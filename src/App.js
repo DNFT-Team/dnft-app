@@ -15,8 +15,13 @@ import NodeInfo from './NodeInfo';
 import TemplateModule from './TemplateModule';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
+import NFTClass from './NFTClass';
+import NFT from './NFT';
+import NFTrade from './NFTrade';
+import NFTList from './NFTList';
+import NFTClassList from './NFTClassList';
 
-function Main () {
+function Main() {
   const [accountAddress, setAccountAddress] = useState(null);
   const { apiState, keyring, keyringState, apiError } = useSubstrate();
   const accountPair =
@@ -61,7 +66,7 @@ function Main () {
             <BlockNumber />
             <BlockNumber finalized />
           </Grid.Row>
-          <Grid.Row stretched>
+          {/* <Grid.Row stretched>
             <Balances />
           </Grid.Row>
           <Grid.Row>
@@ -74,7 +79,23 @@ function Main () {
           </Grid.Row>
           <Grid.Row>
             <TemplateModule accountPair={accountPair} />
+          </Grid.Row> */}
+          <Grid.Row>
+            <NFTClassList accountPair={accountPair} />
           </Grid.Row>
+          <Grid.Row>
+            <NFTClass accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row>
+            <NFTList accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row>
+            <NFT accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row>
+            <NFTrade accountPair={accountPair} />
+          </Grid.Row>
+
         </Grid>
       </Container>
       <DeveloperConsole />
@@ -82,7 +103,7 @@ function Main () {
   );
 }
 
-export default function App () {
+export default function App() {
   return (
     <SubstrateContextProvider>
       <Main />
