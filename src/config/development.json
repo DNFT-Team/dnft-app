@@ -16,5 +16,5 @@
       "data":"Vec<u8>"
     }
   },
-  "PROVIDER_SOCKET": "ws://chain.dnft.world"
+  "PROVIDER_SOCKET": "ws://161.117.82.18:9944"
 }
