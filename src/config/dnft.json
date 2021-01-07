@@ -1,0 +1,25 @@
+{
+  "NFTId": "([u8; 32])",
+  "ClassId": "([u8; 32])",
+  "ClassInfo":{
+    "metadata": "Vec<u8>",
+    "total_issuance":"u64",
+    "owner":"AccountId",
+    "data":"Vec<u8>"
+  },
+  "NFTStatus": {
+    "_enum": [
+      "Normal",
+      "Offered",
+      "Colleted",
+      "Burned"
+    ]
+  },
+  "TokenInfo":{
+    "metadata": "Vec<u8>",
+    "owner":"AccountId",
+    "data":"Vec<u8>",
+    "price":"Balance",
+    "status":"NFTStatus"
+  }
+}
