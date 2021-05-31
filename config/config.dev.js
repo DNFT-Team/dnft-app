@@ -12,4 +12,13 @@ export default defineConfig({
     babelOptions: {},
   },
   webpack5: {},
+  chainWebpack(config, { env, webpack, createCSSRule }) {
+    console.log(config.module.rules);
+    config.module
+      .rule('mjs$')
+      .test(/\.mjs$/)
+      .include.add(/node_modules/)
+      .end()
+      .type('javascript/auto')
+  },
 });

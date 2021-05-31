@@ -4,7 +4,8 @@ import styles from './index.less';
 import { Images } from '@/constants';
 import { history, useIntl, FormattedMessage } from 'umi';
 import Nft from '@/api/nft'
-
+// import {IPFS} from 'ipfs'
+const IPFS = require('ipfs')
 const { Option } = Select;
 const { TextArea } = Input
 const Component = props => {
@@ -17,14 +18,12 @@ const Component = props => {
     const onFinish = value => {
         useLoading(true)
         let base64img = fileList[0] && fileList[0].thumbUrl;
-
+        let desc = `${value.desc}|${value.name}`
         // return;
         Nft.NFT_Add(
             {
-                metaData: 'https://unsplash.it/1920/1080?random=4', // 元数据
-                // metaData: base64img, // 元数据
-                desc: value.desc, // 说明
-                // name: value.name,
+                metaData: base64img, // 元数据
+                desc: desc, // 说明
                 categoryHash: value.categoryHash,
                 price: value.price
             },
@@ -56,6 +55,7 @@ const Component = props => {
 
         ]
         useType(data);
+        // console.log(IPFS)
     }, []);
 
     return (
@@ -79,7 +79,7 @@ const Component = props => {
                     <Select placeholder={intl.formatMessage({ id: 'input.select' })}>
                         {
                             type.map((obj, i) => {
-                                return <Option value={obj.name} key={obj.label}>{obj.label}</Option>
+                                return <Option value={obj.value} key={obj.value}>{obj.label}</Option>
                             })
                         }
                     </Select>

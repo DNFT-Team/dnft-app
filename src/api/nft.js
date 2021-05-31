@@ -62,13 +62,13 @@ class Nft {
       for (let i = 0;i<counter;i++){
         let nftIndex = (await window.state.Api.query[PALLET_NAME].nFTsIndex(i)).toJSON()
         let nftInfo = (await window.state.Api.query[PALLET_NAME].nFTs(nftIndex)).toJSON()
-        console.log(hexToString(nftInfo.data))
+        let desc_name = hexToString(nftInfo.data)
+        let arr = desc_name.split('|')
         res.push({
-          name: 'Buy Blah NowMrBlah',
-          icon: 'https://www.mybae.io/uploads/e34bc9bb-859c-449c-86ec-27af62bbc45a.gif',
+          name: arr[1],
           metaData:hexToString(nftInfo.metadata),
           status: nftInfo.status,
-          desc: hexToString(nftInfo.data),
+          desc: arr[0],
           price: nftInfo.price,
           tokenId: nftIndex,
         })
@@ -98,7 +98,6 @@ class Nft {
       PALLET_NAME,
       'mintNft',
       callBack,
-      // stringToHex(form.name),
       form.categoryHash,
       stringToHex(form.metaData),
       stringToHex(form.desc),
