@@ -1,0 +1,179 @@
+@import '~antd/es/style/themes/default.less';
+
+@pro-header-hover-bg: rgba(0, 0, 0, 0.025);
+
+.menu {
+  :global(.anticon) {
+    margin-right: 8px;
+  }
+  :global(.ant-dropdown-menu-item) {
+    min-width: 160px;
+  }
+}
+
+.right {
+  display: flex;
+  float: right;
+  height: 60px;
+  align-items: center;
+  margin-left: auto;
+  overflow: hidden;
+  .blog {
+    width: 66px;
+    height: 36px;
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    opacity: 1;
+    border-radius: 18px;
+    color: #000033;
+    text-align: center;
+    line-height: 32px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 14px;
+  }
+  .converse {
+    height: 25px;
+    cursor: pointer;
+    margin-right: 15px;
+  }
+  .action {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 12px;
+    // margin: 0px 40px;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    > span {
+      vertical-align: middle;
+    }
+    &:hover {
+      background: @pro-header-hover-bg;
+    }
+    &:global(.opened) {
+      background: @pro-header-hover-bg;
+    }
+  }
+  .search {
+    padding: 0 12px;
+    &:hover {
+      background: transparent;
+    }
+  }
+  .account {
+    .avatar {
+      margin: ~'calc((@{layout-header-height} - 24px) / 2)' 0;
+      margin-right: 8px;
+      color: @primary-color;
+      vertical-align: top;
+      background: rgba(255, 255, 255, 0.85);
+    }
+  }
+}
+
+.dark {
+  .action {
+    color: rgba(255, 255, 255, 0.85);
+    > span {
+      color: rgba(255, 255, 255, 0.85);
+    }
+    &:hover,
+    &:global(.opened) {
+      background: @primary-color;
+    }
+  }
+}
+
+:global(.ant-pro-global-header) {
+  height: 60px;
+  align-items: center;
+  .dark {
+    .action {
+      color: @text-color;
+      > span {
+        color: @text-color;
+      }
+      &:hover {
+        color: rgba(255, 255, 255, 0.85);
+        > span {
+          color: rgba(255, 255, 255, 0.85);
+        }
+      }
+    }
+  }
+}
+.linkWallet {
+  width: 158px;
+  height: 41px;
+  background: #112DF2;
+  opacity: 1;
+  border-radius: 18px;
+  color: #fff;
+  line-height: 41px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  .logo {
+    width:  30px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+  }
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    display: inherit;
+  }
+  .walletTxt {
+    text-align: center;
+    flex: 1;
+    margin-left: -16px;
+  }
+}
+.users {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  img {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    display: inherit;
+  }
+}
+.chain {
+  // width: 240px;
+  width: 78px;
+
+  height: 34px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  border: 2px solid #112DF2;
+  opacity: 1;
+  border-radius: 18px;
+  span {
+    // width: calc(100%/3);
+    width: 100%;
+
+    height: 30px;
+    border-radius: 18px;
+    line-height: 30px;
+    cursor: pointer;
+    text-align: center;
+    color:#112DF2 ;
+  }
+  .active {
+    background-color: #112DF2;
+    color: #fff;
+  }
+}
