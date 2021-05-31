@@ -1,24 +1,13 @@
-# nft-exchange
 
-## Project setup
-```
-yarn install
-```
+### Start project
 
-### Compiles and hot-reloads for development
-```
-yarn serve
+```bash
+yarn start
 ```
 
-### Compiles and minifies for production
-```
-yarn build
+### Build project
+
+```bash
+yarn run build
 ```
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

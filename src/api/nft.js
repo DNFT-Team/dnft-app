@@ -1,13 +1,17 @@
 //  api for trade
 import BaseApi from './baseApi'
 //  api for query
-import chainState from "../store/modules/chainState"
+// import chainState from "../store/modules/chainState"
 //  util for model
+import React from "react";
+
 import {stringToHex,hexToString} from '@polkadot/util'
+import { connect } from 'umi';
 
 const PALLET_NAME = 'nftModule'
 
-export default class Nft {
+class Nft {
+  
   /**
    * @description add NFT Category
    * @param form
@@ -35,9 +39,14 @@ export default class Nft {
    * @constructor
    */
   static async Category_IdList() {
-    let res = await chainState.state.Api.query[PALLET_NAME].classList()
-    res = res.toJSON()
-    return res
+    if(window.state && window.state.Api) {
+      let res = await window.state.Api.query[PALLET_NAME].classList()
+      res = res.toJSON()
+      return res
+    }
+
+    
+    
   }
 
 
@@ -48,21 +57,26 @@ export default class Nft {
    */
   static async NFT_IdList() {
     let res = []
+    try{
+      let counter = (await window.state.Api.query[PALLET_NAME].nFTsCount()).toNumber()
+      for (let i = 0;i<counter;i++){
+        let nftIndex = (await window.state.Api.query[PALLET_NAME].nFTsIndex(i)).toJSON()
+        let nftInfo = (await window.state.Api.query[PALLET_NAME].nFTs(nftIndex)).toJSON()
+        console.log(hexToString(nftInfo.data))
+        res.push({
+          name: 'Buy Blah NowMrBlah',
+          icon: 'https://www.mybae.io/uploads/e34bc9bb-859c-449c-86ec-27af62bbc45a.gif',
+          metaData:hexToString(nftInfo.metadata),
+          status: nftInfo.status,
+          desc: hexToString(nftInfo.data),
+          price: nftInfo.price,
+          tokenId: nftIndex,
+        })
+      }
+    }catch(res) {
 
-    let counter = (await chainState.state.Api.query[PALLET_NAME].nFTsCount()).toNumber()
-    for (let i = 0;i<counter;i++){
-      let nftIndex = (await chainState.state.Api.query[PALLET_NAME].nFTsIndex(i)).toJSON()
-      let nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTs(nftIndex)).toJSON()
-      res.push({
-        name: 'Buy Blah NowMrBlah',
-        icon: 'https://www.mybae.io/uploads/e34bc9bb-859c-449c-86ec-27af62bbc45a.gif',
-        metaData:hexToString(nftInfo.metadata),
-        status: nftInfo.status,
-        desc: hexToString(nftInfo.data),
-        price: nftInfo.price,
-        tokenId: nftIndex,
-      })
     }
+    
 
     console.log('#NFT-List',res)
 
@@ -84,6 +98,7 @@ export default class Nft {
       PALLET_NAME,
       'mintNft',
       callBack,
+      // stringToHex(form.name),
       form.categoryHash,
       stringToHex(form.metaData),
       stringToHex(form.desc),
@@ -153,8 +168,11 @@ export default class Nft {
    * @constructor
    */
   static async NFT_TaxList() {
-    let account = await chainState.state.Api.query[PALLET_NAME].dAOAcc()
-    let res = await chainState.state.Api.query[PALLET_NAME].dAOTax()
+    let account = await window.state.Api.query[PALLET_NAME].dAOAcc()
+    let res = await window.state.Api.query[PALLET_NAME].dAOTax()
     return res.toJSON()
   }
 }
+export default connect(({ chainState }) => ({
+  state: chainState.state,
+}))(Nft);
