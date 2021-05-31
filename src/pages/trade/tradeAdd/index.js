@@ -5,7 +5,7 @@ import { Images } from '@/constants';
 import { history, useIntl, FormattedMessage } from 'umi';
 import Nft from '@/api/nft'
 // import {IPFS} from 'ipfs'
-const IPFS = require('ipfs')
+// const IPFS = require('ipfs')
 const { Option } = Select;
 const { TextArea } = Input
 const Component = props => {
