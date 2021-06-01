@@ -8,12 +8,7 @@
     "data": "Vec<u8>"
   },
   "NFTStatus": {
-    "_enum": [
-      "Normal",
-      "Offered",
-      "Colleted",
-      "Burned"
-    ]
+    "_enum": ["Normal", "Offered", "Colleted", "Burned"]
   },
   "TokenInfo": {
     "metadata": "Vec<u8>",
