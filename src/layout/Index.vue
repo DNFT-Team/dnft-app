@@ -8,7 +8,7 @@
                      :to="{name:'Assets'}"></vs-button>
           <el-divider direction="vertical" style="margin: 0 1rem"/>
           <vs-button color="primary" type="gradient" icon="monetization_on"
-                     @click="right=!right"></vs-button>
+                     @click="triggerRightBar"></vs-button>
         </div>
       </div>
     </header>
@@ -101,7 +101,7 @@
         this.$vs.notify({
           position:'top-center',
           title: 'Wallet Hint',
-          text: 'Your Changed Address',
+          text: 'You Changed Address',
           color: '#e6037a'
         })
       }
@@ -110,15 +110,21 @@
       this.checkWalletPlugin()
     },
     methods: {
+      triggerRightBar(){
+        this.right = !this.right
+        this.right && this.checkWalletPlugin()
+      },
       async checkWalletPlugin() {
         const allInjected = await web3Enable('NFT')
+        if(allInjected && !this.pluginEnable){
+          this.$vs.notify({
+            position:'top-center',
+            title: 'Wallet Hint',
+            text: 'Extension Inject Success',
+            color: '#e6037a'
+          })
+        }
         this.pluginEnable = !!allInjected
-        allInjected && this.$vs.notify({
-          position:'top-center',
-          title: 'Wallet Hint',
-          text: 'Extension Inject Success',
-          color: '#e6037a'
-        })
         const allAccounts = await web3Accounts()
         console.log(allAccounts);
         this.pairs = allAccounts
