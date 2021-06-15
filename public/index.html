@@ -5,13 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>DNFT</title>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+    <div id="app">
+      <!--loadingContent-->
+      <div style=";background:#E0E5F2;width:100vw;height:100vh;text-align: center;color: #11047A;font-weight: bolder;font-size: 24px;display: flex;justify-content: center;align-items: center;flex-flow: column nowrap">
+        <img src="./img/blank-loading.svg" alt="Loading...">
+        <p>WAIT SEC</p>
+      </div>
+    </div>
     <!-- built files will be auto injected -->
   </body>
 </html>

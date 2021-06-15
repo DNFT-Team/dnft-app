@@ -1,68 +1,20 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Layout from '@/layout/index.vue';
+import routes from './routes'
 
+//解决 在用vue-router 做单页应用的时候重复点击一个跳转的路由会出现报错
+// const originalPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push(location) {
+//   return (originalPush.call(this, location).catch(err=>err))
+// }
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: '/',
-    name: 'Layout',
-    component: Layout,
-    children: [
-      {
-        path: '/',
-        name: 'market',
-        component: () => import('../views/market/index.vue'),
-      },
-      {
-        path: '/detail',
-        name: 'detail',
-        component: () => import('../views/market/ProjectDetail.vue'),
-      },
-      {
-        path: '/createnft',
-        name: 'createnft',
-        component: () => import('../views/market/CreateNFT.vue'),
-      },
-      {
-        path: '/createnftcategory',
-        name: 'createnftcategory',
-        component: () => import('../views/market/CreateNFTCategory.vue'),
-      },
-      {
-        path: '/auction',
-        name: 'auction',
-        component: () => import('../views/auction/index.vue'),
-      },
-      {
-        path: '/adetail',
-        name: 'adetail',
-        component: () => import('../views/auction/ProjectDetail.vue'),
-      },
-      {
-        path: '/acreatenft',
-        name: 'acreatenft',
-        component: () => import('../views/auction/CreateNFT.vue'),
-      },
-      {
-        path: '/acreatenftcategory',
-        name: 'acreatenftcategory',
-        component: () => import('../views/auction/CreateNFTCategory.vue'),
-      },
-      {
-        path: '/tax',
-        name: 'TaxList',
-        component: () => import('../views/tax/TaxList.vue'),
-      },
-    ],
-  }
-];
-
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  // mode: 'history',
   routes,
 });
+router.afterEach(() => {
+  window.scrollTo(0, 0)
+})
 
 export default router;

@@ -1,0 +1,52 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+*{
+    padding:0;
+    margin:0;
+    list-style:none
+}
+.full-width{
+    width: 100%;
+}
+.full-height{
+    height: 100%;
+}
+.flex-cen{
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+.flex-btw{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center
+}
+.radius-12{
+    border-radius: 12px;;
+}
+.card-wrap{
+    background: #F6F8FD;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 1rem 0;
+}
+.title{
+    font-weight: 900;
+    font-size: 40px;
+    color: #1B2559;
+}
+.title-sticky{
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 2px 0 0 #1b2559;
+}

@@ -1,0 +1,63 @@
+export const menu = [
+  {
+    path:'/home',
+    name: 'Home',
+    meta: { title: 'home', icon: 'home' },
+    component: () => import('./../views/Home.vue')
+  },
+  {
+    path:'/market',
+    name: 'Market',
+    meta: { title: 'market', icon: 'market' },
+    component: () => import('./../views/Market.vue')
+  },
+  {
+    path:'/recycle',
+    name: 'Recycle',
+    meta: { title: 'recycle', icon: 'recycle' },
+    component: () => import('./../views/Recycle.vue')
+  },
+  {
+    path:'/data',
+    name: 'Data',
+    meta: { title: 'data', icon: 'data' },
+    component: () => import('./../views/DataTsf.vue')
+  },
+  {
+    path:'/dao',
+    name: 'DAO',
+    meta: { title: 'dao', icon: 'dao' },
+    component: () => import('./../views/DaoTsf.vue')
+  }
+]
+export default [
+  {
+    path:'/',
+    name: 'root',
+    redirect: '/home'
+  },
+  {
+    path: '*',
+    name: 'error_404',
+    component: () => import('./../layout/Page404.vue')
+  },
+  {
+    path:'/assets',
+    name: 'Assets',
+    meta: { title: 'assets', icon: 'assets' },
+    component: () => import('./../views/AssetsTax.vue')
+  },
+  {
+    path:'/pending',
+    name: 'Pending',
+    meta: { title: 'pending', icon: 'pending' },
+    component: () => import('./../layout/TransferPending.vue')
+  },
+  {
+    path:'/transfer',
+    name: 'Transfer',
+    meta: { title: 'transfer', icon: 'transfer' },
+    component: () => import('./../views/TransferInfo.vue')
+  },
+  ...menu
+]
