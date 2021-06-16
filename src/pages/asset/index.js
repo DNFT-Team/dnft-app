@@ -1,5 +1,5 @@
 import { DownOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
-import { Input } from "element-react";
+import { Dialog, Input } from "element-react";
 import { css, cx } from "emotion";
 import React, { useCallback, useMemo, useState } from "react";
 import { nfIconSvg } from "utils/svg";
@@ -102,6 +102,8 @@ const AssetScreen = (props) => {
   ];
 
   const [selectedTab, setSelectedTab] = useState("In wallet");
+  const [isVisible, setIsVisible] = useState(false);
+
   const renderAssetHeader = useMemo(() => {
     return (
       <div className={styleHeader}>
@@ -198,6 +200,7 @@ const AssetScreen = (props) => {
     (item) => {
       return (
         <div className={styleCardContainer}>
+          {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
           <div
             style={{
               background: `center / cover no-repeat ${item.src}`,
@@ -208,7 +211,12 @@ const AssetScreen = (props) => {
             <div className={styleCardHeader}>
               <span className={styleCardTitle}>Shanghaibar</span>
               <div className={styleStarInfo}>
-                <div className={styleStarIconContainer}>
+                <div
+                  className={styleStarIconContainer}
+                  onClick={() => {
+                    setIsVisible(true);
+                  }}
+                >
                   <HeartFilled
                     style={{ color: item.stared ? "#F13030" : "#c4c4c4" }}
                   />
@@ -223,6 +231,33 @@ const AssetScreen = (props) => {
     },
     [renderAction]
   );
+
+  const renderModal = useMemo(() => {
+    return (
+      <Dialog
+        customClass={styleModalContainer}
+        visible={isVisible}
+        onCancel={() => {
+          setIsVisible(false);
+        }}
+      >
+        <Dialog.Body>
+          <div>
+            <h1>Venus Design Introduction Tour</h1>
+            <span>
+              Venus is a complex Design System Tool with more than 2000+
+              components for busy designers, developers, entrepreneurs,
+              agencies, etc...
+            </span>
+          </div>
+          <div className={styleModalActionContainer}>
+            <div className={styleModalConfirm}>Start the tour</div>
+            <div>Skip for now</div>
+          </div>
+        </Dialog.Body>
+      </Dialog>
+    );
+  }, [isVisible]);
 
   return (
     <div className={styleContainer}>
@@ -239,6 +274,7 @@ const AssetScreen = (props) => {
           </div>
         </div>
       </div>
+      {renderModal}
     </div>
   );
 };
@@ -376,6 +412,8 @@ const styleCardContainer = css`
   flex: 1;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  position: relative;
   &:hover {
     background: white;
     box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
@@ -490,4 +528,82 @@ const styleText = css`
 
 const styleSoldOut = css`
   margin-bottom: 8px;
+`;
+
+const styleModalContainer = css`
+  width: 340px;
+  border-radius: 40px;
+  padding: 36px 32px;
+  .el-dialog__headerbtn {
+    color: #112df2;
+    background: #f4f7fe;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    .el-dialog__close {
+      transform: scale(0.6);
+      color: #112df2;
+    }
+  }
+
+  .el-dialog__header {
+    padding: 0;
+  }
+  .el-dialog__title {
+    color: #233a7d;
+    font-size: 24px;
+  }
+  .el-dialog__body {
+    padding: 0;
+    position: relative;
+    top: -10px;
+    color: #8f9bba;
+    h1 {
+      font-weight: bold;
+      font-size: 28px;
+      line-height: 36px;
+      color: #000000;
+      text-align: center;
+      margin: 0;
+      margin-bottom: 24px;
+    }
+    span {
+      text-align: center;
+      display: flex;
+    }
+  }
+`;
+
+const styleModalActionContainer = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+`;
+const styleModalConfirm = css`
+  background: #112df2;
+  border-radius: 70px;
+  color: white;
+  font-size: 14px;
+  width: 180px;
+  height: 46px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+`;
+
+const styleSoldOutBanner = css`
+  position: absolute;
+  width: 74px;
+  height: 47px;
+  background: #ff313c;
+  border-radius: 0 0 20px 20px;
+  font-weight: bold;
+  font-size: 14px;
+  left: 24px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
