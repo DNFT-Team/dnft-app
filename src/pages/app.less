@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+.logo {
+  width: 80px;
+  margin: 7vh 0 9vh 70px;
+}
+
+.leftNav {
+  width: 300px;
+  cursor: pointer;
+  background-color: rgb(20, 23, 74);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.navActive:before {
+  position: absolute;
+  width: 18px;
+  height: 52px;
+  content: "";
+  background-color: #ff313c;
+  border-radius: 5px;
+  left: 0;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  padding: 2.5vh 72px;
+  font-weight: normal;
+}
+
+.navImg {
+  width: 32px;
+  margin-right: 20px;
+  color: rgb(165, 161, 239);
+}
+
+.navText {
+  color: rgb(165, 161, 239);
+  font-weight: 300;
+}
+.navActive {
+  color: #fff;
+  font-weight: bold;
+}
+
+.rightContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-bottom: 28px;
+  width: calc(100% - 332px);
+}

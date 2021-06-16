@@ -3,7 +3,7 @@ import React from 'react';
 const AssetsScreen = props => {
 
     return (
-        <div>data</div>
+        <div>market</div>
     )
 }
 export default AssetsScreen;

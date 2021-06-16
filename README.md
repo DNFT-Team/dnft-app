@@ -1,13 +1,9 @@
+# 运行
 
-### Start project
+`yarn start`
 
-```bash
-yarn start
-```
+# 打包
 
-### Build project
+`yarn build`
 
-```bash
-yarn run build
-```
-
+# 发布
