@@ -2,7 +2,7 @@ import { DownOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { Dialog, Input } from "element-react";
 import { css, cx } from "emotion";
 import React, { useCallback, useMemo, useState } from "react";
-import { nfIconSvg } from "utils/svg";
+import { nfIconSvg, noDataSvg } from "utils/svg";
 
 const AssetScreen = (props) => {
   const tabArray = ["In wallet", "On Sale", "My favorite", "Sold"];
@@ -12,97 +12,249 @@ const AssetScreen = (props) => {
       title: "Shanghaibar",
       account: 123,
       sold: true,
+      stared: true,
     },
     {
       src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: "Shanghaibar",
+      title: "test",
       account: "1,234",
+      onSale: true,
       stared: true,
     },
     {
       src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: "Shanghaibar",
+      title: "test2",
       account: 12,
       sold: true,
+      stared: true,
     },
     {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: "Shanghaibar",
+      title: "fwefwefwef",
       account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "aaaaa",
+      account: "1,234",
+      sold: true,
+      stared: true,
     },
     {
       src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
       title: "Shanghaibar",
       account: 123,
-      sold: true,
+      inWallet: true,
+      stared: true,
     },
     {
       src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: "Shanghaibar",
+      title: "test",
       account: "1,234",
+      inWallet: true,
       stared: true,
     },
     {
       src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: "Shanghaibar",
+      title: "test2",
       account: 12,
       sold: true,
+      stared: true,
     },
     {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: "Shanghaibar",
+      title: "fwefwefwef",
       account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "aaaaa",
+      account: "1,234",
+      stared: true,
     },
     {
       src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
       title: "Shanghaibar",
       account: 123,
-      sold: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: "Shanghaibar",
-      account: "1,234",
+      inWallet: true,
       stared: true,
     },
     {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "test",
+      account: "1,234",
+      onSale: true,
+    },
+    {
       src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: "Shanghaibar",
+      title: "test2",
       account: 12,
-      sold: true,
+      inWallet: true,
+      stared: true,
     },
     {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: "Shanghaibar",
+      title: "fwefwefwef",
       account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "aaaaa",
+      account: "1,234",
+      stared: true,
     },
     {
       src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
       title: "Shanghaibar",
       account: 123,
-      sold: true,
+      inWallet: true,
+      stared: true,
     },
     {
       src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: "Shanghaibar",
+      title: "test",
+      account: "1,234",
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: "test2",
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: "fwefwefwef",
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "aaaaa",
       account: "1,234",
       stared: true,
     },
     {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
       title: "Shanghaibar",
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "test",
+      account: "1,234",
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: "test2",
       account: 12,
       sold: true,
+      stared: true,
     },
     {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: "Shanghaibar",
+      title: "fwefwefwef",
       account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "aaaaa",
+      account: "1,234",
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "Shanghaibar",
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "test",
+      account: "1,234",
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: "test2",
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: "fwefwefwef",
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "efefef",
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: "test4",
+      account: "1,234",
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: "test1",
+      account: 123,
+      sold: true,
+      stared: true,
     },
   ];
-
   const [selectedTab, setSelectedTab] = useState("In wallet");
   const [isVisible, setIsVisible] = useState(false);
+  const [keyword, setKeyword] = useState();
 
   const renderAssetHeader = useMemo(() => {
     return (
@@ -134,6 +286,7 @@ const AssetScreen = (props) => {
       );
     });
   }, [selectedTab]);
+  console.log(keyword, "keyword");
 
   const renderFilter = useMemo(() => {
     return (
@@ -144,7 +297,12 @@ const AssetScreen = (props) => {
         </div>
         <div className={styleSearch}>
           <i className="el-icon-search"></i>
-          <Input placeholder={"Search"} />
+          <Input
+            placeholder={"Search"}
+            onChange={(value) => {
+              setKeyword(value);
+            }}
+          />
         </div>
       </div>
     );
@@ -197,9 +355,11 @@ const AssetScreen = (props) => {
   );
 
   const renderCard = useCallback(
-    (item) => {
+    (item, index) => {
+      const isFavorite = item.stared && selectedTab === "My favorite";
+
       return (
-        <div className={styleCardContainer}>
+        <div key={`title-${index}`} className={styleCardContainer}>
           {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
           <div
             style={{
@@ -209,11 +369,14 @@ const AssetScreen = (props) => {
           />
           <div className={styleInfoContainer}>
             <div className={styleCardHeader}>
-              <span className={styleCardTitle}>Shanghaibar</span>
+              <span className={styleCardTitle}>{item.title}</span>
               <div className={styleStarInfo}>
                 <div
                   className={styleStarIconContainer}
                   onClick={() => {
+                    if (!isFavorite) {
+                      return;
+                    }
                     setIsVisible(true);
                   }}
                 >
@@ -229,7 +392,7 @@ const AssetScreen = (props) => {
         </div>
       );
     },
-    [renderAction]
+    [renderAction, keyword]
   );
 
   const renderModal = useMemo(() => {
@@ -259,6 +422,34 @@ const AssetScreen = (props) => {
     );
   }, [isVisible]);
 
+  const dealWithData = useMemo(() => {
+    return data.filter((item) => {
+      const isInWallet = item.inWallet && selectedTab === "In wallet";
+      const isFavorite = item.stared && selectedTab === "My favorite";
+      const isOnSale = item.onSale && selectedTab === "On Sale";
+      const isSold = item.sold && selectedTab === "Sold";
+      const includeKeyword = item.title.includes(keyword);
+
+      if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
+        return;
+      }
+      if ((keyword !== "" && keyword !== undefined) && !includeKeyword) {
+        return;
+      }
+
+      return item;
+    });
+  }, [selectedTab, keyword]);
+
+  const renderNoData = useMemo(() => {
+    return (
+      <div className={styleNoDataContainer}>
+        <div>{noDataSvg}</div>
+        <span>No content</span>
+      </div>
+    );
+  }, []);
+
   return (
     <div className={styleContainer}>
       <div>
@@ -268,9 +459,11 @@ const AssetScreen = (props) => {
           {renderFilter}
 
           <div className={styleCardList}>
-            {data.map((item) => {
-              return renderCard(item);
-            })}
+            {dealWithData.length > 0
+              ? dealWithData.map((item, index) => {
+                  return renderCard(item, index);
+                })
+              : renderNoData}
           </div>
         </div>
       </div>
@@ -401,7 +594,7 @@ const styleCardList = css`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
-  gap: 20px;
+  gap: 60px;
 `;
 
 const styleCardContainer = css`
@@ -409,11 +602,11 @@ const styleCardContainer = css`
   background: #f5f7fa;
   border-radius: 18px;
   min-width: 330px;
-  flex: 1;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
+  flex: 1;
   &:hover {
     background: white;
     box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
@@ -491,7 +684,6 @@ const styleButtonContainer = css`
   justify-content: space-between;
   align-items: center;
   position: relative;
-  /* bottom: -10px; */
 `;
 
 const styleFillButton = css`
@@ -570,6 +762,8 @@ const styleModalContainer = css`
     span {
       text-align: center;
       display: flex;
+      font-size: 12px;
+      line-height: 1.5;
     }
   }
 `;
@@ -607,3 +801,15 @@ const styleSoldOutBanner = css`
   justify-content: center;
   align-items: center;
 `;
+
+const styleNoDataContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  flex-direction: column;
+  color: #233A7D;
+  span{
+    margin-top: 20px;
+  }
+`
