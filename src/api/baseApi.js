@@ -1,13 +1,10 @@
 import {
-  web3Accounts,
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp'
-// import chainState from "../store/modules/chainState"
-import { connect } from 'umi';
-import { numberToHex } from '@polkadot/util';
-class BaseApi {
-
+import store from '../store'
+import { Notification } from 'element-ui';
+export default class BaseApi {
   /**
    * @description api for trade with sign
    * @param pallets
@@ -22,43 +19,32 @@ class BaseApi {
     _callBack,
     ...args
   ) {
+
     console.log('#super.signAndSend', args)
-    let api = window.state.Api
+
+    let api = store.state.chainState.Api
+    const sender = store.state.address
     const allInjected = await web3Enable('NFT')
-    const allAccounts = await web3Accounts()
 
-    // // returns an array of { address, meta: { name, source } }
-    // // meta.source contains the name of the extension that provides this account
+    if(!allInjected || !sender){
 
-    // // finds an injector for an address
-    let accountIndex = Number(localStorage.getItem('accountIndex') || 0)
-    console.log(allAccounts,'allAccounts');
-    const sender = allAccounts[accountIndex].address
-
+      Notification.error({
+        title: 'Polkadot API',
+        message: 'Please Connect Wallet',
+        position: 'top-left',
+        customClass: 'chain-notify'
+      })
+      return
+    }
+    // finds an injector for an address
     const injector = await web3FromAddress(sender)
 
     // // sets the signer for the address on the @polkadot/api. The alternative approach it to pass the signer through
     // // options to signAndSend in the next step where we are sending (and skip this injection here), e.g
     // // `.signAndSend(<address>, { signer: injector.signer }, (status) => { ... })`
     api.setSigner(injector.signer)
-    const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-    const { data: { free } } = await api.query.system.account(sender);
-    let a = free.toHuman();
-    const amount = 10 //    默认转帐10个单位币额
-    const value = numberToHex(amount* 10 ** (12))
-    if(a == 0) {
-      const txHash = await api.tx.balances
-      .transfer(sender, value)
-      .signAndSend(ALICE);
-    }
-    
-
-
-
-
     // const tx = api.tx.balances.transfer(
     const tx = api.tx[pallets][module](...args)
-    console.log(tx,'tx')
     // // sign and send our transaction - notice here that the address of the account (as retrieved injected)
     // // is passed through as the param to the `signAndSend`, the API then calls the extension to present
     // // to the user and get it signed. Once complete, the api sends the tx + signature via the normal process
@@ -69,6 +55,12 @@ class BaseApi {
         _t
       ) => {
         if (result.status.isFinalized || result.status.isInBlock) {
+          // Notification.success({
+          //     title: 'Polkadot API',
+          //     message: `Status ${result.status.isFinalized?'IsFinalized':'IsInBlock'}`,
+          //     position: 'top-left',
+          //     customClass: 'chain-notify'
+          // })
           let hash = ''
           if (result.status.isInBlock) {
             // console.log(
@@ -84,10 +76,10 @@ class BaseApi {
           }
           result.events
             .filter(
-              ({ event: { section } }) => section === 'system'
+              ({event: {section}}) => section === 'system'
             )
             .forEach((ele) => {
-              let { data, method } = ele.event
+              let {data, method} = ele.event
               if (method === 'ExtrinsicFailed') {
                 const [dispatchError] = data
                 if (dispatchError.isModule) {
@@ -100,6 +92,12 @@ class BaseApi {
                       ])
                     )
                     console.log('错误提示:', error.name) //错误提示
+                    Notification.error({
+                      title: 'Polkadot API',
+                      message: error.name,
+                      position: 'top-left',
+                      customClass: 'chain-notify'
+                    })
                     return _callBack({
                       code: -1,
                       msg: error.name,
@@ -107,7 +105,12 @@ class BaseApi {
                       result: null
                     })
                   } catch (error) {
-                    console.log(error)
+                    Notification.error({
+                      title: 'Polkadot API',
+                      message: error.name,
+                      position: 'top-left',
+                      customClass: 'chain-notify'
+                    })
                     return _callBack({
                       code: -2,
                       msg: error.name,
@@ -123,7 +126,7 @@ class BaseApi {
                   result.status.isInBlock,
                   result.status.isFinalized
                 )
-                if (result.status.isInBlock) {
+                if(result.status.isInBlock){
                   return _callBack({
                     code: 0,
                     msg: 'ExtrinsicSuccess',
@@ -137,7 +140,13 @@ class BaseApi {
               }
             })
         } else if (result.isError) {
-          console.log('fail2,', result.toHuman())
+          // console.log('fail2,', result.toHuman())
+          Notification.error({
+            title: 'Polkadot API',
+            message: result.toHuman(),
+            position: 'top-left',
+            customClass: 'chain-notify'
+          })
           return _callBack({
             code: -99,
             msg: 'Error',
@@ -149,7 +158,3 @@ class BaseApi {
     )
   } //end signAndSend
 }
-
-export default connect(({ chainState }) => ({
-  state: chainState.state,
-}))(BaseApi);
