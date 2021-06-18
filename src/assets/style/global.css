@@ -28,6 +28,13 @@ input[type='number'] {
     justify-content: space-between;
     align-items: center
 }
+.mk-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .4rem 1.6rem;
+    background: white;
+}
 .radius-12{
     border-radius: 12px;;
 }
@@ -51,9 +58,13 @@ input[type='number'] {
     box-shadow: 0 2px 0 0 #1b2559;
 }
 .chain-notify{
-    background: linear-gradient(to right,  white , #e6037a);
-    border-color: transparent;
+    background: #bc4e9c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-color: #e6037a;
 }
+.chain-notify div,
+.chain-notify h2,
 .chain-notify .el-icon-close{
     color: white;
 }

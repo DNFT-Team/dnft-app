@@ -10,6 +10,12 @@
         mounted() {
           const {back, hash} = this.$route.query
           if(!hash){
+            this.$vs.notify({
+              position:'top-center',
+              title: 'System hint',
+              text: 'NFT is not existed',
+              color: 'danger'
+            })
             this.$router.push({name: back || 'Home'})
           }else {
             this.$api.NFT_One(hash).then((res)=>{

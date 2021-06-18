@@ -24,6 +24,12 @@ export const menu = [
     component: () => import('./../views/DaoTsf.vue')
   },
   {
+    path:'/auction',
+    name: 'Auction',
+    meta: { title: 'auction', icon: 'auction' },
+    component: () => import('./../views/Auction.vue')
+  },
+  {
     path:'/ai',
     name: 'AI',
     meta: { title: 'AI', icon: 'AI' },
@@ -58,6 +64,12 @@ export default [
     name: 'Transfer',
     meta: { title: 'transfer', icon: 'transfer' },
     component: () => import('./../views/TransferInfo.vue')
+  },
+  {
+    path:'/bit',
+    name: 'Bit',
+    meta: { title: 'bit', icon: 'bit' },
+    component: () => import('./../views/AuctionInfo.vue')
   },
   ...menu
 ]

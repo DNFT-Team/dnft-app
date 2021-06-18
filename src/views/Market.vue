@@ -54,30 +54,40 @@
         data_hs : []
       }
     },
+    computed: {
+      chainOk() {
+        return this.$store.state.chainState.Api && this.$store.state.chainState.isConnected
+      }
+    },
+    watch: {
+      chainOk(bool) {
+        bool && this.fetchOfferedNft()
+      }
+    },
+    methods:{
+      fetchOfferedNft(){
+        this.$vs.loading({color: '#11047A', type: 'radius'})
+        this.$api.NFT_List().then(res=>{
+          this.data_hs = res.filter(e=>e.status==='Offered').map(e=>({
+            ...e,
+            favor: 100,
+            src: e.data,
+            recycle: new Date('2021-08-01 00:00:00'),
+            name: e.metadata,
+            hash: e.tokenId,
+          }))
+        }).catch(()=>{
+          this.data_hs = []
+        }).finally(()=>{
+          this.$vs.loading.close()
+        })
+      }
+    },
     mounted() {
-      this.$api.NFT_List().then(res=>{
-        this.data_hs = res.filter(e=>e.status==='Offered').map(e=>({
-          ...e,
-          favor: 100,
-          src: e.data,
-          recycle: new Date('2021-08-01 00:00:00'),
-          name: e.metadata,
-          hash: e.tokenId,
-        }))
-      }).catch(()=>{
-        this.data_hs = []
-      })
+        this.chainOk && this.fetchOfferedNft()
     }
   }
 </script>
 
 <style scoped>
-  .mk-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .4rem 1.6rem;
-    background: white;
-  }
-
 </style>

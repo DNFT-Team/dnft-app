@@ -68,12 +68,4 @@
 </script>
 
 <style scoped>
-  .mk-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .4rem 1.6rem;
-    background: white;
-  }
-
 </style>
