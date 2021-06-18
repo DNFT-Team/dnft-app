@@ -1,4 +1,6 @@
-# nft-exchange
+# dnft-substrate-front
+
+Test URL: http://mvp.dnft.world/#/home
 
 ## Project setup
 ```
