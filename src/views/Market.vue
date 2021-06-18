@@ -17,32 +17,22 @@
         </vs-select>
       </div>
     </div>
-    <el-row :gutter="20" class="card-wrap">
+    <el-row v-if="data_hs.length>0" :gutter="20" class="card-wrap">
       <el-col :span="6" v-for="(item,i) in data_hs" :key="i">
         <GoodsItem :item="item" :show-recycle="true"/>
       </el-col>
     </el-row>
+    <Empty v-else/>
   </div>
 </template>
 
 <script>
-  import GoodsItem from "./../components/GoodsItem";
+  import GoodsItem from "../components/GoodsItem";
+  import Empty from "../components/Empty";
 
   export default {
     name: "Market",
-    components: {GoodsItem},
-    created() {
-      const ran = Math.random()*20
-      this.data_hs = new Array(20).fill(1).map((e,i)=>({
-        id:i,
-        name: 'ShanghaiBar',
-        owner: 'Billy',
-        price:1.25,
-        favor: 100,
-        src: `https://unsplash.it/300/280?random=${Math.ceil(i+ran)}`,
-        recycle: new Date('2021-08-01 00:00:00')
-      }))
-    },
+    components: {GoodsItem,Empty},
     data() {
       return {
         query: {
@@ -63,6 +53,20 @@
         ],
         data_hs : []
       }
+    },
+    mounted() {
+      this.$api.NFT_List().then(res=>{
+        this.data_hs = res.filter(e=>e.status==='Offered').map(e=>({
+          ...e,
+          favor: 100,
+          src: e.data,
+          recycle: new Date('2021-08-01 00:00:00'),
+          name: e.metadata,
+          hash: e.tokenId,
+        }))
+      }).catch(()=>{
+        this.data_hs = []
+      })
     }
   }
 </script>

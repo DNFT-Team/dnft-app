@@ -22,6 +22,9 @@ Vue.use(Vuesax, {
 import './assets/style/global.css'
 import Index from './layout/Index.vue';
 
+import Api from "./api/Api";
+Vue.prototype.$api  = Api
+
 new Vue({
   router,
   store,

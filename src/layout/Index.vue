@@ -15,7 +15,7 @@
     <div class="m-sidebar">
       <div class="m-brand">
         <img class="m-logo full-width full-height" src="/img/brand.svg" alt="dnft">
-        <img class="m-festival full-width full-height" src="/img/festival.svg" alt="festival">
+<!--        <img class="m-festival full-width full-height" src="/img/festival.svg" alt="festival">-->
       </div>
       <div class="m-menus">
         <div class="m-menu-item" :class="{'active':$route.name===menu.name}"
@@ -52,6 +52,8 @@
         </a>
       </div>
       <div class="flex-cen" style="flex-direction: column">
+        <vs-divider>Network Link</vs-divider>
+        <vs-switch :value="network" color="success"/>
         <vs-divider>Plugin Enable</vs-divider>
         <vs-switch :value="pluginEnable" color="success"/>
         <vs-divider>Choose Address</vs-divider>
@@ -97,14 +99,20 @@
       }
     },
     watch:{
-      selectedAdr(){
-        this.$vs.notify({
-          position:'top-center',
+      selectedAdr(newVal){
+        this.$store.commit('updateAddress', newVal)
+        this.$notify({
           title: 'Wallet Hint',
-          text: 'You Changed Address',
-          color: '#e6037a'
+          message: 'You Changed Address',
+          position: 'top-left',
+          customClass: 'chain-notify'
         })
       }
+    },
+    computed:{
+        network(){
+          return this.$store.state.chainState.isConnected
+        }
     },
     mounted() {
       this.checkWalletPlugin()
@@ -117,17 +125,16 @@
       async checkWalletPlugin() {
         const allInjected = await web3Enable('NFT')
         if(allInjected && !this.pluginEnable){
-          this.$vs.notify({
-            position:'top-center',
+          this.$notify({
             title: 'Wallet Hint',
-            text: 'Extension Inject Success',
-            color: '#e6037a'
+            message: 'Extension Inject Success',
+            position:'top-left',
+            customClass: 'chain-notify'
           })
         }
         this.pluginEnable = !!allInjected
         const allAccounts = await web3Accounts()
-        console.log(allAccounts);
-        this.pairs = allAccounts
+        this.pairs = allAccounts || []
       }
     }
   }

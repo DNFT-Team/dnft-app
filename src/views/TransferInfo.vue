@@ -20,23 +20,23 @@
       </el-col>
       <el-col :span="12">
         <vs-card style="padding: .8rem;">
-          <div class="flex-btw">
-            <div>
+          <div >
+            <div class="flex-btw">
               <span class="title"> # {{goods.name}}</span>
-              <p style="font-size: 24px;color:#2C386F;"> Owner: {{goods.owner}}</p>
+              <span style="color: #B9A2FF">
+                {{goods.favor}}
+                <vs-icon icon="favorite" color="#B9A2FF"></vs-icon>
+              </span>
             </div>
-            <span style="color: #B9A2FF">
-            <vs-icon icon="favorite" color="#B9A2FF"></vs-icon>
-            {{goods.favor}}
-          </span>
+            <p class="mt-owner"> Owner: {{goods.owner}}</p>
           </div>
           <p class="title">Introduction</p>
           <section style="font-weight: 300;font-size: 18px;line-height: 21px;color: #68769F;">To commemorate the Conflux Network's success as the third-largest decentralized...</section>
           <p class="title">Hash</p>
-          <section style="color: #68769F;">wuwghdisauhiusahiugfpiqughdpasudiusahdiusagiudgasipudgisaudjsah</section>
+          <section style="color: #68769F;">{{goods.hash}}</section>
           <p class="title">Price</p>
           <div style="font-weight: bold;font-size: 24px;line-height: 29px;">
-            <span style="color: #253EF3;">{{goods.price}} $ETH</span>
+            <span style="color: #253EF3;">{{goods.price}} $DNF</span>
             <el-divider direction="vertical"/>
             <span style="color: #68769F;">$ 344</span>
           </div>
@@ -56,12 +56,11 @@
     components: {Gallery},
     created() {
       this.data_hs = new Array(4).fill(1).map((e, i) => ({
-        id: i,
         name: 'ShanghaiBar',
         owner: 'Billy',
         price: 1.25,
         favor: 100,
-        src: `/img/home/${i + 5}.png`,
+        src: `https://unsplash.it/300/280?random=${i}`,
         recycle: new Date('2021-08-01 00:00:00')
       }))
       this.getGoodParam()
@@ -70,10 +69,10 @@
       return {
         back: 'Home',
         goods: {
-          id: 1,
           name: 'ShanghaiBar',
           owner: 'Billy',
           price: 1.25,
+          hash: '',
           favor: 100,
           src: `/img/home/6.png`,
           recycle: new Date('2021-08-01 00:00:00')
@@ -88,21 +87,47 @@
         if (!goods) {
           this.$router.push({name:back})
         } else {
-          console.log(goods,back);
+          // console.log(goods,back);
           this.back = back
-          goods.src = `https://unsplash.it/300/280?random=${goods.hash}`
           this.goods = goods
         }
       },
       handleBought(){
-        this.$vs.notify({
-          title: 'Bought Success',
-          text: 'Lorem ipsum dolor sit amet, consectetur',
-          color: 'primary'
+        let address = this.$store.state.address
+        if(!address){
+          this.$vs.notify({
+            position:'top-center',
+            title: 'System hint',
+            text: 'Please connect wallet',
+            color: 'warning'
+          })
+          return
+        }
+        if(address===this.goods.owner){
+          this.$vs.notify({
+            position:'top-center',
+            title: 'System hint',
+            text: 'Buy your owned nft is no need',
+            color: 'warning'
+          })
+          return
+        }
+        this.$vs.loading({color:'#11047A',type:'radius'})
+        this.$api.NFT_Buy(this.goods.hash,(res)=>{
+          console.log(res);
+          this.$vs.loading.close()
+          if(res.code===0){
+            this.$vs.notify({
+              position:'top-center',
+              title: 'System hint',
+              text: 'Bought success',
+              color: 'success'
+            })
+            setTimeout(()=>{
+              this.$router.push({name:this.back})
+            },2000)
+          }
         })
-        setTimeout(()=>{
-          this.$router.push({name:this.back})
-        },2000)
       }
     }
   }
@@ -115,6 +140,14 @@
   background: #F6F8FD;
   border-radius: 10px;
   max-height: 600px;
+  .mt-owner{
+    width: 60%;
+    font-size: 24px;
+    color:#2C386F;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .album{
     max-height: 500px;
     height: 80%;

@@ -18,16 +18,16 @@ export const menu = [
     component: () => import('./../views/Recycle.vue')
   },
   {
-    path:'/data',
-    name: 'Data',
-    meta: { title: 'data', icon: 'data' },
-    component: () => import('./../views/DataTsf.vue')
-  },
-  {
     path:'/dao',
     name: 'DAO',
     meta: { title: 'dao', icon: 'dao' },
     component: () => import('./../views/DaoTsf.vue')
+  },
+  {
+    path:'/ai',
+    name: 'AI',
+    meta: { title: 'AI', icon: 'AI' },
+    component: () => import('./../views/DataTsf.vue')
   }
 ]
 export default [

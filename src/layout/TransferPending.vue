@@ -9,24 +9,30 @@
         name: "TransferPending",
         mounted() {
           const {back, hash} = this.$route.query
-          setTimeout(()=>{
-            this.$router.push({
-              name: 'Transfer',
-              params: {
-                back,
-                goods: {
-                  id: hash,
-                  name: 'ShanghaiBar',
-                  owner: 'Billy',
-                  price: 1.25,
-                  favor: 100,
-                  src: `/img/home/6.png`,
-                  recycle: new Date('2021-08-01 00:00:00')
-                }
-              }
+          if(!hash){
+            this.$router.push({name: back || 'Home'})
+          }else {
+            this.$api.NFT_One(hash).then((res)=>{
+              setTimeout(()=>{
+                this.$router.push({
+                  name: 'Transfer',
+                  params: {
+                    back,
+                    goods: {
+                      ...res,
+                      hash:hash,
+                      name: res.metadata,
+                      src: res.data,
+                      favor: 100,
+                      recycle: new Date('2021-08-01 00:00:00')
+                    }
+                  }
+                })
+              },200)
+            }).catch(()=>{
+              this.$router.push({name: back || 'Home'})
             })
-          },200)
-          // this.$router.push({name: back || 'Home'})
+          }
         }
     }
 </script>

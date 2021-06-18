@@ -50,3 +50,22 @@ input[type='number'] {
     border-radius: 0 0 20px 20px;
     box-shadow: 0 2px 0 0 #1b2559;
 }
+.chain-notify{
+    background: linear-gradient(to right,  white , #e6037a);
+    border-color: transparent;
+}
+.chain-notify .el-icon-close{
+    color: white;
+}
+.inner-card .vs-tabs--li{
+    background: #F6F8FD;
+    border-radius: 20px 0 0 0;
+}
+.inner-card .activeChild{
+    font-weight: bold;
+    color: white;
+    background: #C6FFDD;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #f7797d, #FBD786, #C6FFDD);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #f7797d, #FBD786, #C6FFDD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}

@@ -1,10 +1,9 @@
 import {
-  web3Accounts,
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp'
-import chainState from "../store/modules/chainState"
-
+import store from '../store'
+import { Notification } from 'element-ui';
 export default class BaseApi {
   /**
    * @description api for trade with sign
@@ -20,18 +19,24 @@ export default class BaseApi {
     _callBack,
     ...args
   ) {
+
     console.log('#super.signAndSend', args)
-    let api = chainState.state.Api
+
+    let api = store.state.chainState.Api
+    const sender = store.state.address
     const allInjected = await web3Enable('NFT')
-    const allAccounts = await web3Accounts()
 
-    // // returns an array of { address, meta: { name, source } }
-    // // meta.source contains the name of the extension that provides this account
+    if(!allInjected || !sender){
 
-    // // finds an injector for an address
-    let accountIndex = Number(localStorage.getItem('accountIndex')||0)
-    const sender = allAccounts[accountIndex].address
-
+      Notification.error({
+        title: 'Polkadot API',
+        message: 'Please Connect Wallet',
+        position: 'top-left',
+        customClass: 'chain-notify'
+      })
+      return
+    }
+    // finds an injector for an address
     const injector = await web3FromAddress(sender)
 
     // // sets the signer for the address on the @polkadot/api. The alternative approach it to pass the signer through
@@ -50,6 +55,12 @@ export default class BaseApi {
         _t
       ) => {
         if (result.status.isFinalized || result.status.isInBlock) {
+          // Notification.success({
+          //     title: 'Polkadot API',
+          //     message: `Status ${result.status.isFinalized?'IsFinalized':'IsInBlock'}`,
+          //     position: 'top-left',
+          //     customClass: 'chain-notify'
+          // })
           let hash = ''
           if (result.status.isInBlock) {
             // console.log(
@@ -81,6 +92,12 @@ export default class BaseApi {
                       ])
                     )
                     console.log('错误提示:', error.name) //错误提示
+                    Notification.error({
+                      title: 'Polkadot API',
+                      message: error.name,
+                      position: 'top-left',
+                      customClass: 'chain-notify'
+                    })
                     return _callBack({
                       code: -1,
                       msg: error.name,
@@ -88,7 +105,12 @@ export default class BaseApi {
                       result: null
                     })
                   } catch (error) {
-                    console.log(error)
+                    Notification.error({
+                      title: 'Polkadot API',
+                      message: error.name,
+                      position: 'top-left',
+                      customClass: 'chain-notify'
+                    })
                     return _callBack({
                       code: -2,
                       msg: error.name,
@@ -118,7 +140,13 @@ export default class BaseApi {
               }
             })
         } else if (result.isError) {
-          console.log('fail2,', result.toHuman())
+          // console.log('fail2,', result.toHuman())
+          Notification.error({
+            title: 'Polkadot API',
+            message: result.toHuman(),
+            position: 'top-left',
+            customClass: 'chain-notify'
+          })
           return _callBack({
             code: -99,
             msg: 'Error',

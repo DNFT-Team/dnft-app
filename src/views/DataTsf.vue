@@ -1,7 +1,7 @@
 <template>
   <div class="full-width">
     <div class="mk-top title-sticky">
-      <span class="title">Data</span>
+      <span class="title">AI</span>
       <vs-button color="primary" type="relief" size="large" style="margin-left: 1rem;">Create
       </vs-button>
     </div>

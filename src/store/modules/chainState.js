@@ -4,8 +4,6 @@ import types from '../../config/dnft.json'
 import conf from '../../config/conf.js'
 import {ApiPromise, WsProvider} from '@polkadot/api'
 
-
-
 const apiPlugin = async (store) => {
 
   const apiUrl = conf.Chain_Api_Url
@@ -14,8 +12,8 @@ const apiPlugin = async (store) => {
     //  ws connect
     const provider = new WsProvider(apiUrl)
 
-    types['Address'] = 'AccountId'
-    types['LookupSource'] = 'AccountId'
+    types['Address'] = 'MultiAddress'
+    types['LookupSource'] = 'MultiAddress'
 
     //  chain api instance
     const apiPromise = await ApiPromise.create({ provider, types })
@@ -23,37 +21,22 @@ const apiPlugin = async (store) => {
       console.log('Chain Connect Success : ',apiUrl);
       store.state.Api = apiPromise
       store.state.apiUrl = apiUrl
-
-      //  sync bestNumber
-      await apiPromise.derive.chain.bestNumber(
-        (value) => {
-          // console.log('#bestNumber',value.toNumber());
-          store.state.bestNumber = value.toNumber()
-        }
-      )
-      //  sync bestNumberFinalized
-      await apiPromise.derive.chain.bestNumberFinalized(
-        (value) => {
-          // console.log('#bestNumberFinalized',value.toNumber());
-          store.state.bestNumberFinalized = value.toNumber()
-        }
-      )
+      store.state.isConnected = true
     })
   } catch (err) {
     console.log(err)
+    store.state.isConnected = false
   }
 }
-
-
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  namespaced: true,
   state: {
     apiUrl: conf.Chain_Api_Url,
-    Api: null,
-    bestNumber: 0,
-    bestNumberFinalized: 0
+    isConnected: false,
+    Api: null
   },
   plugins: [apiPlugin]
 })
