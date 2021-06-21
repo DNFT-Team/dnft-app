@@ -140,17 +140,30 @@
       handleVote(vote, flag) {
         if (vote.proposalId) {
           let status = this.checkWallet
-          status && this.$api.DAO_Vote(vote.proposalId, flag, (res) => {
-            if (res.code === 0) {
-              this.$vs.notify({
-                position: 'top-right',
-                title: 'System Hint',
-                text: 'Vote Success.',
-                color: 'success'
-              })
-              this.fetchDaoList()
-            }
-          })
+          if(status){
+            this.$api.DAO_Vote_Check(vote.proposalId,this.$store.state.address).then(voteState=>{
+              if(voteState ) {
+                this.$api.DAO_Vote(vote.proposalId, flag, (res) => {
+                  if (res.code === 0) {
+                    this.$vs.notify({
+                      position: 'top-right',
+                      title: 'System Hint',
+                      text: 'Vote Success.',
+                      color: 'success'
+                    })
+                    this.fetchDaoList()
+                  }
+                })
+              } else {
+                this.$vs.notify({
+                  position: 'top-right',
+                  title: 'System Hint',
+                  text: 'You have already voted .',
+                  color: 'warning'
+                })
+              }
+            })
+          }
         }
       }
     },

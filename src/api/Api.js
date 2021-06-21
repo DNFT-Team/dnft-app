@@ -128,7 +128,7 @@ export default class Api {
     Tax = formatBalance(Tax||0)
     let nFTInTax = await chainState.state.Api.query['nft721Module'].nFTInTax(address)
     for(let nftId of nFTInTax){
-      let nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTs(nftId)).toJSON()
+      let nftInfo = (await chainState.state.Api.query['nft721Module'].nFTs(nftId)).toJSON()
       res.push({
         tokenId: nftId,
         price: nftInfo.price,
@@ -280,6 +280,16 @@ export default class Api {
       ProposalId,
       !!flag
     )
+  }
+
+  /**
+   * @description check vote for proposal
+   * @param proposalId
+   * @param accountId
+   * @returns {Promise<void>}
+   */
+  static async DAO_Vote_Check(proposalId,accountId){
+    return  ( await chainState.state.Api.query['daoModule'].memberProposals(proposalId,accountId) ).toJSON()
   }
 
   /**
