@@ -29,19 +29,21 @@
                    gradient-color-secondary="#5252e8" type="gradient">Help Center
         </vs-button>
         <div class="m-links">
-          <vs-button class="item" radius color="grey" text-color="primary" icon="share"
-                     type="flat"></vs-button>
-          <vs-button class="item" radius color="grey" text-color="primary" icon="ios_share"
-                     type="flat"></vs-button>
-          <vs-button class="item" radius color="grey" text-color="primary" icon="screen_share"
-                     type="flat"></vs-button>
-          <vs-button class="item" radius color="grey" text-color="primary" icon="link"
-                     type="flat"></vs-button>
-          <vs-button class="item" radius color="grey" text-color="primary" icon="link"
-                     type="flat"></vs-button>
+          <vs-button
+            v-for="link in links" :key="link.name"
+            target :href="link.url"
+            class="item"  type="flat" radius
+            icon-pack="iconfont" :icon="link.icon"
+            color="rgba(255,255,255,0.4)" text-color="white"
+          />
         </div>
-        <p>Powered by <strong>DNFT Protocol</strong></p>
-        <p>2021 DNFT All rights reserved</p>
+        <p>
+          <span>Powered by</span>
+          <vs-button href="https://www.dnft.world/" targer color="white" type="line">
+            <strong>DNFT Protocol</strong>
+          </vs-button>
+        </p>
+        <p style="margin-top: .4rem;">2021 DNFT All rights reserved</p>
       </div>
     </div>
     <vs-sidebar position-right parent="body" default-index="1" color="primary" spacer
@@ -95,7 +97,14 @@
         pluginEnable: false,
         selectedAdr: '',
         pairs: [],
-        menuList: menu
+        menuList: menu,
+        links: [
+          { name: 'github' ,url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
+          { name: 'telegram' ,url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
+          { name: 'discord' ,url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
+          { name: 'twitter' ,url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
+          { name: 'medium' ,url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
+        ]
       }
     },
     watch:{
@@ -287,6 +296,12 @@
 
           .item {
             margin: 0 .4rem;
+            transition: all ease-in-out .2s;
+            font-size: 24px;
+            &:hover{
+              transform: scale(1.2);
+              font-size: 28px;
+            }
           }
         }
 
