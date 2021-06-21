@@ -62,8 +62,8 @@
         <ul style="text-align: left" class="full-width">
           <li v-for="(p,i) in pairs" :key="p.address" class="full-width adr-row">
             <vs-radio v-model="selectedAdr" :vs-value="p.address" class="no">No.{{i+1}}</vs-radio>
-            <div class="text">{{p.meta.name || 'Name'}}</div>
-            <div class="text">{{p.address}}</div>
+            <div class="text">Name: {{p.meta.name || '@Name'}}</div>
+            <div class="text" :title="p.address">Address: {{p.address}}</div>
           </li>
         </ul>
       </div>
