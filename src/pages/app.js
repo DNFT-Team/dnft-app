@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { store } from "reduxs/store";
 import Router from "routers";
-import { navRouter } from "routers/config";
+import { MENU_MAP } from "routers/config";
 import styles from "./app.less";
 import { connect } from "react-redux";
 import { withRouter, useHistory } from "react-router-dom";
 import Logo from "images/home/dnftLogo.png";
-import GlobalHeader from "components/globalHeader";
+import GlobalHeader from "components/GlobalHeader";
 import {
   AppstoreOutlined,
   BookOutlined,
@@ -20,7 +20,6 @@ import {
   TwitterOutlined,
 } from "@ant-design/icons";
 import { css } from "emotion";
-import { MSvg, twitterSvg, paperSvg, linkInSvg, githubSvg } from "../utils/svg";
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -50,13 +49,19 @@ const App = (props) => {
     <ContactsOutlined />,
   ];
 
-  const contectIconArray = [MSvg, twitterSvg, paperSvg, linkInSvg, githubSvg];
+  const contectIconArray = [
+    { name: 'github' ,url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
+    { name: 'telegram' ,url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
+    { name: 'discord' ,url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
+    { name: 'twitter' ,url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
+    { name: 'medium' ,url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
+  ];
   return (
     <section className={styles.container}>
       <section className={styles.leftNav}>
         <img className={styles.logo} src={Logo} />
         <section className={styles.menu}>
-          {navRouter.map((obj, index) => {
+          {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;
 
             return (
@@ -70,20 +75,36 @@ const App = (props) => {
                 >
                   {navIconArray[index]}
                 </div>
-                <span
-                  className={`${styles.navText} ${
-                    isActive && styles.navActive
-                  }`}
-                >
-                  {obj.navName}
-                </span>
+                {
+                  obj.deActive? (
+                      <span
+                          className={`${styles.navDeText} ${
+                              isActive && styles.navActive
+                          }`}
+                          >
+                      {obj.navName}*
+                    </span>
+                  ) :(
+                      <span
+                          className={`${styles.navText} ${
+                              isActive && styles.navActive
+                                }`}
+                            >
+                        {obj.navName}{obj.deActive?'*':''}
+                      </span>
+                  )
+                }
               </nav>
             );
           })}
         </section>
         <section className={styleFootNoteContainer}>
           <div className={styleContactUs}>
-            {contectIconArray.map((item) => item)}
+            {contectIconArray.map((item) =>(
+              <a className={styleContactItem} href={item.url} target="_blank">
+                <i className={'iconfont '+item.icon}></i>
+              </a>
+            ))}
           </div>
           <div className={styleFootNote}>
             <div>
@@ -112,6 +133,11 @@ const styleContactUs = css`
   flex-direction: row;
   gap: 24px;
   margin-left: 20px;
+`;
+const styleContactItem = css`
+  text-decoration: none;
+  font-size: 23px;
+  color: white;
 `;
 
 const styleFootNote = css`

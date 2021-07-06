@@ -1,8 +1,12 @@
-import { DownOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { DownOutlined, HeartFilled } from "@ant-design/icons";
 import { Dialog, Input } from "element-react";
 import { css, cx } from "emotion";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import { tokenAbi, nftAbi } from "utils/abi";
+import { tokenContract, nftContract } from "utils/contract";
 import { nfIconSvg, noDataSvg } from "utils/svg";
+import Web3 from "web3";
 
 const AssetScreen = (props) => {
   const tabArray = ["In wallet", "On Sale", "My favorite", "Sold"];
@@ -255,6 +259,138 @@ const AssetScreen = (props) => {
   const [selectedTab, setSelectedTab] = useState("In wallet");
   const [isVisible, setIsVisible] = useState(false);
   const [keyword, setKeyword] = useState();
+  const [balance, setBalance] = useState(0);
+  const [nftData, setNftData] = useState();
+
+  useEffect(() => {
+    injectWallet();
+  }, []);
+
+  const init = () => {
+    getBalance();
+    getNft();
+  };
+
+  const getNft = async () => {
+    try {
+      if (window.ethereum) {
+        let ethereum = window.ethereum;
+        window.web3 = new Web3(ethereum);
+        await ethereum.enable();
+
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const account = accounts[0];
+
+        const contractAddress = nftContract;
+        let nftDataList = [];
+        const myContract = new window.web3.eth.Contract(
+          nftAbi,
+          contractAddress
+        );
+        const nft1 = await myContract.methods.balanceOf(account, 1).call({
+          from: account,
+        });
+        const nft2 = await myContract.methods.balanceOf(account, 2).call({
+          from: account,
+        });
+        const nft3 = await myContract.methods.balanceOf(account, 3).call({
+          from: account,
+        });
+        if (nft1 > 0) {
+          nftDataList.push("https://dnft.world/staking/pool1.png");
+        }
+        if (nft2 > 0) {
+          nftDataList.push("https://dnft.world/staking/pool2.png");
+        }
+        if (nft3 > 0) {
+          nftDataList.push("https://dnft.world/staking/pool3.png");
+        }
+
+        setNftData(nftDataList);
+      }
+    } catch (e) {
+      console.log(e, "e");
+    }
+  };
+
+  useEffect(()=>{
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (Number(ethereum.networkVersion) !== 4) {
+        toast.dark(`please choose Rinkeby`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    }
+  },[])
+
+  const injectWallet = useCallback(async () => {
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+
+      ethereum.on("networkChanged", (networkIDstring) => {
+        if (Number(networkIDstring) !== 4) {
+          toast.dark(`please choose Rinkeby`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          setNftData(undefined)
+          setBalance(undefined)
+
+          return;
+        }
+
+        toast.dark(`NetworkChanged:${networkIDstring}`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+
+        init();
+      });
+
+      ethereum.on("accountsChanged", (accounts) => {
+        setBalance(undefined)
+        setNftData(undefined)
+        toast.dark("AccountsChanged", { position: toast.POSITION.TOP_CENTER });
+        init();
+      });
+
+      init();
+    } else {
+      alert("Please install wallet");
+    }
+  }, []);
+
+  const getBalance = async () => {
+    try {
+      if (window.ethereum) {
+        let ethereum = window.ethereum;
+        window.web3 = new Web3(ethereum);
+        await ethereum.enable();
+
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const account = accounts[0];
+
+        const contractAddress = tokenContract;
+        const myContract = new window.web3.eth.Contract(
+          tokenAbi,
+          contractAddress
+        );
+        const dnftBalance = await myContract.methods.balanceOf(account).call({
+          from: account,
+        });
+        setBalance((dnftBalance * Math.pow(10, -18)).toFixed(2));
+      }
+    } catch (e) {
+      console.log(e, "e");
+    }
+  };
 
   const renderAssetHeader = useMemo(() => {
     return (
@@ -262,12 +398,12 @@ const AssetScreen = (props) => {
         <h1 className={styleTitle}>Asset</h1>
         <div className={styleAssetAccountContainer}>
           <div className={styleIcon}>{nfIconSvg}</div>
-          <span className={styleCoinName}>$DNF</span>
-          <span>123.12</span>
+          <span className={styleCoinName}>DNF</span>
+          <span>{balance}</span>
         </div>
       </div>
     );
-  }, []);
+  }, [balance]);
 
   const renderTabList = useMemo(() => {
     return tabArray.map((item) => {
@@ -286,7 +422,6 @@ const AssetScreen = (props) => {
       );
     });
   }, [selectedTab]);
-  console.log(keyword, "keyword");
 
   const renderFilter = useMemo(() => {
     return (
@@ -353,6 +488,39 @@ const AssetScreen = (props) => {
     },
     [selectedTab]
   );
+
+  const renderNft = useCallback((item, index) => {
+    return (
+      <div key={`title-${index}`} className={styleCardContainer}>
+        <div
+          style={{
+            background: `url(${item}) no-repeat`,
+            backgroundSize: "cover",
+          }}
+          className={styleShortPicture}
+        />
+        <div className={styleInfoContainer} style={{ height: "400px" }}>
+          <div
+            className={styleCardHeader}
+            style={{
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <span className={styleCardTitle}>NFT{index + 1}</span>
+            <div className={styleStarInfo}>
+              <div className={styleStarIconContainer}>
+                <HeartFilled style={{ color: "#c4c4c4" }} />
+              </div>
+              <span>{item.account}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }, []);
 
   const renderCard = useCallback(
     (item, index) => {
@@ -423,7 +591,7 @@ const AssetScreen = (props) => {
   }, [isVisible]);
 
   const dealWithData = useMemo(() => {
-    return data.filter((item) => {
+    return data?.filter((item) => {
       const isInWallet = item.inWallet && selectedTab === "In wallet";
       const isFavorite = item.stared && selectedTab === "My favorite";
       const isOnSale = item.onSale && selectedTab === "On Sale";
@@ -433,13 +601,13 @@ const AssetScreen = (props) => {
       if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
         return;
       }
-      if ((keyword !== "" && keyword !== undefined) && !includeKeyword) {
+      if (keyword !== "" && keyword !== undefined && !includeKeyword) {
         return;
       }
 
       return item;
     });
-  }, [selectedTab, keyword]);
+  }, [selectedTab, keyword, data]);
 
   const renderNoData = useMemo(() => {
     return (
@@ -456,12 +624,17 @@ const AssetScreen = (props) => {
         {renderAssetHeader}
         <div className={styleBody}>
           <div className={styleTabContainer}>{renderTabList}</div>
-          {renderFilter}
+          {/* {renderFilter} */}
 
           <div className={styleCardList}>
-            {dealWithData.length > 0
+            {/* {dealWithData?.length > 0
               ? dealWithData.map((item, index) => {
                   return renderCard(item, index);
+                })
+              : renderNoData} */}
+            {nftData?.length > 0
+              ? nftData.map((item, index) => {
+                  return renderNft(item, index);
                 })
               : renderNoData}
           </div>
@@ -478,9 +651,15 @@ const styleContainer = css`
   padding: 10px 16px;
   height: 100%;
   & > div {
-    background: white;
-    border-radius: 10px;
-    padding: 48px 0;
+    &:first-child {
+      background: white;
+      border-radius: 10px;
+      padding: 48px 0;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: calc(100% - 64px);
+    }
   }
 `;
 
@@ -508,6 +687,7 @@ const styleAssetAccountContainer = css`
 
 const styleBody = css`
   padding: 24px 36px;
+  flex: 1;
 `;
 
 const styleTabContainer = css`
@@ -595,13 +775,15 @@ const styleCardList = css`
   flex-direction: row;
   justify-content: space-between;
   gap: 60px;
+  height: 100%;
+  margin-top: 20px;
 `;
 
 const styleCardContainer = css`
   height: 500px;
   background: #f5f7fa;
   border-radius: 18px;
-  min-width: 330px;
+  max-width: 330px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -808,8 +990,8 @@ const styleNoDataContainer = css`
   justify-content: center;
   flex: 1;
   flex-direction: column;
-  color: #233A7D;
-  span{
+  color: #233a7d;
+  span {
     margin-top: 20px;
   }
-`
+`;

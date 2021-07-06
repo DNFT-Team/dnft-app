@@ -8,6 +8,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from 'reduxs/store';
 import "./i18n_config";
 import './index.less';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './assets/font/iconfont.css'
+
 import reportWebVitals from './reportWebVitals';
 
 
@@ -17,6 +21,7 @@ ReactDOM.render(
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <App />
+          <ToastContainer/>
         </BrowserRouter>
       </PersistGate>
     </Provider>

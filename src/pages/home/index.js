@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { getHomeList } from "reduxs/actions/home";
 import { _setLng } from "reduxs/actions/lng";
 import { connect } from "react-redux";
-import styles from "./index.less";
 import { withRouter } from "react-router-dom";
 import { Carousel } from "element-react";
 import Slider from "react-slick";
@@ -15,7 +14,6 @@ import {
   LeftCircleOutlined,
   RightCircleOutlined,
 } from "@ant-design/icons";
-import debounce from "lodash.debounce";
 
 const HomeScreen = (props) => {
   const { dispatch, datas, location } = props;
