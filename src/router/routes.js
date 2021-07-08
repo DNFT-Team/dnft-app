@@ -77,5 +77,11 @@ export default [
     meta: { title: 'bound', icon: 'bound' },
     component: () => import('../views/ai-info.vue'),
   },
+  {
+    path: '/nft2006',
+    name: 'nft2006',
+    meta: { title: 'nft2006', icon: 'nft2006' },
+    component: () => import('../views/nft2006.vue'),
+  },
   ...menu,
 ];

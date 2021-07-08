@@ -50,8 +50,8 @@
             <vs-tab label="NFT2006">
               <div class="card-wrap nft-card">
                 NFT2006, The Most Popular Token
-                <vs-button @click="openPopUp2" color="primary" type="relief" size="large"
-                           style="margin-left: 1rem;">Create
+                <vs-button :to="{name:'nft2006'}" color="primary" type="relief" size="large"
+                           style="margin-left: 1rem;">Skip to
                 </vs-button>
               </div>
             </vs-tab>
@@ -217,309 +217,334 @@
 </template>
 
 <script>
-  import GoodsItem from "../components/GoodsItem";
-  import Empty from "../components/Empty";
+import GoodsItem from '../components/GoodsItem';
+import Empty from '../components/Empty';
 
-  export default {
-    name: "AssetsTax",
-    components: {GoodsItem, Empty},
-    data() {
-      return {
-        balance: 0,
-        creatShow: true,
-        colorx: 'primary',
-        activePrompt: false,
-        activePrompt2: false,
-        step: 0,
-        dynamicValidateForm: {
-          part: [{
-            value: ''
-          }],
-          price: 0,
-          name: ''
-        },
-        formSeries: {
-          name: '',
-          hash: '',
-          data: '',
-          amount: 0
-        },
-        formNFT: {
-          name: '',
-          hash: '',
-          categoryHash: '',
-          price: 0
-        },
-        seriesList: [],
-        nftList: [],
-        data_hs: [],
-        taxList: []
-      }
-    },
-    watch: {
-      '$store.state.address': {
-        handler(adr) {
-          if (adr) {
-            if (this.colorx === 'warning') {
-              this.fetchNftTax()
-            } else if (this.colorx === 'primary') {
-              this.fetchNft()
-            }
-            this.$api.getBalance(adr).then(res => {
-              this.balance = res || 0
-            }).catch(() => {
-              this.balance = 0
-            })
-          } else {
-            this.nftList = []
-            this.taxList = []
-            this.balance = 0
-          }
-        }
-      }
-    },
-    computed: {
-      stepStr() {
-        return `s${this.step + 1}`
-      }
-    },
-    methods: {
-      openPopUp() {
-        let address = this.$store.state.address
-        if (!address) {
-          this.$vs.notify({
-            position: 'top-center',
-            title: 'System hint',
-            text: 'Please connect wallet',
-            color: 'warning'
-          })
-          return
-        }
-        this.step = 0;
-        this.activePrompt = true
-        this.fetchSeries()
-        this.formSeries = {
-          name: '',
-          desc: '',
-          hash: '',
-          amount: 0
-        }
-        this.formNFT = {
-          name: '',
-          desc: '',
-          hash: '',
-          categoryHash: '',
-          price: 0
-        }
-      },
-      openPopUp2() {
-        let address = this.$store.state.address
-        if (!address) {
-          this.$vs.notify({
-            position: 'top-center',
-            title: 'System hint',
-            text: 'Please connect wallet',
-            color: 'warning'
-          })
-          return
-        }
-        this.activePrompt2 = true
-        this.dynamicValidateForm = {
-          part: [{
-            value: '', hash: 0
-          }],
-          price: 0,
-          name: ''
-        }
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
-      removeDomain(item) {
-        var index = this.dynamicValidateForm.part.indexOf(item)
-        if (index !== -1) {
-          this.dynamicValidateForm.part.splice(index, 1)
-        }
-      },
-      addNftRow() {
-        this.dynamicValidateForm.part.push({
+export default {
+  name: 'AssetsTax',
+  components: { GoodsItem, Empty },
+  data() {
+    return {
+      balance: 0,
+      creatShow: true,
+      colorx: 'primary',
+      activePrompt: false,
+      activePrompt2: false,
+      step: 0,
+      dynamicValidateForm: {
+        part: [{
           value: '',
-          hash: Date.now()
-        });
+        }],
+        price: 0,
+        name: '',
       },
-      handleNext(step) {
-        switch (step) {
-          case 1:
-            if (this.formSeries.hash) {
-              this.formNFT.categoryHash = this.formSeries.hash
-              this.step = 1
-              this.fetchNft()
-            }
-            break;
-          case 2:
-            if (this.formNFT.hash) {
-              this.formNFT = this.nftList.find(e => e.hash === this.formNFT.hash)
-              this.step = 2
-            }
-            break;
-          default:
-            break;
+      formSeries: {
+        name: '',
+        hash: '',
+        data: '',
+        amount: 0,
+      },
+      formNFT: {
+        name: '',
+        hash: '',
+        categoryHash: '',
+        price: 0,
+      },
+      seriesList: [],
+      nftList: [],
+      nftClassList: [],
+      data_hs: [],
+      taxList: [],
+    };
+  },
+  watch: {
+    '$store.state.address': {
+      handler(adr) {
+        if (adr) {
+          if (this.colorx === 'warning') {
+            this.fetchNftTax();
+          } else if (this.colorx === 'primary') {
+            this.fetchNft();
+          }
+          this.$api.getBalance(adr).then((res) => {
+            this.balance = res || 0;
+          }).catch(() => {
+            this.balance = 0;
+          });
+        } else {
+          this.nftList = [];
+          this.taxList = [];
+          this.balance = 0;
         }
       },
-      fetchSeries() {
-        const adr = this.$store.state.address
-        this.$api.Category_List().then(res => {
-          this.seriesList = (res || []).filter(e => e.owner === adr).map(e => ({
-            name: e.name,
-            hash: e.classId,
-          }))
-        }).catch(() => {
-          this.seriesList = []
-        })
-      },
-      fetchNft() {
-        this.colorx = 'primary'
-        this.$api.NFT_Own_List(this.$store.state.address).then(res => {
-          this.nftList = (res || []).map(e => ({
-            ...e,
-            favor: 100,
-            src: e.data,
-            recycle: new Date('2021-08-01 00:00:00'),
-            name: e.metadata,
-            hash: e.tokenId,
-          }))
-        }).catch(() => {
-          this.nftList = []
-        })
-      },
-      fetchNftTax() {
-        this.colorx = 'warning'
-        this.$api.NFT_TaxList(this.$store.state.address).then(res => {
-          this.taxList = (res || []).map(e => ({
-            ...e,
-            favor: 100,
-            src: e.data,
-            recycle: new Date('2021-08-01 00:00:00'),
-            name: e.metadata,
-            hash: e.tokenId,
-          }))
-        }).catch(() => {
-          this.taxList = []
-        })
-      },
-      addSeries() {
-        this.$vs.loading({color: '#11047A', type: 'radius'})
-        this.$api.Category_Add({
-          metaData: this.formSeries.name,
-          amount: this.formSeries.amount,
-          data: 'https://unsplash.it/300/280?random=1',
-        }, (res) => {
-          this.$vs.loading.close()
-          if (res.code === 0) {
-            this.$vs.notify({
-              position: 'top-right',
-              title: 'System Hint',
-              text: 'Add Class Success. Please Chose It Again',
-              color: 'success'
-            })
-            this.fetchSeries()
-          }
-        })
-      },
-      addNFT() {
-        this.$vs.loading({color: '#11047A', type: 'radius'})
-        const ran = Math.ceil(Math.random() * 100)
-        this.$api.NFT_Add({
-          categoryHash: this.formNFT.categoryHash,
-          price: this.formNFT.price,
-          metaData: this.formNFT.name,
-          data: 'https://unsplash.it/300/280?random=' + ran
-        }, (res) => {
-          this.$vs.loading.close()
-          if (res.code === 0) {
-            this.$vs.notify({
-              position: 'top-right',
-              title: 'System Hint',
-              text: 'Add NFT Success. Please Chose It Again',
-              color: 'success'
-            })
-            this.fetchNft()
-          }
-        })
-      },
-      publishNFT(formData) {
-        let form = formData || this.formNFT
-        this.$vs.loading({color: '#11047A', type: 'radius'})
-        this.$api.NFT_Offer({
-          hash: form.hash,
-          price: form.price,
-        }, (res) => {
-          this.$vs.loading.close()
-          if (res.code === 0) {
-            this.$vs.notify({
-              position: 'top-right',
-              title: 'System Hint',
-              text: 'Publish Success!',
-              color: 'success'
-            })
-            this.activePrompt = false
-            this.fetchNft()
-          }
-        })
-      },
-      handleTaxOne(item) {
-        this.$api.NFT_PayTaxOne(item.tokenId, (res) => {
-          if (res.code === 0) {
-            this.$vs.notify({
-              position: 'top-right',
-              title: 'System Hint',
-              text: 'Tax Done',
-              color: 'success'
-            })
-            this.fetchNftTax()
-          }
-        })
-      },
-      handleTaxAll() {
-        this.$api.NFT_PayTaxAll((res) => {
-          if (res.code === 0) {
-            this.$vs.notify({
-              position: 'top-right',
-              title: 'System Hint',
-              text: 'Tax Done',
-              color: 'success'
-            })
-            this.fetchNftTax()
-          }
-        })
+    },
+  },
+  computed: {
+    stepStr() {
+      return `s${this.step + 1}`;
+    },
+  },
+  methods: {
+    openPopUp() {
+      const { address } = this.$store.state;
+      if (!address) {
+        this.$vs.notify({
+          position: 'top-center',
+          title: 'System hint',
+          text: 'Please connect wallet',
+          color: 'warning',
+        });
+        return;
+      }
+      this.step = 0;
+      this.activePrompt = true;
+      this.fetchSeries();
+      this.formSeries = {
+        name: '',
+        desc: '',
+        hash: '',
+        amount: 0,
+      };
+      this.formNFT = {
+        name: '',
+        desc: '',
+        hash: '',
+        categoryHash: '',
+        price: 0,
+      };
+    },
+    openPopUp2() {
+      const { address } = this.$store.state;
+      if (!address) {
+        this.$vs.notify({
+          position: 'top-center',
+          title: 'System hint',
+          text: 'Please connect wallet',
+          color: 'warning',
+        });
+        return;
+      }
+      this.activePrompt2 = true;
+      this.dynamicValidateForm = {
+        part: [{
+          value: '', hash: 0,
+        }],
+        price: 0,
+        name: '',
+      };
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Submit',
+            color: 'success',
+          });
+          this.activePrompt2 = false;
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    removeDomain(item) {
+      const index = this.dynamicValidateForm.part.indexOf(item);
+      if (index !== -1) {
+        this.dynamicValidateForm.part.splice(index, 1);
       }
     },
-    created() {
-      const ran = Math.random() * 20
-      this.data_hs = new Array(20).fill(1).map((e, i) => ({
-        id: i,
-        name: 'ShanghaiBar',
-        owner: 'Billy',
-        price: 1.25,
-        favor: 100,
-        src: `https://unsplash.it/300/280?random=${Math.ceil(i + ran)}`,
-        recycle: new Date('2021-08-01 00:00:00')
-      }))
+    addNftRow() {
+      this.dynamicValidateForm.part.push({
+        value: '',
+        hash: Date.now(),
+      });
     },
-    mounted() {
-      this.fetchNft()
-    }
-  }
+    handleNext(step) {
+      switch (step) {
+        case 1:
+          if (this.formSeries.hash) {
+            this.formNFT.categoryHash = this.formSeries.hash;
+            this.step = 1;
+            this.fetchNftByClass(this.formSeries.hash);
+          }
+          break;
+        case 2:
+          if (this.formNFT.hash) {
+            this.formNFT = this.nftList.find((e) => e.hash === this.formNFT.hash);
+            this.step = 2;
+          }
+          break;
+        default:
+          break;
+      }
+    },
+    fetchSeries() {
+      const adr = this.$store.state.address;
+      this.$api.Category_List().then((res) => {
+        this.seriesList = (res || []).filter((e) => e.owner === adr).map((e) => ({
+          name: e.name,
+          hash: e.classId,
+        }));
+      }).catch(() => {
+        this.seriesList = [];
+      });
+    },
+    fetchNft() {
+      this.colorx = 'primary';
+      this.$api.NFT_List(this.$store.state.address).then((res) => {
+        this.nftList = (res || []).map((e) => ({
+          ...e,
+          favor: 100,
+          src: e.data,
+          recycle: new Date('2021-08-01 00:00:00'),
+          name: e.metadata,
+          hash: e.tokenId,
+        }));
+      }).catch(() => {
+        this.nftList = [];
+      });
+    },
+    fetchNftByClass() {
+      this.$api.NFT_Class_List(this.formNFT.categoryHash).then((res) => {
+        this.nftClassList = (res || []).map((e) => ({
+          ...e,
+          favor: 100,
+          src: e.data,
+          recycle: new Date('2021-08-01 00:00:00'),
+          name: e.metadata,
+          hash: e.tokenId,
+        }));
+      }).catch(() => {
+        this.nftClassList = [];
+      });
+    },
+    fetchNftTax() {
+      this.colorx = 'warning';
+      this.$api.NFT_TaxList(this.$store.state.address).then((res) => {
+        this.taxList = (res || []).map((e) => ({
+          ...e,
+          favor: 100,
+          src: e.data,
+          recycle: new Date('2021-08-01 00:00:00'),
+          name: e.metadata,
+          hash: e.tokenId,
+        }));
+      }).catch(() => {
+        this.taxList = [];
+      });
+    },
+    addSeries() {
+      this.$vs.loading({ color: '#11047A', type: 'radius' });
+      this.$api.Category_Add({
+        metaData: this.formSeries.name,
+        amount: this.formSeries.amount,
+        data: 'https://unsplash.it/300/280?random=1',
+      }, (res) => {
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Add Class Success. Please Chose It Again',
+            color: 'success',
+          });
+          this.fetchSeries();
+        }
+      }).catch((err) => {
+        console.log('addSeries', err);
+      }).finally(() => {
+        this.$vs.loading.close();
+      });
+    },
+    addNFT() {
+      this.$vs.loading({ color: '#11047A', type: 'radius' });
+      const ran = Math.ceil(Math.random() * 100);
+      this.$api.NFT_Add({
+        categoryHash: this.formNFT.categoryHash,
+        price: this.formNFT.price,
+        metaData: this.formNFT.name,
+        data: `https://unsplash.it/300/280?random=${ran}`,
+      }, (res) => {
+        this.$vs.loading.close();
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Add NFT Success. Please Chose It Again',
+            color: 'success',
+          });
+          this.fetchNftByClass(this.formNFT.categoryHash);
+          this.fetchNft();
+        }
+      });
+    },
+    publishNFT(formData) {
+      const form = formData || this.formNFT;
+      this.$vs.loading({ color: '#11047A', type: 'radius' });
+      this.$api.NFT_Offer({
+        hash: form.hash,
+        price: form.price,
+      }, (res) => {
+        this.$vs.loading.close();
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Publish Success!',
+            color: 'success',
+          });
+          this.activePrompt = false;
+          this.fetchNft();
+        }
+      });
+    },
+    handleTaxOne(item) {
+      this.$api.NFT_PayTaxOne(item.tokenId, (res) => {
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Tax Done',
+            color: 'success',
+          });
+          this.fetchNftTax();
+        }
+      });
+    },
+    handleTaxAll() {
+      this.$api.NFT_PayTaxAll((res) => {
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Tax Done',
+            color: 'success',
+          });
+          this.fetchNftTax();
+        }
+      });
+    },
+  },
+  created() {
+    const ran = Math.random() * 20;
+    this.data_hs = new Array(20).fill(1).map((e, i) => ({
+      id: i,
+      name: 'ShanghaiBar',
+      owner: 'Billy',
+      price: 1.25,
+      favor: 100,
+      src: `https://unsplash.it/300/280?random=${Math.ceil(i + ran)}`,
+      recycle: new Date('2021-08-01 00:00:00'),
+    }));
+  },
+  mounted() {
+    this.fetchNft();
+  },
+};
 </script>
 
 <style scoped lang="less">

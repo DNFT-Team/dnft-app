@@ -29,8 +29,8 @@ export default class Api {
       'createClass',
       callBack,
       stringToHex(form.metaData), // metadata
-      form.amount, // amount
       stringToHex(form.data), // data
+      form.amount, // amount
     );
   }
 
@@ -39,18 +39,23 @@ export default class Api {
    * @constructor
    */
   static async Category_List() {
+    const counter = (await chainState.state.Api.query.nft721Module.classCount()).toNumber();
     const res = [];
-    let classList = await chainState.state.Api.query.nft721Module.classList();
-    classList = classList.toJSON() || [];
-    for (const id of classList) {
-      let item = await chainState.state.Api.query.nft721Module.class(id);
-      item = item.toJSON() || {};
-      res.push({
-        classId: id,
-        owner: item.owner,
-        name: hexToString(item.metadata),
-      });
+    for (let i = 0; i < counter; i++) {
+      try {
+        const classId = (await chainState.state.Api.query.nft721Module.classIndex(i)).toJSON();
+        let _temp = await chainState.state.Api.query.nft721Module.classInfos(classId);
+        _temp = _temp.toJSON();
+        res.push({
+          classId,
+          owner: _temp.issuer,
+          name: hexToString(_temp.name),
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
+    console.log(res);
     return res;
   }
 
@@ -78,36 +83,43 @@ export default class Api {
    * @param nftId
    */
   static async NFT_One(nftId) {
-    let res = await chainState.state.Api.query.nft721Module.nFTs(nftId);
+    let res = await chainState.state.Api.query.nft721Module.nFTInfos(nftId);
     res = res.toJSON();
     return {
       tokenId: nftId,
-      owner: res.owner,
+      owner: res.issuer,
       price: res.price,
       status: res.status,
-      metadata: hexToString(res.metadata),
-      data: hexToString(res.data),
+      metadata: hexToString(res.info),
+      data: hexToString(res.metadata),
     };
   }
 
   /**
-   * @description get Owned List
+   * @description get NFT List with class
    * @constructor
    */
-  static async NFT_Own_List(address) {
+  static async NFT_Class_List(classId) {
     const PALLET_NAME = 'nft721Module';
     const res = [];
-    const NftIds = (await chainState.state.Api.query[PALLET_NAME].ownedNFTs(address)).toJSON();
-    for (const id of NftIds) {
-      const nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTs(id)).toJSON();
-      res.push({
-        tokenId: id,
-        owner: nftInfo.owner,
-        price: nftInfo.price,
-        status: nftInfo.status,
-        metadata: hexToString(nftInfo.metadata),
-        data: hexToString(nftInfo.data),
-      });
+    const counter = (await chainState.state.Api.query[PALLET_NAME].classMintIndex(classId)).toNumber();
+
+    for (let i = 0; i < counter; i++) {
+      try {
+        const nftId = (await chainState.state.Api.query[PALLET_NAME].nFTByClassIndex(classId, i + 1)).toJSON();
+        let _temp = await chainState.state.Api.query[PALLET_NAME].nFTInfos(nftId);
+        _temp = _temp.toJSON();
+        res.push({
+          tokenId: nftId,
+          owner: _temp.issuer,
+          price: _temp.price,
+          status: _temp.status,
+          metadata: hexToString(_temp.info),
+          data: hexToString(_temp.metadata),
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
     return res;
   }
@@ -122,14 +134,14 @@ export default class Api {
     Tax = formatBalance(Tax || 0);
     const nFTInTax = await chainState.state.Api.query.nft721Module.nFTInTax(address);
     for (const nftId of nFTInTax) {
-      const nftInfo = (await chainState.state.Api.query.nft721Module.nFTs(nftId)).toJSON();
+      const nftInfo = (await chainState.state.Api.query.nft721Module.nFTInfos(nftId)).toJSON();
       res.push({
         tokenId: nftId,
         price: nftInfo.price,
         status: nftInfo.status,
         tax: Tax,
-        metadata: hexToString(nftInfo.metadata),
-        data: hexToString(nftInfo.data),
+        metadata: hexToString(nftInfo.info),
+        data: hexToString(nftInfo.metadata),
       });
     }
     return res;
@@ -139,25 +151,25 @@ export default class Api {
    * @description get NFT List
    * @constructor
    */
-  static async NFT_List() {
+  static async NFT_List(address = '') {
     const PALLET_NAME = 'nft721Module';
     const res = [];
 
     const counter = (await chainState.state.Api.query[PALLET_NAME].nFTsCount()).toNumber();
     for (let i = 0; i < counter; i++) {
       const nftId = (await chainState.state.Api.query[PALLET_NAME].nFTsIndex(i)).toJSON();
-      const nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTs(nftId)).toJSON();
+      const nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTInfos(nftId)).toJSON();
       res.push({
         tokenId: nftId,
-        owner: nftInfo.owner,
+        owner: nftInfo.issuer,
         price: nftInfo.price,
         status: nftInfo.status,
-        metadata: hexToString(nftInfo.metadata),
-        data: hexToString(nftInfo.data),
+        metadata: hexToString(nftInfo.info),
+        data: hexToString(nftInfo.metadata),
       });
     }
     // console.log(res);
-    return res;
+    return address ? res.filter((e) => e.owner === address) : res;
   }
 
   /**
