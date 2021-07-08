@@ -31,13 +31,11 @@
         <vs-list>
           <div v-for="nft in nftList" :key="nft.nft_id">
             <vs-list-header :title="'Class'+nft.nft_id" color="danger"></vs-list-header>
-            <vs-list-item  :title="nft.name">
+            <vs-list-item  :title="nft.name" :subtitle="`Price: ${nft.price}`">
               <template slot="avatar">
                 <vs-avatar :src="nft.info"/>
               </template>
-              <div>
-                Price: {{nft.price}}
-              </div>
+              <vs-button color="danger" type="gradient">Share</vs-button>
             </vs-list-item>
           </div>
         </vs-list>
@@ -73,6 +71,9 @@ export default {
       nftList: [],
       colList: [],
     };
+  },
+  mounted() {
+    this.getClassList();
   },
   methods: {
     openPop() {},
