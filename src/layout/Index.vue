@@ -4,10 +4,10 @@
       <div class="m-toolbar">
         <vs-input icon="search" placeholder="Search" v-model="globalSearch"/>
         <div class="flex-cen">
-          <vs-button color="primary" type="gradient" icon="account_balance_wallet"
+          <vs-button color="primary" type="gradient" icon="monetization_on"
                      :to="{name:'Assets'}"></vs-button>
           <el-divider direction="vertical" style="margin: 0 1rem"/>
-          <vs-button color="primary" type="gradient" icon="monetization_on"
+          <vs-button color="primary" type="gradient" icon="account_balance_wallet"
                      @click="triggerRightBar"></vs-button>
         </div>
       </div>
@@ -84,69 +84,69 @@
 </template>
 
 <script>
-  import {menu} from '../router/routes'
-  import {web3Enable, web3Accounts} from '@polkadot/extension-dapp'
+import { web3Enable, web3Accounts } from '@polkadot/extension-dapp';
+import { menu } from '../router/routes';
 
-  export default {
-    name: "Index",
-    data() {
-      return {
-        globalSearch: '',
-        isDark: false,
-        right: false,
-        pluginEnable: false,
-        selectedAdr: '',
-        pairs: [],
-        menuList: menu,
-        links: [
-          { name: 'github' ,url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
-          { name: 'telegram' ,url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
-          { name: 'discord' ,url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
-          { name: 'twitter' ,url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
-          { name: 'medium' ,url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
-        ]
-      }
+export default {
+  name: 'Index',
+  data() {
+    return {
+      globalSearch: '',
+      isDark: false,
+      right: false,
+      pluginEnable: false,
+      selectedAdr: '',
+      pairs: [],
+      menuList: menu,
+      links: [
+        { name: 'github', url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
+        { name: 'telegram', url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
+        { name: 'discord', url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
+        { name: 'twitter', url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
+        { name: 'medium', url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' },
+      ],
+    };
+  },
+  watch: {
+    selectedAdr(newVal) {
+      this.$store.commit('updateAddress', newVal);
+      this.$notify({
+        title: 'Wallet Hint',
+        message: 'You Changed Address',
+        position: 'top-left',
+        customClass: 'chain-notify',
+      });
     },
-    watch:{
-      selectedAdr(newVal){
-        this.$store.commit('updateAddress', newVal)
+  },
+  computed: {
+    network() {
+      return this.$store.state.chainState.isConnected;
+    },
+  },
+  mounted() {
+    this.checkWalletPlugin();
+  },
+  methods: {
+    triggerRightBar() {
+      this.right = !this.right;
+      this.right && this.checkWalletPlugin();
+    },
+    async checkWalletPlugin() {
+      const allInjected = await web3Enable('NFT');
+      if (allInjected && !this.pluginEnable) {
         this.$notify({
           title: 'Wallet Hint',
-          message: 'You Changed Address',
+          message: 'Extension Inject Success',
           position: 'top-left',
-          customClass: 'chain-notify'
-        })
+          customClass: 'chain-notify',
+        });
       }
+      this.pluginEnable = !!allInjected;
+      const allAccounts = await web3Accounts();
+      this.pairs = allAccounts || [];
     },
-    computed:{
-        network(){
-          return this.$store.state.chainState.isConnected
-        }
-    },
-    mounted() {
-      this.checkWalletPlugin()
-    },
-    methods: {
-      triggerRightBar(){
-        this.right = !this.right
-        this.right && this.checkWalletPlugin()
-      },
-      async checkWalletPlugin() {
-        const allInjected = await web3Enable('NFT')
-        if(allInjected && !this.pluginEnable){
-          this.$notify({
-            title: 'Wallet Hint',
-            message: 'Extension Inject Success',
-            position:'top-left',
-            customClass: 'chain-notify'
-          })
-        }
-        this.pluginEnable = !!allInjected
-        const allAccounts = await web3Accounts()
-        this.pairs = allAccounts || []
-      }
-    }
-  }
+  },
+};
 </script>
 
 <style scoped lang="less">
