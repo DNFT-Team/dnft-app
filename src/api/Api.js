@@ -87,7 +87,8 @@ export default class Api {
     res = res.toJSON();
     return {
       tokenId: nftId,
-      owner: res.issuer,
+      owner: res.owner,
+      issuer: res.issuer,
       price: res.price,
       status: res.status,
       metadata: hexToString(res.info),
@@ -161,14 +162,14 @@ export default class Api {
       const nftInfo = (await chainState.state.Api.query[PALLET_NAME].nFTInfos(nftId)).toJSON();
       res.push({
         tokenId: nftId,
-        owner: nftInfo.issuer,
+        owner: nftInfo.owner,
+        issuer: nftInfo.issuer,
         price: nftInfo.price,
         status: nftInfo.status,
         metadata: hexToString(nftInfo.info),
         data: hexToString(nftInfo.metadata),
       });
     }
-    // console.log(res);
     return address ? res.filter((e) => e.owner === address) : res;
   }
 
