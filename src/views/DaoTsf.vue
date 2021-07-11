@@ -28,9 +28,9 @@
           <vs-collapse type="margin" accordion>
             <vs-collapse-item>
               <div slot="header">
-                <span class="title">Name.# {{vote.number}}</span>
+                <span class="title">Number.# {{vote.number}}</span>
                 <div>
-                  <span>Process</span>
+                  <span>Process/{{vote.min_to_succeed}}</span>
                   <vs-progress :percent="vote.ratioProcess" color="primary"></vs-progress>
                   <template v-if="vote.vote_yes||vote.vote_no">
                     <span>Agree</span>
@@ -42,9 +42,19 @@
               </div>
               <div style="padding: 2rem 1rem;">
                 <section>
-                  <p>#Money <span>{{vote.money}}</span></p>
-                   <span style="color: #11047A;font-weight: bold">#Content: </span>
-                  {{vote.content}}
+                  <p>
+                  <label style="color: #11047A;font-weight: bold">#Target: </label>
+                  <span>{{vote.min_to_succeed}}</span>
+                </p>
+                  <p>
+                    <label style="color: #11047A;font-weight: bold">#Money: </label>
+                    <span>{{vote.money}}</span>
+                  </p>
+
+                  <p>
+                    <label style="color: #11047A;font-weight: bold">#Content: </label>
+                    <span>{{vote.content}}</span>
+                  </p>
                 </section>
                 <vs-button @click="handleVote(vote,true)" color="success" type="relief"
                            style="float: right;">Agree
@@ -148,7 +158,7 @@ export default {
         const status = this.checkWallet();
         if (status) {
           this.$api.DAO_Vote_Check(vote.proposalId, this.$store.state.address).then((voteState) => {
-            if (voteState) {
+            if (!voteState) {
               this.$api.DAO_Vote(vote.proposalId, flag, (res) => {
                 if (res.code === 0) {
                   this.$vs.notify({
