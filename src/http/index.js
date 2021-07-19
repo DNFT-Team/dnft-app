@@ -1,4 +1,4 @@
-import Axios from "./axios.config";
+import Axios from './axios.config';
 
 /**
  * 请求方法
@@ -14,9 +14,9 @@ import Axios from "./axios.config";
  *
  */
 
-export default async function request({
-  url = "",
-  method = "get",
+export default async function request ({
+  url = '',
+  method = 'get',
   data = {},
   params = {},
   headers = {},
@@ -28,7 +28,7 @@ export default async function request({
   // console.log(`${url}============>`, methods, data, silent)
   const id = `${url}TIME${new Date().getTime()}`; // 生成id
   if (!silent) {
-    // 非静默模式，压入请求队列
+  // 非静默模式，压入请求队列
     Axios.setRequestList({id});
   }
   try {
@@ -39,14 +39,14 @@ export default async function request({
       data,
       params,
     });
-    console.log({id, url,result})
+    console.log({id, url, result})
 
     Axios.setRequestList({el: id, remove: true}); // 请求完成后，出队
     success(result);
-    console.log(result,'result')
+    console.log(result, 'result')
   } catch (error) {
     Axios.setRequestList({el: id, remove: true}); // 请求完成后，出队
-    if (!silent) Axios.Toast.error(error.msg || error.message || error);
+    if (!silent) {Axios.Toast.error(error.msg || error.message || error);}
     fail(error);
   } finally {
     complete();

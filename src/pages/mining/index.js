@@ -1,55 +1,53 @@
-import { Dialog, Input, Loading } from "element-react";
-import { css, cx } from "emotion";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Dialog, Input, Loading } from 'element-react';
+import { css, cx } from 'emotion';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   firstStakeAbi,
   secondStakeAbi,
   thirdStakeAbi,
   tokenAbi,
-} from "utils/abi";
+} from 'utils/abi';
 import {
   tokenContract,
   firstStakeContract,
   secondStakeConTract,
   thirdStakeConTract,
-} from "utils/contract";
-import { miningCloud, miningMoon, nfIconSvg } from "utils/svg";
-import Web3 from "web3";
-import dayjs from "dayjs";
-import { toast } from "react-toastify";
-import headerPicture from "images/mining/header.jpg";
-import cloneDeep from "lodash.clonedeep";
+} from 'utils/contract';
+import { miningCloud, miningMoon, nfIconSvg } from 'utils/svg';
+import Web3 from 'web3';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import headerPicture from 'images/mining/header.jpg';
+import cloneDeep from 'lodash.clonedeep';
 
 const Mining = (props) => {
-  const initState = useMemo(() => {
-    return {
-      0: {
-        isApprove: false,
-        isApproveLoading: false,
-        isStaking: false,
-        unstakeLoadingIndex: [],
-        isClaiming: false,
-      },
-      1: {
-        isApprove: false,
-        isApproveLoading: false,
-        isStaking: false,
-        unstakeLoadingIndex: [],
-        isClaiming: false,
-      },
-      2: {
-        isApprove: false,
-        isApproveLoading: false,
-        isStaking: false,
-        unstakeLoadingIndex: [],
-        isClaiming: false,
-      },
-    };
-  }, []);
+  const initState = useMemo(() => ({
+    0: {
+      isApprove: false,
+      isApproveLoading: false,
+      isStaking: false,
+      unstakeLoadingIndex: [],
+      isClaiming: false,
+    },
+    1: {
+      isApprove: false,
+      isApproveLoading: false,
+      isStaking: false,
+      unstakeLoadingIndex: [],
+      isClaiming: false,
+    },
+    2: {
+      isApprove: false,
+      isApproveLoading: false,
+      isStaking: false,
+      unstakeLoadingIndex: [],
+      isClaiming: false,
+    },
+  }), []);
 
   const [balance, setBalance] = useState(0);
-  const [selectedTab, setSelectedTab] = useState("onGoing");
-  const [stakeTab, setStakeTab] = useState("stake");
+  const [selectedTab, setSelectedTab] = useState('onGoing');
+  const [stakeTab, setStakeTab] = useState('stake');
   const [isVisible, setIsVisible] = useState(false);
   const [stakeIndex, setStakeIndex] = useState(0);
   const [stakeData, setStakeData] = useState([]);
@@ -70,7 +68,7 @@ const Mining = (props) => {
         await ethereum.enable();
 
         const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
+          method: 'eth_requestAccounts',
         });
 
         const account = accounts[0];
@@ -86,15 +84,13 @@ const Mining = (props) => {
         setBalance((dnftBalance * Math.pow(10, -18)).toFixed(2));
       }
     } catch (e) {
-      console.log(e, "e");
+      console.log(e, 'e');
     } finally {
       setBalanceIsLoading(false);
     }
   };
 
-  const getFormatNumber = (count) => {
-    return (count * Math.pow(10, -18)).toFixed(2);
-  };
+  const getFormatNumber = (count) => (count * Math.pow(10, -18)).toFixed(2);
 
   const getItemStakeInfoByContract = useCallback(
     async (abi, stakeContract, account) => {
@@ -172,7 +168,7 @@ const Mining = (props) => {
         await ethereum.enable();
 
         const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
+          method: 'eth_requestAccounts',
         });
 
         const account = accounts[0];
@@ -195,7 +191,7 @@ const Mining = (props) => {
         setStakeData([firstStakeInfo, secondStakeInfo, thirdStakeInfo]);
       }
     } catch (e) {
-      console.log(e, "e");
+      console.log(e, 'e');
     } finally {
       setIsStakeInfoLoading(false);
     }
@@ -220,7 +216,7 @@ const Mining = (props) => {
     if (ethereum) {
       if (Number(ethereum.networkVersion) !== 4) {
         setIsWrongNetWork(true);
-        toast.dark(`please choose Rinkeby`, {
+        toast.dark('please choose Rinkeby', {
           position: toast.POSITION.TOP_CENTER,
         });
 
@@ -236,15 +232,15 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      //监听网络切换
-      ethereum.on("networkChanged", (networkIDstring) => {
+      // 监听网络切换
+      ethereum.on('networkChanged', (networkIDstring) => {
         setStakeData([]);
         setBalance(undefined);
         setStateData(initState);
 
         if (Number(networkIDstring) !== 4) {
           setIsWrongNetWork(true);
-          toast.dark(`please choose Rinkeby`, {
+          toast.dark('please choose Rinkeby', {
             position: toast.POSITION.TOP_CENTER,
           });
 
@@ -258,15 +254,15 @@ const Mining = (props) => {
         init();
       });
 
-      //监听账号切换
-      ethereum.on("accountsChanged", (accounts) => {
-        toast.dark("AccountsChanged", { position: toast.POSITION.TOP_CENTER });
+      // 监听账号切换
+      ethereum.on('accountsChanged', (accounts) => {
+        toast.dark('AccountsChanged', { position: toast.POSITION.TOP_CENTER });
         setBalance(undefined);
         setStateData(initState);
         getBalance();
       });
     } else {
-      alert("Please install wallet");
+      alert('Please install wallet');
     }
   }, [init, initState]);
 
@@ -274,155 +270,147 @@ const Mining = (props) => {
     injectWallet();
   }, [injectWallet]);
 
-  const renderAssetHeader = useMemo(() => {
-    return (
-      <div className={cx(styleHeader)}>
-        <Loading
-          loading={isBalanceLoading}
-          style={{ position: "absolute", width: "calc(100% - 332px)" }}
-        />
-        <div
-          className={styleHeaderInfo}
-          style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
-        >
-          <h1 className={styleTitle}>
+  const renderAssetHeader = useMemo(() => (
+    <div className={cx(styleHeader)}>
+      <Loading
+        loading={isBalanceLoading}
+        style={{ position: 'absolute', width: 'calc(100% - 332px)' }}
+      />
+      <div
+        className={styleHeaderInfo}
+        style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
+      >
+        <h1 className={styleTitle}>
             Earn limited edition NFTs through farming
-          </h1>
-          <div className={styleAssetAccountContainer}>
-            <div className={styleIcon}>{nfIconSvg}</div>
-            <span className={styleCoinName}>DNF</span>
+        </h1>
+        <div className={styleAssetAccountContainer}>
+          <div className={styleIcon}>{nfIconSvg}</div>
+          <span className={styleCoinName}>DNF</span>
 
-            <span className="el-loading-demo">{balance}</span>
-          </div>
-          <div className={styleCapital}>Mining capital</div>
+          <span className="el-loading-demo">{balance}</span>
         </div>
-        <div
-          className={styleMiningPicture}
-          style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
-        >
-          <span>EARN LIMITED EDITION NFTS THROUGH FARMING </span>
-          <img src={headerPicture} />
-        </div>
+        <div className={styleCapital}>Mining capital</div>
       </div>
-    );
-  }, [balance, isBalanceLoading]);
+      <div
+        className={styleMiningPicture}
+        style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
+      >
+        <span>EARN LIMITED EDITION NFTS THROUGH FARMING </span>
+        <img src={headerPicture} />
+      </div>
+    </div>
+  ), [balance, isBalanceLoading]);
 
-  const renderFilter = useMemo(() => {
-    return (
-      <div className={styleButtonContainer}>
-        <div
-          className={cx(
-            styleButton,
-            selectedTab === "onGoing" && styleActiveButton
-          )}
-          onClick={() => {
-            setSelectedTab("onGoing");
-          }}
-        >
+  const renderFilter = useMemo(() => (
+    <div className={styleButtonContainer}>
+      <div
+        className={cx(
+          styleButton,
+          selectedTab === 'onGoing' && styleActiveButton
+        )}
+        onClick={() => {
+          setSelectedTab('onGoing');
+        }}
+      >
           onGoing
-        </div>
-        <div
-          className={cx(
-            styleButton,
-            selectedTab === "complete" && styleActiveButton
-          )}
-          onClick={() => {
-            setSelectedTab("complete");
-          }}
-        >
-          complete
-        </div>
       </div>
-    );
-  }, [selectedTab]);
+      <div
+        className={cx(
+          styleButton,
+          selectedTab === 'complete' && styleActiveButton
+        )}
+        onClick={() => {
+          setSelectedTab('complete');
+        }}
+      >
+          complete
+      </div>
+    </div>
+  ), [selectedTab]);
 
   const renderCard = useCallback(
-    (stakeInfo, index) => {
-      return (
-        <div
-          className={cx(
-            styleCardContainer,
-            (!isStakeInfoLoading || isWrongNetWork) && styleCardIsActive
-          )}
-          onClick={() => {
-            if (isStakeInfoLoading || isWrongNetWork) {
-              return;
-            }
+    (stakeInfo, index) => (
+      <div
+        className={cx(
+          styleCardContainer,
+          (!isStakeInfoLoading || isWrongNetWork) && styleCardIsActive
+        )}
+        onClick={() => {
+          if (isStakeInfoLoading || isWrongNetWork) {
+            return;
+          }
 
-            setIsVisible(true);
-            setStakeIndex(index);
-          }}
-        >
-          <div className={styleCardTitle}>DNF Staking Pool</div>
-          <div className={styleAPY}>
-            <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
-            <div>APY(%)</div>
-          </div>
-          <div className={styleCardInfo}>
-            <div className={styleItemContainer}>
-              <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
-              <div className={styleText}>Reward</div>
-            </div>
-            <div className={styleItemContainer}>
-              <div className={styleDollar}>
-                {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
-                  2
-                )}
-              </div>
-              <div className={styleText}>DNF</div>
-            </div>
-            <div className={styleItemContainer}>
-              <div className={styleDollar}>
-                {(
-                  (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
-                ).toFixed(2)}
-                %
-              </div>
-              <div className={styleText}>DNF</div>
-            </div>
-          </div>
-          <div className={styleCardButton}>Stake</div>
-          <div className={styleMiningCloud}>{miningCloud}</div>
-          <div className={styleMiningMoon}>{miningMoon}</div>
+          setIsVisible(true);
+          setStakeIndex(index);
+        }}
+      >
+        <div className={styleCardTitle}>DNF Staking Pool</div>
+        <div className={styleAPY}>
+          <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
+          <div>APY(%)</div>
         </div>
-      );
-    },
+        <div className={styleCardInfo}>
+          <div className={styleItemContainer}>
+            <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
+            <div className={styleText}>Reward</div>
+          </div>
+          <div className={styleItemContainer}>
+            <div className={styleDollar}>
+              {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
+                2
+              )}
+            </div>
+            <div className={styleText}>DNF</div>
+          </div>
+          <div className={styleItemContainer}>
+            <div className={styleDollar}>
+              {(
+                (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
+              ).toFixed(2)}
+                %
+            </div>
+            <div className={styleText}>DNF</div>
+          </div>
+        </div>
+        <div className={styleCardButton}>Stake</div>
+        <div className={styleMiningCloud}>{miningCloud}</div>
+        <div className={styleMiningMoon}>{miningMoon}</div>
+      </div>
+    ),
     [isStakeInfoLoading, isWrongNetWork]
   );
 
-  const renderTab = useMemo(() => {
-    return (
-      <div className={styleTabContainer}>
-        <span
-          className={cx(styleTab, stakeTab === "stake" && activeTab)}
-          onClick={() => {
-            setStakeTab("stake");
-            setStakeValue(undefined);
-          }}
-        >
+  const renderTab = useMemo(() => (
+    <div className={styleTabContainer}>
+      <span
+        className={cx(styleTab, stakeTab === 'stake' && activeTab)}
+        onClick={() => {
+          setStakeTab('stake');
+          setStakeValue(undefined);
+        }}
+      >
           Stake
-        </span>
-        <span
-          className={cx(styleTab, stakeTab === "unstake" && activeTab)}
-          onClick={() => {
-            setStakeTab("unstake");
-            setStakeValue(undefined);
-          }}
-        >
+      </span>
+      <span
+        className={cx(styleTab, stakeTab === 'unstake' && activeTab)}
+        onClick={() => {
+          setStakeTab('unstake');
+          setStakeValue(undefined);
+        }}
+      >
           Unstake
-        </span>
-        <span
-          className={cx(styleTab, stakeTab === "claim" && activeTab)}
-          onClick={() => {
-            setStakeTab("claim");
-            setStakeValue(undefined);
-          }}
-        >
+      </span>
+      <span
+        className={cx(styleTab, stakeTab === 'claim' && activeTab)}
+        onClick={() => {
+          setStakeTab('claim');
+          setStakeValue(undefined);
+        }}
+      >
           Claim NFT
-        </span>
-      </div>
-    );
-  }, [stakeTab]);
+      </span>
+    </div>
+  ), [stakeTab]);
 
   const renderStake = useCallback(
     (stakeInfo) => {
@@ -445,14 +433,14 @@ const Mining = (props) => {
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Stake</span>
                 <span>Balance: {balance}</span>
               </div>
               <div className={styleInputContainer}>
                 <div className={styleStakeDNF}>DNF</div>
                 <Input
-                  placeholder={"0"}
+                  placeholder={'0'}
                   value={stakeValue}
                   onChange={(value) => {
                     setStakeValue(value);
@@ -467,9 +455,9 @@ const Mining = (props) => {
           </div>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <div
@@ -478,8 +466,8 @@ const Mining = (props) => {
                 opacity: isApproveLoading || isStakeLoading ? 0.3 : 1,
                 cursor:
                   isApproveLoading || isStakeLoading
-                    ? "not-allowed"
-                    : "pointer",
+                    ? 'not-allowed'
+                    : 'pointer',
               }}
               onClick={async () => {
                 if (isApproveLoading || isStakeLoading) {
@@ -505,9 +493,9 @@ const Mining = (props) => {
 
                   try {
                     await stakeContract.methods
-                      .stake(Web3.utils.toWei(stakeValue, "ether"))
+                      .stake(Web3.utils.toWei(stakeValue, 'ether'))
                       .send({
-                        amount: Web3.utils.toWei(stakeValue, "ether"),
+                        amount: Web3.utils.toWei(stakeValue, 'ether'),
                         from: stakeInfo.account,
                       });
                   } finally {
@@ -533,7 +521,7 @@ const Mining = (props) => {
                         .approve(
                           stakeInfo.stakeContract,
                           Web3.utils.toBN(
-                            "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+                            '115792089237316195423570985008687907853269984665640564039457584007913129639935'
                           )
                         )
                         .send({
@@ -555,7 +543,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={isApproveLoading || isStakeLoading} />
-              {stateData[stakeIndex].isApprove ? "Stake" : "Approve DNF"}
+              {stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
             </div>
           </div>
         </div>
@@ -564,128 +552,124 @@ const Mining = (props) => {
     [balance, stakeValue, stakeIndex, stateData, init]
   );
 
-  const renderNoData = useMemo(() => {
-    return (
-      <div className={styleNoDataContainer}>
-        {/* <div>{noDataSvg}</div> */}
-        <span>No content</span>
-      </div>
-    );
-  }, []);
+  const renderNoData = useMemo(() => (
+    <div className={styleNoDataContainer}>
+      {/* <div>{noDataSvg}</div> */}
+      <span>No content</span>
+    </div>
+  ), []);
 
   const renderUnstake = useCallback(
-    (stakeInfo) => {
-      return (
-        <div className={styleUnstakeContainer}>
-          <div className={styleTableHeader}>
-            <span>Staked DNF</span>
-            <span>Reward (DNF)</span>
-            <span>Total（DNF）</span>
-            <span>Status</span>
-          </div>
-          {!(stakeInfo?.stakeInfoList.length > 0)
-            ? renderNoData
-            : stakeInfo?.stakeInfoList?.map((item, index) => {
-                const startDay = dayjs(item[1] * 1000);
+    (stakeInfo) => (
+      <div className={styleUnstakeContainer}>
+        <div className={styleTableHeader}>
+          <span>Staked DNF</span>
+          <span>Reward (DNF)</span>
+          <span>Total（DNF）</span>
+          <span>Status</span>
+        </div>
+        {!(stakeInfo?.stakeInfoList.length > 0)
+          ? renderNoData
+          : stakeInfo?.stakeInfoList?.map((item, index) => {
+            const startDay = dayjs(item[1] * 1000);
 
-                const dealwithDay = startDay.add(
-                  stakeInfo?.duration * 24 * 60 * 60,
-                  "s"
-                );
-                const pendingDay = dealwithDay.diff(dayjs(), "day");
-                const pendingHour =
-                  dealwithDay.diff(dayjs(), "hour") - pendingDay * 24;
+            const dealwithDay = startDay.add(
+              stakeInfo?.duration * 24 * 60 * 60,
+              's'
+            );
+            const pendingDay = dealwithDay.diff(dayjs(), 'day');
+            const pendingHour =
+                  dealwithDay.diff(dayjs(), 'hour') - pendingDay * 24;
 
-                const hasDiff = dealwithDay.diff(dayjs()) > 0;
+            const hasDiff = dealwithDay.diff(dayjs()) > 0;
 
-                const stakeDnf = getFormatNumber(item[0]);
-                const rewardDnf = getFormatNumber(
-                  stakeInfo?.rewardList?.[index]
-                );
+            const stakeDnf = getFormatNumber(item[0]);
+            const rewardDnf = getFormatNumber(
+              stakeInfo?.rewardList?.[index]
+            );
 
-                const unstakeLoadingIndexArray =
+            const unstakeLoadingIndexArray =
                   stateData[stakeIndex].unstakeLoadingIndex;
 
-                return (
-                  <div key={index} className={styleTableBody}>
-                    <span>{stakeDnf}</span>
-                    <span>{rewardDnf}</span>
-                    <span>
-                      {(Number(stakeDnf) + Number(rewardDnf)).toFixed(2)}
-                    </span>
-                    {hasDiff ? (
-                      <span style={{ color: "#FF9538" }}>
-                        {pendingDay}d {pendingHour}h
-                      </span>
-                    ) : (
-                      <span
-                        onClick={async () => {
-                          if (
-                            !(item[0] > 0) ||
+            return (
+              <div key={index} className={styleTableBody}>
+                <span>{stakeDnf}</span>
+                <span>{rewardDnf}</span>
+                <span>
+                  {(Number(stakeDnf) + Number(rewardDnf)).toFixed(2)}
+                </span>
+                {hasDiff ? (
+                  <span style={{ color: '#FF9538' }}>
+                    {pendingDay}d {pendingHour}h
+                  </span>
+                ) : (
+                  <span
+                    onClick={async () => {
+                      if (
+                        !(item[0] > 0) ||
                             unstakeLoadingIndexArray.includes(index)
-                          ) {
-                            return;
-                          }
+                      ) {
+                        return;
+                      }
 
-                          try {
-                            const dealWithIndexArray =
+                      try {
+                        const dealWithIndexArray =
                               unstakeLoadingIndexArray.concat(index);
 
-                            const dealWithStateData = stateData;
-                            dealWithStateData[stakeIndex].unstakeLoadingIndex =
+                        const dealWithStateData = stateData;
+                        dealWithStateData[stakeIndex].unstakeLoadingIndex =
                               dealWithIndexArray;
 
-                            setStateData(cloneDeep(dealWithStateData));
+                        setStateData(cloneDeep(dealWithStateData));
 
-                            const contractAddress = stakeInfo.stakeContract;
-                            const stakeContract = new window.web3.eth.Contract(
-                              stakeInfo.abi,
-                              contractAddress
-                            );
+                        const contractAddress = stakeInfo.stakeContract;
+                        const stakeContract = new window.web3.eth.Contract(
+                          stakeInfo.abi,
+                          contractAddress
+                        );
 
-                            await stakeContract.methods.withdraw(index).send({
-                              from: stakeInfo.account,
-                              idx: index,
-                            });
-                          } finally {
-                            const currentUnstakeLoadingIndex =
+                        await stakeContract.methods.withdraw(index).send({
+                          from: stakeInfo.account,
+                          idx: index,
+                        });
+                      } finally {
+                        const currentUnstakeLoadingIndex =
                               stateData[stakeIndex].unstakeLoadingIndex;
 
-                            const dealWithIndexArray =
+                        const dealWithIndexArray =
                               currentUnstakeLoadingIndex.filter(
                                 (item) => item !== index
                               );
 
-                            const dealWithStateData = stateData;
-                            dealWithStateData[stakeIndex].unstakeLoadingIndex =
+                        const dealWithStateData = stateData;
+                        dealWithStateData[stakeIndex].unstakeLoadingIndex =
                               dealWithIndexArray;
 
-                            setStateData(cloneDeep(dealWithStateData));
-                            getBalance();
-                          }
-                        }}
-                      >
-                        <Loading
-                          loading={unstakeLoadingIndexArray.includes(index)}
-                        />
-                        <div
-                          className={cx(
-                            styleUnStake,
-                            (!(item[0] > 0) ||
+                        setStateData(cloneDeep(dealWithStateData));
+                        getBalance();
+                      }
+                    }}
+                  >
+                    <Loading
+                      loading={unstakeLoadingIndexArray.includes(index)}
+                    />
+                    <div
+                      className={cx(
+                        styleUnStake,
+                        (!(item[0] > 0) ||
                               unstakeLoadingIndexArray.includes(index)) &&
                               styleDisableButton
-                          )}
-                        >
+                      )}
+                    >
                           UNstake
-                        </div>
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-        </div>
-      );
-    },
+                    </div>
+                  </span>
+                )}
+              </div>
+            );
+          })}
+      </div>
+    ),
     [renderNoData, stakeIndex, stateData]
   );
 
@@ -708,31 +692,31 @@ const Mining = (props) => {
                 style={{
                   fontWeight: 900,
                   fontSize: 20,
-                  color: "#1B2559",
+                  color: '#1B2559',
                 }}
               >
                 Shanghaibar
               </span>
               <span
                 style={{
-                  padding: "15px 0 20px 0",
+                  padding: '15px 0 20px 0',
                 }}
               >
                 Contract
               </span>
               <span>Description ：</span>
-              <span style={{ color: "#8F9BBA" }}>
+              <span style={{ color: '#8F9BBA' }}>
                 Version 02 of Editting screen is all about fitting it as a side
                 bar. One of the reasons for this is that we wanted to have all
-                the content visible on multiple{" "}
+                the content visible on multiple{' '}
               </span>
             </div>
           </div>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <div
@@ -784,37 +768,35 @@ const Mining = (props) => {
   );
 
   const renderModal = useCallback(
-    (stakeInfo) => {
-      return (
-        <Dialog
-          customClass={styleModalContainer}
-          title={renderTab}
-          visible={isVisible}
-          onCancel={() => {
-            setIsVisible(false);
-            setStakeTab("stake");
-            setStakeValue(undefined);
-          }}
-        >
-          <Dialog.Body>
-            <div className={styleBodyTitle}>
+    (stakeInfo) => (
+      <Dialog
+        customClass={styleModalContainer}
+        title={renderTab}
+        visible={isVisible}
+        onCancel={() => {
+          setIsVisible(false);
+          setStakeTab('stake');
+          setStakeValue(undefined);
+        }}
+      >
+        <Dialog.Body>
+          <div className={styleBodyTitle}>
               DNF staking（{stakeInfo?.duration}days）
-            </div>
-            <div className={styleBodyTips}>
-              {stakeTab === "stake" &&
-                "StakeDNF for DNF under a  fixed APY（Annual percent yield）"}
-              {stakeTab === "unstake" &&
-                "Click “UNstake” button to get your staked DNF and the rewards back"}
-              {stakeTab === "claim" &&
-                "If your have staked more than 200 DNF in a single staking，you will be eligible to claim the reward DNF."}
-            </div>
-            {stakeTab === "stake" && renderStake(stakeInfo)}
-            {stakeTab === "unstake" && renderUnstake(stakeInfo)}
-            {stakeTab === "claim" && renderClaim(stakeInfo)}
-          </Dialog.Body>
-        </Dialog>
-      );
-    },
+          </div>
+          <div className={styleBodyTips}>
+            {stakeTab === 'stake' &&
+                'StakeDNF for DNF under a  fixed APY（Annual percent yield）'}
+            {stakeTab === 'unstake' &&
+                'Click “UNstake” button to get your staked DNF and the rewards back'}
+            {stakeTab === 'claim' &&
+                'If your have staked more than 200 DNF in a single staking，you will be eligible to claim the reward DNF.'}
+          </div>
+          {stakeTab === 'stake' && renderStake(stakeInfo)}
+          {stakeTab === 'unstake' && renderUnstake(stakeInfo)}
+          {stakeTab === 'claim' && renderClaim(stakeInfo)}
+        </Dialog.Body>
+      </Dialog>
+    ),
     [isVisible, renderTab, renderStake, renderUnstake, renderClaim, stakeTab]
   );
 

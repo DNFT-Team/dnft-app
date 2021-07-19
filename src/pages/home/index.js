@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { getHomeList } from "reduxs/actions/home";
-import { _setLng } from "reduxs/actions/lng";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { Carousel } from "element-react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { css, cx } from "emotion";
+import { getHomeList } from 'reduxs/actions/home';
+import { _setLng } from 'reduxs/actions/lng';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { Carousel } from 'element-react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { css, cx } from 'emotion';
 import {
   HeartOutlined,
   LeftCircleOutlined,
   RightCircleOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
 const HomeScreen = (props) => {
   const { dispatch, datas, location } = props;
@@ -27,31 +27,29 @@ const HomeScreen = (props) => {
   const data = [
     {
       src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: "NFT gallery of the week",
+      title: 'NFT gallery of the week',
     },
     {
       src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: "NFT gallery of the week",
+      title: 'NFT gallery of the week',
     },
     {
       src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: "NFT gallery of the week",
+      title: 'NFT gallery of the week',
     },
     {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: "NFT gallery of the week",
+      title: 'NFT gallery of the week',
     },
   ];
 
-  const currentWindowWidth = useMemo(() => {
-    return window.innerWidth;
-  }, []);
+  const currentWindowWidth = useMemo(() => window.innerWidth, []);
 
   useEffect(() => {
-    window.addEventListener("resize", () => currentWindowWidth);
+    window.addEventListener('resize', () => currentWindowWidth);
 
     return () => {
-      window.removeEventListener("resize", () => currentWindowWidth);
+      window.removeEventListener('resize', () => currentWindowWidth);
     };
   }, []);
 
@@ -85,7 +83,7 @@ const HomeScreen = (props) => {
     [currentWindowWidth]
   );
 
-  function SamplePrevArrow(props) {
+  function SamplePrevArrow (props) {
     const { className, style, onClick, currentSlide, slideCount } = props;
 
     const isFirstShow = currentSlide === 0;
@@ -137,111 +135,93 @@ const HomeScreen = (props) => {
     className: styleSliderContainer,
   };
 
-  const ArtCard = (src) => {
-    return (
-      <div className={styleCard}>
-        <div
-          style={{
-            background: `center / cover no-repeat ${src.item.src}`,
-            height: 350,
-            marginBottom: 20,
-            borderRadius: 10,
-          }}
-        />
-        <div>
-          <div className={styleContentContainer}>
-            <span>Shanghaibar</span>
-            <span className={styleStarContainer}>
-              <HeartOutlined />
-              <span className={styleStarAccount}>234</span>
-            </span>
-          </div>
-          <div className={styleContentContainer}>
-            <span>C.K</span>
-            <span>1.8ETH</span>
-          </div>
+  const ArtCard = (src) => (
+    <div className={styleCard}>
+      <div
+        style={{
+          background: `center / cover no-repeat ${src.item.src}`,
+          height: 350,
+          marginBottom: 20,
+          borderRadius: 10,
+        }}
+      />
+      <div>
+        <div className={styleContentContainer}>
+          <span>Shanghaibar</span>
+          <span className={styleStarContainer}>
+            <HeartOutlined />
+            <span className={styleStarAccount}>234</span>
+          </span>
+        </div>
+        <div className={styleContentContainer}>
+          <span>C.K</span>
+          <span>1.8ETH</span>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 
-  const renderHotList = useCallback((title) => {
-    return (
-      <div className={styleArtContainer}>
-        <h1 className={styleTitle}>{title}</h1>
-        <Slider {...settings}>
-          {data.slice(0, 3).map((item) => {
-            return <ArtCard item={item} />;
-          })}
-          {data.slice(1, 4).map((item) => {
-            return <ArtCard item={item} />;
-          })}
-          {data.map((item) => {
-            return <ArtCard item={item} />;
-          })}
-          <div className={styleCard}>
-            <div
-              style={{
-                background: `center / cover no-repeat url('http://www.ruanyifeng.com/blogimg/asset/201211/bg2012111401.jpg')`,
-                height: 350,
-                margin: " 0 50px 20px 0",
-                backgroundSize: "cover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontWeight: 900,
-                borderRadius: 10,
-              }}
-            >
+  const renderHotList = useCallback((title) => (
+    <div className={styleArtContainer}>
+      <h1 className={styleTitle}>{title}</h1>
+      <Slider {...settings}>
+        {data.slice(0, 3).map((item, i) => <ArtCard item={item} key={i}/>)}
+        {data.slice(1, 4).map((item, i) => <ArtCard item={item} key={i}/>)}
+        {data.map((item, i) => <ArtCard item={item} key={i}/>)}
+        <div className={styleCard}>
+          <div
+            style={{
+              background: 'center / cover no-repeat url(\'http://www.ruanyifeng.com/blogimg/asset/201211/bg2012111401.jpg\')',
+              height: 350,
+              margin: ' 0 50px 20px 0',
+              backgroundSize: 'cover',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 900,
+              borderRadius: 10,
+            }}
+          >
               Explore More
-            </div>
           </div>
-        </Slider>
-      </div>
-    );
-  }, []);
+        </div>
+      </Slider>
+    </div>
+  ), []);
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger="click" height={"70vh"}>
-        {data?.map((item, index) => {
-          return (
-            <Carousel.Item key={index}>
-              <div
-                style={{
-                  background: `center / cover no-repeat ${item.src}`,
-                  height: "100%",
-                }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: "90px",
-                    left: "36px",
-                    fontSize: "64px",
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  {item.title}
-                </span>
-              </div>
-            </Carousel.Item>
-          );
-        })}
+      <Carousel trigger="click" height={'70vh'}>
+        {data?.map((item, index) => (
+          <Carousel.Item key={index}>
+            <div style={{
+              background: 'center / cover no-repeat ' + item.src,
+              height: '100%',
+            }}>
+              <span style={{
+                position: 'absolute',
+                bottom: '90px',
+                left: '36px',
+                fontSize: '64px',
+                fontWeight: 'bold',
+                color: 'white',
+              }}>
+                {item.title}
+              </span>
+            </div>
+          </Carousel.Item>
+        ))}
       </Carousel>
-      {renderHotList("Hot Art")}
-      {renderHotList("Hot Game")}
-      {renderHotList("Hot Collections")}
+      {renderHotList('Hot Art')}
+      {renderHotList('Hot Game')}
+      {renderHotList('Hot Collections')}
     </div>
   );
 };
-const mapStateToProps = ({ home }) => {
-  return {
-    datas: home.datas,
-  };
-};
+const mapStateToProps = ({ home }) => ({
+  datas: home.datas,
+});
 export default withRouter(connect(mapStateToProps)(HomeScreen));
 
 const styleContainer = css`

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Dialog, Input } from "element-react";
-import styles from "./index.less";
-import { css } from "emotion";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Dialog, Input } from 'element-react';
+import styles from './index.less';
+import { css } from 'emotion';
 import {
   ethSvg,
   assetSvg,
@@ -15,9 +15,9 @@ import {
   hecoSvg,
   polkadotSvg,
   dnftSvg,
-} from "../../utils/svg";
-import { useHistory } from "react-router";
-import { toast } from "react-toastify";
+} from '../../utils/svg';
+import { useHistory } from 'react-router';
+import { toast } from 'react-toastify';
 
 const GlobalHeader = (props) => {
   let history = useHistory();
@@ -26,61 +26,57 @@ const GlobalHeader = (props) => {
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
 
-  const netArray = useMemo(() => {
-    return [
-      {
-        name: "Ethereum Mainnet",
-        icon: netEthSvg,
-        shortName: ["ETH", "Ethereum"],
-        shortIcon: ethSvg,
-        netWorkId: 1,
-      },
-      {
-        name: "Bsc Mainnet",
-        icon: bscNetSvg,
-        shortName: ["BSC", "Bsc"],
-        shortIcon: bscSvg,
-      },
-      {
-        name: "Heco Mainnet",
-        icon: heroNetSvg,
-        shortName: ["HECO", "Heco"],
-        shortIcon: hecoSvg,
-      },
-      {
-        name: "Polkadot Mainnet",
-        icon: polkadotNetSvg,
-        shortName: ["DOT", "Polkadot"],
-        shortIcon: polkadotSvg,
-      },
-      {
-        name: "DNFT Mainnet",
-        icon: dnftSvg,
-        shortName: ["DNFT", "Dnft"],
-        shortIcon: dnftSvg,
-        netWorkId: 4,
-      },
-      {
-        name: "Ropsten Mainnet",
-        shortName: ["Ropsten", "Ropsten"],
-        netWorkId: 3,
-      },
-      {
-        name: "BSC Mainnet",
-        shortName: ["BSC", "BSC"],
-        netWorkId: 56,
-      },
-    ];
-  }, []);
+  const netArray = useMemo(() => [
+    {
+      name: 'Ethereum Mainnet',
+      icon: netEthSvg,
+      shortName: ['ETH', 'Ethereum'],
+      shortIcon: ethSvg,
+      netWorkId: 1,
+    },
+    {
+      name: 'Bsc Mainnet',
+      icon: bscNetSvg,
+      shortName: ['BSC', 'Bsc'],
+      shortIcon: bscSvg,
+    },
+    {
+      name: 'Heco Mainnet',
+      icon: heroNetSvg,
+      shortName: ['HECO', 'Heco'],
+      shortIcon: hecoSvg,
+    },
+    {
+      name: 'Polkadot Mainnet',
+      icon: polkadotNetSvg,
+      shortName: ['DOT', 'Polkadot'],
+      shortIcon: polkadotSvg,
+    },
+    {
+      name: 'DNFT Mainnet',
+      icon: dnftSvg,
+      shortName: ['DNFT', 'Dnft'],
+      shortIcon: dnftSvg,
+      netWorkId: 4,
+    },
+    {
+      name: 'Ropsten Mainnet',
+      shortName: ['Ropsten', 'Ropsten'],
+      netWorkId: 3,
+    },
+    {
+      name: 'BSC Mainnet',
+      shortName: ['BSC', 'BSC'],
+      netWorkId: 56,
+    },
+  ], []);
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
       if (currentNetIndex == undefined) {
-        const currentIndex = netArray.findIndex((item) => {
-          return Number(item.netWorkId) === Number(ethereum.networkVersion);
-        });
+        const currentIndex = netArray.findIndex((item) => Number(item.netWorkId) === Number(ethereum.networkVersion));
 
         setCurrentNetIndex(currentIndex);
       }
@@ -92,32 +88,30 @@ const GlobalHeader = (props) => {
           await ethereum.enable();
 
           const accounts = await ethereum.request({
-            method: "eth_requestAccounts",
+            method: 'eth_requestAccounts',
           });
 
           const account = accounts[0];
-          console.log(account, "account here");
+          console.log(account, 'account here');
           setAddress(account);
         }
       }
 
-      //监听网络切换
-      ethereum.on("networkChanged", (networkIDstring) => {
-        const currentIndex = netArray.findIndex((item) => {
-          return Number(item.netWorkId) === Number(networkIDstring);
-        });
+      // 监听网络切换
+      ethereum.on('networkChanged', (networkIDstring) => {
+        const currentIndex = netArray.findIndex((item) => Number(item.netWorkId) === Number(networkIDstring));
 
         setCurrentNetIndex(currentIndex);
       });
 
-      //监听账号切换
-      ethereum.on("accountsChanged", (accounts) => {
-        toast.dark("AccountsChanged", { position: toast.POSITION.TOP_CENTER });
-        console.log("aaa", accounts);
+      // 监听账号切换
+      ethereum.on('accountsChanged', (accounts) => {
+        toast.dark('AccountsChanged', { position: toast.POSITION.TOP_CENTER });
+        console.log('aaa', accounts);
         setAddress(accounts[0]);
       });
     } else {
-      alert("Please install wallet");
+      alert('Please install wallet');
     }
   }, [address, currentNetIndex, netArray]);
 
@@ -125,44 +119,40 @@ const GlobalHeader = (props) => {
     injectWallet();
   }, [injectWallet]);
 
-  console.log(address, "address out");
-  const renderModal = useMemo(() => {
-    return (
-      <Dialog
-        customClass={styleModalContainer}
-        title="Switch to"
-        visible={isNetListVisible}
-        onCancel={() => {
-          setIsNetListVisible(false);
-        }}
-      >
-        <Dialog.Body>
-          {netArray.map((item, index) => {
-            return (
-              <div
-                key={item.netWorkId}
-                className={styleNetItem}
-                style={{ border: index === netArray.length - 1 && "none" }}
-                onClick={() => {
-                  setIsNetListVisible(false);
-                  setCurrentNetIndex(index);
-                }}
-              >
-                <span className={styleNetIcon}>{item.icon}</span>
-                <span>{item.name}</span>
-              </div>
-            );
-          })}
-        </Dialog.Body>
-      </Dialog>
-    );
-  }, [netArray]);
+  console.log(address, 'address out');
+  const renderModal = useMemo(() => (
+    <Dialog
+      customClass={styleModalContainer}
+      title="Switch to"
+      visible={isNetListVisible}
+      onCancel={() => {
+        setIsNetListVisible(false);
+      }}
+    >
+      <Dialog.Body>
+        {netArray.map((item, index) => (
+          <div
+            key={index}
+            className={styleNetItem}
+            style={{ border: index === netArray.length - 1 && 'none' }}
+            onClick={() => {
+              setIsNetListVisible(false);
+              setCurrentNetIndex(index);
+            }}
+          >
+            <span className={styleNetIcon}>{item.icon}</span>
+            <span>{item.name}</span>
+          </div>
+        ))}
+      </Dialog.Body>
+    </Dialog>
+  ), [netArray]);
 
   return (
     <header className={styleHeader}>
       <div className={styleSearchContainer}>
-        <i className="el-icon-search"></i>
-        <Input placeholder={"Search Art,Game or Fun"} />
+        <i className="el-icon-search"/>
+        <Input placeholder={'Search Art,Game or Fun'} />
       </div>
       <div className={styles.actionContainer}>
         <span
@@ -175,23 +165,23 @@ const GlobalHeader = (props) => {
 
             await ethereum.enable();
             const accounts = await ethereum.request({
-              method: "eth_requestAccounts",
+              method: 'eth_requestAccounts',
             });
 
             const account = accounts[0];
-            console.log(account, "account here");
+            console.log(account, 'account here');
             setAddress(account);
           }}
         >
           {address
             ? `${address?.slice(0, 8)}...${address?.slice(28)}`
-            : "connect wallet"}
+            : 'connect wallet'}
         </span>
         <div
           className={actionItem}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
-            history.push("asset");
+            history.push('asset');
           }}
         >
           {assetSvg}
@@ -218,7 +208,7 @@ const GlobalHeader = (props) => {
                 </span>
                 {/* {downArrowSvg} */}
               </div>
-              <div style={{ color: "#8F9BBA" }}>
+              <div style={{ color: '#8F9BBA' }}>
                 {netArray[currentNetIndex]?.shortName[1]}
               </div>
             </div>

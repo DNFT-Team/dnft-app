@@ -2,8 +2,8 @@ import { GET_HOME_LIST } from '../types/home';
 import { parseRestError } from '../errorHelper';
 import { Message } from 'element-react';
 import { get } from 'utils/request';
-import request from "http/index";
-export const getHomeList = (params = {a:1}) => dispatch => {
+import request from 'http/index';
+export const getHomeList = (params = {a: 1}) => (dispatch) => {
   dispatch({ type: GET_HOME_LIST.PENDING });
   return get('/type', params)
     .then((res) => {

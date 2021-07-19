@@ -5,7 +5,5 @@ export default {
     }
     return Promise.reject(res.data);
   },
-  error: (error) => {
-    return Promise.reject(error);
-  },
+  error: (error) => Promise.reject(error),
 };

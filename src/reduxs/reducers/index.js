@@ -3,10 +3,8 @@ import home from './home';
 import lng from './lng';
 
 const appReducer = combineReducers({
-    home,
-    lng,
+  home,
+  lng,
 })
-const rootReducer = (state, action) => {
-    return appReducer(state, action);
-  };
+const rootReducer = (state, action) => appReducer(state, action);
 export default rootReducer;

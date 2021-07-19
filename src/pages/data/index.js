@@ -1,9 +1,6 @@
 import React from 'react';
 
-const AssetsScreen = props => {
-
-    return (
-        <div>data</div>
-    )
-}
+const AssetsScreen = (props) => (
+  <div>data</div>
+)
 export default AssetsScreen;

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { store } from "reduxs/store";
-import Router from "routers";
-import { MENU_MAP } from "routers/config";
-import styles from "./app.less";
-import { connect } from "react-redux";
-import { withRouter, useHistory } from "react-router-dom";
-import Logo from "images/home/dnftLogo.png";
-import GlobalHeader from "components/GlobalHeader";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { store } from 'reduxs/store';
+import Router from 'routers';
+import { MENU_MAP } from 'routers/config';
+import styles from './app.less';
+import { connect } from 'react-redux';
+import { withRouter, useHistory } from 'react-router-dom';
+import Logo from 'images/home/dnftLogo.png';
+import GlobalHeader from 'components/GlobalHeader';
 import {
   AppstoreOutlined,
   BookOutlined,
@@ -18,8 +18,8 @@ import {
   MediumOutlined,
   SnippetsOutlined,
   TwitterOutlined,
-} from "@ant-design/icons";
-import { css } from "emotion";
+} from '@ant-design/icons';
+import { css } from 'emotion';
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -32,8 +32,8 @@ const App = (props) => {
     try {
       i18n.changeLanguage(store.getState().lng.lng.value);
     } catch (e) {
-      i18n.changeLanguage("zh");
-      console.log("getLngFromState error : ", e);
+      i18n.changeLanguage('zh');
+      console.log('getLngFromState error : ', e);
     }
   }, []);
   const handleTo = (value) => {
@@ -50,16 +50,16 @@ const App = (props) => {
   ];
 
   const contectIconArray = [
-    { name: 'github' ,url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
-    { name: 'telegram' ,url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
-    { name: 'discord' ,url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
-    { name: 'twitter' ,url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
-    { name: 'medium' ,url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
+    { name: 'github', url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
+    { name: 'telegram', url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
+    { name: 'discord', url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
+    { name: 'twitter', url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
+    { name: 'medium', url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
   ];
   return (
     <section className={styles.container}>
       <section className={styles.leftNav}>
-        <img className={styles.logo} src={Logo} />
+        <img className={styles.logo} src={Logo} alt="logo"/>
         <section className={styles.menu}>
           {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;
@@ -67,7 +67,7 @@ const App = (props) => {
             return (
               <nav
                 onClick={() => handleTo(obj)}
-                key={index}
+                key={'Nav_' + index}
                 className={`${styles.nav} ${isActive && styles.navActive}`}
               >
                 <div
@@ -76,22 +76,22 @@ const App = (props) => {
                   {navIconArray[index]}
                 </div>
                 {
-                  obj.deActive? (
-                      <span
-                          className={`${styles.navDeText} ${
-                              isActive && styles.navActive
-                          }`}
-                          >
+                  obj.deActive ? (
+                    <span
+                      className={`${styles.navDeText} ${
+                        isActive && styles.navActive
+                      }`}
+                    >
                       {obj.navName}*
                     </span>
-                  ) :(
-                      <span
-                          className={`${styles.navText} ${
-                              isActive && styles.navActive
-                                }`}
-                            >
-                        {obj.navName}{obj.deActive?'*':''}
-                      </span>
+                  ) : (
+                    <span
+                      className={`${styles.navText} ${
+                        isActive && styles.navActive
+                      }`}
+                    >
+                      {obj.navName}{obj.deActive ? '*' : ''}
+                    </span>
                   )
                 }
               </nav>
@@ -100,9 +100,9 @@ const App = (props) => {
         </section>
         <section className={styleFootNoteContainer}>
           <div className={styleContactUs}>
-            {contectIconArray.map((item) =>(
-              <a className={styleContactItem} href={item.url} target="_blank">
-                <i className={'iconfont '+item.icon}></i>
+            {contectIconArray.map((item, i) => (
+              <a className={styleContactItem} href={item.url} target="_blank" rel="noreferrer" key={i}>
+                <i className={'iconfont ' + item.icon} />
               </a>
             ))}
           </div>

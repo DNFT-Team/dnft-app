@@ -1,13 +1,15 @@
+/* eslint-disable */
 export const dnfBodySvg = (
-  <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-<rect width="30" height="30" fill="url(#pattern0)"/>
-<defs>
-<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlinkHref="#image0" transform="scale(0.0204082)"/>
-</pattern>
-<image id="image0" width="49" height="49" xlinkHref="data:image/png;base64,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"/>
-</defs>
-</svg>
+  <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink">
+    <rect width="30" height="30" fill="url(#pattern0)"/>
+    <defs>
+      <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <use xlinkHref="#image0" transform="scale(0.0204082)"/>
+      </pattern>
+      <image id="image0" width="49" height="49" xlinkHref="data:image/png;base64,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"/>
+    </defs>
+  </svg>
 
 )
 
@@ -139,9 +141,9 @@ export const noDataSvg = (
         y2="230.946"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#E8E8E8" />
-        <stop offset="0.6" stop-color="#F8F8F8" stop-opacity="0.5" />
-        <stop offset="1" stop-color="white" stop-opacity="0" />
+        <stop stopColor="#E8E8E8" />
+        <stop offset="0.6" stopColor="#F8F8F8" stopOpacity="0.5" />
+        <stop offset="1" stopColor="white" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint1_linear"
@@ -151,9 +153,9 @@ export const noDataSvg = (
         y2="64.867"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#E8E8E8" />
-        <stop offset="0.6" stop-color="#F9F9F9" stop-opacity="0.1" />
-        <stop offset="1" stop-color="white" stop-opacity="0" />
+        <stop stopColor="#E8E8E8" />
+        <stop offset="0.6" stopColor="#F9F9F9" stopOpacity="0.1" />
+        <stop offset="1" stopColor="white" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint2_linear"
@@ -163,9 +165,9 @@ export const noDataSvg = (
         y2="78.7737"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#E8E8E8" />
-        <stop offset="0.8" stop-color="#F6F6F6" stop-opacity="0.1" />
-        <stop offset="1" stop-color="white" stop-opacity="0" />
+        <stop stopColor="#E8E8E8" />
+        <stop offset="0.8" stopColor="#F6F6F6" stopOpacity="0.1" />
+        <stop offset="1" stopColor="white" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint3_linear"
@@ -175,8 +177,8 @@ export const noDataSvg = (
         y2="85.8736"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint4_linear"
@@ -186,8 +188,8 @@ export const noDataSvg = (
         y2="154.148"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint5_linear"
@@ -197,8 +199,8 @@ export const noDataSvg = (
         y2="183.533"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint6_linear"
@@ -208,8 +210,8 @@ export const noDataSvg = (
         y2="219.839"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint7_linear"
@@ -219,8 +221,8 @@ export const noDataSvg = (
         y2="185.708"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#A5A5A5" />
-        <stop offset="1" stop-color="#BFBFBF" />
+        <stop stopColor="#A5A5A5" />
+        <stop offset="1" stopColor="#BFBFBF" />
       </linearGradient>
       <linearGradient
         id="paint8_linear"
@@ -230,8 +232,8 @@ export const noDataSvg = (
         y2="186.325"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint9_linear"
@@ -241,8 +243,8 @@ export const noDataSvg = (
         y2="168.473"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#A5A5A5" />
-        <stop offset="1" stop-color="#D1D1D1" />
+        <stop stopColor="#A5A5A5" />
+        <stop offset="1" stopColor="#D1D1D1" />
       </linearGradient>
       <linearGradient
         id="paint10_linear"
@@ -252,8 +254,8 @@ export const noDataSvg = (
         y2="165.129"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EBEBEB" />
-        <stop offset="1" stop-color="#C5C5C7" />
+        <stop stopColor="#EBEBEB" />
+        <stop offset="1" stopColor="#C5C5C7" />
       </linearGradient>
       <linearGradient
         id="paint11_linear"
@@ -263,8 +265,8 @@ export const noDataSvg = (
         y2="158.105"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#6779F7" />
-        <stop offset="1" stop-color="#112DF2" />
+        <stop stopColor="#6779F7" />
+        <stop offset="1" stopColor="#112DF2" />
       </linearGradient>
       <linearGradient
         id="paint12_linear"
@@ -274,8 +276,8 @@ export const noDataSvg = (
         y2="84.7118"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#112DF2" />
-        <stop offset="1" stop-color="#6779F7" />
+        <stop stopColor="#112DF2" />
+        <stop offset="1" stopColor="#6779F7" />
       </linearGradient>
       <linearGradient
         id="paint13_linear"
@@ -285,8 +287,8 @@ export const noDataSvg = (
         y2="160.679"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#B4BDFF" />
-        <stop offset="1" stop-color="#919EFF" />
+        <stop stopColor="#B4BDFF" />
+        <stop offset="1" stopColor="#919EFF" />
       </linearGradient>
     </defs>
   </svg>
@@ -304,7 +306,7 @@ export const miningCloud = (
       <path
         d="M165.197 136.285C186.339 125.426 230.337 102.687 237.194 98.6012C245.765 93.494 250.908 108.678 270.478 95.1504"
         stroke="black"
-        stroke-width="0.983506"
+        strokeWidth="0.983506"
       />
       <path
         d="M0 45.5957C3.6665 40.4884 17.8898 35.4916 28.6321 56.3624C42.0601 82.4508 46.917 52.6355 67.3446 73.8927C87.7722 95.15 80.9154 32.4825 110.771 68.0953C140.627 103.708 137.627 82.865 156.769 100.257C166.626 105.365 180.625 76.7914 197.624 97.0825C210.094 111.967 222.876 107.021 228.988 101.699L230.48 100.257C230.041 100.731 229.542 101.216 228.988 101.699L195.624 133.938C140.817 138.171 21.599 144.594 0 136.422V45.5957Z"
@@ -393,7 +395,7 @@ export const miningCloud = (
       <path
         d="M125.994 175.899H0V172.034H119.686L125.994 175.899Z"
         fill="black"
-        fill-opacity="0.2"
+        fillOpacity="0.2"
       />
       <path
         d="M0.514648 173.285V167.658C39.9327 167.658 119.009 167.84 119.968 168.568C120.927 169.297 119.568 172.016 118.769 173.285H0.514648Z"
@@ -413,8 +415,8 @@ export const miningCloud = (
         y2="140.358"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#F1FBFC" />
-        <stop offset="1" stop-color="#C1F2F9" />
+        <stop stopColor="#F1FBFC" />
+        <stop offset="1" stopColor="#C1F2F9" />
       </linearGradient>
       <linearGradient
         id="paint1_linear"
@@ -424,8 +426,8 @@ export const miningCloud = (
         y2="137.112"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#86BBA6" />
-        <stop offset="1" stop-color="#80B5A4" />
+        <stop stopColor="#86BBA6" />
+        <stop offset="1" stopColor="#80B5A4" />
       </linearGradient>
       <linearGradient
         id="paint2_linear"
@@ -435,8 +437,8 @@ export const miningCloud = (
         y2="122.091"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint3_linear"
@@ -446,8 +448,8 @@ export const miningCloud = (
         y2="140.016"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#C9F2F4" />
-        <stop offset="1" stop-color="#6CAFA4" />
+        <stop stopColor="#C9F2F4" />
+        <stop offset="1" stopColor="#6CAFA4" />
       </linearGradient>
       <linearGradient
         id="paint4_linear"
@@ -457,8 +459,8 @@ export const miningCloud = (
         y2="128.022"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#9EDAC2" />
-        <stop offset="1" stop-color="#8AC8B4" stop-opacity="0.1" />
+        <stop stopColor="#9EDAC2" />
+        <stop offset="1" stopColor="#8AC8B4" stopOpacity="0.1" />
       </linearGradient>
       <linearGradient
         id="paint5_linear"
@@ -468,8 +470,8 @@ export const miningCloud = (
         y2="142.591"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint6_linear"
@@ -479,8 +481,8 @@ export const miningCloud = (
         y2="119.663"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#326386" />
-        <stop offset="1" stop-color="#0F4166" />
+        <stop stopColor="#326386" />
+        <stop offset="1" stopColor="#0F4166" />
       </linearGradient>
       <linearGradient
         id="paint7_linear"
@@ -490,8 +492,8 @@ export const miningCloud = (
         y2="19.7832"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#F1FBFC" />
-        <stop offset="1" stop-color="#C1F2F9" />
+        <stop stopColor="#F1FBFC" />
+        <stop offset="1" stopColor="#C1F2F9" />
       </linearGradient>
       <linearGradient
         id="paint8_linear"
@@ -501,8 +503,8 @@ export const miningCloud = (
         y2="142.025"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#326386" />
-        <stop offset="1" stop-color="#0F4166" />
+        <stop stopColor="#326386" />
+        <stop offset="1" stopColor="#0F4166" />
       </linearGradient>
       <linearGradient
         id="paint9_linear"
@@ -512,8 +514,8 @@ export const miningCloud = (
         y2="215.091"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#97E3C9" />
-        <stop offset="1" stop-color="#71AF93" />
+        <stop stopColor="#97E3C9" />
+        <stop offset="1" stopColor="#71AF93" />
       </linearGradient>
       <linearGradient
         id="paint10_linear"
@@ -523,8 +525,8 @@ export const miningCloud = (
         y2="131.376"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint11_linear"
@@ -534,8 +536,8 @@ export const miningCloud = (
         y2="104.4"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint12_linear"
@@ -545,8 +547,8 @@ export const miningCloud = (
         y2="90.4559"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint13_linear"
@@ -556,8 +558,8 @@ export const miningCloud = (
         y2="78.8668"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint14_linear"
@@ -567,8 +569,8 @@ export const miningCloud = (
         y2="89.7445"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint15_linear"
@@ -578,8 +580,8 @@ export const miningCloud = (
         y2="76.5894"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint16_linear"
@@ -589,8 +591,8 @@ export const miningCloud = (
         y2="109.279"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#4F8E74" />
-        <stop offset="0.9999" stop-color="#85BAA8" />
+        <stop stopColor="#4F8E74" />
+        <stop offset="0.9999" stopColor="#85BAA8" />
       </linearGradient>
       <linearGradient
         id="paint17_linear"
@@ -600,8 +602,8 @@ export const miningCloud = (
         y2="205.34"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#326386" />
-        <stop offset="1" stop-color="#0F4166" />
+        <stop stopColor="#326386" />
+        <stop offset="1" stopColor="#0F4166" />
       </linearGradient>
       <linearGradient
         id="paint18_linear"
@@ -611,8 +613,8 @@ export const miningCloud = (
         y2="213.273"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#99D7AC" />
-        <stop offset="1" stop-color="#6BB7A9" />
+        <stop stopColor="#99D7AC" />
+        <stop offset="1" stopColor="#6BB7A9" />
       </linearGradient>
     </defs>
   </svg>
@@ -630,7 +632,7 @@ export const miningMoon = (
       <path
         d="M150 150C218.483 150 274 94.4833 274 26H26C26 94.4833 81.5167 150 150 150Z"
         fill="white"
-        fill-opacity="0.05"
+        fillOpacity="0.05"
       />
     </g>
     <defs>
@@ -641,9 +643,9 @@ export const miningMoon = (
         width="300"
         height="176"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend
           mode="normal"
           in="SourceGraphic"
@@ -889,7 +891,7 @@ export const MSvg = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="16.8" cy="16.8" r="16.8" fill="white" fill-opacity="0.5" />
+    <circle cx="16.8" cy="16.8" r="16.8" fill="white" fillOpacity="0.5" />
     <path
       d="M23.3027 12.4648L24.5 11.3145V11.0625H20.3535L17.3984 18.4531L14.0371 11.0625H9.68945V11.3145L11.0879 13.0059C11.2246 13.1309 11.2949 13.3145 11.2773 13.498V20.1445C11.3203 20.3848 11.2441 20.6289 11.0762 20.8027L9.5 22.7227V22.9707H13.9648V22.7187L12.3906 20.8047C12.3063 20.7191 12.2428 20.6151 12.2052 20.5009C12.1676 20.3868 12.1569 20.2655 12.1738 20.1465V14.3965L16.0938 22.9746H16.5488L19.9199 14.3965V21.2305C19.9199 21.4102 19.9199 21.4473 19.8027 21.5664L18.5898 22.7441V22.9961H24.4727V22.7441L23.3027 21.5938C23.2012 21.5156 23.1484 21.3848 23.1699 21.2578V12.8008C23.1598 12.738 23.1668 12.6737 23.1902 12.6146C23.2136 12.5554 23.2524 12.5037 23.3027 12.4648V12.4648Z"
       fill="#1B2559"
@@ -908,7 +910,7 @@ export const twitterSvg = (
     <path
       d="M16.8 0C7.5215 0 0 7.5215 0 16.8C0 26.0785 7.5215 33.6 16.8 33.6C26.0785 33.6 33.6 26.0785 33.6 16.8C33.6 7.5215 26.0785 0 16.8 0ZM23.6338 13.762C23.6408 13.9055 23.6425 14.049 23.6425 14.189C23.6425 18.564 20.3158 23.6058 14.2293 23.6058C12.4308 23.6087 10.6697 23.0922 9.15775 22.1183C9.415 22.1498 9.67925 22.162 9.947 22.162C11.4975 22.162 12.9238 21.6353 14.056 20.7463C13.366 20.7327 12.6974 20.5042 12.1434 20.0927C11.5895 19.6811 11.1777 19.107 10.9655 18.4503C11.461 18.5445 11.9715 18.5247 12.4583 18.3925C11.7093 18.2411 11.0358 17.8353 10.552 17.2439C10.0681 16.6526 9.80369 15.9121 9.8035 15.148V15.1078C10.2498 15.3545 10.7608 15.505 11.3033 15.5225C10.6011 15.0551 10.1041 14.3372 9.91383 13.5155C9.72353 12.6938 9.85434 11.8304 10.2795 11.102C11.1107 12.124 12.1472 12.9601 13.322 13.556C14.4968 14.152 15.7836 14.4947 17.0993 14.5618C16.932 13.8518 17.004 13.1065 17.304 12.4416C17.6041 11.7768 18.1153 11.2297 18.7584 10.8855C19.4014 10.5412 20.1402 10.419 20.8598 10.5379C21.5795 10.6568 22.2396 11.0102 22.7378 11.543C23.4783 11.3965 24.1885 11.1248 24.8378 10.7398C24.5909 11.5065 24.0742 12.1576 23.3835 12.572C24.0395 12.493 24.68 12.3166 25.284 12.0488C24.8404 12.7136 24.2815 13.2938 23.6338 13.762Z"
       fill="white"
-      fill-opacity="0.5"
+      fillOpacity="0.5"
     />
   </svg>
 );
@@ -921,10 +923,10 @@ export const paperSvg = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="16.8" cy="16.8" r="16.8" fill="white" fill-opacity="0.5" />
+    <circle cx="16.8" cy="16.8" r="16.8" fill="white" fillOpacity="0.5" />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M10.809 18.8306L6.34239 17.1514C5.88872 16.9802 5.88478 16.3351 6.33716 16.1594L24.6683 9.03648C25.0569 8.88509 25.4579 9.22802 25.3732 9.63909L22.0836 25.5776C22.006 25.9539 21.568 26.1246 21.2588 25.8982L16.7682 22.6143C16.4954 22.4149 16.1237 22.4255 15.8627 22.6397L13.3729 24.6842C13.0839 24.9222 12.6485 24.7896 12.5379 24.4309L10.809 18.8306ZM20.9875 12.5213L12.258 17.9368C11.9235 18.1448 11.7659 18.5518 11.874 18.9328L12.8179 22.2732C12.8849 22.51 13.226 22.4857 13.2585 22.2411L13.5039 20.4092C13.5502 20.0644 13.7135 19.7466 13.9667 19.5092L21.1711 12.7639C21.3058 12.638 21.1444 12.4243 20.9875 12.5213Z"
       fill="#212C5E"
     />
@@ -934,15 +936,15 @@ export const paperSvg = (
 export const linkInSvg = (
   <div
     style={{
-      background: "rgba(255, 255, 255, 0.5)",
-      borderRadius: "34px",
-      height: "34px",
-      width: "34px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontWeight: "bold",
-      color: "#141847",
+      background: 'rgba(255, 255, 255, 0.5)',
+      borderRadius: '34px',
+      height: '34px',
+      width: '34px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold',
+      color: '#141847',
     }}
   >
     in
@@ -957,11 +959,11 @@ export const githubSvg = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0)">
+    <g clipPath="url(#clip0)">
       <path
         d="M16.7902 0.415085C12.803 0.416068 8.94617 1.83572 5.90981 4.42005C2.87346 7.00437 0.855688 10.5848 0.21751 14.5206C-0.420667 18.4565 0.362387 22.491 2.42657 25.9023C4.49076 29.3137 7.70139 31.8793 11.4841 33.1401C12.3236 33.2941 12.6307 32.7757 12.6307 32.3348C12.6307 31.9321 12.6166 30.8801 12.6075 29.4788C7.93653 30.4936 6.95099 27.2279 6.95099 27.2279C6.64243 26.213 5.98119 25.3418 5.08663 24.7716C3.56252 23.7297 5.20239 23.7508 5.20239 23.7508C5.73468 23.8241 6.24317 24.0181 6.68896 24.318C7.13476 24.6179 7.50605 25.0159 7.77445 25.4813C8.00196 25.8955 8.30931 26.2604 8.67872 26.5551C9.04814 26.8498 9.47229 27.0683 9.92667 27.198C10.381 27.3278 10.8566 27.3662 11.3259 27.311C11.7952 27.2558 12.249 27.1082 12.6609 26.8766C12.7374 26.0252 13.1155 25.2291 13.7269 24.6317C10.0022 24.2079 6.07619 22.7673 6.07619 16.3326C6.05183 14.6644 6.67081 13.0508 7.80465 11.8268C7.29265 10.3785 7.35169 8.78957 7.96975 7.3833C7.96975 7.3833 9.37909 6.93231 12.5874 9.10471C15.3393 8.35111 18.2432 8.35111 20.9951 9.10471C24.2014 6.9313 25.6077 7.3833 25.6077 7.3833C26.2273 8.78911 26.2871 10.3784 25.7748 11.8268C26.9089 13.0505 27.5273 14.6644 27.5013 16.3326C27.5013 22.7834 23.5752 24.2028 19.8344 24.6186C20.235 25.0258 20.5439 25.5139 20.7405 26.0502C20.937 26.5865 21.0166 27.1586 20.974 27.7282C20.974 29.9731 20.9539 31.7841 20.9539 32.3348C20.9539 32.7837 21.2559 33.3062 22.1085 33.1401C25.8895 31.8767 29.0978 29.3095 31.1596 25.8976C33.2214 22.4857 34.0024 18.4517 33.3627 14.5168C32.7231 10.582 30.7046 7.003 27.6683 4.41985C24.6319 1.8367 20.7757 0.417878 16.7892 0.417098L16.7902 0.415085Z"
         fill="white"
-        fill-opacity="0.5"
+        fillOpacity="0.5"
       />
     </g>
     <defs>
@@ -987,7 +989,7 @@ export const netEthSvg = (
       height="41.724"
       rx="20.862"
       stroke="#233A7D"
-      stroke-width="1.27603"
+      strokeWidth="1.27603"
     />
     <path
       d="M22.0204 26.7712L13.2949 21.556L22.0204 7.01361V26.7712Z"
@@ -1024,7 +1026,7 @@ export const bscNetSvg = (
       height="41.724"
       rx="20.862"
       stroke="#F3BA2F"
-      stroke-width="1.27603"
+      strokeWidth="1.27603"
     />
     <rect
       width="28.0819"
@@ -1066,7 +1068,7 @@ export const heroNetSvg = (
       height="41.724"
       rx="20.862"
       stroke="#3E8445"
-      stroke-width="1.27603"
+      strokeWidth="1.27603"
     />
     <path
       d="M16.7963 12.1934V14.7773C14.7136 15.5577 12.9749 17.0438 11.8691 18.9437V11.2331H15.838C16.3667 11.2331 16.7963 11.6626 16.7963 12.1934Z"
@@ -1139,7 +1141,7 @@ export const dnftNetSvg = (
       height="41.724"
       rx="20.862"
       stroke="#00327F"
-      stroke-width="1.27603"
+      strokeWidth="1.27603"
     />
     <rect
       x="8.95923"

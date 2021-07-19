@@ -5,12 +5,12 @@ let BASE_URL = URL_CLOUD;
 const FETCH_TIMEOUT = 15 * 1000
 let _token = ''
 
-export function setTokenForReq(token) {
+export function setTokenForReq (token) {
   _token = token
 }
 
-export default function request(url, options) {
-  if (BASE_URL.length == 0) return;
+export default function request (url, options) {
+  if (BASE_URL.length == 0) {return;}
   const defaultOptions = { headers: {} }
   const newOptions = { ...defaultOptions, ...options }
   if (
@@ -29,7 +29,7 @@ export default function request(url, options) {
     } else { // newOptions.body is FormData
       newOptions.headers = {
         Accept: 'application/json',
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
         // Authorization: _token,
         ...newOptions.headers,
       }
@@ -61,17 +61,17 @@ export default function request(url, options) {
 
   return req
     .then(checkCode)
-    .then(response => {
+    .then((response) => {
 
       const statusCode = response.status;
       const data = response.json();
       return Promise.all([{ status: statusCode }, data]);
     })
-    .then(text => {
+    .then((text) => {
       console.log('RESP:', text)
       return { ...text[0], data: text[1] }
     })
-    .catch(e => {
+    .catch((e) => {
       if (process.env.NODE_ENV !== 'production') {
         console.groupCollapsed(
           `%c RESP error :${BASE_URL + url}`,
@@ -83,53 +83,45 @@ export default function request(url, options) {
     })
 }
 
-export const get = (url, params) => {
-  return request(
-    `${url}?${stringify({ ...params })}`,
-    {
-      method: 'GET',
-    })
-}
-
-export const put = (url, params) => {
-  return request(url, {
-    method: 'PUT',
-    body: params,
+export const get = (url, params) => request(
+  `${url}?${stringify({ ...params })}`,
+  {
+    method: 'GET',
   })
-}
 
-export const post = (url, params) => {
-  return request(url, {
-    method: 'POST',
-    body: params,
+export const put = (url, params) => request(url, {
+  method: 'PUT',
+  body: params,
+})
+
+export const post = (url, params) => request(url, {
+  method: 'POST',
+  body: params,
+})
+
+export const _delete = (url, params) => request(
+  `${url}?${stringify({ ...params })}`,
+  {
+    method: 'DELETE',
   })
-}
 
-export const _delete = (url, params) => {
-  return request(
-    `${url}?${stringify({ ...params })}`,
-    {
-      method: 'DELETE',
-    })
-}
-
-function stringify(params) {
+function stringify (params) {
   let tempParams = [];
-  Object.keys(params).forEach(key => {
+  Object.keys(params).forEach((key) => {
     let value = params[key];
-    if (value === '' || value === null || value === undefined) return;
+    if (value === '' || value === null || value === undefined) {return;}
     tempParams.push([key, encodeURIComponent(value)].join('='));
   });
   return tempParams.join('&');
-};
+}
 
-function checkCode(res) {
+function checkCode (res) {
   return res
-};
+}
 
 
 class RequestError extends Error {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.success = false
     this.message = props.message
