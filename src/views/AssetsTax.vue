@@ -30,7 +30,7 @@
             :icon="!creatShow?'add_circle':'indeterminate_check_box'"
             @click="creatShow=!creatShow"
           ></vs-button>
-          <vs-tabs alignment="right" v-if="creatShow">
+          <vs-tabs alignment="fixed" v-show="creatShow">
             <vs-tab label="NFT721">
               <div class="card-wrap add-card">
                 Create Your Own NFT As Easy as 1,2,3
@@ -41,7 +41,7 @@
             </vs-tab>
             <vs-tab label="NFT1155">
               <div class="card-wrap tax-card">
-                NFT1155, The New Generation Star
+                NFT1155, The Most Popular Token
                 <vs-button @click="openPopUp2" color="primary" type="relief" size="large"
                            style="margin-left: 1rem;">Create
                 </vs-button>
@@ -49,7 +49,7 @@
             </vs-tab>
             <vs-tab label="NFT2006">
               <div class="card-wrap nft-card">
-                NFT2006, The Most Popular Token
+                NFT2006, The New Generation Star
                 <vs-button :to="{name:'nft2006'}" color="primary" type="relief" size="large"
                            style="margin-left: 1rem;">Skip to
                 </vs-button>
@@ -61,7 +61,7 @@
       <vs-tab @click="colorx='danger'" label="Favor" class="tab-row">
         <el-row v-if="data_hs.length>0" :gutter="20" class="card-wrap">
           <el-col :span="6" v-for="(item,i) in data_hs" :key="i">
-            <GoodsItem :item="item" :show-recycle="true"/>
+            <GoodsItem :item="item" :show-recycle="true" dis-buy/>
           </el-col>
         </el-row>
         <Empty v-else/>
@@ -587,6 +587,7 @@ export default {
   }
 
   .add-card {
+    margin-top: 0;
     color: white;
     background: #11998e; /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #38ef7d, #11998e); /* Chrome 10-25, Safari 5.1-6 */
@@ -594,6 +595,7 @@ export default {
   }
 
   .tax-card {
+    margin-top: 0;
     color: white;
     background: #FF8008; /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #FFC837, #FF8008); /* Chrome 10-25, Safari 5.1-6 */
@@ -601,6 +603,7 @@ export default {
   }
 
   .nft-card {
+    margin-top: 0;
     color: white;
     background: #833ab4; /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); /* Chrome 10-25, Safari 5.1-6 */

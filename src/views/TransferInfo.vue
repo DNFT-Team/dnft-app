@@ -49,88 +49,88 @@
 </template>
 
 <script>
-  import Gallery from "../components/Gallery";
+import Gallery from '../components/Gallery';
 
-  export default {
-    name: "TransferInfo",
-    components: {Gallery},
-    created() {
-      this.data_hs = new Array(4).fill(1).map((e, i) => ({
+export default {
+  name: 'TransferInfo',
+  components: { Gallery },
+  created() {
+    this.data_hs = new Array(4).fill(1).map((e, i) => ({
+      name: 'ShanghaiBar',
+      owner: 'Billy',
+      price: 1.25,
+      favor: 100,
+      src: `https://unsplash.it/300/280?random=${i}`,
+      recycle: new Date('2021-08-01 00:00:00'),
+    }));
+    this.getGoodParam();
+  },
+  data() {
+    return {
+      back: 'Home',
+      goods: {
         name: 'ShanghaiBar',
         owner: 'Billy',
         price: 1.25,
+        hash: '',
         favor: 100,
-        src: `https://unsplash.it/300/280?random=${i}`,
-        recycle: new Date('2021-08-01 00:00:00')
-      }))
-      this.getGoodParam()
-    },
-    data() {
-      return {
-        back: 'Home',
-        goods: {
-          name: 'ShanghaiBar',
-          owner: 'Billy',
-          price: 1.25,
-          hash: '',
-          favor: 100,
-          src: `/img/home/6.png`,
-          recycle: new Date('2021-08-01 00:00:00')
-        },
-        data_hs: []
-      }
-    },
-    methods: {
-      getGoodParam() {
-        let {back, goods} = this.$route.params
-        back = (back && back !== 'Transfer' )? back :'Home'
-        if (!goods) {
-          this.$router.push({name:back})
-        } else {
-          // console.log(goods,back);
-          this.back = back
-          this.goods = goods
-        }
+        src: '/img/home/6.png',
+        recycle: new Date('2021-08-01 00:00:00'),
       },
-      handleBought(){
-        let address = this.$store.state.address
-        if(!address){
-          this.$vs.notify({
-            position:'top-center',
-            title: 'System hint',
-            text: 'Please connect wallet',
-            color: 'warning'
-          })
-          return
-        }
-        if(address===this.goods.owner){
-          this.$vs.notify({
-            position:'top-center',
-            title: 'System hint',
-            text: 'Buy your owned nft is no need',
-            color: 'warning'
-          })
-          return
-        }
-        this.$vs.loading({color:'#11047A',type:'radius'})
-        this.$api.NFT_Buy(this.goods.hash,(res)=>{
-          console.log(res);
-          this.$vs.loading.close()
-          if(res.code===0){
-            this.$vs.notify({
-              position:'top-center',
-              title: 'System hint',
-              text: 'Bought success',
-              color: 'success'
-            })
-            setTimeout(()=>{
-              this.$router.push({name:this.back})
-            },2000)
-          }
-        })
+      data_hs: [],
+    };
+  },
+  methods: {
+    getGoodParam() {
+      let { back, goods } = this.$route.params;
+      back = (back && back !== 'Transfer') ? back : 'Home';
+      if (!goods) {
+        this.$router.push({ name: back });
+      } else {
+        // console.log(goods,back);
+        this.back = back;
+        this.goods = goods;
       }
-    }
-  }
+    },
+    handleBought() {
+      const { address } = this.$store.state;
+      if (!address) {
+        this.$vs.notify({
+          position: 'top-center',
+          title: 'System hint',
+          text: 'Please connect wallet',
+          color: 'warning',
+        });
+        return;
+      }
+      if (address === this.goods.owner) {
+        this.$vs.notify({
+          position: 'top-center',
+          title: 'System hint',
+          text: 'Buy your owned nft is no need',
+          color: 'warning',
+        });
+        return;
+      }
+      this.$vs.loading({ color: '#11047A', type: 'radius' });
+      this.$api.NFT_Buy(this.goods.hash, (res) => {
+        console.log(res);
+        this.$vs.loading.close();
+        if (res.code === 0) {
+          this.$vs.notify({
+            position: 'top-center',
+            title: 'System hint',
+            text: 'Bought success',
+            color: 'success',
+          });
+          setTimeout(() => {
+            this.$router.push({ name: this.back });
+          }, 2000);
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">

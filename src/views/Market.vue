@@ -27,66 +27,66 @@
 </template>
 
 <script>
-  import GoodsItem from "../components/GoodsItem";
-  import Empty from "../components/Empty";
+import GoodsItem from '../components/GoodsItem';
+import Empty from '../components/Empty';
 
-  export default {
-    name: "Market",
-    components: {GoodsItem,Empty},
-    data() {
-      return {
-        query: {
-          sort: 'favor'
+export default {
+  name: 'Market',
+  components: { GoodsItem, Empty },
+  data() {
+    return {
+      query: {
+        sort: 'favor',
+      },
+      opts_sort: [
+        {
+          title: 'Favor',
+          group: [{ text: 'Most Favourite', value: 'favor' }],
         },
-        opts_sort: [
-          {
-            title: 'Favor',
-            group: [{text: 'Most Favourite', value: 'favor'}]
-          },
-          {
-            title: 'Price',
-            group: [
-              {text: 'High to low', value: 'asc'},
-              {text: 'Low to High', value: 'desc'}
-            ]
-          }
-        ],
-        data_hs : []
-      }
+        {
+          title: 'Price',
+          group: [
+            { text: 'High to low', value: 'asc' },
+            { text: 'Low to High', value: 'desc' },
+          ],
+        },
+      ],
+      data_hs: [],
+    };
+  },
+  computed: {
+    chainOk() {
+      return this.$store.state.chainState.Api && this.$store.state.chainState.isConnected;
     },
-    computed: {
-      chainOk() {
-        return this.$store.state.chainState.Api && this.$store.state.chainState.isConnected
-      }
+  },
+  watch: {
+    chainOk(bool) {
+      bool && this.fetchOfferedNft();
     },
-    watch: {
-      chainOk(bool) {
-        bool && this.fetchOfferedNft()
-      }
+  },
+  methods: {
+    fetchOfferedNft() {
+      this.$vs.loading({ color: '#11047A', type: 'radius' });
+      this.$api.NFT_List().then((res) => {
+        this.data_hs = res.filter((e) => e.status === 'Offered').map((e) => ({
+          ...e,
+          favor: 100,
+          src: e.data,
+          recycle: new Date('2021-08-01 00:00:00'),
+          name: e.metadata,
+          hash: e.tokenId,
+        }));
+      }).catch(() => {
+        this.data_hs = [];
+      }).finally(() => {
+        this.$vs.loading.close();
+      });
     },
-    methods:{
-      fetchOfferedNft(){
-        this.$vs.loading({color: '#11047A', type: 'radius'})
-        this.$api.NFT_List().then(res=>{
-          this.data_hs = res.filter(e=>e.status==='Offered').map(e=>({
-            ...e,
-            favor: 100,
-            src: e.data,
-            recycle: new Date('2021-08-01 00:00:00'),
-            name: e.metadata,
-            hash: e.tokenId,
-          }))
-        }).catch(()=>{
-          this.data_hs = []
-        }).finally(()=>{
-          this.$vs.loading.close()
-        })
-      }
-    },
-    mounted() {
-        this.chainOk && this.fetchOfferedNft()
-    }
-  }
+  },
+  mounted() {
+    this.chainOk && this.fetchOfferedNft();
+  },
+};
 </script>
 
 <style scoped>

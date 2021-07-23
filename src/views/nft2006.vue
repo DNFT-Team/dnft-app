@@ -3,13 +3,13 @@
     <div class="mk-top title-sticky">
       <span class="title">NFT2006</span>
       <div>
-        <vs-button @click="openPop" color="warning" type="line" size="large"
+        <vs-button @click="openPop('class')" color="warning" type="line" size="large"
                    style="margin-left: 1rem;">+ CLASS
         </vs-button>
-        <vs-button @click="openPop" color="danger" type="line" size="large"
+        <vs-button @click="openPop('nft')" color="danger" type="line" size="large"
                    style="margin-left: 1rem;">+ NFT
         </vs-button>
-        <vs-button @click="openPop" color="primary" type="line" size="large"
+        <vs-button @click="openPop('collection')" color="primary" type="line" size="large"
                    style="margin-left: 1rem;">+ COL
         </vs-button>
       </div>
@@ -58,7 +58,19 @@
         </vs-list>
       </vs-tab>
     </vs-tabs>
-
+    <vs-popup title="Create" :active.sync="activePrompt">
+      <div style="padding: 1rem .6rem;">
+        <template v-if="promptType==='collection'">
+          <div>col</div>
+        </template>
+        <template v-else-if="promptType==='class'">
+          <div>class</div>
+        </template>
+        <template v-else-if="promptType==='nft'">
+          <div>nft</div>
+        </template>
+      </div>
+    </vs-popup>
   </div>
 </template>
 
@@ -67,6 +79,8 @@ export default {
   name: 'nft2006',
   data() {
     return {
+      activePrompt: false,
+      promptType: 'class',
       clsList: [],
       nftList: [],
       colList: [],
@@ -76,7 +90,10 @@ export default {
     this.getClassList();
   },
   methods: {
-    openPop() {},
+    openPop(promptType) {
+      this.activePrompt = true;
+      this.promptType = promptType;
+    },
     getClassList() {
       this.clsList = [1, 2, 3].map((e) => ({
         class_id: e, name: `Class-${e}`, info: `https://unsplash.it/300/280?random=${e}`, total_supply: Math.ceil(Math.random() * 10),
