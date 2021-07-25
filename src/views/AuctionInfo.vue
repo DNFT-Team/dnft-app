@@ -50,45 +50,45 @@
 </template>
 
 <script>
-  export default {
-    name: "AuctionInfo",
-    data() {
-      return {
-        inAnimate: false,
-        rightTab: 'img',
-        item: {
-          index: 0,
-          name: '',
-          desc: '',
-          base: '',
-          address: '',
-          owner: '',
-          creator: '',
-          src: '',
-          state: 'Open',
-          participants: ''
-        }
-      }
+export default {
+  name: 'AuctionInfo',
+  data() {
+    return {
+      inAnimate: false,
+      rightTab: 'img',
+      item: {
+        index: 0,
+        name: '',
+        desc: '',
+        base: '',
+        address: '',
+        owner: '',
+        creator: '',
+        src: '',
+        state: 'Open',
+        participants: '',
+      },
+    };
+  },
+  methods: {
+    handleSwitch(tab) {
+      if (tab === this.rightTab) return;
+      this.inAnimate = true;
+      setTimeout(() => {
+        this.rightTab = tab;
+        this.inAnimate = false;
+      }, 800);
     },
-    methods:{
-      handleSwitch(tab){
-        if(tab===this.rightTab) return
-        this.inAnimate = true
-        setTimeout(()=>{
-          this.rightTab = tab
-          this.inAnimate = false
-        },800)
-      }
-    },
-    created() {
-      let goods = this.$route.params.goods
-      if (goods) {
-        this.item = {...goods}
-      } else {
-        this.$router.push({name: 'Auction'})
-      }
+  },
+  created() {
+    const { goods } = this.$route.params;
+    if (goods) {
+      this.item = { ...goods };
+    } else {
+      this.$router.push({ name: 'Auction' });
     }
-  }
+  },
+};
 </script>
 
 <style scoped lang="less">
@@ -191,7 +191,7 @@
       }
       .right-hide{
         z-index: 0;
-        background: #b3b3b3;
+        background: #e3e4ed;
         box-shadow: 0 0 6px 3px #8a8888;
       }
     }

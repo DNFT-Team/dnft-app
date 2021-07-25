@@ -6,16 +6,16 @@ export const menu = [
     component: () => import('../views/Home.vue'),
   },
   {
+    path: '/market',
+    name: 'Market',
+    meta: { title: 'market', icon: 'market' },
+    component: () => import('../views/Market.vue'),
+  },
+  {
     path: '/ai',
     name: 'AI',
     meta: { title: 'AI', icon: 'AI' },
     component: () => import('../views/DataTsf.vue'),
-  },
-  {
-    path: '/auction',
-    name: 'Auction',
-    meta: { title: 'auction', icon: 'auction' },
-    component: () => import('../views/Auction.vue'),
   },
   {
     path: '/dao',
@@ -24,15 +24,15 @@ export const menu = [
     component: () => import('../views/DaoTsf.vue'),
   },
   {
-    path: '/market',
-    name: 'Market',
-    meta: { title: 'market', icon: 'market' },
-    component: () => import('../views/Market.vue'),
+    path: '/auction',
+    name: 'Auction',
+    meta: { title: 'auction*', icon: 'auction' },
+    component: () => import('../views/Auction.vue'),
   },
   {
     path: '/recycle',
     name: 'Recycle',
-    meta: { title: 'recycle', icon: 'recycle' },
+    meta: { title: 'recycle*', icon: 'recycle' },
     component: () => import('../views/Recycle.vue'),
   },
 ];

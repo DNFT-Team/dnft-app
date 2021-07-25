@@ -1,7 +1,7 @@
 <template>
   <div class="full-width">
     <div class="mk-top title-sticky">
-      <span class="title">Auction</span>
+      <span class="title">Auction/Coming Soon</span>
       <vs-button color="danger" type="line">Create Collection</vs-button>
       <vs-button color="danger" type="line">Create Auction</vs-button>
       <vs-select
@@ -23,31 +23,32 @@
 </template>
 
 <script>
-  import AuctionItem from "../components/AuctionItem";
-  import Empty from "../components/Empty";
-  import mockApi from './../mock'
-  export default {
-    name: "Auction",
-    components:{AuctionItem,Empty},
-    data() {
-      return {
-        query: {
-          type: 'all'
-        },
-        opts_type: [
-          {text: 'All', value: 'all'},
-          {text: 'Open', value: 'open'},
-          {text: 'Blind-Auction', value: 'blind'},
-          {text: 'Fixed-Price', value: 'fixed'}
-        ],
-        data_hs: []
-      }
-    },
-    created() {
-      // const participants = ['Open','Blind-Auction','Fixed-Price']
-      this.data_hs = mockApi.getAuction(30)
-    }
-  }
+import AuctionItem from '../components/AuctionItem';
+import Empty from '../components/Empty';
+import mockApi from '../mock';
+
+export default {
+  name: 'Auction',
+  components: { AuctionItem, Empty },
+  data() {
+    return {
+      query: {
+        type: 'all',
+      },
+      opts_type: [
+        { text: 'All', value: 'all' },
+        { text: 'Open', value: 'open' },
+        { text: 'Blind-Auction', value: 'blind' },
+        { text: 'Fixed-Price', value: 'fixed' },
+      ],
+      data_hs: [],
+    };
+  },
+  created() {
+    // const participants = ['Open','Blind-Auction','Fixed-Price']
+    this.data_hs = mockApi.getAuction(30);
+  },
+};
 </script>
 
 <style scoped>

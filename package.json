@@ -13,6 +13,7 @@
     "@polkadot/types": "4.8.1",
     "@polkadot/util": "^6.6.1",
     "@polkadot/util-crypto": "^6.6.1",
+    "lodash": "^4.17.21",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuesax": "^3.12.2",
