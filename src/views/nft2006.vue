@@ -17,7 +17,8 @@
     <vs-tabs alignment="fixed" style="margin-top: 1rem">
       <vs-tab label="CLASS" @click="getClsList">
         <vs-list>
-          <vs-list-item v-for="cls in clsList" :key="cls.class_id" :title="cls.name" :subtitle="cls.info">
+          <vs-list-item v-for="cls in clsList" :key="cls.class_id"
+                        :title="cls.name" :subtitle="cls.info">
             <template slot="avatar">
               <vs-avatar :src="cls.data"/>
             </template>
@@ -37,7 +38,9 @@
                 <vs-avatar :src="nft.data"/>
                 <vs-chip color="warning">{{nft.status}}</vs-chip>
               </template>
-              <vs-button color="danger" type="gradient" @click="nftFragmentation(nft)">Share</vs-button>
+              <vs-button color="danger" type="gradient" @click="nftFragmentation(nft)">
+                Share
+              </vs-button>
               <vs-button style="margin-left: 1rem;" v-show="nft.status==='Normal'"
                          color="success" type="gradient" @click="nftOffer(nft)">
                 Offer
@@ -47,27 +50,78 @@
         </vs-list>
       </vs-tab>
       <vs-tab label="COLLECTION" @click="getCollectionList">
+        <vs-collapse type="margin" accordion>
+          <vs-collapse-item  v-for="(col,n) in colList" :key="col.collection_id">
+            <div slot="header">
+              <h4 class="title">
+                <vs-avatar :src="col.data"/>
+                <span>#{{col.name}}</span>
+              </h4>
+            </div>
+            <div style="padding: 2rem 1rem;">
+              <section class="col-txt">
+                <p> Info:{{col.info}}</p>
+                <p> Price:{{col.price}}</p>
+                <p> Owner:{{col.owner}}</p>
+                <p> Issuer:{{col.issuer}}</p>
+              </section>
+              <el-row v-if="col.nfts&&col.nfts.length>0" :gutter="20" class="card-wrap">
+                <el-col :span="6" v-for="nft in col.nfts" :key="nft.nft_id">
+                  <vs-card actionable>
+                    <div slot="header">{{nft.name}}</div>
+                    <el-image class="radius-12 full-width" :src="nft.data" fit="contain" lazy>
+                      <div slot="placeholder" class="img-place">
+                        <vs-icon icon="photo_size_select_actual" size="40px"></vs-icon>
+                      </div>
+                    </el-image>
+                  </vs-card>
+                </el-col>
+              </el-row>
+              <vs-button v-else color="danger" type="relief"
+                         @click="getNftByCol(n)">View NFTs
+              </vs-button>
+            </div>
+          </vs-collapse-item>
+        </vs-collapse>
+      </vs-tab>
+      <vs-tab label="FRAGMENT" @click="getClsList">
         <vs-list>
-          <div v-for="col in colList" :key="col.collection_id">
-            <vs-list-header :title="col.name" color="primary"></vs-list-header>
-            <vs-list-item  v-for="cnft in col.nft"
-                           :key="col.collection_id+'-'+cnft.nft_id"
-                           :title="cnft.name">
-              <template slot="avatar">
-                <vs-avatar :src="cnft.info"/>
-              </template>
-              <div>
-                Price: {{cnft.price}}
-              </div>
-            </vs-list-item>
-          </div>
+          <vs-list-item v-for="cls in clsList" :key="cls.class_id"
+                        :title="cls.name" :subtitle="cls.info">
+            <template slot="avatar">
+              <vs-avatar :src="cls.data"/>
+            </template>
+            <div>
+              TOL: {{cls.total_supply}}
+            </div>
+          </vs-list-item>
         </vs-list>
       </vs-tab>
     </vs-tabs>
     <vs-popup title="Create" :active.sync="activePrompt">
       <div style="padding: 1rem .6rem;">
         <template v-if="promptType==='collection'">
-          <div>col</div>
+          <h4>Create Collection</h4>
+          <div>
+            <vs-select
+              color="primary"
+              label="Select NFT"
+              class="full-width"
+              v-model="formData.nfts"
+              max-selected="5"
+              multiple
+            >
+              <vs-select-item :key="item.nft_id" :value="n" :text="item.name"
+                              v-for="(item,n) in nftList"/>
+            </vs-select>
+            <vs-input class="full-width" label="Name" v-model="formData.name" />
+            <vs-input class="full-width" label="Info" v-model="formData.info" />
+            <vs-input-number label="Price" :min="0" v-model="formData.price"/>
+            <vs-upload action="https://jsonplaceholder.typicode.com/posts/" :limit="1" />
+          </div>
+          <div style="text-align: right;margin-top: 1rem;">
+            <vs-button @click="createCol" color="primary" type="relief">Submit</vs-button>
+          </div>
         </template>
         <template v-else-if="promptType==='class'">
           <h4>Create Class</h4>
@@ -86,7 +140,7 @@
           <div>
             <vs-select
               color="primary"
-              label="Existed"
+              label="Class"
               class="full-width"
               v-model="formData.class_id"
             >
@@ -96,7 +150,7 @@
             <vs-input class="full-width" label="Name" v-model="formData.name" />
             <vs-input class="full-width" label="Info" v-model="formData.info" />
             <vs-input-number label="Price" :min="0" v-model="formData.price"/>
-            <vs-upload action="https://jsonplaceholder.typicode.com/posts/" single-upload :data="formData.data"/>
+            <vs-upload action="https://jsonplaceholder.typicode.com/posts/" :limit="1" />
           </div>
           <div style="text-align: right;margin-top: 1rem;">
             <vs-button @click="createNFT" color="primary" type="relief">Submit</vs-button>
@@ -122,9 +176,10 @@ export default {
       formData: {
         name: '',
         info: '',
-        data: '',
+        data: null,
         total_supply: 0,
         price: 0,
+        nfts: [],
       },
       clsList: [],
       nftList: [],
@@ -160,10 +215,11 @@ export default {
       this.formData = {
         name: '',
         info: '',
-        data: '',
+        data: null,
         class_id: '',
         total_supply: 0,
         price: 0,
+        nfts: [],
       };
       this.activePrompt = true;
       this.promptType = promptType;
@@ -173,7 +229,6 @@ export default {
       if (name && info && total_supply) {
         const metaData = JSON.stringify({ name, info });
         const dataStr = `https://unsplash.it/300/280?random=${Math.ceil(Math.random() * 100)}`;
-
         this.$vs.loading({ color: '#11047A', type: 'radius' });
         BaseApi.signAndSend(
           'nft2006Module',
@@ -212,7 +267,7 @@ export default {
       if (name && info && class_id) {
         const metaData = JSON.stringify({ name, info });
         const dataStr = `https://unsplash.it/300/280?random=${Math.ceil(Math.random() * 100)}`;
-
+        this.$vs.loading({ color: '#11047A', type: 'radius' });
         BaseApi.signAndSend(
           'nft2006Module',
           'mintNft',
@@ -242,7 +297,59 @@ export default {
           });
           this.$vs.loading.close();
         });
+      }
+    },
+    createCol() {
+      const {
+        name, info, price = 0, nfts = [],
+      } = this.formData;
+      if (name && info && nfts.length > 0) {
+        const nftSource = nfts.map((i) => (this.nftList[i]));
+        const nftGroup = groupBy(nftSource, 'class_id');
+        const nftIndex = Object.entries(nftGroup).map((ent) => ([
+          ent[0], ent[1].length, ent[1].map((e) => e.index),
+        ]));
+        if (nftIndex.length <= 0) {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: 'Nft Not Find',
+            color: 'warning',
+          });
+          return;
+        }
+        const dataStr = `https://unsplash.it/300/280?random=${Math.ceil(Math.random() * 100)}`;
         this.$vs.loading({ color: '#11047A', type: 'radius' });
+        BaseApi.signAndSend(
+          'nft2006Module',
+          'coupledCollection',
+          (res) => {
+            this.$vs.loading.close();
+            if (res.code === 0) {
+              this.activePrompt = false;
+              this.$vs.notify({
+                position: 'top-right',
+                title: 'System Hint',
+                text: 'Add Collection Success.',
+                color: 'success',
+              });
+              this.getNFTList();
+            }
+          },
+          stringToHex(name),
+          stringToHex(info),
+          stringToHex(dataStr),
+          price * 1_0000,
+          nftIndex,
+        ).catch((err) => {
+          this.$vs.notify({
+            position: 'top-right',
+            title: 'System Hint',
+            text: err.message,
+            color: 'danger',
+          });
+          this.$vs.loading.close();
+        });
       }
     },
     nftOffer(nft) {
@@ -306,6 +413,44 @@ export default {
         this.$vs.loading.close();
       });
     },
+    async getNftByCol(n) {
+      const col = this.colList[n];
+      let resData = [];
+      try {
+        this.$vs.loading({ color: '#11047A', type: 'radius' });
+        const api = this.$store.state.chainState.Api;
+        const queryCls = col.source.reduce((t, c) => {
+          let temp = [];
+          if (c.amount > 0 && c.nfts_indexs.length > 0) {
+            temp = c.nfts_indexs.map((i) => [
+              api.query.nft2006Module.nFTByClassIndex, [c.class_id, i],
+            ]);
+          }
+          return [...t, ...temp];
+        }, []);
+        const nftIdsByCls = await api.queryMulti(queryCls);
+        const nominatorIds = nftIdsByCls.map((e) => e.value.toString());
+        // console.log('all nominators:', nominatorIds.map((e) => e.toString()));
+        const multiQuery = await api.query.nft2006Module.nFTInfos.multi(nominatorIds);
+        resData = multiQuery.map((e, i) => {
+          const temp = e.value.toJSON();
+          const metaData = JSON.parse(hexToString(temp.metadata));
+          return {
+            ...temp,
+            nft_id: nominatorIds[i].toString() || '',
+            name: metaData.name,
+            info: metaData.info,
+            data: hexToString(temp.info),
+            price: temp.price / 1_0000,
+          };
+        });
+      } catch {
+        resData = [];
+      } finally {
+        this.colList[n].nfts = [...resData];
+        this.$vs.loading.close();
+      }
+    },
     async getClsList() {
       let resData = [];
       try {
@@ -354,27 +499,46 @@ export default {
       } catch {
         resData = [];
       } finally {
-        this.nftList = resData.filter((e) => e.issuer === this.$store.state.address);
+        this.nftList = resData.filter((e) => (e.status !== 'InColletion') && (e.issuer === this.$store.state.address));
       }
     },
-    getCollectionList() {
-      this.colList = [1, 2, 3].map((c) => ({
-        collection_id: c,
-        name: `Collection-${c}`,
-        info: `https://unsplash.it/300/280?random=${c}`,
-        nft: [1, 2, 3].map((e) => ({
-          nft_id: e, name: `Nft-${e}`, info: `https://unsplash.it/300/280?random=${e}`, price: (Math.random() * 10).toFixed(2),
-        })),
-      }));
+    async getCollectionList() {
+      let resData = [];
+      try {
+        const api = this.$store.state.chainState.Api;
+        const keys = await api.query.nft2006Module.collections.keys();
+        const nominatorIds = keys.map(({ args: [nominatorId] }) => nominatorId);
+        // console.log('all nominators:', nominatorIds.map((e) => e.toString()));
+        const multiQuery = await api.query.nft2006Module.collections.multi(nominatorIds);
+        resData = multiQuery.map((e, i) => {
+          const temp = e.value.toJSON();
+          return {
+            ...temp,
+            collection_id: nominatorIds[i].toString() || '',
+            name: hexToString(temp.name),
+            info: hexToString(temp.symbol),
+            data: hexToString(temp.info),
+            price: temp.price / 1_0000,
+            nfts: [],
+          };
+        });
+      } catch {
+        resData = [];
+      } finally {
+        this.colList = resData.filter((e) => e.issuer === this.$store.state.address);
+      }
     },
     getFullList() {
       this.getClsList();
       this.getNFTList();
+      this.getCollectionList();
     },
   },
 };
 </script>
 
 <style scoped>
-
+.col-txt{
+  background: #E0E5F2;margin-bottom: 1rem;padding: .8rem;border-radius: 15px;
+}
 </style>
