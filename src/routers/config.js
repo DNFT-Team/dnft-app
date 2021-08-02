@@ -7,11 +7,11 @@ import MarketDetailScreen from 'pages/market/detail';
 import AssetScreen from 'pages/asset';
 
 const MENU_MAP = [
-  { path: '/', Component: HomeScreen, navName: 'home', exact: true },
-  { path: '/mining', Component: MiningScreen, navName: 'mining' },
-  { path: '/bridge', Component: BridgeScreen, navName: 'bridge' },
-  { path: '/market', exact: true, Component: MarketScreen, navName: 'market', deActive: true},
-  { path: '/data', Component: DataScreen, navName: 'data', deActive: true },
+  { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
+  { path: '/mining', Component: MiningScreen, navName: 'Mining' },
+  { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
+  { path: '/market', exact: true, Component: MarketScreen, navName: 'Market', deActive: true},
+  { path: '/data', Component: DataScreen, navName: 'Data', deActive: true },
 ];
 const ROUTER_MAP = [
   ...MENU_MAP,
