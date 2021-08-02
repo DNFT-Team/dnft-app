@@ -50,16 +50,39 @@ const App = (props) => {
   ];
 
   const contectIconArray = [
-    { name: 'github', url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
-    { name: 'telegram', url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
-    { name: 'discord', url: 'https://discord.gg/pxEZB7ny', icon: 'icon-discord' },
-    { name: 'twitter', url: 'https://twitter.com/DNFTProtocol', icon: 'icon-twitter' },
-    { name: 'medium', url: 'https://medium.com/dnft-protocol', icon: 'icon-medium' }
+    {
+      name: 'github',
+      url: 'https://github.com/DNFT-Team/',
+      icon: 'icon-github',
+    },
+    {
+      name: 'telegram',
+      url: 'https://t.me/dnftprotocol',
+      icon: 'icon-telegram',
+    },
+    {
+      name: 'discord',
+      url: 'https://discord.gg/pxEZB7ny',
+      icon: 'icon-discord',
+    },
+    {
+      name: 'twitter',
+      url: 'https://twitter.com/DNFTProtocol',
+      icon: 'icon-twitter',
+    },
+    {
+      name: 'medium',
+      url: 'https://medium.com/dnft-protocol',
+      icon: 'icon-medium',
+    },
   ];
   return (
     <section className={styles.container}>
-      <section className={styles.leftNav}>
-        <img className={styles.logo} src={Logo} alt="logo"/>
+      <section className={styleLeftNav}>
+        <div className={'styleLogoContainer'}>
+          <img className={styles.logo} src={Logo} alt='logo'/>
+          <span className='logoText'>DNFT Protocal</span>
+        </div>
         <section className={styles.menu}>
           {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;
@@ -68,41 +91,44 @@ const App = (props) => {
               <nav
                 onClick={() => handleTo(obj)}
                 key={'Nav_' + index}
-                className={`${styles.nav} ${isActive && styles.navActive}`}
+                className={`${styles.nav} ${
+                  isActive && styles.navActive
+                } styleNavContainer`}
               >
                 <div
-                  className={`${styles.navImg} ${isActive && styles.navActive}`}
+                  className={`${styles.navImg} ${
+                    isActive && styles.navActive
+                  } `}
                 >
                   {navIconArray[index]}
                 </div>
-                {
-                  obj.deActive ? (
-                    <span
-                      className={`${styles.navDeText} ${
-                        isActive && styles.navActive
-                      }`}
-                    >
-                      {obj.navName}*
-                    </span>
-                  ) : (
-                    <span
-                      className={`${styles.navText} ${
-                        isActive && styles.navActive
-                      }`}
-                    >
-                      {obj.navName}{obj.deActive ? '*' : ''}
-                    </span>
-                  )
-                }
+                {obj.deActive ? (
+                  <span
+                    className={`${styles.navDeText} ${
+                      isActive && styles.navActive
+                    } styleNavText`}
+                  >
+                    {obj.navName}*
+                  </span>
+                ) : (
+                  <span
+                    className={`${styles.navText} ${
+                      isActive && styles.navActive
+                    } styleNavText`}
+                  >
+                    {obj.navName}
+                    {obj.deActive ? '*' : ''}
+                  </span>
+                )}
               </nav>
             );
           })}
         </section>
-        <section className={styleFootNoteContainer}>
+        <section className={'styleFootNoteContainer'}>
           <div className={styleContactUs}>
             {contectIconArray.map((item, i) => (
-              <a className={styleContactItem} href={item.url} target="_blank" rel="noreferrer" key={i}>
-                <i className={'iconfont ' + item.icon} />
+              <a className={styleContactItem} href={item.url} target='_blank' rel='noreferrer' key={i}>
+                <i className={'iconfont ' + item.icon}/>
               </a>
             ))}
           </div>
@@ -123,11 +149,6 @@ const App = (props) => {
 };
 export default withRouter(connect()(App));
 
-const styleFootNoteContainer = css`
-  position: absolute;
-  bottom: 5vh;
-`;
-
 const styleContactUs = css`
   display: flex;
   flex-direction: row;
@@ -147,4 +168,80 @@ const styleFootNote = css`
   flex-direction: column;
   align-items: center;
   font-weight: 300;
+`;
+
+const styleLeftNav = css`
+  width: 56px;
+  cursor: pointer;
+  background-color: rgb(20, 23, 74);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 0 20px;
+  overflow: hidden;
+  transition: width 0.5s;
+
+  .styleLogoContainer {
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+
+    margin-top: 16px;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+      color: white;
+      font-size: 23px;
+      font-weight: bolder;
+      margin-left: 14px;
+    }
+  }
+
+  .styleNavText {
+    visibility: hidden;
+  }
+  .logoText {
+    display: none;
+    white-space: nowrap;
+  }
+  .styleNavContainer {
+    padding: 18px 17px;
+    & > div {
+      margin: 0;
+    }
+  }
+  .styleFootNoteContainer {
+    position: absolute;
+    bottom: 5vh;
+    display: none;
+  }
+  &:hover {
+    width: 216px;
+    .logoText {
+      display: block;
+    }
+    .styleNavText {
+      visibility: visible;
+    }
+
+    .styleNavContainer {
+      padding: 18px 58px 18px 64px;
+      & > div {
+        margin-right: 20px;
+      }
+    }
+
+    .styleLogoContainer {
+      margin-left: 6px;
+    }
+
+    .styleFootNoteContainer {
+      position: absolute;
+      bottom: 5vh;
+      display: block;
+    }
+  }
 `;
