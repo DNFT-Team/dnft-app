@@ -80,7 +80,7 @@ const App = (props) => {
     <section className={styles.container}>
       <section className={styleLeftNav}>
         <div className={'styleLogoContainer'}>
-          <img className={styles.logo} src={Logo} alt='logo'/>
+          <img className={styles.logo} src={Logo} alt='logo' />
           <span className='logoText'>DNFT Protocal</span>
         </div>
         <section className={styles.menu}>
@@ -127,8 +127,14 @@ const App = (props) => {
         <section className={'styleFootNoteContainer'}>
           <div className={styleContactUs}>
             {contectIconArray.map((item, i) => (
-              <a className={styleContactItem} href={item.url} target='_blank' rel='noreferrer' key={i}>
-                <i className={'iconfont ' + item.icon}/>
+              <a
+                className={styleContactItem}
+                href={item.url}
+                target='_blank'
+                rel='noreferrer'
+                key={i}
+              >
+                <i className={'iconfont ' + item.icon} />
               </a>
             ))}
           </div>
@@ -184,13 +190,16 @@ const styleLeftNav = css`
   .styleLogoContainer {
     margin-left: 0;
     display: flex;
-    justify-content: center;
 
     margin-top: 16px;
     margin-bottom: 100px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    img {
+      position: relative;
+      left: 10px;
+    }
 
     span {
       color: white;
@@ -236,6 +245,10 @@ const styleLeftNav = css`
 
     .styleLogoContainer {
       margin-left: 6px;
+      img {
+        position: relative;
+        left: 0;
+      }
     }
 
     .styleFootNoteContainer {
