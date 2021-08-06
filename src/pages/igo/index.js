@@ -8,10 +8,20 @@ import podium from '../../images/igo/podium.png';
 import playButton from '../../images/igo/play-button.png';
 import infoBg from '../../images/igo/info-bg.png';
 import people from '../../images/igo/people.png';
+import { igoContract } from 'utils/contract';
+import { igoAbi } from 'utils/abi';
+import Web3 from 'web3';
 import { toast } from 'react-toastify';
 
 const IGOScreen = () => {
   const [address, setAddress] = useState();
+  const [medalData, setMedalData] = useState({
+    Gold: {},
+    Silver: {},
+    Bronze: {},
+    Total: {},
+  });
+  const [isReward, setIsReward] = useState(false);
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -28,9 +38,103 @@ const IGOScreen = () => {
     }
   }, [address]);
 
+  const getMedalInfo = useCallback(async () => {
+    if (window.ethereum) {
+      let ethereum = window.ethereum;
+      window.web3 = new Web3(ethereum);
+      await ethereum.enable();
+
+      const contractAddress = igoContract;
+      const abi = igoAbi;
+
+      const myContract = new window.web3.eth.Contract(abi, contractAddress);
+
+      let medalIds = await Promise.all(
+        [0, 1, 2].map((item) => myContract.methods.ids(item).call())
+      );
+
+      let data = await Promise.all(
+        medalIds.map((item) => myContract.methods.tokenIds(item).call())
+      );
+      setMedalData({
+        Gold: {
+          id: data[0][0],
+          total: Number(data[0][1]),
+          mintedTotal: Number(data[0][2]),
+          isValid: data[0][3],
+        },
+        Silver: {
+          id: data[1][0],
+          total: Number(data[1][1]),
+          mintedTotal: Number(data[1][2]),
+          isValid: data[1][3],
+        },
+        Bronze: {
+          id: data[2][0],
+          total: Number(data[2][1]),
+          mintedTotal: Number(data[2][2]),
+          isValid: data[2][3],
+        },
+        Total: {
+          total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
+          mintedTotal:
+            Number(data[0][2]) + Number(data[1][2]) + Number(data[2][2]),
+          isValid: data[0][3] || data[1][3] || data[2][3],
+        },
+      });
+    }
+  }, []);
+
+  const getRewardInfo = useCallback(async () => {
+    if (address == undefined) {
+      return;
+    }
+
+    if (window.ethereum) {
+      let ethereum = window.ethereum;
+      window.web3 = new Web3(ethereum);
+      await ethereum.enable();
+
+      const contractAddress = igoContract;
+      const abi = igoAbi;
+
+      const myContract = new window.web3.eth.Contract(abi, contractAddress);
+
+      const isReward = await myContract.methods.rewards(address).call({
+        from: address,
+      });
+
+      setIsReward(isReward > 0);
+    }
+  }, [address]);
+
+  const handleRaffle = useCallback(async () => {
+    if (window.ethereum) {
+      let ethereum = window.ethereum;
+      window.web3 = new Web3(ethereum);
+      await ethereum.enable();
+
+      const contractAddress = igoContract;
+      const abi = igoAbi;
+
+      const myContract = new window.web3.eth.Contract(abi, contractAddress);
+
+      console.log(address,'address')
+      const raffle = await myContract.methods.raffle().send({
+        from: address,
+      });
+      console.log(raffle, 'raffle');
+    }
+  }, [address]);
+
   useEffect(() => {
     injectWallet();
   }, [injectWallet]);
+
+  useEffect(() => {
+    getMedalInfo();
+    getRewardInfo();
+  }, [address]);
 
   return (
     <div className={styleContainer}>
@@ -41,17 +145,25 @@ const IGOScreen = () => {
         className={stylePlayButton}
         src={playButton}
         onClick={async () => {
-          if (address) {
+          if (!address) {
+            let ethereum = window.ethereum;
+            await ethereum.enable();
+            const accounts = await ethereum.request({
+              method: 'eth_requestAccounts',
+            });
+            const account = accounts[0];
+
+            setAddress(account);
             return;
           }
-          let ethereum = window.ethereum;
-          await ethereum.enable();
-          const accounts = await ethereum.request({
-            method: 'eth_requestAccounts',
-          });
-          const account = accounts[0];
 
-          setAddress(account);
+          if (isReward) {
+            toast.dark('you have been reward', {
+              position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+          }
+          handleRaffle()
         }}
       />
       <img className={stylePodium} src={podium} />
@@ -60,25 +172,35 @@ const IGOScreen = () => {
         <div>
           <div className={styleInfoContainer}>
             <span className='title'>Gold Medal</span>
-            <span className='goal'>Goal：1,000</span>
-            <div className='raised'>Raised：999</div>
+            <span className='goal'>Goal：{medalData.Gold.total}</span>
+            <div className='raised'>
+              Raised：{medalData.Gold.total - medalData.Gold.mintedTotal || 1}
+            </div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>Silver Medal</span>
-            <span className='goal'>Goal：1,000</span>
-            <div className='raised'>Raised：999</div>
+            <span className='goal'>Goal：{medalData.Silver.total}</span>
+            <div className='raised'>
+              Raised：
+              {medalData.Silver.total - medalData.Silver.mintedTotal || 1}
+            </div>
           </div>
         </div>
         <div>
           <div className={styleInfoContainer}>
             <span className='title'>Bronze Medal</span>
-            <span className='goal'>Goal：1,000</span>
-            <div className='raised'>Raised：999</div>
+            <span className='goal'>Goal：{medalData.Bronze.total}</span>
+            <div className='raised'>
+              Raised：
+              {medalData.Bronze.total - medalData.Bronze.mintedTotal || 1}
+            </div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>All Medal’s</span>
-            <span className='goal'>Goal：1,000</span>
-            <div className='raised'>Raised：999</div>
+            <span className='goal'>Goal：{medalData.Total.total}</span>
+            <div className='raised'>
+              Raised：{medalData.Total.total - medalData.Total.mintedTotal || 1}
+            </div>
           </div>
         </div>
       </div>
@@ -148,7 +270,7 @@ const styleBottomContainer = css`
   margin: 0 4vw;
   position: absolute;
   bottom: 6vh;
-  width:calc(100% - 8vw);
+  width: calc(100% - 8vw);
   justify-content: space-between;
   gap: 0 20%;
   & > div {
