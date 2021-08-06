@@ -344,9 +344,6 @@ const AssetScreen = (props) => {
           return;
         }
 
-        toast.dark(`NetworkChanged:${networkIDstring}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
 
         init();
       });
@@ -354,7 +351,6 @@ const AssetScreen = (props) => {
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined)
         setNftData(undefined)
-        toast.dark('AccountsChanged', { position: toast.POSITION.TOP_CENTER });
         init();
       });
 

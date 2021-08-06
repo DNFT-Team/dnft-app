@@ -26,88 +26,84 @@ const GlobalHeader = (props) => {
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
 
-  const netArray = useMemo(() => [
-    {
-      name: 'Ethereum Mainnet',
-      icon: netEthSvg,
-      shortName: ['ETH', 'Ethereum'],
-      shortIcon: ethSvg,
-      netWorkId: 1,
-    },
-    {
-      name: 'Bsc Mainnet',
-      icon: bscNetSvg,
-      shortName: ['BSC', 'Bsc'],
-      shortIcon: bscSvg,
-    },
-    {
-      name: 'Heco Mainnet',
-      icon: heroNetSvg,
-      shortName: ['HECO', 'Heco'],
-      shortIcon: hecoSvg,
-    },
-    {
-      name: 'Polkadot Mainnet',
-      icon: polkadotNetSvg,
-      shortName: ['DOT', 'Polkadot'],
-      shortIcon: polkadotSvg,
-    },
-    {
-      name: 'DNFT Mainnet',
-      icon: dnftSvg,
-      shortName: ['DNFT', 'Dnft'],
-      shortIcon: dnftSvg,
-      netWorkId: 4,
-    },
-    {
-      name: 'Ropsten Mainnet',
-      shortName: ['Ropsten', 'Ropsten'],
-      netWorkId: 3,
-    },
-    {
-      name: 'BSC Mainnet',
-      shortName: ['BSC', 'BSC'],
-      netWorkId: 56,
-    },
-  ], []);
+  const netArray = useMemo(
+    () => [
+      {
+        name: 'Ethereum Mainnet',
+        icon: netEthSvg,
+        shortName: ['ETH', 'Ethereum'],
+        shortIcon: ethSvg,
+        netWorkId: 1,
+      },
+      {
+        name: 'Bsc Mainnet',
+        icon: bscNetSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+      },
+      {
+        name: 'Heco Mainnet',
+        icon: heroNetSvg,
+        shortName: ['HECO', 'Heco'],
+        shortIcon: hecoSvg,
+      },
+      {
+        name: 'Polkadot Mainnet',
+        icon: polkadotNetSvg,
+        shortName: ['DOT', 'Polkadot'],
+        shortIcon: polkadotSvg,
+      },
+      {
+        name: 'DNFT Mainnet',
+        icon: dnftSvg,
+        shortName: ['DNFT', 'Dnft'],
+        shortIcon: dnftSvg,
+        netWorkId: 4,
+      },
+      {
+        name: 'Ropsten Test Mainnet',
+        shortName: ['Ropsten', 'Ropsten'],
+        netWorkId: 3,
+      },
+      {
+        name: 'Kovan Test Mainnet',
+        shortName: ['Ropsten', 'Ropsten'],
+        netWorkId: 42,
+      },
+      {
+        name: 'BSC Mainnet',
+        shortName: ['BSC', 'BSC'],
+        netWorkId: 56,
+      },
+    ],
+    []
+  );
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (currentNetIndex == undefined) {
-        const currentIndex = netArray.findIndex((item) => Number(item.netWorkId) === Number(ethereum.networkVersion));
-
-        setCurrentNetIndex(currentIndex);
-      }
-
-      if (address === undefined) {
-        if (ethereum.selectedAddress) {
-          setAddress(ethereum.selectedAddress);
-        } else {
-          await ethereum.enable();
-
-          const accounts = await ethereum.request({
-            method: 'eth_requestAccounts',
-          });
-
-          const account = accounts[0];
-          console.log(account, 'account here');
-          setAddress(account);
-        }
-      }
-
+      setAddress(ethereum.selectedAddress);
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
-        const currentIndex = netArray.findIndex((item) => Number(item.netWorkId) === Number(networkIDstring));
+        toast.dark(`NetworkChanged:${networkIDstring}`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        const currentIndex = netArray.findIndex(
+          (item) => Number(item.netWorkId) === Number(networkIDstring)
+        );
 
         setCurrentNetIndex(currentIndex);
       });
 
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
-        toast.dark('AccountsChanged', { position: toast.POSITION.TOP_CENTER });
-        console.log('aaa', accounts);
+        if (accounts[0] &&  accounts[0] !== address) {
+          console.log(accounts[0],address)
+          toast.dark('AccountsChanged', {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
         setAddress(accounts[0]);
       });
     } else {
@@ -119,57 +115,62 @@ const GlobalHeader = (props) => {
     injectWallet();
   }, [injectWallet]);
 
-  console.log(address, 'address out');
-  const renderModal = useMemo(() => (
-    <Dialog
-      customClass={styleModalContainer}
-      title="Switch to"
-      visible={isNetListVisible}
-      onCancel={() => {
-        setIsNetListVisible(false);
-      }}
-    >
-      <Dialog.Body>
-        {netArray.map((item, index) => (
-          <div
-            key={index}
-            className={styleNetItem}
-            style={{ border: index === netArray.length - 1 && 'none' }}
-            onClick={() => {
-              setIsNetListVisible(false);
-              setCurrentNetIndex(index);
-            }}
-          >
-            <span className={styleNetIcon}>{item.icon}</span>
-            <span>{item.name}</span>
-          </div>
-        ))}
-      </Dialog.Body>
-    </Dialog>
-  ), [netArray]);
+  const renderModal = useMemo(
+    () => (
+      <Dialog
+        customClass={styleModalContainer}
+        title='Switch to'
+        visible={isNetListVisible}
+        onCancel={() => {
+          setIsNetListVisible(false);
+        }}
+      >
+        <Dialog.Body>
+          {netArray.map((item, index) => (
+            <div
+              key={index}
+              className={styleNetItem}
+              style={{ border: index === netArray.length - 1 && 'none' }}
+              onClick={() => {
+                setIsNetListVisible(false);
+                setCurrentNetIndex(index);
+              }}
+            >
+              <span className={styleNetIcon}>{item.icon}</span>
+              <span>{item.name}</span>
+            </div>
+          ))}
+        </Dialog.Body>
+      </Dialog>
+    ),
+    [netArray]
+  );
 
   return (
     <header className={styleHeader}>
       <div className={styleSearchContainer}>
-        <i className="el-icon-search"/>
+        <i className='el-icon-search' />
         <Input placeholder={'Search Art,Game or Fun'} />
       </div>
       <div className={styles.actionContainer}>
         <span
+          className={address == null && styleAddress}
           onClick={async () => {
             if (address) {
               return;
             }
-
             let ethereum = window.ethereum;
-
             await ethereum.enable();
             const accounts = await ethereum.request({
               method: 'eth_requestAccounts',
             });
-
             const account = accounts[0];
-            console.log(account, 'account here');
+            const currentIndex = netArray.findIndex(
+              (item) =>
+                Number(item.netWorkId) === Number(ethereum.networkVersion)
+            );
+
+            setCurrentNetIndex(currentIndex);
             setAddress(account);
           }}
         >
@@ -177,15 +178,17 @@ const GlobalHeader = (props) => {
             ? `${address?.slice(0, 8)}...${address?.slice(28)}`
             : 'connect wallet'}
         </span>
-        <div
-          className={actionItem}
-          style={{ cursor: 'pointer' }}
-          onClick={() => {
-            history.push('asset');
-          }}
-        >
-          {assetSvg}
-        </div>
+        {address && (
+          <div
+            className={actionItem}
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              history.push('asset');
+            }}
+          >
+            {assetSvg}
+          </div>
+        )}
         {currentNetIndex != undefined && (
           <React.Fragment>
             <div
@@ -224,7 +227,7 @@ export default GlobalHeader;
 const styleHeader = css`
   display: flex;
   height: 64px;
-  padding: 24px 30px 24px 56px;
+  padding: 10px 30px 10px 56px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -308,7 +311,6 @@ const styleNetIcon = css`
 const styleSearchContainer = css`
   display: flex;
   flex: 2;
-  border-right: 1px solid #cdcfd4;
   align-items: center;
   font-size: 28px;
   margin-bottom: 16px;
@@ -320,4 +322,14 @@ const styleSearchContainer = css`
     width: 90%;
     color: #8f9bba;
   }
+`;
+
+const styleAddress = css`
+  cursor: pointer;
+  background: #233a7d;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
 `;

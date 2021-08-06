@@ -86,12 +86,10 @@ const AssetsScreen = (props) => {
     if (ethereum) {
       // 监听账号切换
       ethereum.on('networkChanged', (networkIDstring) => {
-        toast.dark(`NetworkChanged:${networkIDstring}`, {position: toast.POSITION.TOP_CENTER});
         handleCrossFr(fromAddr, null)
       })
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
-        toast.dark('AccountsChanged', {position: toast.POSITION.TOP_CENTER});
         handleCrossFr(accounts[0], null)
       })
       window.web3 = new Web3(ethereum);

@@ -13,11 +13,7 @@ import {
   BookOutlined,
   CalendarOutlined,
   ContactsOutlined,
-  DingdingOutlined,
-  GithubOutlined,
-  MediumOutlined,
   SnippetsOutlined,
-  TwitterOutlined,
 } from '@ant-design/icons';
 import { css } from 'emotion';
 
@@ -46,6 +42,7 @@ const App = (props) => {
     <BookOutlined />,
     <SnippetsOutlined />,
     <CalendarOutlined />,
+    <ContactsOutlined />,
     <ContactsOutlined />,
   ];
 
@@ -159,7 +156,7 @@ const styleContactUs = css`
   display: flex;
   flex-direction: row;
   gap: 24px;
-  margin-left: 20px;
+  justify-content: center;
 `;
 const styleContactItem = css`
   text-decoration: none;
@@ -174,6 +171,7 @@ const styleFootNote = css`
   flex-direction: column;
   align-items: center;
   font-weight: 300;
+  white-space: nowrap;
 `;
 
 const styleLeftNav = css`
