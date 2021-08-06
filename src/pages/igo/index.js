@@ -145,10 +145,10 @@ const stylePeople = css`
 const styleBottomContainer = css`
   display: flex;
   flex-direction: row;
-  margin: 0 8%;
+  margin: 0 4vw;
   position: absolute;
   bottom: 6vh;
-  width: 84%;
+  width:calc(100% - 8vw);
   justify-content: space-between;
   gap: 0 20%;
   & > div {
