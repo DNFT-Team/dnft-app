@@ -634,6 +634,7 @@ const styleChampionModal = css`
   justify-content: center;
   flex-direction: column;
   gap: 4%;
+  z-index: 1100;
   span {
     position: relative;
     top: 22%;
@@ -670,6 +671,7 @@ const styleMedalGif = css`
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
+  z-index: 1200;
 `;
 
 const stylStepGif = css`
