@@ -43,7 +43,7 @@ const App = (props) => {
     <BookOutlined />,
     <SnippetsOutlined />,
     <CalendarOutlined />,
-    <ContactsOutlined />,
+    // <ContactsOutlined />,
     <CrownOutlined />
   ];
 
