@@ -32,20 +32,17 @@ const IGOScreen = () => {
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showRaffle, setShowRaffle] = useState(false);
   const [showStepGif, setShowStepGif] = useState(false);
+  const [showRuleModal, setShowRuleModal] = useState(false);
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
-    console.log(ethereum, 'ethereum');
 
     if (ethereum) {
-      console.log(ethereum, 'ethereum');
       setAddress(ethereum.selectedAddress);
 
       if (Number(ethereum.networkVersion) !== 97) {
-        console.log(ethereum, '111');
         setIsWrongNetWork(true);
       } else {
-        console.log(ethereum, '222');
         setIsWrongNetWork(false);
       }
 
@@ -85,34 +82,46 @@ const IGOScreen = () => {
         medalIds.map((item) => myContract.methods.tokenIds(item).call())
       );
 
-      console.log(data,'data')
+      const goldMintedTotal =
+        Number(data[0][1]) - Number(data[0][2]) < 5
+          ? 5
+          : Number(data[0][1]) - Number(data[0][2]);
+      const silverMintedTotal =
+        Number(data[1][1]) - Number(data[1][2]) < 5
+          ? 5
+          : Number(data[1][1]) - Number(data[1][2]);
+      const bronzeMintedTotal =
+        Number(data[2][1]) - Number(data[2][2]) < 5
+          ? 5
+          : Number(data[2][1]) - Number(data[2][2]);
 
-      const goldMintedTotal = Number(data[0][2]) < 5 ? 5 : Number(data[0][2]);
-      const silverMintedTotal = Number(data[1][2]) < 5 ? 5 : Number(data[1][2]);
-      const bronzeMintedTotal = Number(data[2][2]) < 5 ? 5 : Number(data[2][2]);
+      const isNotEnough =
+        Number(data[0][2]) + Number(data[1][2]) + Number(data[2][2]) === 0;
+
       setMedalData({
         Gold: {
           id: data[0][0],
           total: Number(data[0][1]),
-          mintedTotal: goldMintedTotal,
+          mintedTotal: isNotEnough ? 0 : goldMintedTotal,
           isValid: data[0][3],
         },
         Silver: {
           id: data[1][0],
           total: Number(data[1][1]),
-          mintedTotal: silverMintedTotal,
+          mintedTotal: isNotEnough ? 0 : silverMintedTotal,
           isValid: data[1][3],
         },
         Bronze: {
           id: data[2][0],
           total: Number(data[2][1]),
-          mintedTotal: bronzeMintedTotal,
+          mintedTotal: isNotEnough ? 0 : bronzeMintedTotal,
           isValid: data[2][3],
         },
         Total: {
           total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
           mintedTotal: goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
           isValid: data[0][3] || data[1][3] || data[2][3],
+          isNotEnough: isNotEnough,
         },
       });
     }
@@ -230,7 +239,6 @@ const IGOScreen = () => {
   useEffect(() => {
     window.addEventListener('message', (ev) => {
       if (ev.origin === 'http://192.210.186.210') {
-        console.log(ev, 'ev');
         setShowSuccess(true);
       }
     });
@@ -250,7 +258,13 @@ const IGOScreen = () => {
           className={stylePlayButton}
           src={playButton}
           onClick={async () => {
-            console.log(address, 'address');
+            if (medalData.Total.isNotEnough) {
+              toast.info('Ended', {
+                position: toast.POSITION.TOP_CENTER,
+              });
+              return;
+            }
+
             if (!address) {
               let ethereum = window.ethereum;
               await ethereum.enable();
@@ -263,7 +277,6 @@ const IGOScreen = () => {
               setAddress(account);
               return;
             }
-            console.log(isWrongNetWork, 'isWrongNetWork');
 
             if (isWrongNetWork) {
               toast.dark('Please Choose BSC Testnet', {
@@ -294,7 +307,14 @@ const IGOScreen = () => {
           }}
         />
       )}
-
+      <span
+        className={stylePlayRule}
+        onClick={() => {
+          setShowRuleModal(true);
+        }}
+      >
+        GET GAMD RULES
+      </span>
       <img className={stylePodium} src={podium} />
       <img className={stylePeople} src={people} />
       <iframe
@@ -406,6 +426,51 @@ const IGOScreen = () => {
           src={require('images/igo/step.gif').default}
         />
       )}
+      <div
+        className={styleRuleModal}
+        style={{
+          opacity: showRuleModal ? 0.8 : 0,
+          visibility: showRuleModal ? 'visible' : 'hidden',
+        }}
+      >
+        <h1>1st Blockchain Olympics Games</h1>
+        <b>Theme: Synthetic Bitcoin</b>
+        <b>Rules: </b>
+        <p>
+          1.Winning a blind box Medal once you synthesized into BNB, winner get
+          their medals by openning the blind box.
+        </p>
+        <p>2.The openning the blind box operation costs 12 busd.</p>
+        <p>
+          {
+            '3.The Synthetic path: DNF--> EOS--> HT--> DOT--> UNI--> FIL--> LTC--> BNB--> BCH--> ETH-->BTC.'
+          }
+        </p>
+        <p>
+          4.The total number of Gold/Silver/Bronze medal NFT are 50/950/4000.
+        </p>
+        <p>5.Each address is allowed to participate once.</p>
+
+        <b>Rewards:</b>
+        <p>
+          1.Gold/Silver/Bronze medal NFT holders will get an airdrop of
+          100/30/10 DNF when TGE.
+        </p>
+        <p>
+          2.Gold/Silver/Bronze medal NFT holders will have the right of
+          generation rights of DNFT Protocol,which includes continuous
+          activity/airdrop white list, old friends rights, test product
+          experience, etc.
+        </p>
+        <div
+          className={styleClose}
+          onClick={() => {
+            setShowRuleModal(false);
+          }}
+        >
+          ❌
+        </div>
+      </div>
     </div>
   );
 };
@@ -449,6 +514,17 @@ const stylePlayButton = css`
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
+`;
+
+const stylePlayRule = css`
+  top: 68%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  color: #ff504a;
+  font-weight: bolder;
+  font-size: 14px;
 `;
 
 const stylePodium = css`
@@ -591,4 +667,42 @@ const stylStepGif = css`
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
+`;
+
+const styleRuleModal = css`
+  position: relative;
+  width: 800px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  background: #ffffff;
+  box-shadow: inset 0px 11px 50px rgba(15, 52, 66, 0.2);
+  border-radius: 20px;
+  padding: 20px 32px;
+  transition: opacity 0.5s;
+  h1 {
+    font-size: 40px;
+    margin: 0;
+    margin-bottom: 30px;
+    font-weight: bolder;
+    line-height: 1.5;
+  }
+  b {
+    margin: 20px 0 0 0;
+    display: block;
+    line-height: 2;
+  }
+  p {
+    margin: 0;
+    line-height: 1.5;
+  }
+`;
+
+const styleClose = css`
+  position: absolute;
+  right: 30px;
+  top: 26px;
+  font-size: 24px;
+  cursor: pointer;
 `;
