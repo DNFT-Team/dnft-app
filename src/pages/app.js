@@ -14,6 +14,7 @@ import {
   CalendarOutlined,
   ContactsOutlined,
   SnippetsOutlined,
+  CrownOutlined
 } from '@ant-design/icons';
 import { css } from 'emotion';
 
@@ -43,7 +44,7 @@ const App = (props) => {
     <SnippetsOutlined />,
     <CalendarOutlined />,
     <ContactsOutlined />,
-    <ContactsOutlined />,
+    <CrownOutlined />
   ];
 
   const contectIconArray = [
@@ -57,11 +58,11 @@ const App = (props) => {
       url: 'https://t.me/dnftprotocol',
       icon: 'icon-telegram',
     },
-    {
-      name: 'discord',
-      url: 'https://discord.gg/pxEZB7ny',
-      icon: 'icon-discord',
-    },
+    // {
+    //   name: 'discord',
+    //   url: 'https://discord.gg/pxEZB7ny',
+    //   icon: 'icon-discord',
+    // },
     {
       name: 'twitter',
       url: 'https://twitter.com/DNFTProtocol',

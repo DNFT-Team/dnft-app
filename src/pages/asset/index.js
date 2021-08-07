@@ -3,259 +3,14 @@ import { Dialog, Input } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { tokenAbi, nftAbi } from 'utils/abi';
-import { tokenContract, nftContract } from 'utils/contract';
+import { tokenAbi, nftAbi, nft1155Abi } from 'utils/abi';
+import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 
 const AssetScreen = (props) => {
   const tabArray = ['In wallet', 'On Sale', 'My favorite', 'Sold'];
-  const data = [
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test4',
-      account: '1,234',
-      stared: true,
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'test1',
-      account: 123,
-      sold: true,
-      stared: true,
-    },
-  ];
+
   const [selectedTab, setSelectedTab] = useState('In wallet');
   const [isVisible, setIsVisible] = useState(false);
   const [keyword, setKeyword] = useState();
@@ -283,31 +38,55 @@ const AssetScreen = (props) => {
         });
 
         const account = accounts[0];
-
-        const contractAddress = nftContract;
         let nftDataList = [];
+        const contractAddress = nft1155Contract;
         const myContract = new window.web3.eth.Contract(
-          nftAbi,
+          nft1155Abi,
           contractAddress
         );
-        const nft1 = await myContract.methods.balanceOf(account, 1).call({
+        const nft1 = await myContract.methods.balanceOf(account, 100).call({
           from: account,
         });
-        const nft2 = await myContract.methods.balanceOf(account, 2).call({
+        const nft2 = await myContract.methods.balanceOf(account, 200).call({
           from: account,
         });
-        const nft3 = await myContract.methods.balanceOf(account, 3).call({
+        const nft3 = await myContract.methods.balanceOf(account, 300).call({
           from: account,
         });
         if (nft1 > 0) {
-          nftDataList.push('https://dnft.world/staking/pool1.png');
+          nftDataList.push('https://dnft.world/igo/100.png');
         }
         if (nft2 > 0) {
-          nftDataList.push('https://dnft.world/staking/pool2.png');
+          nftDataList.push('https://dnft.world/igo/200.png');
         }
         if (nft3 > 0) {
-          nftDataList.push('https://dnft.world/staking/pool3.png');
+          nftDataList.push('https://dnft.world/igo/300.png');
         }
+
+        // const contractAddress = nftContract;
+        // let nftDataList = [];
+        // const myContract = new window.web3.eth.Contract(
+        //   nftAbi,
+        //   contractAddress
+        // );
+        // const nft1 = await myContract.methods.balanceOf(account, 1).call({
+        //   from: account,
+        // });
+        // const nft2 = await myContract.methods.balanceOf(account, 2).call({
+        //   from: account,
+        // });
+        // const nft3 = await myContract.methods.balanceOf(account, 3).call({
+        //   from: account,
+        // });
+        // if (nft1 > 0) {
+        //   nftDataList.push('https://dnft.world/staking/pool1.png');
+        // }
+        // if (nft2 > 0) {
+        //   nftDataList.push('https://dnft.world/staking/pool2.png');
+        // }
+        // if (nft3 > 0) {
+        //   nftDataList.push('https://dnft.world/staking/pool3.png');
+        // }
 
         setNftData(nftDataList);
       }
@@ -320,37 +99,35 @@ const AssetScreen = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 4) {
-        toast.dark('please choose Rinkeby', {
+      if (Number(ethereum.networkVersion) !== 97) {
+        toast.dark('Please Choose BSC Testnet', {
           position: toast.POSITION.TOP_CENTER,
         });
       }
     }
-  }, [])
+  }, []);
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 4) {
-          toast.dark('please choose Rinkeby', {
+        if (Number(networkIDstring) !== 97) {
+          toast.dark('Please Choose BSC Testnet', {
             position: toast.POSITION.TOP_CENTER,
           });
-          setNftData(undefined)
-          setBalance(undefined)
+          setNftData(undefined);
+          setBalance(undefined);
 
           return;
         }
-
 
         init();
       });
 
       ethereum.on('accountsChanged', (accounts) => {
-        setBalance(undefined)
-        setNftData(undefined)
+        setBalance(undefined);
+        setNftData(undefined);
         init();
       });
 
@@ -388,48 +165,58 @@ const AssetScreen = (props) => {
     }
   };
 
-  const renderAssetHeader = useMemo(() => (
-    <div className={styleHeader}>
-      <h1 className={styleTitle}>Asset</h1>
-      <div className={styleAssetAccountContainer}>
-        <div className={styleIcon}>{nfIconSvg}</div>
-        <span className={styleCoinName}>DNF</span>
-        <span>{balance}</span>
+  const renderAssetHeader = useMemo(
+    () => (
+      <div className={styleHeader}>
+        <h1 className={styleTitle}>Asset</h1>
+        <div className={styleAssetAccountContainer}>
+          <div className={styleIcon}>{nfIconSvg}</div>
+          <span className={styleCoinName}>DNF</span>
+          <span>{balance}</span>
+        </div>
       </div>
-    </div>
-  ), [balance]);
+    ),
+    [balance]
+  );
 
-  const renderTabList = useMemo(() => tabArray.map((item) => (
-    <div
-      className={cx(
-        styleTabButton,
-        item === selectedTab && styleActiveTabButton
-      )}
-      onClick={() => {
-        setSelectedTab(item);
-      }}
-    >
-      {item}
-    </div>
-  )), [selectedTab]);
-
-  const renderFilter = useMemo(() => (
-    <div className={styleFilterContainer}>
-      <div className={styleFilter}>
-        <span>Collection</span>
-        <DownOutlined />
-      </div>
-      <div className={styleSearch}>
-        <i className="el-icon-search"></i>
-        <Input
-          placeholder={'Search'}
-          onChange={(value) => {
-            setKeyword(value);
+  const renderTabList = useMemo(
+    () =>
+      tabArray.map((item) => (
+        <div
+          className={cx(
+            styleTabButton,
+            item === selectedTab && styleActiveTabButton
+          )}
+          onClick={() => {
+            setSelectedTab(item);
           }}
-        />
+        >
+          {item}
+        </div>
+      )),
+    [selectedTab]
+  );
+
+  const renderFilter = useMemo(
+    () => (
+      <div className={styleFilterContainer}>
+        <div className={styleFilter}>
+          <span>Collection</span>
+          <DownOutlined />
+        </div>
+        <div className={styleSearch}>
+          <i className='el-icon-search'></i>
+          <Input
+            placeholder={'Search'}
+            onChange={(value) => {
+              setKeyword(value);
+            }}
+          />
+        </div>
       </div>
-    </div>
-  ), []);
+    ),
+    []
+  );
 
   const renderAction = useCallback(
     (item) => {
@@ -438,7 +225,7 @@ const AssetScreen = (props) => {
         return (
           <div className={styleButtonContainer}>
             <div className={cx(styleButton, styleFillButton)}>
-                Cross-chain
+              Cross-chain
             </div>
             <div className={cx(styleButton, styleBorderButton)}>Sell</div>
           </div>
@@ -477,36 +264,50 @@ const AssetScreen = (props) => {
     [selectedTab]
   );
 
-  const renderNft = useCallback((item, index) => (
-    <div key={`title-${index}`} className={styleCardContainer}>
-      <div
-        style={{
-          background: `url(${item}) no-repeat`,
-          backgroundSize: 'cover',
-        }}
-        className={styleShortPicture}
-      />
-      <div className={styleInfoContainer} style={{ height: '400px' }}>
+  const getFormatName = (nftId) => {
+    switch (nftId) {
+    case '100':
+      return 'Gold'
+    case '200':
+      return 'Silver'
+    case '300':
+      return 'Bronze'
+    }
+  };
+
+  const renderNft = useCallback(
+    (item, index) => (
+      <div key={`title-${index}`} className={styleCardContainer}>
         <div
-          className={styleCardHeader}
           style={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            height: '100%',
+            background: `url(${item}) no-repeat`,
+            backgroundSize: 'cover',
           }}
-        >
-          <span className={styleCardTitle}>NFT{index + 1}</span>
-          <div className={styleStarInfo}>
-            <div className={styleStarIconContainer}>
-              <HeartFilled style={{ color: '#c4c4c4' }} />
+          className={styleShortPicture}
+        />
+        <div className={styleInfoContainer} style={{ height: '400px' }}>
+          <div
+            className={styleCardHeader}
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              height: '100%',
+            }}
+          >
+            <span className={styleCardTitle}>{getFormatName(item.split('igo/')[1].split('.')[0])}</span>
+            <div className={styleStarInfo}>
+              <div className={styleStarIconContainer}>
+                <HeartFilled style={{ color: '#c4c4c4' }} />
+              </div>
+              <span>{item.account}</span>
             </div>
-            <span>{item.account}</span>
           </div>
         </div>
       </div>
-    </div>
-  ), []);
+    ),
+    []
+  );
 
   const renderCard = useCallback(
     (item, index) => {
@@ -549,59 +350,69 @@ const AssetScreen = (props) => {
     [renderAction, keyword]
   );
 
-  const renderModal = useMemo(() => (
-    <Dialog
-      customClass={styleModalContainer}
-      visible={isVisible}
-      onCancel={() => {
-        setIsVisible(false);
-      }}
-    >
-      <Dialog.Body>
-        <div>
-          <h1>Venus Design Introduction Tour</h1>
-          <span>
+  const renderModal = useMemo(
+    () => (
+      <Dialog
+        customClass={styleModalContainer}
+        visible={isVisible}
+        onCancel={() => {
+          setIsVisible(false);
+        }}
+      >
+        <Dialog.Body>
+          <div>
+            <h1>Venus Design Introduction Tour</h1>
+            <span>
               Venus is a complex Design System Tool with more than 2000+
               components for busy designers, developers, entrepreneurs,
               agencies, etc...
-          </span>
-        </div>
-        <div className={styleModalActionContainer}>
-          <div className={styleModalConfirm}>Start the tour</div>
-          <div>Skip for now</div>
-        </div>
-      </Dialog.Body>
-    </Dialog>
-  ), [isVisible]);
+            </span>
+          </div>
+          <div className={styleModalActionContainer}>
+            <div className={styleModalConfirm}>Start the tour</div>
+            <div>Skip for now</div>
+          </div>
+        </Dialog.Body>
+      </Dialog>
+    ),
+    [isVisible]
+  );
 
-  const dealWithData = useMemo(() => data?.filter((item) => {
-    const isInWallet = item.inWallet && selectedTab === 'In wallet';
-    const isFavorite = item.stared && selectedTab === 'My favorite';
-    const isOnSale = item.onSale && selectedTab === 'On Sale';
-    const isSold = item.sold && selectedTab === 'Sold';
-    const includeKeyword = item.title.includes(keyword);
+  // const dealWithData = useMemo(
+  //   () =>
+  //     data?.filter((item) => {
+  //       const isInWallet = item.inWallet && selectedTab === 'In wallet';
+  //       const isFavorite = item.stared && selectedTab === 'My favorite';
+  //       const isOnSale = item.onSale && selectedTab === 'On Sale';
+  //       const isSold = item.sold && selectedTab === 'Sold';
+  //       const includeKeyword = item.title.includes(keyword);
 
-    if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
-      return;
-    }
-    if (keyword !== '' && keyword !== undefined && !includeKeyword) {
-      return;
-    }
+  //       if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
+  //         return;
+  //       }
+  //       if (keyword !== '' && keyword !== undefined && !includeKeyword) {
+  //         return;
+  //       }
 
-    return item;
-  }), [selectedTab, keyword, data]);
+  //       return item;
+  //     }),
+  //   [selectedTab, keyword, data]
+  // );
 
-  const renderNoData = useMemo(() => (
-    <div className={styleNoDataContainer}>
-      <div>{noDataSvg}</div>
-      <span>No content</span>
-    </div>
-  ), []);
+  const renderNoData = useMemo(
+    () => (
+      <div className={styleNoDataContainer}>
+        <div>{noDataSvg}</div>
+        <span>No content</span>
+      </div>
+    ),
+    []
+  );
 
   return (
     <div className={styleContainer}>
       <div>
-        {renderAssetHeader}
+        {/* {renderAssetHeader} */}
         <div className={styleBody}>
           <div className={styleTabContainer}>{renderTabList}</div>
           {/* {renderFilter} */}
@@ -779,7 +590,7 @@ const styleCardContainer = css`
 `;
 
 const styleShortPicture = css`
-  height: 375px;
+  height: 425px;
   border-radius: 18px 18px 0 0;
 `;
 

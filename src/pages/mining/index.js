@@ -217,9 +217,9 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 4) {
+      if (Number(ethereum.networkVersion) !== 97) {
         setIsWrongNetWork(true);
-        toast.dark('please choose Rinkeby', {
+        toast.dark('Please Choose BSC Testnet', {
           position: toast.POSITION.TOP_CENTER,
         });
 
@@ -241,9 +241,9 @@ const Mining = (props) => {
         setBalance(undefined);
         setStateData(initState);
 
-        if (Number(networkIDstring) !== 4) {
+        if (Number(networkIDstring) !== 97) {
           setIsWrongNetWork(true);
-          toast.dark('please choose Rinkeby', {
+          toast.dark('Please Choose BSC Testnet', {
             position: toast.POSITION.TOP_CENTER,
           });
 
@@ -275,7 +275,7 @@ const Mining = (props) => {
       <div className={cx(styleHeader)}>
         <Loading
           loading={isBalanceLoading}
-          style={{ position: 'absolute', width: 'calc(100% - 332px)' }}
+          style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
         />
         <div
           className={styleHeaderInfo}
