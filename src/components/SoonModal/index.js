@@ -3,12 +3,12 @@ import comHead from './dnft_head.png';
 import comSoon from './coming_soon.gif';
 const SoonModal = (props) => (
   <div style={{
-    zIndex: 999999,
-    background: 'rgba(0,0,0,0.9)',
+    zIndex: 888,
+    background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
     position: 'fixed',
     top: '64px',
     bottom: 0,
-    left: '100px',
+    left: '240px',
     right: 0,
     display: 'flex',
     justifyContent: 'center',

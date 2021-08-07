@@ -13,6 +13,7 @@ import m9 from 'images/market/m9.png';
 import m10 from 'images/market/m10.png';
 import loading from 'images/market/loading.png'
 import { withRouter, Link, useHistory } from 'react-router-dom';
+import SoonModal from './../../components/SoonModal';
 
 const AssetsScreen = (props) => {
   let history = useHistory();
@@ -94,6 +95,7 @@ const AssetsScreen = (props) => {
   }
   return (
     <div className={styles.container}>
+      <SoonModal />
       <Header />
       <div className={styles.ArtContainer}>
         <div className={styles.content1}>

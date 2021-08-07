@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SoonModal from './../../components/SoonModal';
 import Web3 from 'web3';
 import styles from './index.less';
 import { Tooltip, Layout, Dialog, Steps, Alert } from 'element-react';
@@ -273,6 +274,7 @@ const AssetsScreen = (props) => {
   //  render Dom
   return (
     <div className={styles.main}>
+      <SoonModal/>
       <div className={styles.mainTop}>
         <div className={styles.box}>
           <div className={styles.bridge}>

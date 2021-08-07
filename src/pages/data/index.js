@@ -1,6 +1,9 @@
 import React from 'react';
-
+import SoonModal from './../../components/SoonModal';
 const AssetsScreen = (props) => (
-  <div>data</div>
+  <div>
+    <SoonModal/>
+      DATA
+  </div>
 )
 export default AssetsScreen;

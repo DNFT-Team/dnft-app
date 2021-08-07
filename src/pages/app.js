@@ -228,6 +228,7 @@ const styleLeftNav = css`
   }
   &:hover {
     width: 216px;
+    z-index: 100000;
     .logoText {
       display: block;
     }

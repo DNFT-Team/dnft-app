@@ -1,4 +1,5 @@
 import { Dialog, Input, Loading } from 'element-react';
+import SoonModal from './../../components/SoonModal';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -812,6 +813,7 @@ const Mining = (props) => {
 
   return (
     <div className={styleContainer}>
+      <SoonModal/>
       {renderAssetHeader}
       <div className={styleBody}>
         <div>
