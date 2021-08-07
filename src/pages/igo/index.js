@@ -608,6 +608,7 @@ const styleIframeContainer = css`
   bottom: 6vh;
   border-radius: 30px;
   box-shadow: 0px 0px 12px;
+  z-index: 1000;
 `;
 
 const styleChampionModal = css`

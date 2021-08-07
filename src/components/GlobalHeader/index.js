@@ -86,9 +86,6 @@ const GlobalHeader = (props) => {
       setAddress(ethereum.selectedAddress);
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
-        toast.dark(`NetworkChanged:${networkIDstring}`, {
-          position: toast.POSITION.TOP_CENTER,
-        });
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
@@ -100,9 +97,6 @@ const GlobalHeader = (props) => {
       ethereum.on('accountsChanged', (accounts) => {
         if (accounts[0] &&  accounts[0] !== address) {
           console.log(accounts[0],address)
-          toast.dark('AccountsChanged', {
-            position: toast.POSITION.TOP_CENTER,
-          });
         }
         setAddress(accounts[0]);
       });
