@@ -12,7 +12,7 @@ const MENU_MAP = [
   { path: '/mining', Component: MiningScreen, navName: 'Mining' },
   { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
   { path: '/market', exact: true, Component: MarketScreen, navName: 'Market', deActive: true},
-  { path: '/data', Component: DataScreen, navName: 'Data', deActive: true },
+  // { path: '/data', Component: DataScreen, navName: 'Data', deActive: true },
   { path: '/igo', Component: IGOScreen, navName: 'IGO' },
 ];
 const ROUTER_MAP = [
