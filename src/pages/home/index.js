@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import SoonModal from './../../components/SoonModal';
 
 import { getHomeList } from 'reduxs/actions/home';
 import { _setLng } from 'reduxs/actions/lng';
@@ -192,6 +193,7 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
+      <SoonModal />
       <Carousel trigger="click" height={'70vh'}>
         {data?.map((item, index) => (
           <Carousel.Item key={index}>

@@ -78,7 +78,7 @@ const App = (props) => {
       <section className={styleLeftNav}>
         <div className={'styleLogoContainer'}>
           <img className={styles.logo} src={Logo} alt='logo' />
-          <span className='logoText'>DNFT Protocal</span>
+          <span className='logoText'>D LABS</span>
         </div>
         <section className={styles.menu}>
           {MENU_MAP.map((obj, index) => {
