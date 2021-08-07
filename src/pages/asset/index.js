@@ -281,7 +281,7 @@ const AssetScreen = (props) => {
         <div
           style={{
             background: `url(${item}) no-repeat`,
-            backgroundSize: 'cover',
+            backgroundSize: 'contain',
           }}
           className={styleShortPicture}
         />
@@ -295,7 +295,7 @@ const AssetScreen = (props) => {
               height: '100%',
             }}
           >
-            <span className={styleCardTitle}>{getFormatName(item.split('igo/')[1].split('.')[0])}</span>
+            <span className={styleCardTitle}>{getFormatName(item.split('igo/')[1].split('.')[0])} Medal NFT</span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer}>
                 <HeartFilled style={{ color: '#c4c4c4' }} />

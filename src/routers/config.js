@@ -11,7 +11,7 @@ const MENU_MAP = [
   { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
   { path: '/mining', Component: MiningScreen, navName: 'Mining' },
   { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
-  { path: '/market', exact: true, Component: MarketScreen, navName: 'Market', deActive: true},
+  { path: '/market', exact: true, Component: MarketScreen, navName: 'Market'},
   // { path: '/data', Component: DataScreen, navName: 'Data', deActive: true },
   { path: '/igo', Component: IGOScreen, navName: 'IGO' },
 ];

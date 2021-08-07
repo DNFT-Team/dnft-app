@@ -508,12 +508,22 @@ const styleFiveRings = css`
 `;
 
 const stylePlayButton = css`
-  width: 10%;
-  top: 60%;
+  @keyframes slidein {
+    0%,100% {
+      width: 10%;
+    }
+
+    50% {
+      width: 12%;
+    }
+  }
+  top: 58%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
+  animation: 2000ms infinite;
+  animation-name: slidein;
 `;
 
 const stylePlayRule = css`
