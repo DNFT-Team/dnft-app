@@ -79,7 +79,7 @@ const App = (props) => {
       <section className={styleLeftNav}>
         <div className={'styleLogoContainer'}>
           <img className={styles.logo} src={Logo} alt='logo' />
-          <span className='logoText'>D LABS</span>
+          <span className='logoText'>DNFT Protocol</span>
         </div>
         <section className={styles.menu}>
           {MENU_MAP.map((obj, index) => {
@@ -138,7 +138,7 @@ const App = (props) => {
           </div>
           <div className={styleFootNote}>
             <div>
-              Powered by <b>DNFT Protocol</b>
+              Powered by <b>D LABS</b>
             </div>
             <div>2021 DNFT All rights reserved</div>
           </div>
