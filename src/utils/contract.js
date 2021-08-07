@@ -23,4 +23,7 @@ export const NERVE_BRIDGE = {
 
 // igo
 
-export const igoContract = '0x7689EbFFB41C5B12F749aA26283a1877685Fe439'
+export const igoContract = '0x7689EbFFB41C5B12F749aA26283a1877685Fe439';
+
+export const nft1155Contract = '0xe5a2758146bea3422532eeB537bE230113bacDd7';
+export const busdContract = '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
