@@ -215,8 +215,6 @@ const IGOScreen = () => {
         );
 
         let amount = await myBusdContract.methods.balanceOf(address).call();
-        console.log(address, 'address');
-        console.log(amount, 'amount');
         if (amount > 0) {
           setHasAmount(true);
         } else {
@@ -245,7 +243,7 @@ const IGOScreen = () => {
 
   useEffect(() => {
     window.addEventListener('message', (ev) => {
-      if (ev.origin === 'http://192.210.186.210') {
+      if (ev.origin === 'http://fun.dnft.world') {
         setShowConfirmSuccess(true);
       }
     });
@@ -327,7 +325,7 @@ const IGOScreen = () => {
       <iframe
         style={{ visibility: playing ? 'visible' : 'hidden' }}
         className={styleIframeContainer}
-        src='http://192.210.186.210/'
+        src='http://fun.dnft.world/test_syncbtc/'
       ></iframe>
       <div className={styleBottomContainer}>
         <div>
@@ -404,7 +402,7 @@ const IGOScreen = () => {
                 }
               }}
             >
-              {isLoading ? 'loading...' : 'Approv'}
+              {isLoading ? 'loading...' : 'Approve'}
             </div>
           )}
           {isApproved && (
