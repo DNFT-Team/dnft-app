@@ -33,6 +33,7 @@ const IGOScreen = () => {
   const [showRaffle, setShowRaffle] = useState(false);
   const [showStepGif, setShowStepGif] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
+  const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
@@ -239,7 +240,7 @@ const IGOScreen = () => {
   useEffect(() => {
     window.addEventListener('message', (ev) => {
       if (ev.origin === 'http://192.210.186.210') {
-        setShowSuccess(true);
+        setShowConfirmSuccess(true);
       }
     });
     // Remove event listener on cleanup
@@ -415,6 +416,7 @@ const IGOScreen = () => {
           onClick={() => {
             setShowRaffle(false);
             setPlaying(false);
+            setIsReward(true);
           }}
           className={styleMedalGif}
           src={require(`images/igo/${nftId}.gif`).default}
@@ -471,6 +473,27 @@ const IGOScreen = () => {
           ❌
         </div>
       </div>
+      {showConfirmSuccess && <div className={styleConfirmSuccessModal}>
+        <span>Congratulations on your success</span>
+        <span>Do you wanna get your reward now?</span>
+        <div>
+          <div
+            onClick={() => {
+              setShowConfirmSuccess(false);
+            }}
+          >
+            No
+          </div>
+          <div
+            onClick={() => {
+              setShowSuccess(true);
+              setShowConfirmSuccess(false)
+            }}
+          >
+            Yes
+          </div>
+        </div>
+      </div>}
     </div>
   );
 };
@@ -509,7 +532,8 @@ const styleFiveRings = css`
 
 const stylePlayButton = css`
   @keyframes slidein {
-    0%,100% {
+    0%,
+    100% {
       width: 10%;
     }
 
@@ -718,4 +742,54 @@ const styleClose = css`
   top: 26px;
   font-size: 24px;
   cursor: pointer;
+`;
+
+const styleConfirmSuccessModal = css`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.25) 0%,
+      rgba(255, 255, 255, 0.25) 100%
+    ),
+    #5ae9d7;
+  background-blend-mode: soft-light, normal;
+  box-shadow: inset 0px 0px 18px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 12.2px;
+  width: 280px;
+  height: 80px;
+  padding: 30px 16px;
+  color: #006b5a;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1050;
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  & > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    top: 30px;
+    width: 100%;
+    justify-content: space-evenly;
+    div {
+      background: #ff6059;
+      position: relative;
+      padding: 4px 20px;
+      font-size: 14px;
+      border-radius: 6px;
+      box-shadow: 0px 3px 3px rgb(0 0 0 / 25%), 0px 2px 0px #aa1c16;
+      width: fit-content;
+      color: white;
+      font-weight: bolder;
+      cursor: pointer;
+    }
+  }
 `;
