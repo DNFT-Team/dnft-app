@@ -7,9 +7,9 @@ const SoonModal = (props) => (
     background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
     position: 'fixed',
     top: '64px',
-    bottom: 0,
+    bottom: '0',
     left: '240px',
-    right: 0,
+    right: '0',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -39,7 +39,7 @@ const SoonModal = (props) => (
       <p style={{
         fontFamily: 'Poppins',
         fontWeight: 'bold',
-        fontSize: '40px',
+        fontSize: '3.6rem',
         lineHeight: '20px',
         textAlign: 'center',
         letterSpacing: '-0.015em',
