@@ -89,42 +89,49 @@ const IGOScreen = () => {
 
       const goldMintedTotal =
         Number(data[0][1]) - Number(data[0][2]) < 5
-          ? 5
-          : Number(data[0][1]) - Number(data[0][2]);
+          ? Number(data[0][1]) - 5
+          : Number(data[0][2]);
       const silverMintedTotal =
         Number(data[1][1]) - Number(data[1][2]) < 5
-          ? 5
-          : Number(data[1][1]) - Number(data[1][2]);
+          ? Number(data[1][1]) - 5
+          : Number(data[1][2]);
       const bronzeMintedTotal =
         Number(data[2][1]) - Number(data[2][2]) < 5
-          ? 5
-          : Number(data[2][1]) - Number(data[2][2]);
+          ? Number(data[2][1]) - 5
+          : Number(data[2][2]);
 
       const isNotEnough =
-        Number(data[0][2]) + Number(data[1][2]) + Number(data[2][2]) === 0;
-
+        Number(data[0][1]) -
+          Number(data[0][2]) +
+          Number(data[1][1]) -
+          Number(data[1][2]) +
+          Number(data[2][1]) -
+          Number(data[2][2]) ===
+        0;
       setMedalData({
         Gold: {
           id: data[0][0],
           total: Number(data[0][1]),
-          mintedTotal: isNotEnough ? 0 : goldMintedTotal,
+          mintedTotal: isNotEnough ? Number(data[0][1]) : goldMintedTotal,
           isValid: data[0][3],
         },
         Silver: {
           id: data[1][0],
           total: Number(data[1][1]),
-          mintedTotal: isNotEnough ? 0 : silverMintedTotal,
+          mintedTotal: isNotEnough ? Number(data[1][1]) : silverMintedTotal,
           isValid: data[1][3],
         },
         Bronze: {
           id: data[2][0],
           total: Number(data[2][1]),
-          mintedTotal: isNotEnough ? 0 : bronzeMintedTotal,
+          mintedTotal: isNotEnough ? Number(data[2][1]) : bronzeMintedTotal,
           isValid: data[2][3],
         },
         Total: {
           total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
-          mintedTotal: goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
+          mintedTotal: isNotEnough
+            ? Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1])
+            : goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
           isValid: data[0][3] || data[1][3] || data[2][3],
           isNotEnough: isNotEnough,
         },
@@ -159,7 +166,10 @@ const IGOScreen = () => {
     setIsLoading(true);
 
     try {
-      const myIgoContract = new window.web3.eth.Contract(igoAbi, igoContract);
+      const myIgoContract = new window.web3.eth.Contract(
+        igoAbi,
+        igoContract
+      );
 
       const raffle = await myIgoContract.methods.raffle().send({
         from: address,
@@ -332,16 +342,14 @@ const IGOScreen = () => {
           <div className={styleInfoContainer}>
             <span className='title'>Gold Medal NFT</span>
             <span className='goal'>Supply：{medalData.Gold.total}</span>
-            <div className='raised'>
-              Minted：{medalData.Gold.total - medalData.Gold.mintedTotal}
-            </div>
+            <div className='raised'>Minted：{medalData.Gold.mintedTotal}</div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>Silver Medal NFT</span>
             <span className='goal'>Supply：{medalData.Silver.total}</span>
             <div className='raised'>
               Minted：
-              {medalData.Silver.total - medalData.Silver.mintedTotal}
+              {medalData.Silver.mintedTotal}
             </div>
           </div>
         </div>
@@ -351,15 +359,13 @@ const IGOScreen = () => {
             <span className='goal'>Supply：{medalData.Bronze.total}</span>
             <div className='raised'>
               Minted：
-              {medalData.Bronze.total - medalData.Bronze.mintedTotal}
+              {medalData.Bronze.mintedTotal}
             </div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>All Medal’s NFT</span>
             <span className='goal'>Supply：{medalData.Total.total}</span>
-            <div className='raised'>
-              Minted：{medalData.Total.total - medalData.Total.mintedTotal}
-            </div>
+            <div className='raised'>Minted：{medalData.Total.mintedTotal}</div>
           </div>
         </div>
       </div>
