@@ -9,12 +9,16 @@ import playButton from '../../images/igo/play-button.png';
 import infoBg from '../../images/igo/info-bg.png';
 import people from '../../images/igo/people.png';
 import champion from '../../images/igo/champion.png';
+import asset from '../../images/igo/asset.png';
 import { busdContract, igoContract } from 'utils/contract';
 import { igoAbi, busdAbi } from 'utils/abi';
 import Web3 from 'web3';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router';
 
 const IGOScreen = () => {
+  let history = useHistory();
+
   const [address, setAddress] = useState();
   const [medalData, setMedalData] = useState({
     Gold: {},
@@ -211,6 +215,8 @@ const IGOScreen = () => {
         );
 
         let amount = await myBusdContract.methods.balanceOf(address).call();
+        console.log(address, 'address');
+        console.log(amount, 'amount');
         if (amount > 0) {
           setHasAmount(true);
         } else {
@@ -314,7 +320,7 @@ const IGOScreen = () => {
           setShowRuleModal(true);
         }}
       >
-        GET GAMD RULES
+        GAME RULES
       </span>
       <img className={stylePodium} src={podium} />
       <img className={stylePeople} src={people} />
@@ -326,35 +332,35 @@ const IGOScreen = () => {
       <div className={styleBottomContainer}>
         <div>
           <div className={styleInfoContainer}>
-            <span className='title'>Gold Medal</span>
-            <span className='goal'>Goal：{medalData.Gold.total}</span>
+            <span className='title'>Gold Medal NFT</span>
+            <span className='goal'>Supply：{medalData.Gold.total}</span>
             <div className='raised'>
-              Raised：{medalData.Gold.total - medalData.Gold.mintedTotal}
+              Minted：{medalData.Gold.total - medalData.Gold.mintedTotal}
             </div>
           </div>
           <div className={styleInfoContainer}>
-            <span className='title'>Silver Medal</span>
-            <span className='goal'>Goal：{medalData.Silver.total}</span>
+            <span className='title'>Silver Medal NFT</span>
+            <span className='goal'>Supply：{medalData.Silver.total}</span>
             <div className='raised'>
-              Raised：
+              Minted：
               {medalData.Silver.total - medalData.Silver.mintedTotal}
             </div>
           </div>
         </div>
         <div>
           <div className={styleInfoContainer}>
-            <span className='title'>Bronze Medal</span>
-            <span className='goal'>Goal：{medalData.Bronze.total}</span>
+            <span className='title'>Bronze Medal NFT</span>
+            <span className='goal'>Supply：{medalData.Bronze.total}</span>
             <div className='raised'>
-              Raised：
+              Minted：
               {medalData.Bronze.total - medalData.Bronze.mintedTotal}
             </div>
           </div>
           <div className={styleInfoContainer}>
-            <span className='title'>All Medal’s</span>
-            <span className='goal'>Goal：{medalData.Total.total}</span>
+            <span className='title'>All Medal’s NFT</span>
+            <span className='goal'>Supply：{medalData.Total.total}</span>
             <div className='raised'>
-              Raised：{medalData.Total.total - medalData.Total.mintedTotal}
+              Minted：{medalData.Total.total - medalData.Total.mintedTotal}
             </div>
           </div>
         </div>
@@ -362,8 +368,12 @@ const IGOScreen = () => {
 
       {showSuccess && (
         <div className={styleChampionModal}>
-          <span>You can claim your prize</span>
-          <span>Participation rules rules rules rules rules</span>
+          <span>Claim Your Prize</span>
+          <span>
+            It will cost you 20 BUSD to claim a DNFT Medal NFT. You will
+            randomly get a Gold/Silver/Bronze Medal NFT for further airdop
+            benefit.
+          </span>
           {!isApproved && (
             <div
               style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
@@ -394,7 +404,7 @@ const IGOScreen = () => {
                 }
               }}
             >
-              {isLoading ? 'loading...' : 'Approved'}
+              {isLoading ? 'loading...' : 'Approv'}
             </div>
           )}
           {isApproved && (
@@ -405,22 +415,26 @@ const IGOScreen = () => {
                 await handleRaffle();
               }}
             >
-              {isLoading ? 'loading...' : 'Raffle'}
+              {isLoading ? 'loading...' : 'Claim'}
             </div>
           )}
           {nftId > 0}
         </div>
       )}
       {showRaffle && (
-        <img
-          onClick={() => {
-            setShowRaffle(false);
-            setPlaying(false);
-            setIsReward(true);
-          }}
-          className={styleMedalGif}
-          src={require(`images/igo/${nftId}.gif`).default}
-        />
+        <div className={styleMedalGif}>
+          <img src={require(`images/igo/${nftId}.gif`).default} />
+          <img
+            className='asset'
+            src={asset}
+            onClick={() => {
+              history.push('/asset');
+            }}
+          />
+          <span>
+            Congratulations! Click the button below to check you DNFT Medal NFT.
+          </span>
+        </div>
       )}
       {showStepGif && (
         <img
@@ -435,32 +449,33 @@ const IGOScreen = () => {
           visibility: showRuleModal ? 'visible' : 'hidden',
         }}
       >
-        <h1>1st Blockchain Olympics Games</h1>
-        <b>Theme: Synthetic Bitcoin</b>
+        <h1>Olympic BTC Synthesis Game</h1>
+        <b>Goal: </b>
+        <p>Try to synthesize a Bitcoin</p>
         <b>Rules: </b>
         <p>
-          1.Winning a blind box Medal once you synthesized into BNB, winner get
-          their medals by openning the blind box.
+          1. 100% Winning a Medal NFT once you have synthesized into BNB, you
+          can get your Medal NFT by claiming it.
         </p>
-        <p>2.The openning the blind box operation costs 12 busd.</p>
+        <p>2.The Medal NFT claiming will cost you 20 BUSD.</p>
         <p>
           {
             '3.The Synthetic path: DNF--> EOS--> HT--> DOT--> UNI--> FIL--> LTC--> BNB--> BCH--> ETH-->BTC.'
           }
         </p>
         <p>
-          4.The total number of Gold/Silver/Bronze medal NFT are 50/950/4000.
+          4.The total amount of Gold/Silver/Bronze medal NFT are 50/450/2500.
         </p>
-        <p>5.Each address is allowed to participate once.</p>
+        <p>5.Each address is only allowed to participate once.</p>
 
         <b>Rewards:</b>
         <p>
           1.Gold/Silver/Bronze medal NFT holders will get an airdrop of
-          100/30/10 DNF when TGE.
+          100/50/25 DNF when TGE.
         </p>
         <p>
           2.Gold/Silver/Bronze medal NFT holders will have the right of
-          generation rights of DNFT Protocol,which includes continuous
+          generation rights of DNFT Protocol, which includes continuous
           activity/airdrop white list, old friends rights, test product
           experience, etc.
         </p>
@@ -473,27 +488,29 @@ const IGOScreen = () => {
           ❌
         </div>
       </div>
-      {showConfirmSuccess && <div className={styleConfirmSuccessModal}>
-        <span>Congratulations on your success</span>
-        <span>Do you wanna get your reward now?</span>
-        <div>
-          <div
-            onClick={() => {
-              setShowConfirmSuccess(false);
-            }}
-          >
-            No
-          </div>
-          <div
-            onClick={() => {
-              setShowSuccess(true);
-              setShowConfirmSuccess(false)
-            }}
-          >
-            Yes
+      {showConfirmSuccess && (
+        <div className={styleConfirmSuccessModal}>
+          <span>Congratulations on your success!</span>
+          <span>Do you wanna get your reward now?</span>
+          <div>
+            <div
+              onClick={() => {
+                setShowConfirmSuccess(false);
+              }}
+            >
+              No
+            </div>
+            <div
+              onClick={() => {
+                setShowSuccess(true);
+                setShowConfirmSuccess(false);
+              }}
+            >
+              Yes
+            </div>
           </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 };
@@ -541,7 +558,7 @@ const stylePlayButton = css`
       width: 12%;
     }
   }
-  top: 58%;
+  top: 52%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -551,7 +568,7 @@ const stylePlayButton = css`
 `;
 
 const stylePlayRule = css`
-  top: 68%;
+  top: 62%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -559,6 +576,10 @@ const stylePlayRule = css`
   color: #ff504a;
   font-weight: bolder;
   font-size: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid #ff6059;
+  padding: 12px 36px;
+  border-radius: 100px;
 `;
 
 const stylePodium = css`
@@ -650,19 +671,19 @@ const styleChampionModal = css`
   background-size: contain;
   position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 30vh;
-  height: 50%;
-  top: 50%;
+  transform: translate(-50%, -40%);
+  width: 260px;
+  height: 68%;
+  top: 20%;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  gap: 4%;
+  gap: 8px;
   z-index: 1100;
   span {
     position: relative;
-    top: 22%;
-    padding: 0 20%;
+    top: 30%;
+    padding: 0 40px;
     font-size: 12px;
     text-align: center;
     color: rgba(0, 0, 0, 0.5);
@@ -676,7 +697,7 @@ const styleChampionModal = css`
 const styleButton = css`
   background: #ff6059;
   position: relative;
-  top: 25%;
+  top: 31%;
   padding: 4px 16px;
   font-size: 12px;
   border-radius: 6px;
@@ -691,11 +712,46 @@ const styleButton = css`
 
 const styleMedalGif = css`
   position: absolute;
-  width: 30vh;
+  height: 75vh;
+  width: 50vh;
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
   z-index: 1200;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  div {
+    cursor: pointer;
+    color: #ff504a;
+    font-weight: bolder;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid #ff6059;
+    padding: 12px 36px;
+    border-radius: 100px;
+  }
+  .asset {
+    top: -12vh;
+    position: relative;
+    width: 20vh;
+    cursor: pointer;
+  }
+  span {
+    top: -12vh;
+    position: relative;
+    font-size: 12px;
+    color: white;
+    padding: 0 60px;
+    top: -8vh;
+    text-align: center;
+  }
+
+  img {
+    width: 30vh;
+  }
 `;
 
 const stylStepGif = css`

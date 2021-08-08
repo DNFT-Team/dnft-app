@@ -8,15 +8,12 @@ import { connect } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom';
 import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
-import {
-  AppstoreOutlined,
-  BookOutlined,
-  CalendarOutlined,
-  ContactsOutlined,
-  SnippetsOutlined,
-  CrownOutlined
-} from '@ant-design/icons';
 import { css } from 'emotion';
+import homeIcon from '../images/nav/home_selected.svg';
+import miningIcon from '../images/nav/mining_selected.svg';
+import bridgeIcon from '../images/nav/bridge_selected.svg';
+import marketIcon from '../images/nav/market_selected.svg';
+import igoIcon from '../images/nav/igo_selected.svg';
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -39,12 +36,11 @@ const App = (props) => {
   };
 
   const navIconArray = [
-    <AppstoreOutlined />,
-    <BookOutlined />,
-    <SnippetsOutlined />,
-    <CalendarOutlined />,
-    // <ContactsOutlined />,
-    <CrownOutlined />
+    <img src={homeIcon} style={{ width: 30 }} />,
+    <img src={miningIcon} style={{ width: 30 }} />,
+    <img src={bridgeIcon} style={{ width: 30 }} />,
+    <img src={marketIcon} style={{ width: 30 }} />,
+    <img src={igoIcon} style={{ width: 30 }} />,
   ];
 
   const contectIconArray = [
@@ -216,7 +212,7 @@ const styleLeftNav = css`
     white-space: nowrap;
   }
   .styleNavContainer {
-    padding: 18px 17px;
+    padding: 14px 14px;
     & > div {
       margin: 0;
     }
@@ -237,7 +233,7 @@ const styleLeftNav = css`
     }
 
     .styleNavContainer {
-      padding: 18px 58px 18px 64px;
+      padding: 14px 58px 14px 64px;
       & > div {
         margin-right: 20px;
       }
