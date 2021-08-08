@@ -1,7 +1,8 @@
 import React from 'react';
 import comHead from './dnft_head.png';
 import comSoon from './coming_soon.gif';
-const SoonModal = (props) => (
+const flag = 2 // 1---主网，2---测试服
+const SoonModal = (props) => flag === 2 ? '' : (
   <div style={{
     zIndex: 888,
     background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
