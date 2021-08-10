@@ -1,4 +1,5 @@
 import React from 'react';
+import {Icon} from '@iconify/react'
 import Header from './component/header';
 import styles from './index.less'
 import m1 from 'images/market/m1.png';
@@ -111,7 +112,11 @@ const AssetsScreen = (props) => {
                 <div className={styles.content}>
                   <span className={styles.title}>{obj.title}</span>
                   <span className={styles.starContainer}>
-                    <i className="el-icon-star-off"></i>
+                    <Icon icon="mdi:account-child-circle" />
+                    <Icon icon="flat-color-icons:approval" />
+                    <Icon icon="noto:alien" />
+                    <Icon icon="logos:apple" />
+                    <Icon icon="fxemoji:2hearts" />
                     <span className={styles.starAccount}>{obj.star}</span>
                   </span>
                 </div>
