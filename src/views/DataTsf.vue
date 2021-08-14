@@ -1,15 +1,18 @@
 <template>
   <div class="full-width">
-    <div class="mk-top title-sticky">
+    <div class="mk-top title-sticky bg-white dark:bg-gray-800">
       <span class="title">AI</span>
-      <vs-button @click="openPopUpData" color="success" type="line" size="large" style="margin-left: 1rem;">Data+
+      <vs-button @click="openPopUpData" color="success" type="line"
+                 size="large" style="margin-left: 1rem;">Data+
       </vs-button>
-      <vs-button @click="openPopUpModel" color="success" type="line" size="large" style="margin-left: 1rem;">Model+
+      <vs-button @click="openPopUpModel" color="success" type="line"
+                 size="large" style="margin-left: 1rem;">Model+
       </vs-button>
       <div>
         <vs-select
           color="danger"
           label="Sort"
+          class="text-black dark:text-red-600"
           v-model="query.sort"
         >
           <div :key="index" v-for="(item,index) in opts_sort">

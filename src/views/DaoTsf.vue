@@ -1,8 +1,8 @@
 <template>
   <div class="full-width">
-    <div class="mk-top title-sticky">
+    <div class="mk-top title-sticky bg-white dark:bg-gray-800">
       <span class="title">DAO</span>
-      <vs-button @click="openPop" color="primary" type="relief" size="large"
+      <vs-button @click="openPop" color="success" type="line" size="large"
                  style="margin-left: 1rem;">Create
       </vs-button>
     </div>

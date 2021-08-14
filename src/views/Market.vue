@@ -6,6 +6,7 @@
         <vs-select
           color="danger"
           label="Sort"
+          class="text-black dark:text-red-600"
           v-model="query.sort"
         >
           <div :key="index" v-for="(item,index) in opts_sort">

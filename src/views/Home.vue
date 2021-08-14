@@ -1,8 +1,6 @@
 <template>
     <div class="full-width">
-      <el-divider content-position="left">
-        <span class="title">NFT Gallery of the week</span>
-      </el-divider>
+      <h2 class="title font-serif text-primary dark:text-white">NFT Gallery of the week</h2>
       <el-carousel height="630px" indicator-position="outside" autoplay loop>
         <el-carousel-item v-for="(item, i) in data_carousel" :key="i" class="radius-12">
           <el-image class="full-height full-width" :src="item.src" fit="fill"></el-image>
@@ -15,7 +13,7 @@
 </template>
 
 <script>
-import Gallery from '../components/Gallery';
+import Gallery from '../components/Gallery.vue';
 
 export default {
   name: 'Home',
@@ -27,17 +25,17 @@ export default {
       owner: 'Billy',
       price: 1.25,
       favor: 100,
-      src: `/img/home/${i + 5}.png`,
+      src: `https://unsplash.it/300/280?random=${i + 20}`,
       recycle: new Date('2021-08-01 00:00:00'),
     }));
   },
   data() {
     return {
       data_carousel: [
-        { title: '', src: '/img/home/1.jpg' },
-        { title: '', src: '/img/home/2.jpg' },
-        { title: '', src: '/img/home/3.jpg' },
-        { title: '', src: '/img/home/4.jpg' },
+        { title: '', src: 'https://unsplash.it/1080/860?random=14' },
+        { title: '', src: 'https://unsplash.it/1080/860?random=19' },
+        { title: '', src: 'https://unsplash.it/1080/860?random=18' },
+        { title: '', src: 'https://unsplash.it/1080/860?random=15' },
       ],
       data_hs: [],
     };

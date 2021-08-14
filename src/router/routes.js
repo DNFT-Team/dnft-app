@@ -2,37 +2,37 @@ export const menu = [
   {
     path: '/home',
     name: 'Home',
-    meta: { title: 'home', icon: 'home' },
+    meta: { title: 'home', icon: 'icon-home' },
     component: () => import('../views/Home.vue'),
   },
   {
     path: '/market',
     name: 'Market',
-    meta: { title: 'market', icon: 'market' },
+    meta: { title: 'market', icon: 'icon-shop' },
     component: () => import('../views/Market.vue'),
   },
   {
     path: '/ai',
     name: 'AI',
-    meta: { title: 'AI', icon: 'AI' },
+    meta: { title: 'AI', icon: 'icon-wuguan' },
     component: () => import('../views/DataTsf.vue'),
   },
   {
     path: '/dao',
     name: 'DAO',
-    meta: { title: 'dao', icon: 'dao' },
+    meta: { title: 'dao', icon: 'icon-vote' },
     component: () => import('../views/DaoTsf.vue'),
   },
   {
     path: '/auction',
     name: 'Auction',
-    meta: { title: 'auction*', icon: 'auction' },
+    meta: { title: 'auction*', icon: 'icon-auction' },
     component: () => import('../views/Auction.vue'),
   },
   {
     path: '/recycle',
     name: 'Recycle',
-    meta: { title: 'recycle*', icon: 'recycle' },
+    meta: { title: 'recycle*', icon: 'icon-cycle' },
     component: () => import('../views/Recycle.vue'),
   },
 ];
