@@ -314,9 +314,9 @@ module.exports = {
     // 强制在 yield* 表达式中 * 周围使用空格
     'yield-star-spacing': 2,
 
-
     // 强制使用一致的换行风格
-    'linebreak-style': [1, 'unix'],
+    // 'linebreak-style': [1, 'unix'],
+    'linebreak-style': [0, 'unix'],
     // 在JSX中强制布尔属性符号
     'react/jsx-boolean-value': 1,
     // 在JSX中验证右括号位置
