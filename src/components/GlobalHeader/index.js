@@ -18,7 +18,7 @@ import {
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
-
+const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
 
@@ -96,7 +96,7 @@ const GlobalHeader = (props) => {
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
         if (accounts[0] &&  accounts[0] !== address) {
-          console.log(accounts[0],address)
+          console.log(accounts[0], address)
         }
         setAddress(accounts[0]);
       });
@@ -211,6 +211,9 @@ const GlobalHeader = (props) => {
             </div>
           </React.Fragment>
         )}
+        <a style={{cursor: 'pointer'}} href={mvpUrl} target="_blank" rel="noreferrer">
+          {polkadotNetSvg}
+        </a>
       </div>
       {/* {renderModal} */}
     </header>
@@ -241,7 +244,6 @@ const actionItem = css`
   height: 42px;
   width: 42px;
   color: white;
-  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
