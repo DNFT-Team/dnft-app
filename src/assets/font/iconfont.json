@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "15433491",
+      "name": "空投",
+      "font_class": "kongtou",
+      "unicode": "e6ab",
+      "unicode_decimal": 59051
+    },
+    {
       "icon_id": "12833019",
       "name": "medium",
       "font_class": "medium",

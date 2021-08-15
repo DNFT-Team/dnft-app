@@ -13,7 +13,7 @@ export default class Api {
   static async getBalance(address) {
     let balance = await chainState.state.Api.query.system.account(address);
     balance = balance.toJSON();
-    return formatBalance(balance.data.free);
+    return formatBalance(balance.data.free, {}, 12);
   }
 
   /**

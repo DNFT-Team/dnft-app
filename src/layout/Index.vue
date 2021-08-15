@@ -6,7 +6,15 @@
         dark:bg-gray-800 dark:text-white"
                placeholder="Search anything" v-model="globalSearch" />
         <div class="flex-cen">
-          <div class="capitalize truncate text-center text-blue-800 dark:text-white"
+          <vs-tooltip v-if="address && network"
+                      text="Grant DNFT If U're New!"
+                      position="left" color="danger">
+            <vs-button color="danger" type="gradient"
+                       icon-pack="iconfont"
+                       icon="icon-kongtou"
+                       @click="grantToken" />
+          </vs-tooltip>
+          <div class="ml-8 capitalize truncate text-center text-blue-800 dark:text-white"
                style="width: 180px;">
             <span v-if="!network">
             Connecting Chain ...</span>
@@ -99,6 +107,8 @@
 
 <script>
 import { web3Enable, web3Accounts } from '@polkadot/extension-dapp';
+import { numberToHex } from '@polkadot/util';
+import { createTestKeyring } from '@polkadot/keyring/testing';
 import { menu } from '../router/routes';
 import conf from '../config/conf';
 
@@ -154,6 +164,34 @@ export default {
     this.checkWalletPlugin();
   },
   methods: {
+    async grantToken() {
+      const amount = 5;
+      const value = numberToHex(amount * 1e3 * 10 ** 12);
+      const ALICE = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
+      const balance = await this.$api.getBalance(this.address);
+      if (Number(balance.split(' ')[0]) >= 2) {
+        this.$notify({
+          title: 'Wallet Hint',
+          message: 'Your Balance is enough',
+          position: 'top-left',
+          customClass: 'chain-notify',
+        });
+      }
+      const keyring = createTestKeyring();
+      const alicePair = keyring.getPair(ALICE);
+      const transfer = this.$store.state.chainState.Api.tx.balances.transfer(this.address, value);
+      const unsub = await transfer.signAndSend(alicePair, {}, (result) => {
+        if (result.status.isInBlock) {
+          this.$notify({
+            title: 'Wallet Hint',
+            message: 'Charge Success',
+            position: 'top-left',
+            customClass: 'chain-notify',
+          });
+          unsub();
+        }
+      });
+    },
     triggerRightBar() {
       this.right = !this.right;
       this.right && this.checkWalletPlugin();
