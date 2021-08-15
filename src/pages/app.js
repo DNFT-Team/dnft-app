@@ -14,6 +14,7 @@ import miningIcon from '../images/nav/mining_selected.svg';
 import bridgeIcon from '../images/nav/bridge_selected.svg';
 import marketIcon from '../images/nav/market_selected.svg';
 import igoIcon from '../images/nav/igo_selected.svg';
+import dataIcon from '../images/nav/data_selected.svg';
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -41,6 +42,8 @@ const App = (props) => {
     <img src={bridgeIcon} style={{ width: 30 }} />,
     <img src={marketIcon} style={{ width: 30 }} />,
     <img src={igoIcon} style={{ width: 30 }} />,
+    <img src={dataIcon} style={{ width: 30 }} />,
+
   ];
 
   const contectIconArray = [

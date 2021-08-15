@@ -6,14 +6,17 @@ import DataScreen from 'pages/data';
 import MarketDetailScreen from 'pages/market/detail';
 import AssetScreen from 'pages/asset';
 import IGOScreen from 'pages/igo'
+import ProfileScreen from 'pages/profile'
+import DataDetailScreen from 'pages/data/detail';
 
 const MENU_MAP = [
   { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
   { path: '/mining', Component: MiningScreen, navName: 'Mining' },
   { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
   { path: '/market', exact: true, Component: MarketScreen, navName: 'Market'},
-  // { path: '/data', Component: DataScreen, navName: 'Data', deActive: true },
   { path: '/igo', Component: IGOScreen, navName: 'IGO' },
+  { path: '/data', exact: true, Component: DataScreen, navName: 'Data', },
+
 ];
 const ROUTER_MAP = [
   ...MENU_MAP,
@@ -24,5 +27,9 @@ const ROUTER_MAP = [
     navName: 'market',
   },
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
+  { path: '/profile', exact: true, Component: ProfileScreen, navName: 'profile' },
+  { path: '/data/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
+
+
 ];
 export { MENU_MAP, ROUTER_MAP };

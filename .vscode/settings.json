@@ -1,0 +1,12 @@
+{
+  "vetur.grammar.customBlocks": {
+
+    "docs": "md",
+    "i18n": "json"
+  },
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      "singleQuote": true
+    }
+  }
+}

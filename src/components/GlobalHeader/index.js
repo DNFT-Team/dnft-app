@@ -150,7 +150,9 @@ const GlobalHeader = (props) => {
         <span
           className={address == null && styleAddress}
           onClick={async () => {
+
             if (address) {
+              // history.push('/profile')
               return;
             }
             let ethereum = window.ethereum;
