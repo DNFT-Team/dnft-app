@@ -1,5 +1,5 @@
 <template>
-  <vs-card style="background:#F6F8FD" actionable>
+  <vs-card class="text-blue-800 bg-white dark:text-white dark:bg-gray-600" actionable>
     <div slot="header" class="mg-line">
       <vs-chip v-if="showStatus" color="primary">
         {{item.status}}
@@ -30,7 +30,6 @@
       <span>Tax: {{item.tax}}</span>
     </div>
     <div style="padding: 1rem 0;">
-    <vs-chip transparent color="primary">NFT721</vs-chip>
     </div>
     <div slot="footer">
       <vs-row vs-justify="flex-end">
@@ -78,7 +77,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     font-size: 16px;
-    color: #1B2559;
   }
   .mg-owner{
     width: 50%;

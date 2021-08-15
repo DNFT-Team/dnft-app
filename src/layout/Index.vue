@@ -1,9 +1,23 @@
 <template>
   <div class="m-wrapper">
-    <header class="m-header">
+    <header class="m-header shadow-xl bg-white dark:bg-gray-700">
       <div class="m-toolbar">
-        <vs-input icon="search" placeholder="Search" v-model="globalSearch"/>
+        <input class="p-1 text-primary placeholder-gray-500 placeholder-opacity-65 bg-gray-100
+        dark:bg-gray-800 dark:text-white"
+               placeholder="Search anything" v-model="globalSearch" />
         <div class="flex-cen">
+          <div class="capitalize truncate text-center text-blue-800 dark:text-white"
+               style="width: 180px;">
+            <span v-if="!network">
+            Connecting Chain ...</span>
+            <span v-else
+                  @click="triggerRightBar"
+                  style="width: 180px;">{{address || 'Connect Wallet'}}</span>
+          </div>
+          <el-divider v-show="address" direction="vertical" style="margin: 0 1rem"/>
+          <vs-switch v-model="isDark" color="danger" vs-icon-on="dark_mode"
+                     vs-icon-off="light_mode"></vs-switch>
+          <el-divider direction="vertical" style="margin: 0 1rem"/>
           <vs-button color="primary" type="gradient" icon="monetization_on"
                      :to="{name:'Assets'}"></vs-button>
           <el-divider direction="vertical" style="margin: 0 1rem"/>
@@ -12,20 +26,20 @@
         </div>
       </div>
     </header>
-    <div class="m-sidebar">
+    <div class="m-sidebar bg-primary dark:bg-gray-900">
       <div class="m-brand">
-        <img class="m-logo full-width full-height" src="/img/brand.svg" alt="dnft">
-<!--        <img class="m-festival full-width full-height" src="/img/festival.svg" alt="festival">-->
+        <img class="full-width full-height" src="/img/brand.svg" alt="dnft">
+        <p class="text-white font-serif">DNFT Protocol</p>
       </div>
       <div class="m-menus">
         <div class="m-menu-item" :class="{'active':$route.name===menu.name}"
              v-for="menu in menuList" :key="menu.name" @click="$router.push(menu)">
-          <vs-icon icon="mood" size="24px"></vs-icon>
+          <vs-icon icon-pack="iconfont" :icon="menu.meta.icon" size="24px"></vs-icon>
           <span class="m-menu-label">{{menu.meta.title}}</span>
         </div>
       </div>
       <div class="m-footage">
-        <vs-button class="m-help" icon="help_center" color="#c72a75"
+        <vs-button class="m-help" icon="help_center" color="#c72a75" target :href="docLink"
                    gradient-color-secondary="#5252e8" type="gradient">Help Center
         </vs-button>
         <div class="m-links">
@@ -40,14 +54,14 @@
         <p>
           <span>Powered by</span>
           <vs-button href="https://www.dnft.world/" targer color="white" type="line">
-            <strong>DNFT Protocol</strong>
+            <strong>D LABS</strong>
           </vs-button>
         </p>
         <p style="margin-top: .4rem;">2021 DNFT All rights reserved</p>
       </div>
     </div>
-    <vs-sidebar position-right parent="body" default-index="1" color="primary" spacer
-                v-model="right">
+    <vs-sidebar position-right parent="body"
+                default-index="1" color="primary" spacer v-model="right">
       <div class="flex-cen" slot="header">
         <a href="https://polkadot.network/" target="_blank">
           <img src="/img/logo-polkadot.svg" alt="polkadot">
@@ -66,14 +80,14 @@
             <div class="text" :title="p.address">Address: {{p.address}}</div>
           </li>
         </ul>
+        <div class="side-footer">
+          <a class="net-links" :href="appUrl">
+            ETH-Net
+          </a>
+        </div>
       </div>
     </vs-sidebar>
-    <div class="m-config">
-      <vs-button class="m-translate" icon="translate" color="danger" type="flat"></vs-button>
-      <vs-switch v-model="isDark" color="danger" vs-icon-on="dark_mode"
-                 vs-icon-off="light_mode"></vs-switch>
-    </div>
-    <div class="m-page">
+    <div class="m-page xd-scroll bg-white text-blue-900 dark:text-white dark:bg-gray-700">
       <main class="m-main">
         <transition name="fade" mode="out-in">
           <router-view :key="$route.name"/>
@@ -86,11 +100,13 @@
 <script>
 import { web3Enable, web3Accounts } from '@polkadot/extension-dapp';
 import { menu } from '../router/routes';
+import conf from '../config/conf';
 
 export default {
   name: 'Index',
   data() {
     return {
+      appUrl: conf.app_net_link,
       globalSearch: '',
       isDark: false,
       right: false,
@@ -98,6 +114,7 @@ export default {
       selectedAdr: '',
       pairs: [],
       menuList: menu,
+      docLink: 'https://dnft.gitbook.io/dnft/#home',
       links: [
         { name: 'github', url: 'https://github.com/DNFT-Team/', icon: 'icon-github' },
         { name: 'telegram', url: 'https://t.me/dnftprotocol', icon: 'icon-telegram' },
@@ -108,6 +125,13 @@ export default {
     };
   },
   watch: {
+    isDark(bool) {
+      if (bool) {
+        document.querySelector('html').classList.add('dark');
+      } else {
+        document.querySelector('html').classList.remove('dark');
+      }
+    },
     selectedAdr(newVal) {
       this.$store.commit('updateAddress', newVal);
       this.$notify({
@@ -121,6 +145,9 @@ export default {
   computed: {
     network() {
       return this.$store.state.chainState.isConnected;
+    },
+    address() {
+      return this.$store.state.address;
     },
   },
   mounted() {
@@ -180,7 +207,6 @@ export default {
       top: 0;
       right: 0;
       left: 299px;
-      background: white;
       padding: 2px 2rem;
       z-index: 1000;
 
@@ -194,12 +220,11 @@ export default {
     }
 
     .m-page {
-      background: white;
       padding-top: 40px;
       padding-left: 299px;
       min-height: 500px;
       height: 100vh;
-      overflow: scroll;
+      overflow: auto;
 
       .m-main {
         display: flex;
@@ -217,7 +242,6 @@ export default {
       top: 0;
       bottom: 0;
       z-index: 1000;
-      background: #1B2559;
       display: flex;
       flex-flow: column nowrap;
       overflow: auto;
@@ -225,9 +249,14 @@ export default {
       .m-brand {
         height: 100px;
         width: 100px;
-        margin: 70px 0 60px 65px;
+        margin: 40px 0 60px 65px;
         position: relative;
-
+        p{
+          position: absolute;
+          bottom: -30px;
+          left: 0;
+          width: max-content;
+        }
         .m-festival {
           position: absolute;
           top: 0;
@@ -244,7 +273,8 @@ export default {
         .m-menu-item {
           cursor: pointer;
           padding: .8rem 1rem;
-          font-size: 24px;
+          margin: .2rem 0;
+          font-size: 18px;
           line-height: 29px;
           letter-spacing: 0.02em;
           color: #C0BEFF;
@@ -268,7 +298,11 @@ export default {
 
         .active {
           color: white;
-          border-color: red;
+          font-weight: bold;
+          border-color: white;
+          background: #112df2;
+          border-radius: 12px;
+          animation: menuBoom ease-in-out .3s;
         }
       }
 
@@ -310,39 +344,42 @@ export default {
         }
       }
     }
-
-    .m-config {
-      position: fixed;
-      bottom: 0;
-      left: 299px;
-      padding: .4rem 1rem .4rem 0;
-      z-index: 999;
-      border: 0;
-      background: #1B2559;
-      border-radius: 0 20px 0 0;
-      outline: none;
+  }
+  .side-footer{
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    .net-links{
       display: flex;
-      justify-content: center;
+      outline: none;
+      cursor: pointer;
+      width: 180px;
+      height: 60px;
+      font-weight: 500;
+      font-size: 20px;
       align-items: center;
-      flex-flow: row nowrap;
-
-      &::after {
-        content: '';
-        background: transparent;
-        width: 20px;
-        height: 20px;
-        position: absolute;
-        top: -20px;
-        left: 0;
-        border-radius: 0 0 0 20px;
-        box-shadow: -5px 5px 0 5px #1b2559;
-        z-index: 800;
+      justify-content: center;
+      text-align: center;
+      letter-spacing: 0.655422px;
+      color: #fff;
+      box-shadow: 0 6.59053px 4.56268px rgb(0 0 0%);
+      border-radius: 8.86119px;
+      background: linear-gradient(
+        0.759turn
+        , #112df2 5.72%, #9374ff 94.92%);
+      transition: .3s ease-in-out;
+      &:hover{
+        opacity: .8;
       }
+    }
+  }
 
-      .m-translate {
-        z-index: 999;
-        margin-right: .4rem;
-      }
+  @keyframes menuBoom {
+    0%,100%{
+      transform: scale(1);
+    }
+    50%{
+      transform: scale(1.2);
     }
   }
 </style>

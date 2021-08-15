@@ -1,11 +1,12 @@
 <template>
   <div class="full-width">
-    <div class="mk-top title-sticky">
+    <div class="mk-top title-sticky bg-white dark:bg-gray-800">
       <span class="title">Recycle/Coming Soon</span>
       <div>
         <vs-select
           color="danger"
           label="Sort"
+          class="text-black dark:text-red-600"
           v-model="query.sort"
         >
           <div :key="index" v-for="(item,index) in opts_sort">

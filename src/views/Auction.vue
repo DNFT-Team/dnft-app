@@ -1,12 +1,13 @@
 <template>
   <div class="full-width">
-    <div class="mk-top title-sticky">
+    <div class="mk-top title-sticky bg-white dark:bg-gray-800">
       <span class="title">Auction/Coming Soon</span>
       <vs-button color="danger" type="line">Create Collection</vs-button>
       <vs-button color="danger" type="line">Create Auction</vs-button>
       <vs-select
-        color="primary"
+        color="danger"
         label="Participant"
+        class="text-black dark:text-red-600"
         v-model="query.type"
       >
         <vs-select-item v-for="(item,index) in opts_type" :key="index" :value="item.value"

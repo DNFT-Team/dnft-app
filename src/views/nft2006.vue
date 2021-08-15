@@ -1,6 +1,6 @@
 <template>
   <div class="full-width">
-    <div class="mk-top title-sticky">
+    <div class="mk-top title-sticky bg-white dark:bg-gray-800">
       <span class="title">NFT2006</span>
       <div>
         <vs-button @click="openPop('class')" color="warning" type="line" size="large"

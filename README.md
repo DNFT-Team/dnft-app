@@ -1,4 +1,5 @@
-# dnft-substrate-front
+# dnft-app
+> The Core App of DNFT `MVP-Version`
 
 Test URL: http://mvp.dnft.world/#/home
 
@@ -11,6 +12,8 @@ yarn install
 ```
 yarn serve
 ```
+App running at:
+- Local:   http://localhost:8083/
 
 ### Compiles and minifies for production
 ```
