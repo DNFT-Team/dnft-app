@@ -1,16 +1,20 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2623741 */
-  src: url('iconfont.woff2?t=1628933883810') format('woff2'),
-       url('iconfont.woff?t=1628933883810') format('woff'),
-       url('iconfont.ttf?t=1628933883810') format('truetype');
+  src: url('iconfont.woff2?t=1629015375292') format('woff2'),
+       url('iconfont.woff?t=1629015375292') format('woff'),
+       url('iconfont.ttf?t=1629015375292') format('truetype');
 }
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: inherit;
+  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-kongtou:before {
+  content: "\e6ab";
 }
 
 .icon-medium:before {

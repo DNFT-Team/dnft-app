@@ -9,12 +9,12 @@
         <vs-button @click="openPop('nft')" color="danger" type="line" size="large"
                    style="margin-left: 1rem;">+ NFT
         </vs-button>
-        <vs-button @click="openPop('collection')" color="primary" type="line" size="large"
+        <vs-button @click="openPop('collection')" color="success" type="line" size="large"
                    style="margin-left: 1rem;">+ COL
         </vs-button>
       </div>
     </div>
-    <vs-tabs alignment="fixed" style="margin-top: 1rem">
+    <vs-tabs  color="rgb(42, 207, 133)" alignment="fixed" style="margin-top: 1rem">
       <vs-tab label="CLASS" @click="getClsList">
         <vs-list>
           <vs-list-item v-for="cls in clsList" :key="cls.class_id"
