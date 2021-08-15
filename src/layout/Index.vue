@@ -176,6 +176,7 @@ export default {
           position: 'top-left',
           customClass: 'chain-notify',
         });
+        return;
       }
       const keyring = createTestKeyring();
       const alicePair = keyring.getPair(ALICE);
