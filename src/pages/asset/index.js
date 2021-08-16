@@ -848,22 +848,23 @@ const styleCardList = css`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
-  gap: 60px;
+  gap: 16px;
   height: 100%;
   margin-top: 20px;
 `;
 
 const styleCardContainer = css`
-  height: 500px;
+  height: 340px;
   background: #f5f7fa;
   border-radius: 18px;
-  max-width: 330px;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   flex: 1;
-  min-width: 330px;
+  min-width: 280px;
+  margin: 20px;
   &:hover {
     background: white;
     box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
