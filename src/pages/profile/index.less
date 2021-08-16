@@ -2,17 +2,40 @@
   background: #f5f7fa;
   padding: 10px 16px;
   height: 100%;
- 
 }
 .container {
   background-color: white;
   height: 100%;
   border-radius: 10px;
-  padding: 0 23px;
 }
 .profile {
   width: 100%;
-  padding:  58px 20px 0 18px;
+  box-sizing: border-box;
+  height: 223px;
+  padding: 71px 87px 0 27px;
+  background: #ffffff;
+  box-shadow: 0px 9px 20px rgba(27, 37, 89, 0.1);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.left {
+  display: flex;
+}
+.authorImg {
+  width: 120px;
+  height: 120px;
+  margin-right: 48px;
+}
+.authorInfo {
+  margin-top: 13px;
+}
+.authorName {
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 32px;
+  color: #000000;
 }
 .title {
   font-weight: bold;
@@ -25,7 +48,7 @@
   display: flex;
   align-items: center;
   height: 32px;
-  margin-bottom: 23px;
+  margin-bottom: 5px;
 }
 .address {
   font-size: 16px;
@@ -37,36 +60,135 @@
   cursor: pointer;
   margin-left: 12px;
 }
-.person {
+.contactImg {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
-.personLeft {
-  display: flex;
-  align-items: center;
+.contactImg img {
+  width: 24px;
+  margin-right: 10px;
+  cursor: pointer;
 }
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
-  padding-right: 13px;
-}
-.desc {
-  font-weight: bold;
+.edit {
   font-size: 16px;
   line-height: 16px;
+  width: 114px;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  border-radius: 8px;
   color: #000000;
+  cursor: pointer;
+}
+.tabs {
+  display: flex;
+  align-items: center;
+  margin-top: 92px;
+  padding-left: 27px;
+  padding-bottom: 56px;
+}
+.tabs span {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  color: #666666;
+  padding-right: 46px;
+}
+.tabs span i {
+  font-style: normal;
+  padding-right: 6px;
+}
+.tabsActive {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  color: #000;
+}
+.datas {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 27px;
 }
 .collection {
-  width: 163px;
-height: 48px;
-border-radius: 10px;
-
-background: #112DF2;
-line-height: 48px;
-text-align: center;
-font-size: 16px;
-line-height: 48px;
-color: #FCFCFD;
+  width: 351px;
+  height: 414px;
+  border: 1px solid red;
+}
+.collectionImg {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+.thumbnail {
+  display: flex;
+  height: 97px;
+  margin-bottom: 18px;
+}
+.thumbnail img {
+  width: calc((100% - 12px) / 3);
+  margin-right: 6px;
+  border-radius: 10px;
+}
+.thumbnail img:last-child {
+  margin-right: 0;
+}
+.info {
+  height: 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 19px;
+}
+.infoLeft,
+.infoRight {
+  display: flex;
+  align-items: center;
+}
+.infoLeft img {
+  width: 24px;
+  height: 24px;
+  margin-right: 11px;
+  border-radius: 50%;
+}
+.infoLeft span,
+.infoRight span {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+  color: #000000;
+}
+.infoRight img {
+  width: 26px;
+  height: 26px;
+  margin-right: 4px;
+}
+.infoDesc {
+  font-size: 12px;
+  line-height: 16px;
+  color: #23262f;
+}
+.editBox {
+  width: 528px;
+  margin: 0 auto;
+  padding-top: 59px;
+}
+.editBox h3 {
+  font-weight: bold;
+  font-size: 38px;
+  line-height: 38px;
+  letter-spacing: -0.02em;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 37px;
+  color: #23262f;
+}
+.head {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #030303;
+  margin: 0;
+  padding-left: 10px;
 }
