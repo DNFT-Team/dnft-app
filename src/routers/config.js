@@ -9,6 +9,7 @@ import IGOScreen from 'pages/igo'
 import ProfileScreen from 'pages/profile'
 import DataDetailScreen from 'pages/data/detail';
 import ProfileEditScreen from 'pages/profile/edit'
+import CreateNFT from 'pages/asset/create'
 
 const MENU_MAP = [
   { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
@@ -31,7 +32,10 @@ const ROUTER_MAP = [
   { path: '/profile', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
   { path: '/data/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
-
-
+  {
+    path: '/asset/create',
+    exact: true,
+    Component: CreateNFT,
+  },
 ];
 export { MENU_MAP, ROUTER_MAP };

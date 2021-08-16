@@ -1,7 +1,8 @@
 import { DownOutlined, HeartFilled } from '@ant-design/icons';
-import { Dialog, Input } from 'element-react';
+import { Dialog, Input, Select } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { tokenAbi, nftAbi, nft1155Abi } from 'utils/abi';
 import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
@@ -9,20 +10,280 @@ import { nfIconSvg, noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 
 const AssetScreen = (props) => {
-  const tabArray = ['In wallet', 'On Sale', 'My favorite', 'Sold'];
-
-  const [selectedTab, setSelectedTab] = useState('In wallet');
+  const tabArray = ['On Sale', 'In Wallet', 'My favorite', 'Sold'];
+  const data = [
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'aaaaa',
+      account: '1,234',
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'aaaaa',
+      account: '1,234',
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'aaaaa',
+      account: '1,234',
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'aaaaa',
+      account: '1,234',
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'aaaaa',
+      account: '1,234',
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'Shanghaibar',
+      account: 123,
+      inWallet: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test',
+      account: '1,234',
+      onSale: true,
+    },
+    {
+      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
+      title: 'test2',
+      account: 12,
+      sold: true,
+      stared: true,
+    },
+    {
+      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      title: 'fwefwefwef',
+      account: 736,
+      inWallet: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'efefef',
+      account: 123,
+      onSale: true,
+      stared: true,
+    },
+    {
+      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      title: 'test4',
+      account: '1,234',
+      stared: true,
+    },
+    {
+      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      title: 'test1',
+      account: 123,
+      sold: true,
+      stared: true,
+    },
+  ];
+  const cateType = [
+    { label: 'Lasted', value: 0 },
+    { label: 'Virtual reality', value: 1 },
+    { label: 'Domain', value: 2 },
+    { label: 'Art', value: 3 },
+    { label: 'Cooection', value: 4 },
+    { label: 'Sports', value: 5 },
+    { label: 'Game', value: 6 },
+  ];
+  const cateType1 = [
+    { label: 'Most favorited', value: 0 },
+    { label: 'Price:high to low', value: 1 },
+    { label: 'Price:low to high', value: 2 },
+  ];
+  const [selectedTab, setSelectedTab] = useState('In Wallet');
   const [isVisible, setIsVisible] = useState(false);
   const [keyword, setKeyword] = useState();
   const [balance, setBalance] = useState(0);
   const [nftData, setNftData] = useState();
+  let history = useHistory();
 
   useEffect(() => {
     injectWallet();
   }, []);
 
   const init = () => {
-    getBalance();
+    // getBalance();
     getNft();
   };
 
@@ -168,11 +429,18 @@ const AssetScreen = (props) => {
   const renderAssetHeader = useMemo(
     () => (
       <div className={styleHeader}>
-        <h1 className={styleTitle}>Asset</h1>
         <div className={styleAssetAccountContainer}>
           <div className={styleIcon}>{nfIconSvg}</div>
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
+        </div>
+        <div
+          className={styleCreateNFT}
+          onClick={() => {
+            history.push('/asset/create');
+          }}
+        >
+          Create NFT
         </div>
       </div>
     ),
@@ -197,31 +465,10 @@ const AssetScreen = (props) => {
     [selectedTab]
   );
 
-  const renderFilter = useMemo(
-    () => (
-      <div className={styleFilterContainer}>
-        <div className={styleFilter}>
-          <span>Collection</span>
-          <DownOutlined />
-        </div>
-        <div className={styleSearch}>
-          <i className='el-icon-search'></i>
-          <Input
-            placeholder={'Search'}
-            onChange={(value) => {
-              setKeyword(value);
-            }}
-          />
-        </div>
-      </div>
-    ),
-    []
-  );
-
   const renderAction = useCallback(
     (item) => {
       switch (selectedTab) {
-      case 'In wallet':
+      case 'In Wallet':
         return (
           <div className={styleButtonContainer}>
             <div className={cx(styleButton, styleFillButton)}>
@@ -267,11 +514,11 @@ const AssetScreen = (props) => {
   const getFormatName = (nftId) => {
     switch (nftId) {
     case '100':
-      return 'Gold'
+      return 'Gold';
     case '200':
-      return 'Silver'
+      return 'Silver';
     case '300':
-      return 'Bronze'
+      return 'Bronze';
     }
   };
 
@@ -295,7 +542,9 @@ const AssetScreen = (props) => {
               height: '100%',
             }}
           >
-            <span className={styleCardTitle}>{getFormatName(item.split('igo/')[1].split('.')[0])} Medal NFT</span>
+            <span className={styleCardTitle}>
+              {getFormatName(item.split('igo/')[1].split('.')[0])} Medal NFT
+            </span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer}>
                 <HeartFilled style={{ color: '#c4c4c4' }} />
@@ -378,26 +627,26 @@ const AssetScreen = (props) => {
     [isVisible]
   );
 
-  // const dealWithData = useMemo(
-  //   () =>
-  //     data?.filter((item) => {
-  //       const isInWallet = item.inWallet && selectedTab === 'In wallet';
-  //       const isFavorite = item.stared && selectedTab === 'My favorite';
-  //       const isOnSale = item.onSale && selectedTab === 'On Sale';
-  //       const isSold = item.sold && selectedTab === 'Sold';
-  //       const includeKeyword = item.title.includes(keyword);
+  const dealWithData = useMemo(
+    () =>
+      data?.filter((item) => {
+        const isInWallet = item.inWallet && selectedTab === 'In Wallet';
+        const isFavorite = item.stared && selectedTab === 'My favorite';
+        const isOnSale = item.onSale && selectedTab === 'On Sale';
+        const isSold = item.sold && selectedTab === 'Sold';
+        const includeKeyword = item.title.includes(keyword);
 
-  //       if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
-  //         return;
-  //       }
-  //       if (keyword !== '' && keyword !== undefined && !includeKeyword) {
-  //         return;
-  //       }
+        if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
+          return;
+        }
+        if (keyword !== '' && keyword !== undefined && !includeKeyword) {
+          return;
+        }
 
-  //       return item;
-  //     }),
-  //   [selectedTab, keyword, data]
-  // );
+        return item;
+      }),
+    [selectedTab, keyword, data]
+  );
 
   const renderNoData = useMemo(
     () => (
@@ -412,19 +661,42 @@ const AssetScreen = (props) => {
   return (
     <div className={styleContainer}>
       <div>
-        {/* {renderAssetHeader} */}
+        {renderAssetHeader}
         <div className={styleBody}>
-          <div className={styleTabContainer}>{renderTabList}</div>
-          {/* {renderFilter} */}
+          <div className={styleTabContainer}>
+            <div>{renderTabList}</div>
+            <div>
+              <Select
+                style={{ marginRight: 20 }}
+                value={0}
+                placeholder='请选择'
+              >
+                {cateType.map((el) => (
+                  <Select.Option
+                    key={el.value}
+                    label={el.label}
+                    value={el.value}
+                  />
+                ))}
+              </Select>
+              <Select value={0} placeholder='请选择'>
+                {cateType1.map((el) => (
+                  <Select.Option
+                    key={el.value}
+                    label={el.label}
+                    value={el.value}
+                  />
+                ))}
+              </Select>
+            </div>
+          </div>
 
           <div className={styleCardList}>
-            {/* {dealWithData?.length > 0
+            {dealWithData?.length > 0
               ? dealWithData.map((item, index) => {
-                  return renderCard(item, index);
-                })
-              : renderNoData} */}
-            {nftData?.length > 0
-              ? nftData.map((item, index) => renderNft(item, index))
+                console.log('index', index)
+                return renderCard(item, index);
+              })
               : renderNoData}
           </div>
         </div>
@@ -443,7 +715,7 @@ const styleContainer = css`
     &:first-child {
       background: white;
       border-radius: 10px;
-      padding: 48px 0;
+      padding: 32px 0;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -454,17 +726,24 @@ const styleContainer = css`
 
 const styleHeader = css`
   border-bottom: 1px solid #efefef;
-  padding: 0 36px;
+  padding: 28px 36px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const styleTitle = css`
-  font-size: 30px;
-  color: #233a7d;
-  margin: 0;
+const styleCreateNFT = css`
+  background-color: #112df2;
+  color: white;
+  padding: 16px 36px;
+  height: 18px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
 `;
 
 const styleAssetAccountContainer = css`
-  padding: 40px 0 24px 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -476,13 +755,19 @@ const styleAssetAccountContainer = css`
 
 const styleBody = css`
   padding: 24px 36px;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const styleTabContainer = css`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  flex: 1;
+  justify-content: space-between;
+  &>div{
+    display: flex;
+    flex-direction: row;
+  }
 `;
 
 const styleIcon = css`
@@ -563,21 +848,23 @@ const styleCardList = css`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
-  gap: 60px;
+  gap: 16px;
   height: 100%;
   margin-top: 20px;
 `;
 
 const styleCardContainer = css`
-  height: 500px;
+  height: 340px;
   background: #f5f7fa;
   border-radius: 18px;
-  max-width: 330px;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   flex: 1;
+  min-width: 280px;
+  margin: 20px;
   &:hover {
     background: white;
     box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
