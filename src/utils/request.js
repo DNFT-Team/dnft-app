@@ -1,4 +1,4 @@
-export const URL_CLOUD = 'http://api.nftable.org';
+export const URL_CLOUD = 'http://92.205.29.153:8000';
 
 let BASE_URL = URL_CLOUD;
 

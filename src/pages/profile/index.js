@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './index.less';
 import copy from 'images/profile/copy.png';
 import dnftLogo from 'images/home/dnftLogo.png';
@@ -6,10 +6,18 @@ import contact_t from 'images/profile/t.png';
 import contact_m from 'images/profile/m.png';
 import like from 'images/profile/like.png';
 import { useHistory } from 'react-router';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { getMyProfileList } from 'reduxs/actions/profile';
 
 const ProfileScreen = (props) => {
-  let history = useHistory();
+  const { dispatch, datas, location } = props;
 
+  console.log(datas)
+  let history = useHistory();
+  useEffect(() => {
+    dispatch(getMyProfileList());
+  }, []);
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -84,4 +92,7 @@ const ProfileScreen = (props) => {
     </div>
   );
 };
-export default ProfileScreen;
+const mapStateToProps = ({ profile }) => ({
+  datas: profile.datas,
+});
+export default withRouter(connect(mapStateToProps)(ProfileScreen));
