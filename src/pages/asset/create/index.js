@@ -8,29 +8,10 @@ import {
 } from 'element-react';
 import { css } from 'emotion';
 import React, { useMemo, useState } from 'react';
+import CreateCollectionModal from '../../../components/CreateCollectionModal';
 
 const CreateNFT = (props) => {
   const [options, setOptions] = useState([
-    {
-      value: '1',
-      label: '黄金糕',
-    },
-    {
-      value: '2',
-      label: '双皮奶',
-    },
-    {
-      value: '3',
-      label: '蚵仔煎',
-    },
-    {
-      value: '4',
-      label: '龙须面',
-    },
-    {
-      value: '5',
-      label: '北京烤鸭',
-    },
     {
       value: 'other',
       label: 'New collection +',
@@ -47,49 +28,6 @@ const CreateNFT = (props) => {
       </div>
     );
   };
-
-  const renderModal = useMemo(
-    () => (
-      <Dialog
-        customClass={styleModalContainer}
-        title='Create your collection'
-        visible={showCreateCollection}
-        onCancel={() => {
-          setShowCreateCollection(false);
-        }}
-      >
-        <Dialog.Body>
-          <Upload
-            className={styleUploadContainer}
-            drag
-            action="//jsonplaceholder.typicode.com/posts/"
-            tip={
-              <div className="el-upload__tip">
-                Drag or choose your file to upload
-              </div>
-            }
-          >
-            <i className="el-icon-upload2"></i>
-            <div className="el-upload__text">
-              PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-            </div>
-          </Upload>
-          {renderFormItem('Your Full Name', <Input placeholder='e. g. David' />)}
-          {renderFormItem('BlockChain', <Input placeholder='Ethereum' />)}
-          {renderFormItem(
-            'Description',
-            <Input
-              type='textarea'
-              placeholder='e. g. David'
-              autosize={{ minRows: 4, maxRows: 4 }}
-            />
-          )}
-          <div className={styleCreateNFT}>Create</div>
-        </Dialog.Body>
-      </Dialog>
-    ),
-    [showCreateCollection]
-  );
 
   return (
     <React.Fragment>
@@ -170,7 +108,13 @@ const CreateNFT = (props) => {
         {renderFormItem('BlockChain', <Input placeholder='Ethereum' />)}
         <div className={styleCreateNFT}>Create</div>
       </div>
-      {renderModal}
+      {showCreateCollection && (
+        <CreateCollectionModal
+          onClose={() => {
+            setShowCreateCollection(false);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
@@ -243,22 +187,4 @@ const styleAlert = css`
   }
 `;
 
-const styleModalContainer = css`
-  width: 564px;
-  border-radius: 10px;
 
-  .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 12px;
-  }
-  .el-dialog__title {
-    color: #11142D;
-    font-size: 18px;
-  }
-  .el-dialog__header {
-    padding: 32px;
-  }
-  .el-dialog__body {
-    padding: 0 32px 32px 32px;
-  }
-`;
