@@ -471,9 +471,6 @@ const AssetScreen = (props) => {
       case 'In Wallet':
         return (
           <div className={styleButtonContainer}>
-            <div className={cx(styleButton, styleFillButton)}>
-              Cross-chain
-            </div>
             <div className={cx(styleButton, styleBorderButton)}>Sell</div>
           </div>
         );
@@ -481,7 +478,6 @@ const AssetScreen = (props) => {
         return (
           <div className={styleButtonContainer}>
             <span className={stylePrice}>1.8ETH</span>
-            <div className={cx(styleButton, styleFillButton)}>Edit</div>
           </div>
         );
       case 'My favorite':
@@ -490,7 +486,6 @@ const AssetScreen = (props) => {
         ) : (
           <div className={styleButtonContainer}>
             <span className={stylePrice}>1.8ETH</span>
-            <div className={cx(styleButton, styleFillButton)}>Buy</div>
           </div>
         );
       case 'Sold':
@@ -801,54 +796,10 @@ const styleActiveTabButton = css`
   color: white;
 `;
 
-const styleFilterContainer = css`
-  border: 1px solid #e1e2ed;
-  border-radius: 10px;
-  width: 100%;
-  height: 46px;
-  display: flex;
-  margin: 24px 0 64px 0;
-`;
-
-const styleFilter = css`
-  display: flex;
-  align-items: center;
-  padding: 0 20px 0 14px;
-  justify-content: space-between;
-  width: 160px;
-  border-right: 1px solid #e1e2ed;
-  span {
-    font-weight: bold;
-    font-size: 18px;
-    color: #263b79;
-  }
-  svg {
-    font-size: 12px;
-    padding-left: 28px;
-  }
-`;
-
-const styleSearch = css`
-  padding-left: 24px;
-  display: flex;
-  align-items: center;
-  color: #263b79;
-  flex: 1;
-  .el-input__inner {
-    border: none;
-    font-size: 14px;
-    margin-left: 12px;
-    width: 100%;
-    color: #8f9bba;
-  }
-`;
-
 const styleCardList = css`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
-  gap: 16px;
   height: 100%;
   margin-top: 20px;
 `;
@@ -857,13 +808,13 @@ const styleCardContainer = css`
   height: 340px;
   background: #f5f7fa;
   border-radius: 18px;
-  max-width: 280px;
+  max-width: 270px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   flex: 1;
-  min-width: 280px;
+  min-width: 270px;
   margin: 20px;
   &:hover {
     background: white;
@@ -956,7 +907,8 @@ const styleBorderButton = css`
 `;
 
 const styleButton = css`
-  width: 130px;
+  display: flex;
+  flex:1;
   height: 40px;
   display: flex;
   justify-content: center;
