@@ -1,9 +1,10 @@
-import { GET_MY_PROFILE_LIST } from '../types/profile';
+import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN } from '../types/profile';
 
 const initialState = {
   pending: false,
   datas: null,
-
+  address: null,
+  chainType: null,
 }
 const Profile = (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +23,17 @@ const Profile = (state = initialState, action) => {
     return {
       ...state,
       pending: false,
+    }
+  case SET_PROFILE_ADDRESS.SUCCESS:
+    return {
+      ...state,
+      address: action.payload.address,
+      chainType: action.payload.chainType,
+    }
+  case GET_MY_PROFILE_TOKEN.SUCCESS:
+    return {
+      ...state,
+      token: action.payload.accessToken
     }
   default:  return state
   }

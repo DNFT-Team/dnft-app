@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './index.less';
-import copy from 'images/profile/copy.png';
+import copyImg from 'images/profile/copy.png';
 import dnftLogo from 'images/home/dnftLogo.png';
 import contact_t from 'images/profile/t.png';
 import contact_m from 'images/profile/m.png';
@@ -9,26 +9,35 @@ import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getMyProfileList } from 'reduxs/actions/profile';
+import copy from 'copy-to-clipboard';
+import { Message } from 'element-react';
 
 const ProfileScreen = (props) => {
-  const { dispatch, datas, location } = props;
+  const { dispatch, datas, location, address, chainType } = props;
 
-  console.log(datas)
+  console.log(address, chainType)
   let history = useHistory();
   useEffect(() => {
     dispatch(getMyProfileList());
   }, []);
+  const handleCopyAddress = () => {
+    copy(address);
+    Message({
+      message: '地址复制成功！',
+      type: 'success'
+    });
+  }
   return (
     <div className={styles.box}>
       <div className={styles.container}>
         <div className={styles.profile}>
           <div className={styles.left}>
-            <img className={styles.authorImg} src={copy} />
+            <img className={styles.authorImg} src={copyImg} />
             <div className={styles.authorInfo}>
               <div className={styles.authorName}>daljj</div>
               <div className={styles.addressBox}>
-                <span className={styles.address}>a5as25af1af...1520</span>
-                <img className={styles.copyAddress} src={copy} />
+                <span className={styles.address}>{address && `${address?.slice(0, 8)}...${address?.slice(28)}`}</span>
+                <img className={styles.copyAddress} onClick={handleCopyAddress} src={copyImg} />
               </div>
               <div className={styles.contactImg}>
                 <a>
@@ -94,5 +103,7 @@ const ProfileScreen = (props) => {
 };
 const mapStateToProps = ({ profile }) => ({
   datas: profile.datas,
+  address: profile.address,
+  chainType: profile.chainType,
 });
 export default withRouter(connect(mapStateToProps)(ProfileScreen));

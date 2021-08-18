@@ -18,14 +18,17 @@ import {
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
+import { NET_WORK_VERSION } from 'utils/constant'
+
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
-
+  const {dispatch} = props;
   const [isNetListVisible, setIsNetListVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
-
   const netArray = useMemo(
     () => [
       {
@@ -92,13 +95,22 @@ const GlobalHeader = (props) => {
 
         setCurrentNetIndex(currentIndex);
       });
-
+      let params = {address:ethereum.selectedAddress,chainType:NET_WORK_VERSION[ethereum.networkVersion]}
+      console.log(params)
+      // 存储address
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
         if (accounts[0] &&  accounts[0] !== address) {
           console.log(accounts[0], address)
         }
         setAddress(accounts[0]);
+        let params = {address:accounts[0],chainType:NET_WORK_VERSION[ethereum.networkVersion]}
+
+        dispatch(setProfileAddress(params))
+        dispatch(setProfileToken(params))
+
       });
     } else {
       alert('Please install wallet');
@@ -152,7 +164,7 @@ const GlobalHeader = (props) => {
           onClick={async () => {
 
             if (address) {
-              // history.push('/profile')
+              history.push('/profile')
               return;
             }
             let ethereum = window.ethereum;
@@ -221,8 +233,11 @@ const GlobalHeader = (props) => {
     </header>
   );
 };
-export default GlobalHeader;
-
+// export default GlobalHeader;
+const mapStateToProps = ({ profile }) => ({
+  myAddress: profile.address,
+});
+export default (connect(mapStateToProps)(GlobalHeader));
 const styleHeader = css`
   display: flex;
   height: 64px;
