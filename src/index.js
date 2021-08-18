@@ -10,6 +10,7 @@ import './i18n_config';
 import './index.less';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'ui-neumorphism/dist/index.css';
 import './assets/font/iconfont.css'
 
 import reportWebVitals from './reportWebVitals';

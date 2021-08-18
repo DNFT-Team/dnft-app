@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getMyProfileList } from 'reduxs/actions/profile';
+import { Button } from 'ui-neumorphism'
 
 const ProfileScreen = (props) => {
   const { dispatch, datas, location } = props;
@@ -53,6 +54,7 @@ const ProfileScreen = (props) => {
           </div>
         </div>
         {/* DATA */}
+        <Button>Press</Button>
         <div className={styles.tabs}>
           <span>
             <i className={styles.tabsActive}>Collections</i>5
