@@ -5,3 +5,4 @@ export const GET_MY_PROFILE_TOKEN = createActionSet('GET_MY_PROFILE_TOKEN');
 export const GET_MY_PROFILE_BATCH = createActionSet('GET_MY_PROFILE_BATCH');
 export const GET_MY_PROFILE_OWNED = createActionSet('GET_MY_PROFILE_OWNED');
 export const GET_MY_PROFILE_CREATED = createActionSet('GET_MY_PROFILE_CREATED');
+export const GET_MY_PROFILE_SAVE = createActionSet('GET_MY_PROFILE_SAVE');
