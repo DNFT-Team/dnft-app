@@ -6,7 +6,7 @@ import {curveArrow} from '../../utils/svg'
 import {Grid, GridItem, Heading, Text} from '@chakra-ui/react'
 // 892/1630
 
-const AssetsScreen = (props) =>
+const BridgeScreen = (props) =>
   //  render Dom
   (
     <div className="d-fullWidth">
@@ -50,4 +50,4 @@ const AssetsScreen = (props) =>
     </div>
   )
 
-export default AssetsScreen;
+export default BridgeScreen;
