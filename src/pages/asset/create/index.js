@@ -7,34 +7,100 @@ import {
   Upload,
 } from 'element-react';
 import { css } from 'emotion';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
+import { post } from 'utils/request';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router';
 
 const CreateNFT = (props) => {
-  const [options, setOptions] = useState([
-    {
-      value: 'other',
-      label: 'New collection +',
-    },
-  ]);
-  const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const { dispatch, datas, location, address, chainType, token } = props;
 
-  const renderFormItem = (label, item) => {
-    console.log(label, 'label');
-    return (
-      <div className={styleFormItemContainer}>
-        <div className='label'>{label}</div>
-        {item}
-      </div>
+  const [options, setOptions] = useState([]);
+  const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const [form, setForm] = useState({})
+
+  let history = useHistory();
+
+  const cateType = [
+    { label: 'Lasted', value: 'LASTED' },
+    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    { label: 'Domain', value: 'DOMAIN' },
+    { label: 'Art', value: 'ART' },
+    { label: 'Cooection', value: 'COOECTION' },
+    { label: 'Sports', value: 'SPORTS' },
+    { label: 'Game', value: 'GAME' },
+  ];
+
+  const getCollectionList = async () => {
+    const { data } = await post(
+      '/api/v1/collection/batch',
+      {
+        address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+        sortOrder: 'ASC',
+        sortTag: 'createTime',
+        page: 0,
+        size: 10,
+      },
+      token
+    );
+
+    setOptions(
+      data?.data?.content?.map((item) => {
+        let dealWithItem = {
+          label: item.name,
+          value: item.id,
+        };
+        return dealWithItem;
+      }).concat([
+        {
+          value: 'other',
+          label: 'New collection +',
+        },
+      ])
     );
   };
+
+  const createNFT = async () => {
+    try {
+      const result = await post(
+        '/api/v1/nft/',
+        {
+          ...form,
+          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          chainType: chainType,
+          avatorUrl: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg',
+          hash:'lflewfwelfewlfl'
+        },
+        token
+      );
+      console.log(result);
+      history.push('/asset');
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      getCollectionList();
+    }
+  }, [token]);
+  console.log(form, 'form')
+
+  const renderFormItem = (label, item) =>
+    <div className={styleFormItemContainer}>
+      <div className='label'>{label}</div>
+      {item}
+    </div>
 
   return (
     <React.Fragment>
       <Alert
         className={styleAlert}
         title={
-          'You have not created the collection yet.   OpenSea will include a link to this URL on this item\'s detail page'
+          'You have not created the collection yet.   OpenSea will include a link to this URL on this item"s detail page'
         }
         type='warning'
       />
@@ -44,12 +110,19 @@ const CreateNFT = (props) => {
         <Upload
           className={styleUploadContainer}
           drag
-          action='//jsonplaceholder.typicode.com/posts/'
+          multiple={false}
+          action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
           tip={
             <div className='el-upload__tip'>
               Drag or choose your file to upload
             </div>
           }
+          onSuccess={(response, file) => {
+            setForm({
+              ...form,
+              avatorUrl: file.url,
+            })
+          }}
         >
           <i className='el-icon-upload2'></i>
           <div className='el-upload__text'>
@@ -57,13 +130,24 @@ const CreateNFT = (props) => {
           </div>
         </Upload>
         <h3>Item Details</h3>
-        {renderFormItem('Name', <Input placeholder='e. g. David' />)}
+        {renderFormItem('Name', <Input placeholder='e. g. David' onChange={(value) => {
+          setForm({
+            ...form,
+            name: value
+          })
+        }}/>)}
         {renderFormItem(
           'Description',
           <Input
             type='textarea'
             placeholder='e. g. David'
             autosize={{ minRows: 4, maxRows: 4 }}
+            onChange={(value) => {
+              setForm({
+                ...form,
+                description: value
+              })
+            }}
           />
         )}
         {renderFormItem(
@@ -73,25 +157,33 @@ const CreateNFT = (props) => {
             onChange={(value) => {
               if (value === 'other') {
                 setShowCreateCollection(true);
+                return;
               }
+
+              setForm({
+                ...form,
+                collectionId: value
+              })
             }}
           >
-            {options.map((el) => {
-              console.log(el, 'el');
-              return (
-                <Select.Option
-                  key={el.value}
-                  label={el.label}
-                  value={el.value}
-                />
-              );
-            })}
+            {options.map((el) =>
+              <Select.Option
+                key={el.value}
+                label={el.label}
+                value={el.value}
+              />
+            )}
           </Select>
         )}
         {renderFormItem(
           'Category',
-          <Select placeholder='please choose'>
-            {options.map((el) => {
+          <Select placeholder='please choose' onChange={(value) => {
+            setForm({
+              ...form,
+              category: value
+            })
+          }}>
+            {cateType.map((el) => {
               console.log(el, 'el');
 
               return (
@@ -104,9 +196,8 @@ const CreateNFT = (props) => {
             })}
           </Select>
         )}
-        {renderFormItem('Supply', <InputNumber value={1} />)}
-        {renderFormItem('BlockChain', <Input placeholder='Ethereum' />)}
-        <div className={styleCreateNFT}>Create</div>
+        {renderFormItem('BlockChain', <Input disabled placeholder={chainType} />)}
+        <div className={styleCreateNFT} onClick={createNFT}>Create</div>
       </div>
       {showCreateCollection && (
         <CreateCollectionModal
@@ -118,7 +209,13 @@ const CreateNFT = (props) => {
     </React.Fragment>
   );
 };
-export default CreateNFT;
+
+const mapStateToProps = ({ profile }) => ({
+  address: profile.address,
+  chainType: profile.chainType,
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(CreateNFT));
 
 const styleContainer = css`
   display: flex;
@@ -139,7 +236,7 @@ const styleContainer = css`
 `;
 
 const styleUploadContainer = css`
-    margin-bottom: 40px;
+  margin-bottom: 40px;
   .el-upload-dragger {
     display: flex;
     flex-direction: column;
@@ -173,7 +270,7 @@ const styleCreateNFT = css`
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
-  width: 48px;
+  width: fit-content;
 `;
 
 const styleAlert = css`
@@ -186,5 +283,3 @@ const styleAlert = css`
     top: 24px;
   }
 `;
-
-

@@ -81,7 +81,7 @@ const styleCreateNFT = css`
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
-  width: 48px;
+  width: fit-content;
 `;
 
 const styleModalContainer = css`

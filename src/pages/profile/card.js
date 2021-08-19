@@ -1,25 +1,30 @@
 import { css, cx } from 'emotion';
 import React from 'react';
 import {Icon} from '@iconify/react';
-
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import {
+  setProfileLike,
+  setProfileSave
+} from 'reduxs/actions/profile';
 const NFTCard = (props) => {
-  const { needAction, item, index, currentStatus } = props;
+  const { needAction, item, index, currentStatus, address, dispatch, token  } = props;
 
   const renderAction = (item) => {
-    switch (currentStatus.value) {
-    case 'INWALLET':
+    switch (currentStatus) {
+    case 'In Wallet':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Sell</div>
         </div>
       );
-    case 'ONSALE':
+    case 'On Sale':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Off Shelf</div>
         </div>
       );
-    case 'MYFAVORITE':
+    case 'My favorite':
       return item.sold ? (
         <div className={styleButtonContainer}>
           <span>
@@ -33,7 +38,7 @@ const NFTCard = (props) => {
           <span className={stylePrice}>1.8ETH</span>
         </div>
       );
-    case 'SOLD':
+    case 'Sold':
       return (
         <div className={styleButtonContainer}>
           <span>
@@ -49,27 +54,44 @@ const NFTCard = (props) => {
     }
   };
 
+  const handleLike = () => {
+    console.log(address,item)
+    dispatch(setProfileLike({
+      address,
+      nftId: item.id,
+      like: item.saved ? 0 : 1,
+    },token))
+  }
+
+  const handleSave = () => {
+    dispatch(setProfileSave({
+      address,
+      nftId: item.id,
+      saved: item.isSaved ? 0 : 1,
+    },token))
+  }
+
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
-      {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
           background: `center / cover no-repeat url(${item.avatorUrl})`,
         }}
         className={styleShortPicture}
       />
-      <div className={styleCollectionIconContainer} onClick={() => {}}>
-        <Icon icon="ant-design:inbox-outlined" style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
+      <div className={styleSoldOutBanner} onClick={() => {handleSave(item)}}>
+        <Icon icon="ic:sharp-stars" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
       </div>
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
-          <div>
-            <span className={styleChainType}>{item.chainType}</span>
+          {/* 1212 */}
+          <div className={styleCardContent}>
+            <span className={styleCardTitle}>{item.name}</span>
             <div className={styleStarInfo}>
-              <div className={styleStarIconContainer} onClick={() => {}}>
-                <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
+              <div className={styleStarIconContainer} onClick={() => {handleLike(item)}}>
+                <Icon icon="bx:bx-like" style={{ color: item.isLiked ? '#F13030' : '#c4c4c4' }} />
               </div>
-              <span>{item.account}</span>
+              <span>{item.likeCount}</span>
             </div>
           </div>
           <span className="description">{item.description}</span>
@@ -81,10 +103,21 @@ const NFTCard = (props) => {
     </div>
   );
 };
-export default NFTCard;
+const mapStateToProps = ({ profile }) => ({
+  datas: profile.datas,
+  address: profile.address,
+  chainType: profile.chainType,
+  token: profile.token,
+  batch: profile.batch,
+  owned: profile.owned,
+  created: profile.created,
+});
+export default withRouter(connect(mapStateToProps)(NFTCard));
+
+// export default NFTCard;
 
 const styleActionContainer = css`
-  margin-top: 14px;
+  margin-top: 10px;
 `;
 
 const styleButtonContainer = css`
@@ -101,10 +134,9 @@ const styleFillButton = css`
   border-radius: 8px;
 `;
 const styleBorderButton = css`
-  border: 1px solid #E6E8EC;
+  border: 1px solid #112df2;
   border-radius: 8px;
-  color: #000000;
-  font-weight: 500;
+  color: #112df2;
 `;
 
 const styleButton = css`
@@ -132,34 +164,37 @@ const styleText = css`
 
 const styleSoldOutBanner = css`
   position: absolute;
-  width: 74px;
-  height: 47px;
-  background: #ff313c;
-  border-radius: 0 0 20px 20px;
-  font-weight: bold;
-  font-size: 14px;
-  left: 24px;
+  // width: 20px;
+  // height: 20px;
+  // background: #ff313c;
+  // border-radius: 20px;
+  // font-weight: bold;
+  // font-size: 14px;
+  right: 15px;
+  top: 15px;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  svg {
+    font-size: 40px;
+  }
 `;
 
 const styleCardContainer = css`
-  background: #ffffff;
+  background: #f5f7fa;
   border-radius: 18px;
-  max-width: 288px;
+  max-width: 270px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   flex: 1;
-  min-width: 288px;
+  min-width: 270px;
   margin: 20px;
-  padding: 8px;
-  box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
   &:hover {
     background: white;
+    box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
     position: relative;
     top: -20px;
   }
@@ -170,29 +205,32 @@ const styleCardContainer = css`
 
 const styleShortPicture = css`
   min-height: 220px;
-  border-radius: 24px;
+  border-radius: 18px 18px 0 0;
 `;
-
+const styleCardContent = css`
+  display: flex;
+`;
 const styleStarInfo = css`
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   align-items: center;
   color: #8f9bba;
   position: absolute;
-  top: -36px;
+  // top: -36px;
   right: 0;
 `;
 
 const styleStarIconContainer = css`
-  background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  // background: #ffffff;
+  // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
+  // margin-bottom: 4px;
   &:hover {
     cursor: pointer;
   }
@@ -211,8 +249,8 @@ const styleCollectionIconContainer = css`
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 205px;
-  right: 76px;
+  top: 198px;
+  right: 64px;
   &:hover {
     cursor: pointer;
   }
@@ -238,14 +276,12 @@ const styleCardHeader = css`
   position: relative;
   .description {
     color: #11142D;
-    margin-top: 14px;
+    margin-top: 4px;
   }
 `;
 
-const styleChainType = css`
-  background: #FEDDBD;
-  color: #A15F1E;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 8px;
+const styleCardTitle = css`
+  color: #1b2559;
+  font-weight: 900;
+  font-size: 20px;
 `;
