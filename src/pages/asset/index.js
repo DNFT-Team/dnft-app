@@ -8,313 +8,50 @@ import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
+import { post } from 'utils/request';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const AssetScreen = (props) => {
-  const tabArray = ['On Sale', 'In Wallet', 'My favorite', 'Sold'];
-  const data = [
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
+  const { dispatch, location, address, chainType, token } = props;
 
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      sold: true,
-      stared: true,
-      description: 'description'
+  const tabArray = [{
+    label: 'On Sale',
+    value: 'ONSALE'
+  },{
+    label: 'In Wallet',
+    value: 'INWALLET'
+  },{
+    label: 'My Favorite',
+    value: 'MYFAVORITE'
+  },{
+    label: 'Sold',
+    value: 'SOLD'
+  }];
 
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'aaaaa',
-      account: '1,234',
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'Shanghaibar',
-      account: 123,
-      inWallet: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test',
-      account: '1,234',
-      onSale: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'test2',
-      account: 12,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'fwefwefwef',
-      account: 736,
-      inWallet: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'efefef',
-      account: 123,
-      onSale: true,
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'test4',
-      account: '1,234',
-      stared: true,
-      description: 'description'
-    },
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'test1',
-      account: 123,
-      sold: true,
-      stared: true,
-      description: 'description'
-    },
-  ];
   const cateType = [
-    { label: 'Lasted', value: 0 },
-    { label: 'Virtual reality', value: 1 },
-    { label: 'Domain', value: 2 },
-    { label: 'Art', value: 3 },
-    { label: 'Cooection', value: 4 },
-    { label: 'Sports', value: 5 },
-    { label: 'Game', value: 6 },
+    { label: 'Lasted', value: 'LASTED' },
+    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    { label: 'Domain', value: 'DOMAIN' },
+    { label: 'Art', value: 'ART' },
+    { label: 'Cooection', value: 'COOECTION' },
+    { label: 'Sports', value: 'SPORTS' },
+    { label: 'Game', value: 'GAME' },
   ];
-  const cateType1 = [
-    { label: 'Most favorited', value: 0 },
+
+  const sortTagType = [
+    { label: 'Most favorited', value: 'likeCount' },
     { label: 'Price:high to low', value: 1 },
     { label: 'Price:low to high', value: 2 },
   ];
-  const [selectedTab, setSelectedTab] = useState('In Wallet');
+  const [selectedTab, setSelectedTab] = useState('INWALLET');
   const [isVisible, setIsVisible] = useState(false);
-  const [keyword, setKeyword] = useState();
   const [balance, setBalance] = useState(0);
   const [nftData, setNftData] = useState();
+  const [category, setCategory] = useState('LASTED');
+  const [sortTag, setSortTag] = useState('likeCount')
+  const [list, setList] = useState()
+
   let history = useHistory();
 
   useEffect(() => {
@@ -325,6 +62,29 @@ const AssetScreen = (props) => {
     // getBalance();
     getNft();
   };
+
+  const getNFTList = async () => {
+    const { data } = await post(
+      '/api/v1/nft/batch',
+      {
+        address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+        category: category,
+        sortOrder: 'ASC',
+        status: selectedTab.value,
+        sortTag: sortTag,
+        page: 0,
+        size: 10
+      },
+      token
+    );
+    setList(data?.data?.content || [])
+  }
+
+  useEffect(() => {
+    if (token) {
+      getNFTList()
+    }
+  },[token, category, selectedTab, sortTag])
 
   const getNft = async () => {
     try {
@@ -492,13 +252,13 @@ const AssetScreen = (props) => {
         <div
           className={cx(
             styleTabButton,
-            item === selectedTab && styleActiveTabButton
+            item?.value === selectedTab?.value && styleActiveTabButton
           )}
           onClick={() => {
             setSelectedTab(item);
           }}
         >
-          {item}
+          {item.label}
         </div>
       )),
     [selectedTab]
@@ -517,13 +277,8 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => {
-      console.log(item,'item')
-      return (
-        <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} />
-      );
-    },
-    [keyword, selectedTab]
+    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} />,
+    [selectedTab]
   );
 
   const renderModal = useMemo(
@@ -554,27 +309,6 @@ const AssetScreen = (props) => {
     [isVisible]
   );
 
-  const dealWithData = useMemo(
-    () =>
-      data?.filter((item) => {
-        const isInWallet = item.inWallet && selectedTab === 'In Wallet';
-        const isFavorite = item.stared && selectedTab === 'My favorite';
-        const isOnSale = item.onSale && selectedTab === 'On Sale';
-        const isSold = item.sold && selectedTab === 'Sold';
-        const includeKeyword = item.title.includes(keyword);
-
-        if (!isInWallet && !isOnSale && !isFavorite && !isSold) {
-          return;
-        }
-        if (keyword !== '' && keyword !== undefined && !includeKeyword) {
-          return;
-        }
-
-        return item;
-      }),
-    [selectedTab, keyword, data]
-  );
-
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -595,8 +329,11 @@ const AssetScreen = (props) => {
             <div>
               <Select
                 style={{ marginRight: 20 }}
-                value={0}
+                value={category}
                 placeholder='请选择'
+                onChange={(value) => {
+                  setCategory(value)
+                }}
               >
                 {cateType.map((el) => (
                   <Select.Option
@@ -606,8 +343,10 @@ const AssetScreen = (props) => {
                   />
                 ))}
               </Select>
-              <Select value={0} placeholder='请选择'>
-                {cateType1.map((el) => (
+              <Select value={sortTag} placeholder='请选择' onChange={(value) => {
+                setSortTag(value)
+              }}>
+                {sortTagType.map((el) => (
                   <Select.Option
                     key={el.value}
                     label={el.label}
@@ -619,11 +358,8 @@ const AssetScreen = (props) => {
           </div>
 
           <div className={styleCardList}>
-            {dealWithData?.length > 0
-              ? dealWithData.map((item, index) => {
-                console.log('index', index)
-                return renderCard(item, index);
-              })
+            {list?.length > 0
+              ? list.map((item, index) =>  renderCard(item, index))
               : renderNoData}
           </div>
         </div>
@@ -632,7 +368,13 @@ const AssetScreen = (props) => {
     </div>
   );
 };
-export default AssetScreen;
+
+const mapStateToProps = ({ profile }) => ({
+  address: profile.address,
+  chainType: profile.chainType,
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(AssetScreen));
 
 const styleContainer = css`
   background: #f5f7fa;

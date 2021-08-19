@@ -7,19 +7,19 @@ const NFTCard = (props) => {
 
   const renderAction = (item) => {
     switch (currentStatus) {
-    case 'In Wallet':
+    case 'INWALLET':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Sell</div>
         </div>
       );
-    case 'On Sale':
+    case 'ONSALE':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Off Shelf</div>
         </div>
       );
-    case 'My favorite':
+    case 'MYFAVORITE':
       return item.sold ? (
         <div className={styleButtonContainer}>
           <span>
@@ -33,7 +33,7 @@ const NFTCard = (props) => {
           <span className={stylePrice}>1.8ETH</span>
         </div>
       );
-    case 'Sold':
+    case 'SOLD':
       return (
         <div className={styleButtonContainer}>
           <span>
@@ -54,12 +54,12 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `center / cover no-repeat ${item.src}`,
+          background: `center / cover no-repeat url(${item.avatorUrl})`,
         }}
         className={styleShortPicture}
       />
       <div className={styleCollectionIconContainer} onClick={() => {}}>
-        <Icon icon="ant-design:inbox-outlined" style={{ color: item.collectioned ? '#42E78E' : '#c4c4c4' }} />
+        <Icon icon="ant-design:inbox-outlined" style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
       </div>
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
@@ -67,7 +67,7 @@ const NFTCard = (props) => {
             <span className={styleCardTitle}>{item.title}</span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer} onClick={() => {}}>
-                <Icon icon="ant-design:heart-filled" style={{ color: item.stared ? '#F13030' : '#c4c4c4' }} />
+                <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
               </div>
               <span>{item.account}</span>
             </div>

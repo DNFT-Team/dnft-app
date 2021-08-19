@@ -15,6 +15,7 @@ import { Message } from 'element-react';
 
 const ProfileScreen = (props) => {
   const { dispatch, datas, location, address, chainType, token } = props;
+  console.log(token, 'token')
 
   let history = useHistory();
   useEffect(() => {
