@@ -83,26 +83,38 @@ export default function request (url, options) {
     })
 }
 
-export const get = (url, params) => request(
+export const get = (url, params, token) => request(
   `${url}?${stringify({ ...params })}`,
   {
     method: 'GET',
+    headers: {
+      Authorization: token
+    }
   })
 
-export const put = (url, params) => request(url, {
+export const put = (url, params, token) => request(url, {
   method: 'PUT',
   body: params,
+  headers: {
+    Authorization: token
+  }
 })
 
-export const post = (url, params) => request(url, {
+export const post = (url, params, token) => request(url, {
   method: 'POST',
   body: params,
+  headers: {
+    Authorization: token
+  }
 })
 
-export const _delete = (url, params) => request(
+export const _delete = (url, params, token) => request(
   `${url}?${stringify({ ...params })}`,
   {
     method: 'DELETE',
+    headers: {
+      Authorization: token
+    }
   })
 
 function stringify (params) {
