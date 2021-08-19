@@ -17,7 +17,7 @@ const BridgeScreen = (props) =>
           bg="brand.900"
           templateColumns="repeat(10, 1fr)"
         >
-          <GridItem colSpan={[10, 10, 4, 4]} color="white" className={styles.bannerLeft}>
+          <GridItem colSpan={[10, 10, 10, 4]} p={['1.785rem', '1.785rem', '3.785rem']} color="white">
             <div>
               <Heading as="h4" className={styles.title}>Bridge</Heading>
               <Text color="brand.100" className={styles.subTitle} isTruncated>Cross the DNF from chain to chain</Text>
@@ -41,7 +41,7 @@ const BridgeScreen = (props) =>
               </Grid>
             </div>
           </GridItem>
-          <GridItem colSpan={[10, 10, 6, 6]}>
+          <GridItem colSpan={[10, 10, 10, 6]}>
             <TextField placeholder="amount" />
             <TextField placeholder="accept" />
           </GridItem>
