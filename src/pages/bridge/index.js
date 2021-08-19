@@ -43,6 +43,7 @@ const AssetsScreen = (props) =>
           </GridItem>
           <GridItem colSpan={[10, 10, 6, 6]}>
             <TextField placeholder="amount" />
+            <TextField placeholder="accept" />
           </GridItem>
         </Grid>
       </div>
