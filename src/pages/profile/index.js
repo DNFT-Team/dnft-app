@@ -5,7 +5,6 @@ import copyImg from 'images/profile/copy.png';
 import dnftLogo from 'images/home/dnftLogo.png';
 import contact_t from 'images/profile/t.png';
 import contact_m from 'images/profile/m.png';
-import copy from 'images/profile/copy.png';
 import like from 'images/profile/like.png';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
