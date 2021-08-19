@@ -6,20 +6,20 @@ const NFTCard = (props) => {
   const { needAction, item, index, currentStatus } = props;
 
   const renderAction = (item) => {
-    switch (currentStatus) {
-    case 'In Wallet':
+    switch (currentStatus.value) {
+    case 'INWALLET':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Sell</div>
         </div>
       );
-    case 'On Sale':
+    case 'ONSALE':
       return (
         <div className={styleButtonContainer}>
           <div className={cx(styleButton, styleBorderButton)}>Off Shelf</div>
         </div>
       );
-    case 'My favorite':
+    case 'MYFAVORITE':
       return item.sold ? (
         <div className={styleButtonContainer}>
           <span>
@@ -33,7 +33,7 @@ const NFTCard = (props) => {
           <span className={stylePrice}>1.8ETH</span>
         </div>
       );
-    case 'Sold':
+    case 'SOLD':
       return (
         <div className={styleButtonContainer}>
           <span>
@@ -54,20 +54,20 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `center / cover no-repeat ${item.src}`,
+          background: `center / cover no-repeat url(${item.avatorUrl})`,
         }}
         className={styleShortPicture}
       />
       <div className={styleCollectionIconContainer} onClick={() => {}}>
-        <Icon icon="ant-design:inbox-outlined" style={{ color: item.collectioned ? '#42E78E' : '#c4c4c4' }} />
+        <Icon icon="ant-design:inbox-outlined" style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
       </div>
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
           <div>
-            <span className={styleCardTitle}>{item.title}</span>
+            <span className={styleChainType}>{item.chainType}</span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer} onClick={() => {}}>
-                <Icon icon="ant-design:heart-filled" style={{ color: item.stared ? '#F13030' : '#c4c4c4' }} />
+                <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
               </div>
               <span>{item.account}</span>
             </div>
@@ -84,7 +84,7 @@ const NFTCard = (props) => {
 export default NFTCard;
 
 const styleActionContainer = css`
-  margin-top: 10px;
+  margin-top: 14px;
 `;
 
 const styleButtonContainer = css`
@@ -101,9 +101,10 @@ const styleFillButton = css`
   border-radius: 8px;
 `;
 const styleBorderButton = css`
-  border: 1px solid #112df2;
+  border: 1px solid #E6E8EC;
   border-radius: 8px;
-  color: #112df2;
+  color: #000000;
+  font-weight: 500;
 `;
 
 const styleButton = css`
@@ -145,19 +146,20 @@ const styleSoldOutBanner = css`
 `;
 
 const styleCardContainer = css`
-  background: #f5f7fa;
+  background: #ffffff;
   border-radius: 18px;
-  max-width: 270px;
+  max-width: 288px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   flex: 1;
-  min-width: 270px;
+  min-width: 288px;
   margin: 20px;
+  padding: 8px;
+  box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
   &:hover {
     background: white;
-    box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
     position: relative;
     top: -20px;
   }
@@ -168,7 +170,7 @@ const styleCardContainer = css`
 
 const styleShortPicture = css`
   min-height: 220px;
-  border-radius: 18px 18px 0 0;
+  border-radius: 24px;
 `;
 
 const styleStarInfo = css`
@@ -209,8 +211,8 @@ const styleCollectionIconContainer = css`
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 198px;
-  right: 64px;
+  top: 205px;
+  right: 76px;
   &:hover {
     cursor: pointer;
   }
@@ -236,12 +238,14 @@ const styleCardHeader = css`
   position: relative;
   .description {
     color: #11142D;
-    margin-top: 4px;
+    margin-top: 14px;
   }
 `;
 
-const styleCardTitle = css`
-  color: #1b2559;
-  font-weight: 900;
-  font-size: 20px;
+const styleChainType = css`
+  background: #FEDDBD;
+  color: #A15F1E;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 8px;
 `;
