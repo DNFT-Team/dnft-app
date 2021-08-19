@@ -1,4 +1,13 @@
 /* eslint-disable */
+export const curveArrow = (id)=>(   <svg width="109" height="81" viewBox="0 0 109 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M61.3234 0.562727L108.288 16.261L71.2106 49.0846L68.2442 34.5269C56.6778 36.8837 45.9869 42.4013 37.3623 50.4718C28.5964 58.6744 22.3203 69.182 19.2539 80.7889L0.281598 75.7767C4.29027 60.6031 12.495 46.8667 23.9546 36.1434C35.2293 25.593 49.2055 18.3798 64.3261 15.2988L61.3234 0.562727Z" fill={'url(#linear' + id + ')'}/>
+    <defs>
+        <linearGradient id={'linear' + id} x1="82.0479" y1="16.356" x2="21.0838" y2="73.7117" gradientUnits="userSpaceOnUse">
+            <stop stop-color="currentColor"/>
+            <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+</svg>)
 export const dnfBodySvg = (
   <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink">
