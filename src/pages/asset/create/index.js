@@ -70,7 +70,8 @@ const CreateNFT = (props) => {
           ...form,
           address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
           chainType: chainType,
-          avatorUrl: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg'
+          avatorUrl: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg',
+          hash:'lflewfwelfewlfl'
         },
         token
       );

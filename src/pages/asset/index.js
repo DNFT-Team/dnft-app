@@ -44,7 +44,10 @@ const AssetScreen = (props) => {
     { label: 'Price:high to low', value: 1 },
     { label: 'Price:low to high', value: 2 },
   ];
-  const [selectedTab, setSelectedTab] = useState('INWALLET');
+  const [selectedTab, setSelectedTab] = useState({
+    label: 'In Wallet',
+    value: 'INWALLET'
+  });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
   const [nftData, setNftData] = useState();
@@ -406,7 +409,6 @@ const styleCreateNFT = css`
   background-color: #112df2;
   color: white;
   padding: 16px 36px;
-  height: 18px;
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;

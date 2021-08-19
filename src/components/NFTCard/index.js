@@ -64,7 +64,7 @@ const NFTCard = (props) => {
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
           <div>
-            <span className={styleCardTitle}>{item.title}</span>
+            <span className={styleCardTitle}>{item.name}</span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer} onClick={() => {}}>
                 <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
