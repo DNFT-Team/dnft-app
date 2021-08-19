@@ -15,6 +15,7 @@ import bridgeIcon from '../images/nav/bridge_selected.svg';
 import marketIcon from '../images/nav/market_selected.svg';
 import igoIcon from '../images/nav/igo_selected.svg';
 import dataIcon from '../images/nav/data_selected.svg';
+import {Icon} from '@iconify/react';
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -50,27 +51,27 @@ const App = (props) => {
     {
       name: 'github',
       url: 'https://github.com/DNFT-Team/',
-      icon: 'icon-github',
+      icon: 'jam:github-circle',
     },
     {
       name: 'telegram',
       url: 'https://t.me/dnftprotocol',
-      icon: 'icon-telegram',
+      icon: 'ri:telegram-line',
     },
     // {
     //   name: 'discord',
     //   url: 'https://discord.gg/pxEZB7ny',
-    //   icon: 'icon-discord',
+    //   icon: 'jam:discord',
     // },
     {
       name: 'twitter',
       url: 'https://twitter.com/DNFTProtocol',
-      icon: 'icon-twitter',
+      icon: 'jam:twitter-circle',
     },
     {
       name: 'medium',
       url: 'https://medium.com/dnft-protocol',
-      icon: 'icon-medium',
+      icon: 'jam:medium-circle',
     },
   ];
   return (
@@ -131,7 +132,7 @@ const App = (props) => {
                 rel='noreferrer'
                 key={i}
               >
-                <i className={'iconfont ' + item.icon} />
+                <Icon icon={item.icon} />
               </a>
             ))}
           </div>

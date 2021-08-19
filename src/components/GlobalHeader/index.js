@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
 import { NET_WORK_VERSION } from 'utils/constant'
 
+// import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
@@ -160,7 +161,7 @@ const GlobalHeader = (props) => {
       </div>
       <div className={styles.actionContainer}>
         <span
-          className={address == null && styleAddress}
+          className={address ? '' : styleAddress}
           onClick={async () => {
 
             if (address) {
