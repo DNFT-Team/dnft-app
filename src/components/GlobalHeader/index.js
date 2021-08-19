@@ -99,8 +99,8 @@ const GlobalHeader = (props) => {
       let params = {address:ethereum.selectedAddress,chainType:NET_WORK_VERSION[ethereum.networkVersion]}
       console.log(params)
       // 存储address
-      await dispatch(setProfileAddress(params))
-      await dispatch(setProfileToken(params))
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
         if (accounts[0] &&  accounts[0] !== address) {
