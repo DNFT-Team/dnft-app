@@ -1,6 +1,6 @@
 import { css, cx } from 'emotion';
 import React from 'react';
-import { InboxOutlined, HeartFilled } from '@ant-design/icons';
+import {Icon} from '@iconify/react';
 
 const NFTCard = (props) => {
   const { needAction, item, index, currentStatus } = props;
@@ -59,9 +59,7 @@ const NFTCard = (props) => {
         className={styleShortPicture}
       />
       <div className={styleCollectionIconContainer} onClick={() => {}}>
-        <InboxOutlined
-          style={{ color: item.collectioned ? '#42E78E' : '#c4c4c4' }}
-        />
+        <Icon icon="ant-design:inbox-outlined" style={{ color: item.collectioned ? '#42E78E' : '#c4c4c4' }} />
       </div>
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
@@ -69,9 +67,7 @@ const NFTCard = (props) => {
             <span className={styleCardTitle}>{item.title}</span>
             <div className={styleStarInfo}>
               <div className={styleStarIconContainer} onClick={() => {}}>
-                <HeartFilled
-                  style={{ color: item.stared ? '#F13030' : '#c4c4c4' }}
-                />
+                <Icon icon="ant-design:heart-filled" style={{ color: item.stared ? '#F13030' : '#c4c4c4' }} />
               </div>
               <span>{item.account}</span>
             </div>

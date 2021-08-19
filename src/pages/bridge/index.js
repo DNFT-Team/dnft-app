@@ -16,6 +16,13 @@ import { TOKEN_DNF, NERVE_BRIDGE  } from '../../utils/contract.js'
 import {NERVE_WALLET_ADDR, NERVE_WALLET_PRI} from '../../config/priConfig'
 import {WEB3_MAX_NUM, toDecimal} from '../../utils/web3Tools'
 import {withdrawalTest, getWithdrawalFee, broadcastTx, validateTx, getNulsBalance} from '../../api/nerve'
+import {Button} from 'ui-neumorphism';
+import {
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+} from '@chakra-ui/react'
 
 const crossAll = [
   {
@@ -276,6 +283,13 @@ const AssetsScreen = (props) => {
     <div className={styles.main}>
       <SoonModal/>
       <div className={styles.mainTop}>
+        <Button>Press</Button>
+        <Slider defaultValue={30}>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
         <div className={styles.box}>
           <div className={styles.bridge}>
             <img className={styles.dnftImg} src={dnft} alt="DNFT"/>

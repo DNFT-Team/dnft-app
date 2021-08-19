@@ -8,49 +8,25 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from 'reduxs/store';
 import './i18n_config';
 import './index.less';
+//  global-Toast
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './assets/font/iconfont.css'
-
+// [ui-neumorphism/](https://akaspanion.github.io/ui-neumorphism)
+import 'ui-neumorphism/dist/index.css';
+// Chakra-UI(https://chakra-ui.com/docs/getting-started)
+import { ChakraProvider } from '@chakra-ui/react'
+//  measuring performance
 import reportWebVitals from './reportWebVitals';
+//  check device platform
+import isMobile from './utils/isMobile';
+const mobileVal = isMobile()
 
-const browser = {
-  versions: function () {
-    let u = navigator.userAgent, app = navigator.appVersion;
-    return {// 移动终端浏览器版本信息
-
-      trident: u.indexOf('Trident') > -1, // IE内核
-
-      presto: u.indexOf('Presto') > -1, // opera内核
-
-      webKit: u.indexOf('AppleWebKit') > -1, // 苹果、谷歌内核
-
-      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, // 火狐内核
-
-      mobile: !!u.match(/AppleWebKit.*Mobile.*/), // 是否为移动终端
-
-      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), // ios终端
-
-      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, // android终端或者uc浏览器
-
-      iPhone: u.indexOf('iPhone') > -1, // 是否为iPhone或者QQHD浏览器
-
-      iPad: u.indexOf('iPad') > -1, // 是否iPad
-
-      webApp: u.indexOf('Safari') == -1 // 是否web应该程序，没有头部与底部
-
-    };
-  }(),
-  // language: (navigator.browserLanguage || navigator.language).toLowerCase()
-}
-const isMobile = browser.versions.mobile || browser.versions.ios || browser.versions.android    ||
-    browser.versions.iPhone || browser.versions.iPad
 ReactDOM.render(
   // Fix---Warning: findDOMNode is deprecated in StrictMode
   // <React.StrictMode>
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      {isMobile ? (
+      {mobileVal ? (
         <div>
           <p>Oops,This website is not available on Mobile Device</p>
           <p>Please view on the PC client.</p>
@@ -59,7 +35,9 @@ ReactDOM.render(
         </div>
       ) : (
         <BrowserRouter>
-          <App />
+          <ChakraProvider resetCSS={false}>
+            <App />
+          </ChakraProvider>
           <ToastContainer/>
         </BrowserRouter>
       )}

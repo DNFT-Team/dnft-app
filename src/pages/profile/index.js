@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
+import {Icon} from '@iconify/react'
 import styles from './index.less';
 import copy from 'images/profile/copy.png';
-import dnftLogo from 'images/home/dnftLogo.png';
-import contact_t from 'images/profile/t.png';
-import contact_m from 'images/profile/m.png';
 import like from 'images/profile/like.png';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
@@ -32,13 +30,13 @@ const ProfileScreen = (props) => {
               </div>
               <div className={styles.contactImg}>
                 <a>
-                  <img src={contact_m} />
+                  <Icon icon="ri:telegram-line" />
                 </a>
                 <a>
-                  <img src={contact_t} />
+                  <Icon icon="jam:twitter-circle" />
                 </a>
                 <a>
-                  <img src={contact_t} />
+                  <Icon icon="jam:medium-circle" />
                 </a>
               </div>
             </div>
@@ -66,15 +64,15 @@ const ProfileScreen = (props) => {
         </div>
         <div className={styles.datas}>
           <div className={styles.collection}>
-            <img className={styles.collectionImg} src={contact_m} />
+            <Icon className={styles.collectionImg} icon="jam:medium-circle" />
             <div className={styles.thumbnail}>
-              <img src={contact_m} />
-              <img src={contact_m} />
-              <img src={contact_m} />
+              <Icon icon="jam:medium-circle" />
+              <Icon icon="jam:medium-circle" />
+              <Icon icon="jam:medium-circle" />
             </div>
             <div className={styles.info}>
               <div className={styles.infoLeft}>
-                <img src={contact_m} />
+                <Icon icon="jam:medium-circle" />
                 <span>Collection 01</span>
               </div>
               <div className={styles.infoRight}>
