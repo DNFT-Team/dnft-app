@@ -17,7 +17,7 @@ import {
   dnftSvg,
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
@@ -148,7 +148,7 @@ const GlobalHeader = (props) => {
       </div>
       <div className={styles.actionContainer}>
         <span
-          className={address == null && styleAddress}
+          className={address ? '' : styleAddress}
           onClick={async () => {
 
             if (address) {

@@ -10,11 +10,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { css, cx } from 'emotion';
-import {
-  HeartOutlined,
-  LeftCircleOutlined,
-  RightCircleOutlined,
-} from '@ant-design/icons';
+import {Icon} from '@iconify/react';
 
 const HomeScreen = (props) => {
   const { dispatch, datas, location } = props;
@@ -71,7 +67,8 @@ const HomeScreen = (props) => {
       const isLastShow = slidesToShow + currentSlide >= slideCount;
 
       return (
-        <RightCircleOutlined
+        <Icon
+          icon="ant-design:right-circle-outlined"
           className={cx(className, styleNextArrow)}
           style={{
             ...style,
@@ -90,7 +87,8 @@ const HomeScreen = (props) => {
     const isFirstShow = currentSlide === 0;
 
     return (
-      <LeftCircleOutlined
+      <Icon
+        icon="ant-design:left-circle-outlined"
         className={cx(className, stylePrevArrow)}
         style={{
           ...style,
@@ -150,7 +148,7 @@ const HomeScreen = (props) => {
         <div className={styleContentContainer}>
           <span>Shanghaibar</span>
           <span className={styleStarContainer}>
-            <HeartOutlined />
+            <Icon icon="ant-design:heart-outlined" />
             <span className={styleStarAccount}>234</span>
           </span>
         </div>
