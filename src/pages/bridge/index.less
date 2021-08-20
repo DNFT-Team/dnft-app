@@ -24,14 +24,14 @@
     position: relative;
     width: 100%;
 }
-.winDR{
-    transform: rotateY(180deg);
-}
+.winDR img,
 .winDL img{
     width: 100%;
 }
-.winDLArrow,
-.winDRArrow{
+.winDR{
+    transform: rotateY(180deg);
+}
+.winArrow{
     position: absolute;
     right: -10%;
     top: -10%;
@@ -40,10 +40,10 @@
     animation: floatArrow 4s infinite ease-in-out;
     z-index: 2;
 }
-.winDLArrow{
+.winDL .winArrow{
     color: #F55B5D;
 }
-.winDRArrow{
+.winDR .winArrow{
     color: #39CE9C;
 }
 @keyframes floatArrow {
