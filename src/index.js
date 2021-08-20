@@ -23,7 +23,21 @@ const theme = extendTheme({
       600: '#112DF2',   //  主明亮色-激活
       900: '#1B2559',   //  主暗色-大背景块
     },
+    custom: {
+      500: '#112DF2',
+      600: '#112DF2',
+      700: '#1B2559',
+    },
   },
+  components: {
+    Button: {
+      baseStyle: {
+        '_hover': {opacity: .8},
+        '_focus': {outline: 'none', boxShadow: 'none'},
+        '_active': {outline: 'none', boxShadow: 'none'},
+      }
+    }
+  }
 })
 
 //  measuring performance
@@ -46,7 +60,7 @@ ReactDOM.render(
         </div>
       ) : (
         <BrowserRouter>
-          <ChakraProvider resetCSS={false} theme={theme}>
+          <ChakraProvider resetCSS theme={theme}>
             <App />
           </ChakraProvider>
           <ToastContainer/>

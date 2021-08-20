@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'ui-neumorphism';
 import {
-  Grid, GridItem, Box,
-  Heading, Text,
+  Grid, GridItem, Box, HStack,
+  Heading, Text, Button,
   Input, InputGroup, InputLeftElement, InputRightAddon
 } from '@chakra-ui/react';
 import styles from './index.less';
 import bgWindow from '../../images/bridge/bg_window.png';
-import { curveArrow } from '../../utils/svg';
+import { curveArrow, combineArrow } from '../../utils/svg';
 
 /* Available network*/
 const NetOptions = [
@@ -71,9 +70,10 @@ const BridgeScreen = (props) => {
             <GridItem colSpan={[10, 10, 10, 5, 6]} p={['1.785rem', '1.785rem', '1.785rem', '2rem', '3.785rem']} bg="brand.900">
               <Box bg="white" height="100%" borderRadius='.8rem' p='1rem' boxSizing='border-box'>
                 <div>
-                  <InputGroup>
+                  <Text size="xl" fontWeight="bold">DNF :</Text>
+                  <InputGroup my=".4rem">
                     <InputLeftElement color="brand.600">
-                      <div className={styles.tokenType}>DNF</div>
+                      <div className={styles.tokenType}> </div>
                     </InputLeftElement>
                     <Input
                       is-full-width="true"
@@ -89,15 +89,16 @@ const BridgeScreen = (props) => {
                       NetOptions[frNet].name
                     }</InputRightAddon>
                   </InputGroup>
-                  <Text size="sm" color="brand.100">Available balance : ${balance} DNF</Text>
+                  <Text size="sm" color="brand.100">Available balance : {balance} DNF</Text>
                 </div>
-                <div style={{margin: '3rem 0'}}>
-                  Here put A switchIcon, position right
-                </div>
+                <Box my="3rem" textAlign="right">
+                  <div className={styles.switchIcon}>{combineArrow}</div>
+                </Box>
                 <div>
-                  <InputGroup>
+                  <Text size="xl" fontWeight="bold">DNF :</Text>
+                  <InputGroup my=".4rem">
                     <InputLeftElement color="brand.600">
-                      <div className={styles.tokenType}>DNF</div>
+                      <div className={styles.tokenType}> </div>
                     </InputLeftElement>
                     <Input
                       is-full-width="true"
@@ -111,12 +112,12 @@ const BridgeScreen = (props) => {
                     />
                     <InputRightAddon>BSC</InputRightAddon>
                   </InputGroup>
-                  <Text size="sm" color="brand.100">By now,You will received 100% DNF</Text>
+                  <Text size="sm" color="brand.100">By now, You will received 100% DNF</Text>
                 </div>
-                <div style={{margin: '1rem 0'}}>
-                  <Button onClick={() => {setAmount('')}}>Confirm</Button>
-                  <Button>History</Button>
-                </div>
+                <HStack mt="3rem">
+                  <Button colorScheme="custom" onClick={() => {setAmount('')}}>Confirm</Button>
+                  <Button color="brand.300">History</Button>
+                </HStack>
               </Box>
             </GridItem>
           )}
