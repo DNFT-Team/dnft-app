@@ -1,4 +1,30 @@
 /* eslint-disable */
+export const combineArrow = (
+  <svg width="48" height="43" viewBox="0 0 48 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M7.79316 12.5522L19.5061 2.57847L22.2871 17.709L17.9386 16.1619C16.7093 19.6169 16.4614 23.3462 17.2241 26.9356C17.9993 30.5838 19.7871 33.9396 22.3826 36.618L18.0045 40.8604C14.6115 37.359 12.2743 32.972 11.2609 28.2027C10.2638 23.5104 10.588 18.635 12.195 14.1183L7.79316 12.5522Z" fill="url(#paint0_linear)"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M39.7317 29.727L27.9252 39.5897L25.287 24.4336L29.6207 26.0217C30.8826 22.5785 31.1657 18.8516 30.4369 15.2552C29.6961 11.5999 27.94 8.22737 25.3699 5.52459L29.7878 1.32367C33.1476 4.85698 35.4434 9.26582 36.4118 14.0444C37.3645 18.746 36.9944 23.6181 35.3448 28.1194L39.7317 29.727Z" fill="url(#paint1_linear)"/>
+    <defs>
+      <linearGradient id="paint0_linear" x1="15.3203" y1="9.57384" x2="20.7936" y2="34.9955" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#F55B5D"/>
+        <stop offset="1" stopColor="#F55B5D" stopOpacity="0"/>
+      </linearGradient>
+      <linearGradient id="paint1_linear" x1="32.1768" y1="32.6342" x2="26.9435" y2="7.16207" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#39CE9C"/>
+        <stop offset="1" stopColor="#39CE9C" stopOpacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+)
+export const curveArrow = (id)=>(   <svg width="109" height="81" viewBox="0 0 109 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M61.3234 0.562727L108.288 16.261L71.2106 49.0846L68.2442 34.5269C56.6778 36.8837 45.9869 42.4013 37.3623 50.4718C28.5964 58.6744 22.3203 69.182 19.2539 80.7889L0.281598 75.7767C4.29027 60.6031 12.495 46.8667 23.9546 36.1434C35.2293 25.593 49.2055 18.3798 64.3261 15.2988L61.3234 0.562727Z" fill={'url(#linear' + id + ')'}/>
+    <defs>
+        <linearGradient id={'linear' + id} x1="82.0479" y1="16.356" x2="21.0838" y2="73.7117" gradientUnits="userSpaceOnUse">
+            <stop stopColor="currentColor"/>
+            <stop offset="1" stopColor="currentColor" stopOpacity="0"/>
+        </linearGradient>
+    </defs>
+</svg>)
 export const dnfBodySvg = (
   <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink">

@@ -14,7 +14,32 @@ import 'react-toastify/dist/ReactToastify.css';
 // [ui-neumorphism/](https://akaspanion.github.io/ui-neumorphism)
 import 'ui-neumorphism/dist/index.css';
 // Chakra-UI(https://chakra-ui.com/docs/getting-started)
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: '#AFB5D3',    //  文本描述
+      300: 'rgba(17, 45, 242, 0.5)',    //  次辅助色-禁用
+      600: '#112DF2',   //  主明亮色-激活
+      900: '#1B2559',   //  主暗色-大背景块
+    },
+    custom: {
+      500: '#112DF2',
+      600: '#112DF2',
+      700: '#1B2559',
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        '_hover': {opacity: .8},
+        '_focus': {outline: 'none', boxShadow: 'none'},
+        '_active': {outline: 'none', boxShadow: 'none'},
+      }
+    }
+  }
+})
+
 //  measuring performance
 import reportWebVitals from './reportWebVitals';
 //  check device platform
@@ -35,7 +60,7 @@ ReactDOM.render(
         </div>
       ) : (
         <BrowserRouter>
-          <ChakraProvider resetCSS={false}>
+          <ChakraProvider resetCSS theme={theme}>
             <App />
           </ChakraProvider>
           <ToastContainer/>
