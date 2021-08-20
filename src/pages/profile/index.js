@@ -35,7 +35,7 @@ const ProfileScreen = (props) => {
           {
             address,
             page: 0,
-            size: 10,
+            size: 100,
             category: 'GAME',
             sortOrder: 'ASC',
             sortTag: 'createTime',
@@ -44,8 +44,8 @@ const ProfileScreen = (props) => {
           token
         )
       );
-      dispatch(getMyProfileCreated({ address, page: 0, size: 10 }, token));
-      dispatch(getMyProfileOwned({ address, page: 1, size: 10 }, token));
+      dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+      dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token]);
   const handleCopyAddress = () => {
@@ -82,7 +82,7 @@ const ProfileScreen = (props) => {
           {item}
         </div>
       )),
-    [selectedTab]
+    [selectedTab, batch]
   );
   const renderNoData = useMemo(
     () => (
@@ -108,7 +108,7 @@ const ProfileScreen = (props) => {
     },
     [selectedTab]
   );
-  console.log(owned, 'batch');
+  console.log(renderAction(selectedTab), 'batch');
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -152,7 +152,7 @@ const ProfileScreen = (props) => {
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>
         <div className={styleCardList}>
-          {renderAction(selectedTab)?.content?.map((item, index) => {
+          {renderAction(selectedTab)?.map((item, index) => {
             console.log('index', index);
             return renderCard(item, index);
           }) ?? renderNoData}

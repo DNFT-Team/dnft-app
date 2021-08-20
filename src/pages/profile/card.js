@@ -59,7 +59,7 @@ const NFTCard = (props) => {
     dispatch(setProfileLike({
       address,
       nftId: item.id,
-      like: item.saved ? 0 : 1,
+      like: item.isLiked ? 0 : 1,
     },token))
   }
 

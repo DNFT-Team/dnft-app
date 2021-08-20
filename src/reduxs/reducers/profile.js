@@ -1,4 +1,4 @@
-import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED } from '../types/profile';
+import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED, GET_MY_PROFILE_SAVE, GET_MY_PROFILE_LIKE} from '../types/profile';
 
 const initialState = {
   pending: false,
@@ -52,6 +52,56 @@ const Profile = (state = initialState, action) => {
     return {
       ...state,
       created: action.payload.data
+    }
+  case GET_MY_PROFILE_SAVE.SUCCESS:
+    let batch = state.batch.slice();
+    batch.map((obj) => {
+      if(obj.id === action.payload.data.nftId)
+        obj.isSaved = !!action.payload.data.saved
+    })
+    let owned = state.owned.slice();
+    owned.map((obj) => {
+      if(obj.id === action.payload.data.nftId)
+        obj.isSaved = !!action.payload.data.saved
+    })
+    let created = state.created.slice();
+    created.map((obj) => {
+      if(obj.id === action.payload.data.nftId)
+        obj.isSaved = !!action.payload.data.saved
+    })
+    return {
+      ...state,
+      batch,
+      owned,
+      created,
+    }
+  case GET_MY_PROFILE_LIKE.SUCCESS:
+    let _batch = state.batch.slice();
+    _batch.map((obj) => {
+      if(obj.id === action.payload.data.nftId) {
+        obj.isLiked = !!action.payload.data.like;
+        obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
+      }
+    })
+    let _owned = state.owned.slice();
+    _owned.map((obj) => {
+      if(obj.id === action.payload.data.nftId) {
+        obj.isLiked = !!action.payload.data.like;
+        obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
+      }
+    })
+    let _created = state.created.slice();
+    _created.map((obj) => {
+      if(obj.id === action.payload.data.nftId) {
+        obj.isLiked = !!action.payload.data.like;
+        obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
+      }
+    })
+    return {
+      ...state,
+      batch: _batch,
+      owned: _owned,
+      created: _created,
     }
   default:  return state
   }

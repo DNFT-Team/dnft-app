@@ -1,4 +1,4 @@
-import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED, GET_MY_PROFILE_SAVE } from '../types/profile';
+import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED, GET_MY_PROFILE_SAVE, GET_MY_PROFILE_LIKE } from '../types/profile';
 import { parseRestError } from '../errorHelper';
 import { Message } from 'element-react';
 import { get, post } from 'utils/request';
@@ -29,7 +29,7 @@ export const getMyProfileBatch = (params = {},token) => (dispatch) => {
       if (res && res.status == 200) {
         dispatch({
           type: GET_MY_PROFILE_BATCH.SUCCESS, payload: {
-            data: res.data?.data,
+            data: res.data?.data?.content || [],
           }
         })
       } else {
@@ -49,7 +49,7 @@ export const getMyProfileOwned = (params = {},token) => (dispatch) => {
       if (res && res.status == 200) {
         dispatch({
           type: GET_MY_PROFILE_OWNED.SUCCESS, payload: {
-            data: res.data?.data,
+            data: res.data?.data?.content || [],
           }
         })
       } else {
@@ -69,7 +69,7 @@ export const getMyProfileCreated = (params = {},token) => (dispatch) => {
       if (res && res.status == 200) {
         dispatch({
           type: GET_MY_PROFILE_CREATED.SUCCESS, payload: {
-            data: res.data?.data,
+            data: res.data?.data?.content || [],
           }
         })
       } else {
@@ -119,11 +119,11 @@ export const setProfileLike = (params = {}, token) => (dispatch) => (
       console.log('-------------------- GET_MY_PROFILE_LIST result is:', res)
 
       if (res && res.status == 200) {
-        // dispatch({
-        //   type: GET_MY_PROFILE_TOKEN.SUCCESS, payload: {
-        //     data: `${res.data.tokenType} ${res.data.accessToken}`,
-        //   }
-        // })
+        dispatch({
+          type: GET_MY_PROFILE_LIKE.SUCCESS, payload: {
+            data: params,
+          }
+        })
       } else {
         const error = parseRestError(res);
         dispatch({ type: GET_MY_PROFILE_TOKEN.ERROR })
@@ -141,11 +141,11 @@ export const setProfileSave = (params = {}, token) => (dispatch) => (
       console.log('-------------------- GET_MY_PROFILE_LIST result is:', res)
 
       if (res && res.status == 200) {
-        // dispatch({
-        //   type: GET_MY_PROFILE_TOKEN.SUCCESS, payload: {
-        //     data: `${res.data.tokenType} ${res.data.accessToken}`,
-        //   }
-        // })
+        dispatch({
+          type: GET_MY_PROFILE_SAVE.SUCCESS, payload: {
+            data: params,
+          }
+        })
       } else {
         const error = parseRestError(res);
         // dispatch({ type: GET_MY_PROFILE_SAVE.ERROR })
