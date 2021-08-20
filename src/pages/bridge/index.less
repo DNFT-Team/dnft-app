@@ -54,3 +54,17 @@
         transform: scale(0.4) translate(0,0);
     }
 }
+.tokenType{
+    position: relative;
+    padding: 0 .4rem;
+}
+.tokenType::after{
+    content: '';
+    position: absolute;
+    height: 80%;
+    width: 3px;
+    right: 0;
+    top: 50%;
+    transform: translate(5%,-50%);
+    background: currentColor;
+}
