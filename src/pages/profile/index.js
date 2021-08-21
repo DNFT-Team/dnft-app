@@ -16,10 +16,10 @@ import {
   getMyProfileOwned,
 } from 'reduxs/actions/profile';
 import copy from 'copy-to-clipboard';
-import { Message } from 'element-react';
 import { css, cx } from 'emotion';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
 import NFTCard from './card';
+import { toast } from 'react-toastify';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, token, batch, owned, created } = props;
@@ -44,20 +44,45 @@ const ProfileScreen = (props) => {
           token
         )
       );
-      dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
-      dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
+      // dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+      // dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token]);
   const handleCopyAddress = () => {
     copy(address);
-    Message({
-      message: '地址复制成功！',
-      type: 'success',
+    toast.success('The address is copied successfully!', {
+      position: toast.POSITION.TOP_CENTER,
     });
+  };
+  const renderActionDispatch = (item) => {
+    switch (item) {
+    case 'Collections':
+      return dispatch(
+        getMyProfileBatch(
+          {
+            address,
+            page: 0,
+            size: 100,
+            category: 'GAME',
+            sortOrder: 'ASC',
+            sortTag: 'createTime',
+            status: 'INWALLET',
+          },
+          token
+        )
+      );
+    case 'Owned':
+      return dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
+    case 'Created':
+      return dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+    default:
+      return null;
+    }
   };
   const renderAction = (item) => {
     switch (item) {
     case 'Collections':
+
       return batch;
     case 'Owned':
       return owned;
@@ -77,12 +102,13 @@ const ProfileScreen = (props) => {
           )}
           onClick={() => {
             setSelectedTab(item);
+            renderActionDispatch(item)
           }}
         >
           {item}
         </div>
       )),
-    [selectedTab, batch]
+    [selectedTab]
   );
   const renderNoData = useMemo(
     () => (
