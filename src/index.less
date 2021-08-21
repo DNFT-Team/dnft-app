@@ -7,22 +7,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
   box-sizing: content-box !important;
 }
-
+/*code*/
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/*input*/
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-
 input[type='number'] {
   -moz-appearance: textfield;
 }
+/*button*/
+button{
+  outline: none;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+}
+/*full-size*/
 .d-fullWidth{
   width: 100%;
 }
 .d-fullHeight{
   height: 100%;
+}
+/*scroll-bar*/
+::-webkit-scrollbar {
+  width : 10px;
+  height: 1px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius   : 10px;
+  background-color: #1B2559;
+  background-image: -webkit-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.2) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.2) 75%,
+          transparent 75%,
+          transparent
+  );
+}
+::-webkit-scrollbar-track {
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #ededed;
+  border-radius: 10px;
 }
