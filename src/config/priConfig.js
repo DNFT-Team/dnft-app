@@ -1,2 +1,0 @@
-export const NERVE_WALLET_ADDR = 'NERVEepb6FjjXdQZwaBbiF7mcV1mkE6t3xU3Kt'
-export const NERVE_WALLET_PRI = '0e5fbf35a61f7ff76eb6cbd41d7e1dedb3c96fcbd56932f91eca2409d9eb57b1'

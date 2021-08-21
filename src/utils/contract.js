@@ -10,6 +10,7 @@ export const secondStakeConTract = '0x50B129482914f64554f57E7DCD24939e17702f7D'
 export const thirdStakeConTract = '0x55Bcd2355E6eF5e1F9C31D439d2c5902fBF2FC89'
 
 // bridge
+export const NERVE_WALLET_ADDR = 'NERVEepb6FjjXdQZwaBbiF7mcV1mkE6t3xU3Kt'
 
 export const TOKEN_DNF = {
   tokenContract: '0xEbE02100C2c806ccFBAFfb38594A5dd793C9844D',

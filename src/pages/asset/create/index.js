@@ -13,10 +13,12 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
+import { ipfs_post } from 'utils/ipfs-request';
 
 const CreateNFT = (props) => {
   const { dispatch, datas, location, address, chainType, token } = props;
 
+  console.log(token, 'token')
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({})
@@ -32,6 +34,22 @@ const CreateNFT = (props) => {
     { label: 'Sports', value: 'SPORTS' },
     { label: 'Game', value: 'GAME' },
   ];
+
+  const uploadFile = async (file) => {
+    const fileData = new FormData();
+    fileData.append('file', file);
+
+    const { data } = await ipfs_post(
+      '/api/v0/add',
+      fileData
+    );
+
+    setForm({
+      ...form,
+      avatorUrl: data.Hash
+    })
+    // http://92.205.29.153:8080/ipfs/QmUGKvgHdTuiwySEBJryAjAzQLFpgCFt4tDCRLrqW3Pfw4
+  };
 
   const getCollectionList = async () => {
     const { data } = await post(
@@ -70,8 +88,7 @@ const CreateNFT = (props) => {
           ...form,
           address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
           chainType: chainType,
-          avatorUrl: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg',
-          hash:'lflewfwelfewlfl'
+          hash: new Date().valueOf()
         },
         token
       );
@@ -111,18 +128,17 @@ const CreateNFT = (props) => {
           className={styleUploadContainer}
           drag
           multiple={false}
+          withCredentials={true}
           action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
+          limit={1}
+          httpRequest = {(e) => {
+            uploadFile(e.file)
+          }}
           tip={
             <div className='el-upload__tip'>
               Drag or choose your file to upload
             </div>
           }
-          onSuccess={(response, file) => {
-            setForm({
-              ...form,
-              avatorUrl: file.url,
-            })
-          }}
         >
           <i className='el-icon-upload2'></i>
           <div className='el-upload__text'>

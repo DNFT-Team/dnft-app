@@ -54,7 +54,8 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `center / cover no-repeat url(${item.avatorUrl})`,
+          background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
+          backgroundSize: 'contain',
         }}
         className={styleShortPicture}
       />
@@ -72,7 +73,7 @@ const NFTCard = (props) => {
               <span>{item.account}</span>
             </div>
           </div>
-          <span className="description">{item.description}</span>
+          <span className="title">{item.name}</span>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
@@ -95,11 +96,7 @@ const styleButtonContainer = css`
   position: relative;
 `;
 
-const styleFillButton = css`
-  background: #112df2;
-  color: white;
-  border-radius: 8px;
-`;
+
 const styleBorderButton = css`
   border: 1px solid #E6E8EC;
   border-radius: 8px;
@@ -236,7 +233,7 @@ const styleCardHeader = css`
   padding-bottom: 12px;
   border-bottom: 1px solid #f5f7fa;
   position: relative;
-  .description {
+  .title {
     color: #11142D;
     margin-top: 14px;
   }

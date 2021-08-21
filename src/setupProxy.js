@@ -3,14 +3,15 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function (app) {
   app.use(
     createProxyMiddleware(
-      '/nerve',
+      '/ipfs',
       {
-        target: 'https://public.nerve.network',
+        target: 'http://92.205.29.153:5001',
         changeOrigin: true,
         pathRewrite: {
-          '/nerve': ''
-        }
-      }
+          '/ipfs': ''
+        },
+        secure: false
+      },
     )
   );
 };
