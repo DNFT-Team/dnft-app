@@ -188,7 +188,7 @@ const GlobalHeader = (props) => {
             className={actionItem}
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              history.push('asset');
+              history.push('/asset');
             }}
           >
             {assetSvg}

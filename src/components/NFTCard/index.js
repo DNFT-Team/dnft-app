@@ -2,8 +2,11 @@ import { css, cx } from 'emotion';
 import React from 'react';
 import {Icon} from '@iconify/react';
 
+import { post } from 'utils/request';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 const NFTCard = (props) => {
-  const { needAction, item, index, currentStatus } = props;
+  const { needAction, item, index, currentStatus, token, address, onLike, onSave } = props;
 
   const renderAction = (item) => {
     switch (currentStatus.value) {
@@ -49,16 +52,47 @@ const NFTCard = (props) => {
     }
   };
 
+  const handleLike = async () => {
+    if (token && address) {
+      await post(
+        '/api/v1/nft/like',
+        {
+          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          like: item.isLiked ? 0 : 1,
+          id: item.id
+        },
+        token
+      );
+      onLike()
+    }
+  }
+
+  const handleSave = async () => {
+    if (token && address) {
+      await post(
+        '/api/v1/nft/save',
+        {
+          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          saved: item.isSaved ? 0 : 1,
+          id: item.id
+        },
+        token
+      );
+      onSave()
+    }
+  }
+
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `center / cover no-repeat url(${item.avatorUrl})`,
+          background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
+          backgroundSize: 'contain',
         }}
         className={styleShortPicture}
       />
-      <div className={styleCollectionIconContainer} onClick={() => {}}>
+      <div className={styleCollectionIconContainer} onClick={handleSave}>
         <Icon icon="ant-design:inbox-outlined" style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
       </div>
       <div className={styleInfoContainer}>
@@ -66,13 +100,13 @@ const NFTCard = (props) => {
           <div>
             <span className={styleChainType}>{item.chainType}</span>
             <div className={styleStarInfo}>
-              <div className={styleStarIconContainer} onClick={() => {}}>
+              <div className={styleStarIconContainer} onClick={handleLike}>
                 <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
               </div>
               <span>{item.account}</span>
             </div>
           </div>
-          <span className="description">{item.description}</span>
+          <span className="title">{item.name}</span>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
@@ -81,7 +115,11 @@ const NFTCard = (props) => {
     </div>
   );
 };
-export default NFTCard;
+const mapStateToProps = ({ profile }) => ({
+  address: profile.address,
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(NFTCard));
 
 const styleActionContainer = css`
   margin-top: 14px;
@@ -95,11 +133,7 @@ const styleButtonContainer = css`
   position: relative;
 `;
 
-const styleFillButton = css`
-  background: #112df2;
-  color: white;
-  border-radius: 8px;
-`;
+
 const styleBorderButton = css`
   border: 1px solid #E6E8EC;
   border-radius: 8px;
@@ -236,7 +270,7 @@ const styleCardHeader = css`
   padding-bottom: 12px;
   border-bottom: 1px solid #f5f7fa;
   position: relative;
-  .description {
+  .title {
     color: #11142D;
     margin-top: 14px;
   }

@@ -50,7 +50,6 @@ const AssetScreen = (props) => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [nftData, setNftData] = useState();
   const [category, setCategory] = useState('LASTED');
   const [sortTag, setSortTag] = useState('likeCount')
   const [list, setList] = useState()
@@ -92,8 +91,8 @@ const AssetScreen = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 97 && history.location.pathname === '/asset') {
-        toast.dark('Please Choose BSC Testnet', {
+      if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/asset') {
+        toast.dark('Please Choose Rinkeby', {
           position: toast.POSITION.TOP_CENTER,
         });
       }
@@ -105,11 +104,10 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 4 && history.location.pathname === '/asset') {
-          toast.dark('Please Choose BSC Testnet', {
+        if (Number(networkIDstring) !== 97 && history.location.pathname === '/asset') {
+          toast.dark('Please Choose Rinkeby', {
             position: toast.POSITION.TOP_CENTER,
           });
-          setNftData(undefined);
           setBalance(undefined);
 
           return;
@@ -120,7 +118,6 @@ const AssetScreen = (props) => {
 
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined);
-        setNftData(undefined);
         init();
       });
 
@@ -210,7 +207,7 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} />,
+    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} onLike={getNFTList} onSave={getNFTList} />,
     [selectedTab]
   );
 
