@@ -207,7 +207,7 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} />,
+    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} onLike={getNFTList} onSave={getNFTList} />,
     [selectedTab]
   );
 
