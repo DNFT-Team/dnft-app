@@ -14,12 +14,15 @@ import {
   secondStakeConTract,
   thirdStakeConTract,
 } from 'utils/contract';
-import { miningCloud, miningMoon, nfIconSvg } from 'utils/svg';
+import { nfIconSvg } from 'utils/svg';
 import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cloneDeep from 'lodash.clonedeep';
 import { useHistory } from 'react-router';
+import bg from '../../images/mining/bg.svg';
+import nft from '../../images/mining/logo.svg';
+import label from '../../images/mining/label.svg';
 
 const Mining = (props) => {
   let history = useHistory();
@@ -344,36 +347,45 @@ const Mining = (props) => {
           setStakeIndex(index);
         }}
       >
-        <div className={styleCardTitle}>DNF Staking Pool</div>
-        <div className={styleCardInfo}>
-          <div className={styleItemContainer}>
-            <div className={styleText}>Reward</div>
-            <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
+        <div>
+          <div className={styleCardTitle}>
+            <img src={nft} style={{ width: 40 }} />
+            DNF Staking Pool
           </div>
-          <div className={styleItemContainer}>
-            <div className={styleText}>DNF</div>
-            <div className={styleDollar}>
-              {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
-                2
-              )}
+          <div className={styleCardInfo}>
+            <div className={styleItemContainer}>
+              <div className={styleText}>Reward</div>
+              <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
+            </div>
+            <div className={styleItemContainer}>
+              <div className={styleText}>DNF</div>
+              <div className={styleDollar}>
+                {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
+                  2
+                )}
+              </div>
+            </div>
+            <div className={styleItemContainer}>
+              <div className={styleText}>DNF</div>
+              <div className={styleDollar}>
+                {(
+                  (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
+                ).toFixed(2)}
+                %
+              </div>
             </div>
           </div>
-          <div className={styleItemContainer}>
-            <div className={styleText}>DNF</div>
-            <div className={styleDollar}>
-              {(
-                (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
-              ).toFixed(2)}
-              %
+          <div className={styleBottomContainer}>
+            <div className={styleAPY}>
+              <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
+              <div>APY(%)</div>
             </div>
+            <div className={styleCardButton}>Stake</div>
           </div>
         </div>
-        <div className={styleBottomContainer}>
-          <div className={styleAPY}>
-            <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
-            <div>APY(%)</div>
-          </div>
-          <div className={styleCardButton}>Stake</div>
+        <div className={styleLabelContainer}>
+          <div className='percent'>{stakeInfo?.rewardRate || 0.0}</div>
+          <div>APY(%)</div>
         </div>
       </div>
     ),
@@ -830,7 +842,7 @@ export default Mining;
 
 const styleContainer = css`
   background: #f5f7fa;
-  padding: 22px 20px;
+  padding: 22px 20px 0 20px;
   height: 100%;
   & > div {
     border-radius: 14px;
@@ -900,7 +912,7 @@ const styleMiningPicture = css`
 `;
 
 const styleBody = css`
-  padding: 40px 0;
+  padding: 40px 0 0 0;
 
   .circular {
     position: relative;
@@ -950,18 +962,27 @@ const styleCardList = css`
   display: flex;
   flex-direction: row;
   gap: 56px;
+  background: url(${bg}) no-repeat 100% 100%;
+  background-size: cover;
+  min-height: calc(100vh - 360px);
 `;
 
 const styleCardContainer = css`
   display: flex;
   flex: 1;
-  border-radius: 20px;
-  padding:16px 16px 20px 30px;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   filter: drop-shadow(0px 11px 21px rgba(0, 0, 0, 0.05));
-  background:white;
+  height: fit-content;
+  &>div{
+    &:first-child{
+      margin: 10px 0;
+      padding:16px 16px 20px 30px;
+      background:white;
+      border-radius: 20px;
+    }
+  }
 `;
 
 const styleCardIsActive = css`
@@ -972,11 +993,16 @@ const styleCardIsActive = css`
 `;
 
 const styleCardTitle = css`
+  display: flex;
+  align-items: center;
   font-weight: 600;
   font-size: 20px;
   color: #B3B7DD;
   padding-bottom: 16px;
   border-bottom: 1px dashed #EDEDED;
+  img {
+    margin-right: 20px;
+  }
 `;
 
 const styleBottomContainer = css`
@@ -1166,7 +1192,7 @@ const styleInputContainer = css`
   display: flex;
   flex-direction: row;
   height: 64px;
-  margin: 10px 0;
+  margin: 5px 0;
   input {
     border: none;
     background: transparent;
@@ -1243,3 +1269,27 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+
+const styleLabelContainer = css`
+  position: absolute;
+  background: url(${label}) no-repeat 100% 100%;
+  background-size: cover;
+  width: 64px;
+  height: 64px;
+  top: 0;
+  right: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  div{
+    position: relative;
+    left: 3px;
+    top: 2px;
+  }
+  .percent{
+    color: white;
+    font-size: 16px;
+  }
+`

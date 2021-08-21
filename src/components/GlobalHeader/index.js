@@ -15,6 +15,7 @@ import {
   hecoSvg,
   polkadotSvg,
   dnftSvg,
+
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
@@ -71,13 +72,8 @@ const GlobalHeader = (props) => {
       },
       {
         name: 'Kovan Test Mainnet',
-        shortName: ['Ropsten', 'Ropsten'],
+        shortName: ['Kovan', 'Kovan'],
         netWorkId: 42,
-      },
-      {
-        name: 'BSC Mainnet',
-        shortName: ['BSC', 'BSC'],
-        netWorkId: 56,
       },
     ],
     []
