@@ -19,8 +19,11 @@ import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cloneDeep from 'lodash.clonedeep';
+import { useHistory } from 'react-router';
 
 const Mining = (props) => {
+  let history = useHistory();
+
   const initState = useMemo(
     () => ({
       0: {
@@ -217,7 +220,8 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 4) {
+      console.log(ethereum, 'ethereum')
+      if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/mining') {
         setIsWrongNetWork(true);
         toast.dark('Please Choose Rinkeby', {
           position: toast.POSITION.TOP_CENTER,
@@ -241,7 +245,7 @@ const Mining = (props) => {
         setBalance(undefined);
         setStateData(initState);
 
-        if (Number(networkIDstring) !== 4) {
+        if (Number(networkIDstring) !== 4 && history.location.pathname === '/mining') {
           setIsWrongNetWork(true);
           toast.dark('Please Choose Rinkeby', {
             position: toast.POSITION.TOP_CENTER,
