@@ -62,7 +62,7 @@ const AssetScreen = (props) => {
   }, []);
 
   const init = () => {
-    // getBalance();
+    getBalance();
     getNft();
   };
 
@@ -198,7 +198,7 @@ const AssetScreen = (props) => {
     } else {
       alert('Please install wallet');
     }
-  }, []);
+  }, [init]);
 
   const getBalance = async () => {
     try {
