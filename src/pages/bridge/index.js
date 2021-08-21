@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Icon} from '@iconify/react';
@@ -6,12 +6,13 @@ import {
   Grid, GridItem, Box, HStack,
   Heading, Text, Button,
   Input, InputGroup,
-  InputLeftElement, InputRightAddon
+  InputLeftElement, InputRightAddon,
+  AlertDialog, AlertDialogBody,
+  AlertDialogContent, AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import Web3 from 'web3';
-import {NERVE_BRIDGE, TOKEN_DNF} from '../../utils/contract';
-import {NERVE_WALLET_ADDR} from '../../config/priConfig';
+import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from '../../utils/contract';
 import {toDecimal, WEB3_MAX_NUM} from '../../utils/web3Tools';
 import { curveArrow, combineArrow } from '../../utils/svg';
 import styles from './index.less';
@@ -45,6 +46,10 @@ const BridgeScreen = (props) => {
   //  form - input
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState(0)
+  //  alert pop-up
+  const [isOpen, setIsOpen] = useState(false)
+  const onClose = () => setIsOpen(false)
+  const cancelRef = useRef()
 
   useEffect(() => {
     // console.log('useEffect', address, chainType);
@@ -115,12 +120,16 @@ const BridgeScreen = (props) => {
     }
   }
   //  mutations
-  const approveDnfToNerve = async (address) => {
+  const approveDnfToNerve = async () => {
+    onClose()
     try {
       const dnfContract = new window.web3.eth.Contract(TOKEN_DNF.abi, TOKEN_DNF.tokenContract);
       await dnfContract.methods['approve'](NERVE_BRIDGE.tokenContract, WEB3_MAX_NUM).send({ from: address });
     } catch (err) {
-      console.log('approveDnfToNerve', err);   // code:4001-user denied action
+      console.error('approveDnfToNerve', err);
+      if (err.code === 4001) {
+        toast.error('You denied the approve', {position: toast.POSITION.TOP_CENTER});
+      }
     }
   }
   const submitCross = async () => {
@@ -131,7 +140,7 @@ const BridgeScreen = (props) => {
     }
     setLoading(true)
     const chainSuit = await checkSuit(4)
-    // console.log('chainSuit', chainSuit);
+    console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
       if (chainSuit.balance < Number(amount)) {
         toast.warning('Your balance is not enough.', {position: toast.POSITION.TOP_CENTER});
@@ -139,9 +148,8 @@ const BridgeScreen = (props) => {
         return
       }
       if (!chainSuit.isApprove) {
-        // call approve
-        await approveDnfToNerve(chainSuit.address)
         setLoading(false)
+        setIsOpen(true)
       } else {
         const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, NERVE_BRIDGE.tokenContract)
         const gasNum = 210000, gasPrice = '20000000000';
@@ -292,6 +300,35 @@ const BridgeScreen = (props) => {
           )}
         </Grid>
       </div>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        motionPreset="slideInBottom"
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent w="max-content" borderRadius="40px">
+            <AlertDialogBody fontFamily="DM Sans" letterSpacing="-0.02em" p="2.14rem 3rem" textAlign="center">
+              <Heading
+                as="h4" color="black" fontWeight="bold"
+                fontSize="lg" lineHeight="2.57rem"
+              >Approve first!</Heading>
+              <Text
+                color="brand.100"  my="2.14rem"
+                fontSize="0.857rem" lineHeight="1.43rem"
+              >You may need to approve first!</Text>
+              <Button colorScheme="custom" px="2.92rem" borderRadius="5.36rem" onClick={approveDnfToNerve} >OK</Button>
+              <Text
+                color="brand.100" my="2.14rem" cursor="pointer"
+                fontSize="0.857rem" lineHeight="1.43rem"
+                _hover={{textDecoration: 'underline'}}
+                onClick={onClose}
+              >Skip for now</Text>
+            </AlertDialogBody>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </div>
   )
 }
