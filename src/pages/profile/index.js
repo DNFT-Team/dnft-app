@@ -46,8 +46,8 @@ const ProfileScreen = (props) => {
           token
         )
       );
-      // dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
-      // dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
+      dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+      dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token]);
   const handleCopyAddress = () => {
@@ -183,10 +183,11 @@ const ProfileScreen = (props) => {
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>
         <div className={styleCardList}>
-          {renderAction(selectedTab)?.map((item, index) => {
-            console.log('index', index);
-            return renderCard(item, index);
-          }) ?? renderNoData}
+          {renderAction(selectedTab)?.length > 0
+            ? renderAction(selectedTab)?.map((item, index) => (
+              renderCard(item, index)
+            ))
+            : renderNoData}
         </div>
       </div>
     </div>
