@@ -161,7 +161,7 @@ const GlobalHeader = (props) => {
           onClick={async () => {
 
             if (address) {
-              history.push('/profile')
+              history.push(`/profile/address/${address}`)
               return;
             }
             let ethereum = window.ethereum;

@@ -22,10 +22,12 @@ import NFTCard from './card';
 import { toast } from 'react-toastify';
 
 const ProfileScreen = (props) => {
-  const { dispatch, address, token, batch, owned, created } = props;
+  const { dispatch, address, token, batch, owned, created, location } = props;
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
-
+  let newAddress = location?.pathname?.split('/') || [];
+  newAddress = newAddress[newAddress.length - 1]
+  console.log(newAddress,'newAddress')
   let history = useHistory();
   useEffect(() => {
     if (token) {
@@ -33,7 +35,7 @@ const ProfileScreen = (props) => {
       dispatch(
         getMyProfileBatch(
           {
-            address,
+            address: newAddress,
             page: 0,
             size: 100,
             category: 'GAME',
@@ -49,7 +51,7 @@ const ProfileScreen = (props) => {
     }
   }, [token]);
   const handleCopyAddress = () => {
-    copy(address);
+    copy(newAddress);
     toast.success('The address is copied successfully!', {
       position: toast.POSITION.TOP_CENTER,
     });
@@ -60,7 +62,7 @@ const ProfileScreen = (props) => {
       return dispatch(
         getMyProfileBatch(
           {
-            address,
+            address: newAddress,
             page: 0,
             size: 100,
             category: 'GAME',
@@ -72,9 +74,9 @@ const ProfileScreen = (props) => {
         )
       );
     case 'Owned':
-      return dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
+      return dispatch(getMyProfileOwned({ address: newAddress, page: 0, size: 100 }, token));
     case 'Created':
-      return dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+      return dispatch(getMyProfileCreated({ address: newAddress, page: 0, size: 100 }, token));
     default:
       return null;
     }
@@ -129,12 +131,12 @@ const ProfileScreen = (props) => {
           index={index}
           needAction={true}
           currentStatus={selectedTab}
+          newAddress={newAddress}
         />
       );
     },
     [selectedTab]
   );
-  console.log(renderAction(selectedTab), 'batch');
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -145,7 +147,7 @@ const ProfileScreen = (props) => {
               <div className={styles.authorName}>daljj</div>
               <div className={styles.addressBox}>
                 <span className={styles.address}>
-                  {address && `${address?.slice(0, 8)}...${address?.slice(28)}`}
+                  {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`}
                 </span>
                 <img
                   className={styles.copyAddress}
@@ -166,14 +168,17 @@ const ProfileScreen = (props) => {
               </div>
             </div>
           </div>
-          <div className={styles.profileEdit}>
-            <div
-              onClick={() => history.push('/profile/edit')}
-              className={styles.edit}
-            >
-              Edit Profile
+          {
+            newAddress === address &&
+            <div className={styles.profileEdit}>
+              <div
+                onClick={() => history.push('/profile/edit')}
+                className={styles.edit}
+              >
+                Edit Profile
+              </div>
             </div>
-          </div>
+          }
         </div>
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>

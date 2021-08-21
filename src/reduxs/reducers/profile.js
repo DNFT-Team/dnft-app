@@ -54,44 +54,18 @@ const Profile = (state = initialState, action) => {
       created: action.payload.data
     }
   case GET_MY_PROFILE_SAVE.SUCCESS:
-    let batch = state.batch.slice();
-    batch.map((obj) => {
-      if(obj.id === action.payload.data.nftId)
-        obj.isSaved = !!action.payload.data.saved
-    })
-    let owned = state.owned.slice();
-    owned.map((obj) => {
-      if(obj.id === action.payload.data.nftId)
-        obj.isSaved = !!action.payload.data.saved
-    })
-    let created = state.created.slice();
-    created.map((obj) => {
+    let dataAll = state?.[action.payload.data.type]?.slice() || [];
+    dataAll.map((obj) => {
       if(obj.id === action.payload.data.nftId)
         obj.isSaved = !!action.payload.data.saved
     })
     return {
       ...state,
-      batch,
-      owned,
-      created,
+      [action.payload.data.type]: dataAll,
     }
   case GET_MY_PROFILE_LIKE.SUCCESS:
-    let _batch = state.batch.slice();
-    _batch.map((obj) => {
-      if(obj.id === action.payload.data.nftId) {
-        obj.isLiked = !!action.payload.data.like;
-        obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
-      }
-    })
-    let _owned = state.owned.slice();
-    _owned.map((obj) => {
-      if(obj.id === action.payload.data.nftId) {
-        obj.isLiked = !!action.payload.data.like;
-        obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
-      }
-    })
-    let _created = state.created.slice();
-    _created.map((obj) => {
+    let _dataAll = state?.[action.payload.data.type]?.slice();
+    _dataAll.map((obj) => {
       if(obj.id === action.payload.data.nftId) {
         obj.isLiked = !!action.payload.data.like;
         obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
@@ -99,9 +73,7 @@ const Profile = (state = initialState, action) => {
     })
     return {
       ...state,
-      batch: _batch,
-      owned: _owned,
-      created: _created,
+      [action.payload.data.type]: dataAll,
     }
   default:  return state
   }

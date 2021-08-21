@@ -8,16 +8,16 @@ import {
   setProfileSave
 } from 'reduxs/actions/profile';
 const NFTCard = (props) => {
-  const { needAction, item, index, currentStatus, address, dispatch, token  } = props;
+  const { needAction, item, index, currentStatus, address, dispatch, token, newAddress  } = props;
 
   const renderAction = (item) => {
     switch (currentStatus) {
-    case 'In Wallet':
-      return (
-        <div className={styleButtonContainer}>
-          <div className={cx(styleButton, styleBorderButton)}>Sell</div>
-        </div>
-      );
+    case 'Collections':
+      return 'batch';
+    case 'Owned':
+      return 'owned';
+    case 'Created':
+      return 'created';
     case 'On Sale':
       return (
         <div className={styleButtonContainer}>
@@ -54,20 +54,22 @@ const NFTCard = (props) => {
     }
   };
 
+
   const handleLike = () => {
-    console.log(address,item)
     dispatch(setProfileLike({
-      address,
+      address: newAddress,
       nftId: item.id,
       like: item.isLiked ? 0 : 1,
+      type: renderAction()
     },token))
   }
 
   const handleSave = () => {
     dispatch(setProfileSave({
-      address,
+      address: newAddress,
       nftId: item.id,
       saved: item.isSaved ? 0 : 1,
+      type: renderAction()
     },token))
   }
 
@@ -96,9 +98,9 @@ const NFTCard = (props) => {
           </div>
           <span className="description">{item.description}</span>
         </div>
-        {needAction && (
+        {/* {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
-        )}
+        )} */}
       </div>
     </div>
   );

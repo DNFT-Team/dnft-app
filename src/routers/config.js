@@ -29,7 +29,7 @@ const ROUTER_MAP = [
     navName: 'market',
   },
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
-  { path: '/profile', exact: true, Component: ProfileScreen, navName: 'profile' },
+  { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
   { path: '/data/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   {
