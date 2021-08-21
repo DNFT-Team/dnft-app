@@ -63,7 +63,6 @@ const AssetScreen = (props) => {
 
   const init = () => {
     getBalance();
-    getNft();
   };
 
   const getNFTList = async () => {
@@ -89,75 +88,6 @@ const AssetScreen = (props) => {
     }
   },[token, category, selectedTab, sortTag])
 
-  const getNft = async () => {
-    try {
-      if (window.ethereum) {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
-
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        const account = accounts[0];
-        let nftDataList = [];
-        const contractAddress = nft1155Contract;
-        const myContract = new window.web3.eth.Contract(
-          nft1155Abi,
-          contractAddress
-        );
-        const nft1 = await myContract.methods.balanceOf(account, 100).call({
-          from: account,
-        });
-        const nft2 = await myContract.methods.balanceOf(account, 200).call({
-          from: account,
-        });
-        const nft3 = await myContract.methods.balanceOf(account, 300).call({
-          from: account,
-        });
-        if (nft1 > 0) {
-          nftDataList.push('https://dnft.world/igo/100.png');
-        }
-        if (nft2 > 0) {
-          nftDataList.push('https://dnft.world/igo/200.png');
-        }
-        if (nft3 > 0) {
-          nftDataList.push('https://dnft.world/igo/300.png');
-        }
-
-        // const contractAddress = nftContract;
-        // let nftDataList = [];
-        // const myContract = new window.web3.eth.Contract(
-        //   nftAbi,
-        //   contractAddress
-        // );
-        // const nft1 = await myContract.methods.balanceOf(account, 1).call({
-        //   from: account,
-        // });
-        // const nft2 = await myContract.methods.balanceOf(account, 2).call({
-        //   from: account,
-        // });
-        // const nft3 = await myContract.methods.balanceOf(account, 3).call({
-        //   from: account,
-        // });
-        // if (nft1 > 0) {
-        //   nftDataList.push('https://dnft.world/staking/pool1.png');
-        // }
-        // if (nft2 > 0) {
-        //   nftDataList.push('https://dnft.world/staking/pool2.png');
-        // }
-        // if (nft3 > 0) {
-        //   nftDataList.push('https://dnft.world/staking/pool3.png');
-        // }
-
-        setNftData(nftDataList);
-      }
-    } catch (e) {
-      console.log(e, 'e');
-    }
-  };
-
   useEffect(() => {
     let ethereum = window.ethereum;
 
@@ -175,7 +105,7 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 97 && history.location.pathname === '/asset') {
+        if (Number(networkIDstring) !== 4 && history.location.pathname === '/asset') {
           toast.dark('Please Choose BSC Testnet', {
             position: toast.POSITION.TOP_CENTER,
           });
@@ -364,6 +294,9 @@ const AssetScreen = (props) => {
             {list?.length > 0
               ? list.map((item, index) =>  renderCard(item, index))
               : renderNoData}
+            {/* {nftData?.length > 0
+              ? nftData.map((item, index) => renderCard(item, index))
+              : renderNoData} */}
           </div>
         </div>
       </div>
