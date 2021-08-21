@@ -866,13 +866,6 @@ const styleHeaderInfo = css`
   padding: 28px 30px;
 `;
 
-const styleTitle = css`
-  font-size: 14px;
-  color: #333333;
-  margin-bottom: 64px;
-  margin-top: 0;
-`;
-
 const styleAssetAccountContainer = css`
   display: flex;
   flex-direction: row;
@@ -888,27 +881,6 @@ const styleCapital = css`
   color: #8f9bba;
   position: relative;
   left: 62px;
-`;
-
-const styleMiningPicture = css`
-  position: relative;
-  overflow: hidden;
-  img {
-    width: 720px;
-    height: 228px;
-  }
-  span {
-    position: absolute;
-    font-size: 30px;
-    color: #144934;
-    width: 430px;
-    right: 60px;
-    line-height: 1.5;
-    top: 30px;
-    font-weight: bolder;
-    text-align: left;
-    letter-spacing: 2px;
-  }
 `;
 
 const styleBody = css`
@@ -1276,7 +1248,7 @@ const styleLabelContainer = css`
   background-size: cover;
   width: 64px;
   height: 64px;
-  top: 0;
+  top: 5px;
   right: 0;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
