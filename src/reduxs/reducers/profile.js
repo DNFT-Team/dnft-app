@@ -73,7 +73,7 @@ const Profile = (state = initialState, action) => {
     })
     return {
       ...state,
-      [action.payload.data.type]: dataAll,
+      [action.payload.data.type]: _dataAll,
     }
   default:  return state
   }
