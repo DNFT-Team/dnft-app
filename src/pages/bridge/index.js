@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import {Icon} from '@iconify/react';
 import {
   Grid, GridItem, Box, HStack,
@@ -33,20 +35,25 @@ const NetOptions = [
  * @constructor
  */
 const BridgeScreen = (props) => {
+  const { address, chainType } = props;
   //  global loading
   const [loading, setLoading] = useState(false)
+  const [isInjected, setIsInjected] = useState(false)
   //  networks
   const [frNet, setFrNet] = useState(0)
   const [toNet, setToNet] = useState(1)
   //  form - input
   const [amount, setAmount] = useState('')
-  const [balance, setBalance] = useState(5)
+  const [balance, setBalance] = useState(0)
 
-  useEffect(async () => {
-    //  do something here
-    await injectWallet();
-    await checkSuit()
-  }, []);
+  useEffect(() => {
+    // console.log('useEffect', address, chainType);
+    if (chainType) {init()}
+  }, [address, chainType]);
+  const init = async () => {
+    if (!isInjected) {await injectWallet()}
+    return await checkSuit()
+  }
   //  setUp wallet
   const injectWallet = async () => {
     try {
@@ -54,6 +61,7 @@ const BridgeScreen = (props) => {
       if (ethereum) {
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
+        setIsInjected(true)
       } else {
         toast.error('Please install wallet', {position: toast.POSITION.TOP_CENTER});
       }
@@ -63,34 +71,20 @@ const BridgeScreen = (props) => {
   }
   const checkSuit = async (step = 3) => {
     let res = {netOk: false, address: '', balance: 0, isApprove: false}
-    res.netOk = await checkNetWork()
-    step >= 2 && (res.address = await getAccount())
-    step >= 3 && (res.balance = await getDnfBalance(res.address))
-    step >= 4 && (res.isApprove = await getIsApprove(res))
+    if (chainType !== 'ETH') {
+      toast.warning('Please connect ETH-NET', {position: toast.POSITION.TOP_CENTER});
+      res.netOk = false
+      setBalance(0)
+    } else {
+      res.netOk = true
+      step >= 2 && (res.address = address)
+      step >= 3 && (res.balance = await getDnfBalance())
+      step >= 4 && (res.isApprove = await getIsApprove(res))
+    }
     return res
   }
   //  get basic info
-  const checkNetWork = async () => {
-    let ethereum = window.ethereum
-    // console.log('networkVersion', ethereum.networkVersion);
-    if (1 === Number(ethereum.networkVersion)) {
-      return true;
-    } else {
-      toast.warning('Please connect ETH-NET', {position: toast.POSITION.TOP_CENTER});
-      return false
-    }
-  }
-  const getAccount = async () => {
-    try {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-      return accounts[0]
-    } catch {
-      return ''
-    }
-  }
-  const getDnfBalance = async (address) => {
+  const getDnfBalance = async () => {
     let balance = 0
     try {
       if (address) {
@@ -130,19 +124,21 @@ const BridgeScreen = (props) => {
     }
   }
   const submitCross = async () => {
+    // console.log('skipHistory', address, chainType);
     if (amount <= 0) {
       toast.warning('Please Input active number.', {position: toast.POSITION.TOP_CENTER});
       return
     }
     setLoading(true)
-    const chainSuit = await checkSuit()
+    const chainSuit = await checkSuit(4)
+    // console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
       if (chainSuit.balance < Number(amount)) {
         toast.warning('Your balance is not enough.', {position: toast.POSITION.TOP_CENTER});
         setLoading(false)
         return
       }
-      if (chainSuit.isApprove) {
+      if (!chainSuit.isApprove) {
         // call approve
         await approveDnfToNerve(chainSuit.address)
         setLoading(false)
@@ -238,6 +234,7 @@ const BridgeScreen = (props) => {
                       height="3.57rem"
                       fontWeight="bold" fontSize="1.43rem"
                       autoFocus
+                      isInvalid={amount < 0}
                       type="number"
                       _hover={{borderColor: 'inherit'}}
                       value={amount}  onChange={(v) => {setAmount(v.target.value)}}
@@ -299,4 +296,9 @@ const BridgeScreen = (props) => {
   )
 }
 
-export default BridgeScreen;
+const mapStateToProps = ({ profile }) => ({
+  address: profile.address,
+  chainType: profile.chainType
+});
+export default withRouter(connect(mapStateToProps)(BridgeScreen));
+
