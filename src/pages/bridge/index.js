@@ -1,20 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Icon} from '@iconify/react';
 import {
   Grid, GridItem, Box, HStack,
-  Heading, Text, Button,
-  Input, InputGroup,
+  Heading, Text, Button, Fade,
+  Input, InputGroup, Link,
   InputLeftElement, InputRightAddon,
   AlertDialog, AlertDialogBody,
   AlertDialogContent, AlertDialogOverlay,
 } from '@chakra-ui/react';
+import { Divider } from 'ui-neumorphism'
 import { toast } from 'react-toastify';
+import gitbook from '../../config/gitbook';
 import Web3 from 'web3';
 import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from '../../utils/contract';
 import {toDecimal, WEB3_MAX_NUM} from '../../utils/web3Tools';
-import { curveArrow, combineArrow } from '../../utils/svg';
+import {curveArrow, combineArrow} from '../../utils/svg';
 import styles from './index.less';
 import bgWindow from '../../images/bridge/bg_window.png';
 import IconEth from '../../images/networks/eth.png';
@@ -40,6 +42,7 @@ const BridgeScreen = (props) => {
   //  global loading
   const [loading, setLoading] = useState(false)
   const [isInjected, setIsInjected] = useState(false)
+  const [transaction, setTransaction] = useState(null)
   //  networks
   const [frNet, setFrNet] = useState(0)
   const [toNet, setToNet] = useState(1)
@@ -139,6 +142,7 @@ const BridgeScreen = (props) => {
       return
     }
     setLoading(true)
+    setTransaction(null)
     const chainSuit = await checkSuit(4)
     console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
@@ -165,6 +169,14 @@ const BridgeScreen = (props) => {
         })
           .then((receipt) => {
             console.info('===>receipt', receipt);
+            setTransaction({
+              timestamp: Date.now(),
+              account: address,
+              amount,
+              from: 'ETH',
+              to: 'BSC',
+              hash: receipt
+            })
             toast.success('Trade Write Success', {position: toast.POSITION.TOP_CENTER})
           })
           .catch((err) => {
@@ -196,8 +208,15 @@ const BridgeScreen = (props) => {
             /* Banner Left/Top */
             <GridItem colSpan={[10, 10, 10, 5, 4]} p={['1.785rem', '1.785rem', '1.785rem', '2rem', '3.785rem']} color="white">
               <Heading as="h4" className={styles.title}>Bridge</Heading>
+              <Link href={gitbook.bridge} isExternal color="brand.100" mt="2rem" display="inline-block">
+                <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem'}} /> Learn how to cross
+              </Link>
               <Text color="brand.100" className={styles.subTitle} lineHeight="2rem">
-                Swift, easy and reliable solution to cross your DNF over chains
+                Swift, easy and reliable solution to cross your DNF over chains<br/>
+                The whole process of cross-chain is as easy as 1,2,3<br/>
+                - 1. Packing data<br/>
+                - 2. Transfer transaction confirm<br/>
+                - 3. Trading-center withdrawal
               </Text>
               <Grid
                 gap={4}
@@ -295,6 +314,21 @@ const BridgeScreen = (props) => {
                   </Button>
                   <Button  colorScheme="teal" variant="outline" fontSize="1.14rem" p="1.14rem 2.14rem" onClick={skipHistory}>History</Button>
                 </HStack>
+                {transaction ? (<Fade in>
+                  <Box
+                    mt="4" p="1.8rem"
+                    color="brand.100" bg="#e3ebf5"
+                    rounded="xl" shadow="md"
+                  >
+                    <Text color="green.400">
+                      Transfer transaction has been written into the chain!<br/>
+                      All you need to do now is just waiting for the withdraw.
+                    </Text>
+                    <Divider style={{margin: '1rem .8rem'}}/>
+                    <p>Transfer {transaction.amount} DNF from {transaction.from} to {transaction.to} at {new Date(transaction.timestamp).toISOString()}</p>
+                    <p>You can check via this hash:<Link color="brand.600">{transaction.hash}</Link> </p>
+                  </Box>
+                </Fade>) : ''}
               </Box>
             </GridItem>
           )}

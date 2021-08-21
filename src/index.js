@@ -36,6 +36,13 @@ const theme = extendTheme({
         '_focus': {outline: 'none', boxShadow: 'none'},
         '_active': {outline: 'none', boxShadow: 'none'},
       }
+    },
+    Link: {
+      baseStyle: {
+        '_hover': {opacity: .8},
+        '_focus': {outline: 'none', boxShadow: 'none'},
+        '_active': {outline: 'none', boxShadow: 'none'},
+      }
     }
   }
 })
