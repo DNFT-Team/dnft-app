@@ -293,7 +293,7 @@ const IGOScreen = () => {
               return;
             }
 
-            if (isWrongNetWork) {
+            if (isWrongNetWork && history.location.pathname === '/igo') {
               toast.dark('Please Choose BSC Testnet', {
                 position: toast.POSITION.TOP_CENTER,
               });

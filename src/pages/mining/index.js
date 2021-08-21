@@ -14,14 +14,19 @@ import {
   secondStakeConTract,
   thirdStakeConTract,
 } from 'utils/contract';
-import { miningCloud, miningMoon, nfIconSvg } from 'utils/svg';
+import { nfIconSvg } from 'utils/svg';
 import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import headerPicture from 'images/mining/header.jpg';
 import cloneDeep from 'lodash.clonedeep';
+import { useHistory } from 'react-router';
+import bg from '../../images/mining/bg.svg';
+import nft from '../../images/mining/logo.svg';
+import label from '../../images/mining/label.svg';
 
 const Mining = (props) => {
+  let history = useHistory();
+
   const initState = useMemo(
     () => ({
       0: {
@@ -50,7 +55,7 @@ const Mining = (props) => {
   );
 
   const [balance, setBalance] = useState(0);
-  const [selectedTab, setSelectedTab] = useState('onGoing');
+  const [selectedTab, setSelectedTab] = useState('Ongoing');
   const [stakeTab, setStakeTab] = useState('stake');
   const [isVisible, setIsVisible] = useState(false);
   const [stakeIndex, setStakeIndex] = useState(0);
@@ -218,9 +223,10 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 97) {
+      console.log(ethereum, 'ethereum')
+      if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/mining') {
         setIsWrongNetWork(true);
-        toast.dark('Please Choose BSC Testnet', {
+        toast.dark('Please Choose Rinkeby', {
           position: toast.POSITION.TOP_CENTER,
         });
 
@@ -242,9 +248,9 @@ const Mining = (props) => {
         setBalance(undefined);
         setStateData(initState);
 
-        if (Number(networkIDstring) !== 97) {
+        if (Number(networkIDstring) !== 4 && history.location.pathname === '/mining') {
           setIsWrongNetWork(true);
-          toast.dark('Please Choose BSC Testnet', {
+          toast.dark('Please Choose Rinkeby', {
             position: toast.POSITION.TOP_CENTER,
           });
 
@@ -282,23 +288,13 @@ const Mining = (props) => {
           className={styleHeaderInfo}
           style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
         >
-          <h1 className={styleTitle}>
-            Earn limited edition NFTs through farming
-          </h1>
           <div className={styleAssetAccountContainer}>
             <div className={styleIcon}>{nfIconSvg}</div>
             <span className={styleCoinName}>DNF</span>
 
             <span className='el-loading-demo'>{balance}</span>
           </div>
-          <div className={styleCapital}>Mining capital</div>
-        </div>
-        <div
-          className={styleMiningPicture}
-          style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
-        >
-          <span>EARN LIMITED EDITION NFTS THROUGH FARMING </span>
-          <img src={headerPicture} />
+          <div className={styleCapital}>Available balance</div>
         </div>
       </div>
     ),
@@ -311,24 +307,24 @@ const Mining = (props) => {
         <div
           className={cx(
             styleButton,
-            selectedTab === 'onGoing' && styleActiveButton
+            selectedTab === 'Ongoing' && styleActiveButton
           )}
           onClick={() => {
-            setSelectedTab('onGoing');
+            setSelectedTab('Ongoing');
           }}
         >
-          onGoing
+          Ongoing
         </div>
         <div
           className={cx(
             styleButton,
-            selectedTab === 'complete' && styleActiveButton
+            selectedTab === 'Complete' && styleActiveButton
           )}
           onClick={() => {
-            setSelectedTab('complete');
+            setSelectedTab('Complete');
           }}
         >
-          complete
+          Complete
         </div>
       </div>
     ),
@@ -351,37 +347,46 @@ const Mining = (props) => {
           setStakeIndex(index);
         }}
       >
-        <div className={styleCardTitle}>DNF Staking Pool</div>
-        <div className={styleAPY}>
-          <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
+        <div>
+          <div className={styleCardTitle}>
+            <img src={nft} style={{ width: 40 }} />
+            DNF Staking Pool
+          </div>
+          <div className={styleCardInfo}>
+            <div className={styleItemContainer}>
+              <div className={styleText}>Reward</div>
+              <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
+            </div>
+            <div className={styleItemContainer}>
+              <div className={styleText}>DNF</div>
+              <div className={styleDollar}>
+                {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
+                  2
+                )}
+              </div>
+            </div>
+            <div className={styleItemContainer}>
+              <div className={styleText}>DNF</div>
+              <div className={styleDollar}>
+                {(
+                  (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
+                ).toFixed(2)}
+                %
+              </div>
+            </div>
+          </div>
+          <div className={styleBottomContainer}>
+            <div className={styleAPY}>
+              <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
+              <div>APY(%)</div>
+            </div>
+            <div className={styleCardButton}>Stake</div>
+          </div>
+        </div>
+        <div className={styleLabelContainer}>
+          <div className='percent'>{stakeInfo?.rewardRate || 0.0}</div>
           <div>APY(%)</div>
         </div>
-        <div className={styleCardInfo}>
-          <div className={styleItemContainer}>
-            <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
-            <div className={styleText}>Reward</div>
-          </div>
-          <div className={styleItemContainer}>
-            <div className={styleDollar}>
-              {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
-                2
-              )}
-            </div>
-            <div className={styleText}>DNF</div>
-          </div>
-          <div className={styleItemContainer}>
-            <div className={styleDollar}>
-              {(
-                (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
-              ).toFixed(2)}
-              %
-            </div>
-            <div className={styleText}>DNF</div>
-          </div>
-        </div>
-        <div className={styleCardButton}>Stake</div>
-        <div className={styleMiningCloud}>{miningCloud}</div>
-        <div className={styleMiningMoon}>{miningMoon}</div>
       </div>
     ),
     [isStakeInfoLoading, isWrongNetWork]
@@ -837,18 +842,17 @@ export default Mining;
 
 const styleContainer = css`
   background: #f5f7fa;
-  padding: 22px 20px;
+  padding: 22px 20px 0 20px;
   height: 100%;
   & > div {
-    border-radius: 10px;
+    border-radius: 14px;
   }
 `;
 
 const styleHeader = css`
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: row;
-  margin-bottom: 36px;
+  margin-bottom: 22px;
   background: white;
   display: flex;
   justify-content: space-between;
@@ -859,7 +863,7 @@ const styleHeader = css`
 `;
 
 const styleHeaderInfo = css`
-  padding: 40px;
+  padding: 28px 30px;
 `;
 
 const styleTitle = css`
@@ -908,8 +912,7 @@ const styleMiningPicture = css`
 `;
 
 const styleBody = css`
-  padding: 40px 20px 44px 36px;
-  background: #1c2656;
+  padding: 40px 0 0 0;
 
   .circular {
     position: relative;
@@ -936,43 +939,50 @@ const styleCoinName = css`
 const styleButtonContainer = css`
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 40px;
 `;
 
 const styleButton = css`
-  font-weight: bold;
-  font-size: 14px;
-  color: #8588a7;
-  width: 84px;
-  height: 46px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #666666;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-family: Poppins;
 `;
 
 const styleActiveButton = css`
-  color: #1b2559;
-  background: #ffffff;
-  border-radius: 8px;
+  color: #000000;
 `;
 
 const styleCardList = css`
-  margin-top: 64px;
+  margin-top: 40px;
   display: flex;
   flex-direction: row;
   gap: 56px;
+  background: url(${bg}) no-repeat 100% 100%;
+  background-size: cover;
+  min-height: calc(100vh - 360px);
 `;
 
 const styleCardContainer = css`
   display: flex;
   flex: 1;
-  background: #121a44;
-  border-radius: 20px;
-  padding: 18px 26px;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  filter: drop-shadow(0px 11px 21px rgba(0, 0, 0, 0.05));
+  height: fit-content;
+  &>div{
+    &:first-child{
+      margin: 10px 0;
+      padding:16px 16px 20px 30px;
+      background:white;
+      border-radius: 20px;
+    }
+  }
 `;
 
 const styleCardIsActive = css`
@@ -983,68 +993,74 @@ const styleCardIsActive = css`
 `;
 
 const styleCardTitle = css`
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
   font-size: 20px;
-  color: #fff;
+  color: #B3B7DD;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #EDEDED;
+  img {
+    margin-right: 20px;
+  }
 `;
+
+const styleBottomContainer = css`
+  padding-top: 22px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
 
 const styleAPY = css`
   font-size: 14px;
-  color: #ff313c;
   display: flex;
-  flex-direction: column;
-  margin: 36px 0 32px 0;
+  flex-direction: row;
+  align-items: baseline;
+  color: #777BA4;
 `;
 
 const stylePercent = css`
-  font-size: 36px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ff313c;
+  padding-right: 10px;
 `;
 
 const styleCardInfo = css`
   display: flex;
   flex-direction: row;
-  gap: 5%;
+  justify-content: space-between;
+  padding: 22px 0 30px 0;
+  border-bottom: 1px dashed #EDEDED;
 `;
 
 const styleItemContainer = css`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 `;
 
 const styleDollar = css`
   font-weight: bold;
-  font-size: 14px;
-  color: #a5bcff;
+  font-size: 20px;
+  color: #1B2559;
 `;
 
 const styleText = css`
-  font-size: 12px;
-  color: #777ba4;
-`;
-
-const styleMiningCloud = css`
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-`;
-
-const styleMiningMoon = css`
-  position: absolute;
-  right: 0;
-  top: -18px;
+  font-size: 14px;
+  color: #B2B3B5;
 `;
 
 const styleCardButton = css`
-  background: #ff6059;
+  background: #112DF2;
   border-radius: 10px;
-  width: 40%;
+  width: 110px;
   padding: 12px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 36px 0 0 32%;
   color: #fff;
 `;
 
@@ -1176,7 +1192,7 @@ const styleInputContainer = css`
   display: flex;
   flex-direction: row;
   height: 64px;
-  margin: 10px 0;
+  margin: 5px 0;
   input {
     border: none;
     background: transparent;
@@ -1253,3 +1269,27 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+
+const styleLabelContainer = css`
+  position: absolute;
+  background: url(${label}) no-repeat 100% 100%;
+  background-size: cover;
+  width: 64px;
+  height: 64px;
+  top: 0;
+  right: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  div{
+    position: relative;
+    left: 3px;
+    top: 2px;
+  }
+  .percent{
+    color: white;
+    font-size: 16px;
+  }
+`

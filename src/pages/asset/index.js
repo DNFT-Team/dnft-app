@@ -62,7 +62,7 @@ const AssetScreen = (props) => {
   }, []);
 
   const init = () => {
-    // getBalance();
+    getBalance();
     getNft();
   };
 
@@ -162,7 +162,7 @@ const AssetScreen = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 97) {
+      if (Number(ethereum.networkVersion) !== 97 && history.location.pathname === '/asset') {
         toast.dark('Please Choose BSC Testnet', {
           position: toast.POSITION.TOP_CENTER,
         });
@@ -175,7 +175,7 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 97) {
+        if (Number(networkIDstring) !== 97 && history.location.pathname === '/asset') {
           toast.dark('Please Choose BSC Testnet', {
             position: toast.POSITION.TOP_CENTER,
           });
@@ -198,7 +198,7 @@ const AssetScreen = (props) => {
     } else {
       alert('Please install wallet');
     }
-  }, []);
+  }, [init]);
 
   const getBalance = async () => {
     try {

@@ -60,7 +60,7 @@ ReactDOM.render(
         </div>
       ) : (
         <BrowserRouter>
-          <ChakraProvider resetCSS theme={theme}>
+          <ChakraProvider resetCSS={false} theme={theme}>
             <App />
           </ChakraProvider>
           <ToastContainer/>

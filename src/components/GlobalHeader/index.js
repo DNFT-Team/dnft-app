@@ -15,6 +15,7 @@ import {
   hecoSvg,
   polkadotSvg,
   dnftSvg,
+
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
@@ -71,13 +72,8 @@ const GlobalHeader = (props) => {
       },
       {
         name: 'Kovan Test Mainnet',
-        shortName: ['Ropsten', 'Ropsten'],
+        shortName: ['Kovan', 'Kovan'],
         netWorkId: 42,
-      },
-      {
-        name: 'BSC Mainnet',
-        shortName: ['BSC', 'BSC'],
-        netWorkId: 56,
       },
     ],
     []
@@ -247,7 +243,6 @@ const styleHeader = css`
   top: 0;
   z-index: 100;
   background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
   input {
     &:focus {
       outline: none;
