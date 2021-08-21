@@ -247,7 +247,6 @@ const styleHeader = css`
   top: 0;
   z-index: 100;
   background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
   input {
     &:focus {
       outline: none;
