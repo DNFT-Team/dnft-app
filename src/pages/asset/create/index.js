@@ -84,7 +84,7 @@ const CreateNFT = (props) => {
           },
         ])
       );
-    }catch (e) {
+    } catch (e) {
       console.log(e, 'e')
     }
   };
@@ -143,10 +143,10 @@ const CreateNFT = (props) => {
           className={styleUploadContainer}
           drag
           multiple={false}
-          withCredentials={true}
+          withCredentials
           action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
           limit={1}
-          httpRequest = {(e) => {
+          httpRequest={(e) => {
             uploadFile(e.file)
           }}
           tip={
@@ -214,11 +214,12 @@ const CreateNFT = (props) => {
               category: value
             })
           }}>
-            {cateType.map((el) => {<Select.Option
-              key={el.value}
-              label={el.label}
-              value={el.value}
-            />
+            {cateType.map((el) => {
+              <Select.Option
+                key={el.value}
+                label={el.label}
+                value={el.value}
+              />
             })}
           </Select>
         )}
@@ -311,6 +312,9 @@ const styleAlert = css`
   height: 60px;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 84px;
+  z-index: 2;
   .el-icon-close {
     top: 24px;
   }
