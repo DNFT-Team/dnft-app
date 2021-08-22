@@ -14,7 +14,6 @@ import {
   secondStakeConTract,
   thirdStakeConTract,
 } from 'utils/contract';
-import { nfIconSvg } from 'utils/svg';
 import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -23,6 +22,7 @@ import { useHistory } from 'react-router';
 import bg from '../../images/mining/bg.svg';
 import nft from '../../images/mining/logo.svg';
 import label from '../../images/mining/label.svg';
+import defaultHeadSvg from '../../images/asset/Head.svg'
 
 const Mining = (props) => {
   let history = useHistory();
@@ -289,7 +289,9 @@ const Mining = (props) => {
           style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
         >
           <div className={styleAssetAccountContainer}>
-            <div className={styleIcon}>{nfIconSvg}</div>
+            <div className={styleIcon}>
+              <img src={defaultHeadSvg} />
+            </div>
             <span className={styleCoinName}>DNF</span>
 
             <span className='el-loading-demo'>{balance}</span>

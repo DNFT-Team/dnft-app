@@ -11,7 +11,7 @@ import NFTCard from '../../components/NFTCard';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import nfIconSvg from '../../images/asset/Head.svg'
+import defaultHeadSvg from '../../images/asset/Head.svg'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -165,7 +165,7 @@ const AssetScreen = (props) => {
       <div className={styleHeader}>
         <div className={styleAssetAccountContainer}>
           <div className={styleIcon}>
-            <img src={nfIconSvg} />
+            <img src={defaultHeadSvg} />
           </div>
           <span className={styleCoinName}>{chainType}</span>
           <span>{chainType === 'DNFT' && balance }</span>
