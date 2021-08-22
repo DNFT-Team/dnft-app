@@ -85,7 +85,7 @@ const AssetScreen = (props) => {
     if (token) {
       getNFTList()
     }
-  },[token, category, selectedTab, sortTag])
+  },[token, category, selectedTab, sortTag, address])
 
   useEffect(() => {
     let ethereum = window.ethereum;

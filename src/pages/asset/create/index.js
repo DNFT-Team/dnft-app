@@ -101,6 +101,7 @@ const CreateNFT = (props) => {
         },
         token
       );
+      console.log(result, 'result')
       history.push('/asset');
     } catch (e) {
       console.log(e, 'e')
