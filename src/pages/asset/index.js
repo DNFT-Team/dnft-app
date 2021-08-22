@@ -5,12 +5,13 @@ import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { tokenAbi, nftAbi, nft1155Abi } from 'utils/abi';
 import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
-import { nfIconSvg, noDataSvg } from 'utils/svg';
+import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import nfIconSvg from '../../images/asset/Head.svg'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -163,7 +164,9 @@ const AssetScreen = (props) => {
     () => (
       <div className={styleHeader}>
         <div className={styleAssetAccountContainer}>
-          <div className={styleIcon}>{nfIconSvg}</div>
+          <div className={styleIcon}>
+            <img src={nfIconSvg} />
+          </div>
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
         </div>
@@ -376,10 +379,9 @@ const styleTabContainer = css`
 `;
 
 const styleIcon = css`
-  background: #c0beff;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
+  width: 70px;
+  height: 70px;
+  border-radius: 70px;
   display: flex;
   align-items: center;
   justify-content: center;

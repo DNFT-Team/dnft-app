@@ -3,31 +3,30 @@ import { Dialog, Input } from 'element-react';
 import styles from './index.less';
 import { css } from 'emotion';
 import {
-  ethSvg,
   assetSvg,
-  downArrowSvg,
   netEthSvg,
   bscNetSvg,
   heroNetSvg,
   polkadotNetSvg,
-  dnftNetSvg,
-  bscSvg,
-  hecoSvg,
   polkadotSvg,
-  dnftSvg,
-
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
-import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
 import { NET_WORK_VERSION } from 'utils/constant'
+
+import ethSvg from '../../images/networks/logo_eth.svg'
+import bscSvg from '../../images/networks/logo_bsc.svg'
+import hecoSvg from '../../images/networks/logo_heco.svg'
+import dnftSvg from '../../images/networks/logo_dnft.svg'
+
 
 // import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
-  const {dispatch} = props;
+  const { dispatch, chainType } = props;
+
   const [isNetListVisible, setIsNetListVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
@@ -45,6 +44,14 @@ const GlobalHeader = (props) => {
         icon: bscNetSvg,
         shortName: ['BSC', 'Bsc'],
         shortIcon: bscSvg,
+        netWorkId: 56,
+      },
+      {
+        name: 'Bsc Mainnet',
+        icon: bscNetSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+        netWorkId: 97,
       },
       {
         name: 'Heco Mainnet',
@@ -84,6 +91,11 @@ const GlobalHeader = (props) => {
 
     if (ethereum) {
       setAddress(ethereum.selectedAddress);
+      const currentIndex = netArray.findIndex(
+        (item) => Number(item.netWorkId) === Number(ethereum.networkVersion)
+      );
+      setCurrentNetIndex(currentIndex)
+
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
         const currentIndex = netArray.findIndex(
@@ -93,7 +105,6 @@ const GlobalHeader = (props) => {
         setCurrentNetIndex(currentIndex);
       });
       let params = {address:ethereum.selectedAddress,chainType:NET_WORK_VERSION[ethereum.networkVersion]}
-      console.log(params)
       // 存储address
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
@@ -116,7 +127,7 @@ const GlobalHeader = (props) => {
 
   useEffect(() => {
     injectWallet();
-  }, [injectWallet]);
+  }, [injectWallet, window.ethereum]);
 
   const renderModal = useMemo(
     () => (
@@ -197,12 +208,13 @@ const GlobalHeader = (props) => {
         {currentNetIndex != undefined && (
           <React.Fragment>
             <div
+              style={{background:'transparent'}}
               className={actionItem}
               onClick={() => {
                 setIsNetListVisible(true);
               }}
             >
-              {netArray[currentNetIndex]?.shortIcon}
+              <img src={netArray[currentNetIndex]?.shortIcon} />
             </div>
             <div
               className={styleNetContainer}
@@ -233,6 +245,7 @@ const GlobalHeader = (props) => {
 // export default GlobalHeader;
 const mapStateToProps = ({ profile }) => ({
   myAddress: profile.address,
+  chainType: profile.chainType
 });
 export default (connect(mapStateToProps)(GlobalHeader));
 const styleHeader = css`
