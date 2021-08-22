@@ -1,25 +1,54 @@
+import { Dialog, InputNumber, Select } from 'element-react';
 import { css, cx } from 'emotion';
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {Icon} from '@iconify/react';
 
 import { post } from 'utils/request';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 const NFTCard = (props) => {
   const { needAction, item, index, currentStatus, token, address, onLike, onSave } = props;
+  const [showSellModal, setShowSellModal] = useState(false);
+  const [showOffShelfModal, setShowOffShelfModal] = useState(false);
+  const [sellForm, setSellForm] = useState({
+    amount: 1
+  });
+
+  const onShowSellModal = () => {
+    setShowSellModal(true)
+  };
+
+  const onShowOffShelfModal = () => {
+    setShowOffShelfModal(true)
+  }
+
+  const renderFormItem = (label, item) => {
+    console.log(label, 'label');
+    return (
+      <div className={styleFormItemContainer}>
+        <div className='label'>{label}</div>
+        {item}
+      </div>
+    );
+  };
 
   const renderAction = (item) => {
     switch (currentStatus.value) {
     case 'INWALLET':
       return (
         <div className={styleButtonContainer}>
-          <div className={cx(styleButton, styleBorderButton)}>Sell</div>
+          <div className={cx(styleButton, styleBorderButton)} onClick={() => {
+            onShowSellModal()
+          }}>On Shelf</div>
         </div>
       );
     case 'ONSALE':
       return (
         <div className={styleButtonContainer}>
-          <div className={cx(styleButton, styleBorderButton)}>Off Shelf</div>
+          <div className={cx(styleButton, styleBorderButton)} onClick={() => {
+            onShowOffShelfModal()
+          }}>Off Shelf</div>
         </div>
       );
     case 'MYFAVORITE':
@@ -80,6 +109,86 @@ const NFTCard = (props) => {
       );
       onSave()
     }
+  };
+
+  const renderSellModal = useMemo(() => {
+    console.log('on shelf modal')
+    return (
+      <Dialog
+        customClass={styleModalContainer}
+        title='On Shelf'
+        visible
+        onCancel={() => {
+          setShowSellModal(false)
+        }}
+      >
+        <Dialog.Body>
+          {renderFormItem('Amount', <InputNumber min={1} defaultValue={1} onChange={(value) => {
+            setSellForm({
+              ...sellForm,
+              amount: value
+            })
+          }}
+          />)}
+          {renderFormItem('Type', <Select
+            style={{ width: 300 }}
+            value={sellForm.type}
+            placeholder='please choose'
+            onChange={(value) => {
+              setSellForm({
+                ...sellForm,
+                type: value
+              })
+            }}
+          >
+            <Select.Option
+              key={'DNFT'}
+              label={'DNFT'}
+              value={'DNFT'}
+            />
+            <Select.Option
+              key={'BUSD'}
+              label={'BUSD'}
+              value={'BUSD'}
+            />
+          </Select>)}
+          {renderFormItem('Price', <InputNumber controls={false} placeholder='Ethereum' value={sellForm.price} onChange={(value) => {
+            setSellForm({
+              ...sellForm,
+              price: value
+            })
+          }} />)}
+          <div className={styleCreateNFT}>Confirm</div>
+        </Dialog.Body>
+      </Dialog>
+    )
+  }, []);
+
+  const renderOffShelfModal = () => {
+    console.log('off shelf modal ')
+    return (
+      <Dialog
+        title="Tips"
+        size="tiny"
+        visible
+        onCancel={() => {
+          onShowOffShelfModal(false)
+        }}
+      >
+        <Dialog.Body>
+          <span>Are you sure off shelf the nft?</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            onShowOffShelfModal(false)
+          }}>Cancel</Button>
+          <Button type="primary" onClick={() => {
+            console.log('confirm');
+            onShowOffShelfModal(false)
+          }}>Confirm</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
   }
 
   return (
@@ -112,6 +221,8 @@ const NFTCard = (props) => {
           <div className={styleActionContainer}>{renderAction(item)}</div>
         )}
       </div>
+      {showSellModal && renderSellModal}
+      {showOffShelfModal && renderOffShelfModal}
     </div>
   );
 };
@@ -282,4 +393,48 @@ const styleChainType = css`
   font-size: 12px;
   padding: 4px 12px;
   border-radius: 8px;
+`;
+
+
+const styleCreateNFT = css`
+  background-color: #0049c6;
+  color: white;
+  padding: 10px 32px;
+  height: fit-content;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: fit-content;
+`;
+
+const styleModalContainer = css`
+  width: 564px;
+  border-radius: 10px;
+
+  .el-dialog__headerbtn .el-dialog__close {
+    color: #233a7d;
+    font-size: 12px;
+  }
+  .el-dialog__title {
+    color: #11142d;
+    font-size: 18px;
+  }
+  .el-dialog__header {
+    padding: 32px;
+  }
+  .el-dialog__body {
+    padding: 0 32px 32px 32px;
+  }
+  .el-input-number {
+    width: 300px;
+  }
+`;
+
+const styleFormItemContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  .label {
+    margin-bottom: 10px;
+  }
 `;

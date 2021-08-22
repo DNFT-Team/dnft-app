@@ -260,7 +260,7 @@ const AssetScreen = (props) => {
               <Select
                 style={{ marginRight: 20 }}
                 value={category}
-                placeholder='请选择'
+                placeholder='please choose'
                 onChange={(value) => {
                   setCategory(value)
                 }}
@@ -273,7 +273,7 @@ const AssetScreen = (props) => {
                   />
                 ))}
               </Select>
-              <Select value={sortTag} placeholder='请选择' onChange={(value) => {
+              <Select value={sortTag} placeholder='please choose' onChange={(value) => {
                 setSortTag(value)
               }}>
                 {sortTagType.map((el) => (

@@ -14,14 +14,16 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
+import { toast } from 'react-toastify';
 
 const CreateNFT = (props) => {
   const { dispatch, datas, location, address, chainType, token } = props;
 
-  console.log(token, 'token')
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
-  const [form, setForm] = useState({})
+  const [form, setForm] = useState({
+    supply: 1
+  })
 
   let history = useHistory();
 
@@ -81,6 +83,13 @@ const CreateNFT = (props) => {
   };
 
   const createNFT = async () => {
+    if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
+      toast.dark('Wrong network', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+
     try {
       const result = await post(
         '/api/v1/nft/',
@@ -92,7 +101,6 @@ const CreateNFT = (props) => {
         },
         token
       );
-      console.log(result);
       history.push('/asset');
     } catch (e) {
       console.log(e, 'e')
@@ -104,7 +112,6 @@ const CreateNFT = (props) => {
       getCollectionList();
     }
   }, [token]);
-  console.log(form, 'form')
 
   const renderFormItem = (label, item) =>
     <div className={styleFormItemContainer}>
@@ -117,7 +124,7 @@ const CreateNFT = (props) => {
       <Alert
         className={styleAlert}
         title={
-          'You have not created the collection yet.   OpenSea will include a link to this URL on this item"s detail page'
+          "You have not created the collection yet.   OpenSea will include a link to this URL on this item's detail page"
         }
         type='warning'
       />
@@ -199,19 +206,20 @@ const CreateNFT = (props) => {
               category: value
             })
           }}>
-            {cateType.map((el) => {
-              console.log(el, 'el');
-
-              return (
-                <Select.Option
-                  key={el.value}
-                  label={el.label}
-                  value={el.value}
-                />
-              );
+            {cateType.map((el) => {<Select.Option
+              key={el.value}
+              label={el.label}
+              value={el.value}
+            />
             })}
           </Select>
         )}
+        {renderFormItem('Supply', <InputNumber defaultValue={1} min={1} onChange={(value) => {
+          setForm({
+            ...form,
+            supply: value
+          })
+        }}/>)}
         {renderFormItem('BlockChain', <Input disabled placeholder={chainType} />)}
         <div className={styleCreateNFT} onClick={createNFT}>Create</div>
       </div>
