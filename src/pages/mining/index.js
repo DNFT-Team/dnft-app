@@ -831,15 +831,20 @@ const Mining = (props) => {
       <div className={styleBody}>
         <div>
           {renderFilter}
-          <Loading loading={isStakeInfoLoading} />
-          <div
-            className={styleCardList}
-            style={{ opacity: isStakeInfoLoading || isWrongNetWork ? 0.3 : 1 }}
-          >
-            {renderCard(stakeData[0], 0)}
-            {renderCard(stakeData[1], 1)}
-            {renderCard(stakeData[2], 2)}
-          </div>
+          {
+            selectedTab === 'Ongoing' &&
+            <React.Fragment>
+              <Loading loading={isStakeInfoLoading} />
+              <div
+                className={styleCardList}
+                style={{ opacity: isStakeInfoLoading || isWrongNetWork ? 0.3 : 1 }}
+              >
+                {renderCard(stakeData[0], 0)}
+                {renderCard(stakeData[1], 1)}
+                {renderCard(stakeData[2], 2)}
+              </div>
+            </React.Fragment>
+          }
         </div>
       </div>
       {renderModal(stakeData[stakeIndex])}
