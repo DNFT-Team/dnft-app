@@ -22,7 +22,8 @@ import { useHistory } from 'react-router';
 import bg from '../../images/mining/bg.svg';
 import nft from '../../images/mining/logo.svg';
 import label from '../../images/mining/label.svg';
-import defaultHeadSvg from '../../images/asset/Head.svg'
+import defaultHeadSvg from '../../images/asset/Head.svg';
+import contractSvg from '../../images/mining/contract.svg';
 
 const Mining = (props) => {
   let history = useHistory();
@@ -725,10 +726,13 @@ const Mining = (props) => {
                 style={{
                   padding: '10px 0 20px 0',
                   color: '#000',
-                  fontSize: '15px'
+                  fontSize: '15px',
+                  display: 'flex',
+                  alignItems :'center'
                 }}
               >
-                Contract
+                <img style={{width:18, height:18, marginRight: '8px'}} src={contractSvg} />
+                <span>Contract</span>
               </span>
               <span>Description ：</span>
               <span style={{ color: '#8F9BBA' }}>
@@ -1226,9 +1230,6 @@ const styleClaimInfo = css`
   flex-direction: column;
   font-size: 14px;
   color: #233a7d;
-  span {
-    margin-bottom: 4px;
-  }
 `;
 
 const styleTag = css`
