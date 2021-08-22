@@ -167,8 +167,8 @@ const AssetScreen = (props) => {
           <div className={styleIcon}>
             <img src={nfIconSvg} />
           </div>
-          <span className={styleCoinName}>DNF</span>
-          <span>{balance}</span>
+          <span className={styleCoinName}>{chainType}</span>
+          <span>{chainType === 'DNFT' && balance }</span>
         </div>
         <div
           className={styleCreateNFT}
