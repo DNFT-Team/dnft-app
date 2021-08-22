@@ -69,20 +69,11 @@ const CreateNFT = (props) => {
         },
         token
       );
-
       setOptions(
-        data?.data?.content?.map((item) => {
-          let dealWithItem = {
-            label: item.name,
-            value: item.id,
-          };
-          return dealWithItem;
-        }).concat([
-          {
-            value: 'other',
-            label: 'New collection +',
-          },
-        ])
+        data?.data?.content?.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
       );
     } catch (e) {
       console.log(e, 'e')
@@ -197,6 +188,7 @@ const CreateNFT = (props) => {
               })
             }}
           >
+            <Select.Option key='other' label='New collection +' value='other'/>
             {options.map((el) =>
               <Select.Option
                 key={el.value}
@@ -234,6 +226,13 @@ const CreateNFT = (props) => {
       </div>
       {showCreateCollection && (
         <CreateCollectionModal
+          address={address}
+          chainType={chainType}
+          token={token}
+          onSuccess={(res) => {
+            //  do your callback here
+            console.log(res);
+          }}
           onClose={() => {
             setShowCreateCollection(false);
           }}
@@ -299,7 +298,6 @@ const styleCreateNFT = css`
   background-color: #0049c6;
   color: white;
   padding: 18px 42px;
-  height: 20px;
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;

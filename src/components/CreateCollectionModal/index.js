@@ -1,9 +1,15 @@
 import { Dialog, Input, Upload } from 'element-react';
 import { css } from 'emotion';
 import React from 'react';
+import { toast } from 'react-toastify';
+import { post } from 'utils/request';
 
 const CreateCollectionModal = (props) => {
-  const { onClose } = props;
+  // console.log('CreateCollectionModal', props);
+  const {
+    onClose, onSuccess, //  callback
+    chainType, token, address //  req-payloads
+  } = props;
 
   const renderFormItem = (label, item) => {
     console.log(label, 'label');
@@ -14,6 +20,35 @@ const CreateCollectionModal = (props) => {
       </div>
     );
   };
+  const createColl = async () => {
+    if (!token || !address) {return}
+    if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
+      toast.warning('Wrong network', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    try {
+      const result = await post(
+        '/api/v1/collection/',
+        {
+          address,
+          chainType,
+          avatorUrl: '',
+          name: 'im a coll',
+          description: 'im a desc'
+        },
+        token
+      );
+      console.log(result, 'result')
+      onSuccess(result)
+    } catch (e) {
+      console.log(e, 'e')
+      toast.error(e, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  }
 
   return (
     <Dialog
@@ -35,10 +70,10 @@ const CreateCollectionModal = (props) => {
         >
           <i className='el-icon-upload2'></i>
           <div className='el-upload__text'>
-            PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
+            PNG, GIF, WEBP. Max 1Gb.
           </div>
         </Upload>
-        {renderFormItem('Your Full Name', <Input placeholder='e. g. David' />)}
+        {renderFormItem('Name', <Input placeholder='e. g. David' />)}
         {renderFormItem('BlockChain', <Input placeholder='Ethereum' />)}
         {renderFormItem(
           'Description',
@@ -48,7 +83,7 @@ const CreateCollectionModal = (props) => {
             autosize={{ minRows: 4, maxRows: 4 }}
           />
         )}
-        <div className={styleCreateNFT}>Create</div>
+        <div className={styleCreateNFT} onClick={createColl}>Create</div>
       </Dialog.Body>
     </Dialog>
   );
