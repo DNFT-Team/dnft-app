@@ -38,48 +38,55 @@ const CreateNFT = (props) => {
   ];
 
   const uploadFile = async (file) => {
-    const fileData = new FormData();
-    fileData.append('file', file);
+    try {
+      const fileData = new FormData();
+      fileData.append('file', file);
 
-    const { data } = await ipfs_post(
-      '/api/v0/add',
-      fileData
-    );
+      const { data } = await ipfs_post(
+        '/api/v0/add',
+        fileData
+      );
 
-    setForm({
-      ...form,
-      avatorUrl: data.Hash
-    })
-    // http://92.205.29.153:8080/ipfs/QmUGKvgHdTuiwySEBJryAjAzQLFpgCFt4tDCRLrqW3Pfw4
+      setForm({
+        ...form,
+        avatorUrl: data.Hash
+      })
+    } catch (e) {
+      console.log(e, 'e')
+    }
   };
 
   const getCollectionList = async () => {
-    const { data } = await post(
-      '/api/v1/collection/batch',
-      {
-        address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
-        sortOrder: 'ASC',
-        sortTag: 'createTime',
-        page: 0,
-        size: 10,
-      },
-      token
-    );
-
-    setOptions(
-      data?.data?.content?.map((item) => {
-        let dealWithItem = {
-          label: item.name,
-          value: item.id,
-        };
-        return dealWithItem;
-      }).concat([
+    try {
+      const { data } = await post(
+        '/api/v1/collection/batch',
         {
-          value: 'other',
-          label: 'New collection +',
+          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          sortOrder: 'ASC',
+          sortTag: 'createTime',
+          page: 0,
+          size: 10,
         },
-      ])
-    );
+        token
+      );
+
+      setOptions(
+        data?.data?.content?.map((item) => {
+          let dealWithItem = {
+            label: item.name,
+            value: item.id,
+          };
+          return dealWithItem;
+        }).concat([
+          {
+            value: 'other',
+            label: 'New collection +',
+          },
+        ])
+      );
+    }catch (e) {
+      console.log(e, 'e')
+    }
   };
 
   const createNFT = async () => {

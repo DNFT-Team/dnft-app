@@ -266,7 +266,7 @@ const Mining = (props) => {
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined);
         setStateData(initState);
-        getBalance();
+        init();
       });
     } else {
       alert('Please install wallet');
@@ -444,7 +444,7 @@ const Mining = (props) => {
           <div className={styleTableBody}>
             <span>DNF</span>
             <span>{stakeInfo?.rewardRate}</span>
-            <span>{stakeInfo?.duration}days</span>
+            <span>{Math.round(stakeInfo?.duration)}days</span>
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
@@ -797,7 +797,7 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            DNF staking（{stakeInfo?.duration}days）
+            DNF staking（{Math.round(stakeInfo?.duration)}days）
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
@@ -1038,17 +1038,18 @@ const styleCardButton = css`
 
 const styleTab = css`
   color: #8588a7;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 16px;
   cursor: pointer;
 `;
 
 const activeTab = css`
-  color: #ff313c;
+  color: #112DF2;
+  font-weight: bold;
 `;
 
 const styleModalContainer = css`
-  width: 950px;
+  width: 650px;
   border-radius: 10px;
   padding: 24px 42px;
   overflow: auto;
@@ -1073,7 +1074,7 @@ const styleModalContainer = css`
     font-size: 24px;
   }
   .el-dialog__body {
-    padding: 20px 16px;
+    padding: 0;
   }
 `;
 
@@ -1093,7 +1094,7 @@ const styleBodyTitle = css`
 const styleBodyTips = css`
   font-weight: 600;
   font-size: 17px;
-  /* color: #49c1ab; */
+  color: #49C1AB;
 `;
 
 const styleTableHeader = css`
@@ -1102,7 +1103,7 @@ const styleTableHeader = css`
   color: #8f9bba;
   display: flex;
   justify-content: space-between;
-  margin-top: 50px;
+  margin-top: 30px;
   padding: 10px 0 10px 50px;
   span {
     display: flex;
@@ -1117,7 +1118,8 @@ const styleTableBody = css`
   display: flex;
   justify-content: space-between;
   padding: 10px 0 10px 50px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
+  align-items: center;
   span {
     display: flex;
     flex: 1;
@@ -1134,6 +1136,7 @@ const styleTableBody = css`
 const styleStakeTips = css`
   font-size: 14px;
   color: #8f9bba;
+  letter-spacing: -1px;
 `;
 
 const styleApproveButton = css`
@@ -1145,7 +1148,7 @@ const styleApproveButton = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 54px;
+  margin-top: 28px;
   cursor: pointer;
 
   .circular {
@@ -1226,7 +1229,7 @@ const styleUnstakeContainer = css`
   flex-direction: column;
   flex: 1;
   overflow: auto;
-  min-height: 300px;
+  min-height: 200px;
   max-height: 50vh;
 `;
 

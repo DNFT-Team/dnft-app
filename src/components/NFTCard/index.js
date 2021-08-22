@@ -23,14 +23,10 @@ const NFTCard = (props) => {
     setShowOffShelfModal(true)
   }
 
-  const renderFormItem = (label, item) => {
-    console.log(label, 'label');
-    return (
-      <div className={styleFormItemContainer}>
-        <div className='label'>{label}</div>
-        {item}
-      </div>
-    );
+  const renderFormItem = (label, item) => {<div className={styleFormItemContainer}>
+    <div className='label'>{label}</div>
+    {item}
+  </div>
   };
 
   const renderAction = (item) => {

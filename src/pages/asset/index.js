@@ -65,20 +65,24 @@ const AssetScreen = (props) => {
   };
 
   const getNFTList = async () => {
-    const { data } = await post(
-      '/api/v1/nft/batch',
-      {
-        address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
-        category: category,
-        sortOrder: 'ASC',
-        status: selectedTab.value,
-        sortTag: sortTag,
-        page: 0,
-        size: 10
-      },
-      token
-    );
-    setList(data?.data?.content || [])
+    try {
+      const { data } = await post(
+        '/api/v1/nft/batch',
+        {
+          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          category: category,
+          sortOrder: 'ASC',
+          status: selectedTab.value,
+          sortTag: sortTag,
+          page: 0,
+          size: 10
+        },
+        token
+      );
+      setList(data?.data?.content || [])
+    } catch (e) {
+      console.log(e, 'e')
+    }
   }
 
   useEffect(() => {
