@@ -704,18 +704,26 @@ const Mining = (props) => {
               />
             </div>
             <div className={styleClaimInfo}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <span
+                  style={{
+                    fontWeight: 900,
+                    fontSize: 20,
+                    color: '#1B2559',
+                  }}
+                >
+                  Shanghaibar
+                </span>
+                <span className={styleTag}>On sale</span>
+              </div>
               <span
                 style={{
-                  fontWeight: 900,
-                  fontSize: 20,
-                  color: '#1B2559',
-                }}
-              >
-                Shanghaibar
-              </span>
-              <span
-                style={{
-                  padding: '15px 0 20px 0',
+                  padding: '10px 0 20px 0',
+                  color: '#000',
+                  fontSize: '15px'
                 }}
               >
                 Contract
@@ -1051,14 +1059,15 @@ const activeTab = css`
 const styleModalContainer = css`
   width: 650px;
   border-radius: 10px;
-  padding: 24px 42px;
+  padding: 30px 20px;
   overflow: auto;
 
   .el-dialog__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0;
+    padding: 0 0 24px 0;
+    border-bottom: 1px solid #F2F2F2;
     &::before,
     &::after {
       display: none;
@@ -1066,8 +1075,8 @@ const styleModalContainer = css`
   }
 
   .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 24px;
+    color: #575D6F;
+    font-size: 16px;
   }
   .el-dialog__title {
     color: #233a7d;
@@ -1191,7 +1200,7 @@ const styleClaimCardContainer = css`
   background: #ffffff;
   box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.05);
   border-radius: 14px;
-  padding: 30px;
+  padding: 30px 22px;
   display: flex;
   flex-direction: row;
 `;
@@ -1199,6 +1208,9 @@ const styleClaimCardContainer = css`
 const stylePicture = css`
   width: 250px;
   margin-right: 20px;
+  img {
+    border-radius: 10px 0 0 10px;
+  }
 `;
 
 const styleClaimInfo = css`
@@ -1209,6 +1221,14 @@ const styleClaimInfo = css`
   span {
     margin-bottom: 4px;
   }
+`;
+
+const styleTag = css`
+  background: #D8F6F0;
+  padding: 4px 12px;
+  border-radius: 5px;
+  color: #169981;
+  margin-left: 14px;
 `;
 
 const styleUnStake = css`
