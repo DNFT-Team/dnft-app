@@ -1,27 +1,37 @@
+import React, {useEffect, useState} from 'react';
 import { Dialog, Input, Upload } from 'element-react';
-import { css } from 'emotion';
-import React from 'react';
+import { Badge, Text } from '@chakra-ui/react'
 import { toast } from 'react-toastify';
+import { css } from 'emotion';
 import { post } from 'utils/request';
+
+const COLL_SCHEMA = {chainType: '',  address: '',  avatorUrl: '', name: '', description: '', }
 
 const CreateCollectionModal = (props) => {
   // console.log('CreateCollectionModal', props);
   const {
     onClose, onSuccess, //  callback
-    chainType, token, address //  req-payloads
+    token,  //  req-token
+    isNew = false, // editStatus
+    formDs = COLL_SCHEMA //  form Data
   } = props;
+  const [colData, setColData] = useState(COLL_SCHEMA)
+  useEffect(() => {
+    setColData({
+      ...COLL_SCHEMA,
+      ...formDs
+    })
+  })
 
-  const renderFormItem = (label, item) => {
-    console.log(label, 'label');
-    return (
-      <div className={styleFormItemContainer}>
-        <div className='label'>{label}</div>
-        {item}
-      </div>
-    );
-  };
-  const createColl = async () => {
-    if (!token || !address) {return}
+  const renderFormItem = (label, item) => (
+    <div className={styleFormItemContainer}>
+      <div className='label'>{label}</div>
+      {item}
+    </div>
+  );
+  const submitColl = async () => {
+    const {address, chainType} = colData
+    if (token || !address) {return}
     if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
       toast.warning('Wrong network', {
         position: toast.POSITION.TOP_CENTER,
@@ -29,15 +39,10 @@ const CreateCollectionModal = (props) => {
       return;
     }
     try {
+      // const url = isNew?'collection':'collection/edit'
       const result = await post(
         '/api/v1/collection/',
-        {
-          address,
-          chainType,
-          avatorUrl: '',
-          name: 'im a coll',
-          description: 'im a desc'
-        },
+        colData,
         token
       );
       console.log(result, 'result')
@@ -53,7 +58,7 @@ const CreateCollectionModal = (props) => {
   return (
     <Dialog
       customClass={styleModalContainer}
-      title='Create your collection'
+      title={`${!isNew ? 'Edit' : 'Create'} your collection`}
       visible
       onCancel={onClose}
     >
@@ -73,8 +78,16 @@ const CreateCollectionModal = (props) => {
             PNG, GIF, WEBP. Max 1Gb.
           </div>
         </Upload>
+        <Text mb="2rem">
+          Network
+          <Badge
+            variant="solid" borderRadius="14px"
+            bg="brand.600" color="white"
+            p=".2rem 1.4rem" ml={2}
+            fontSize="1.2em" fontWeight="bold"
+          >{colData.chainType || 'Unknown Net'}</Badge>
+        </Text>
         {renderFormItem('Name', <Input placeholder='e. g. David' />)}
-        {renderFormItem('BlockChain', <Input placeholder='Ethereum' />)}
         {renderFormItem(
           'Description',
           <Input
@@ -83,7 +96,7 @@ const CreateCollectionModal = (props) => {
             autosize={{ minRows: 4, maxRows: 4 }}
           />
         )}
-        <div className={styleCreateNFT} onClick={createColl}>Create</div>
+        <div className={styleCreateNFT} onClick={submitColl}>Submit</div>
       </Dialog.Body>
     </Dialog>
   );
@@ -112,7 +125,6 @@ const styleCreateNFT = css`
   background-color: #0049c6;
   color: white;
   padding: 18px 42px;
-  height: 20px;
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;

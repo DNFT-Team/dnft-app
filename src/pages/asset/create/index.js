@@ -226,9 +226,9 @@ const CreateNFT = (props) => {
       </div>
       {showCreateCollection && (
         <CreateCollectionModal
-          address={address}
-          chainType={chainType}
+          formDs={{address, chainType}}
           token={token}
+          isNew
           onSuccess={(res) => {
             //  do your callback here
             console.log(res);

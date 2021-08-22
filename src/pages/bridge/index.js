@@ -212,11 +212,10 @@ const BridgeScreen = (props) => {
                 <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem'}} /> Learn how to cross
               </Link>
               <Text color="brand.100" className={styles.subTitle} lineHeight="2rem">
-                Swift, easy and reliable solution to cross your DNF over chains<br/>
-                The whole process of cross-chain is as easy as 1,2,3<br/>
-                - 1. Packing data<br/>
-                - 2. Transfer transaction confirm<br/>
-                - 3. Trading-center withdrawal
+                The whole process of providing a quick, simple and reliable solution to get your DNF running across the chain in just 3 short steps, as shown below:<br/>
+                1. Swiftly data packing<br/>
+                2. Reliable transaction confirmation after data transfer<br/>
+                3. Easily withdraw your money from Trading-center
               </Text>
               <Grid
                 gap={4}

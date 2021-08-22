@@ -104,7 +104,7 @@ const GlobalHeader = (props) => {
 
         setCurrentNetIndex(currentIndex);
       });
-      let params = {address:ethereum.selectedAddress,chainType:NET_WORK_VERSION[ethereum.networkVersion]}
+      let params = {address: ethereum.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
       // 存储address
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
@@ -114,7 +114,7 @@ const GlobalHeader = (props) => {
           console.log(accounts[0], address)
         }
         setAddress(accounts[0]);
-        let params = {address:accounts[0],chainType:NET_WORK_VERSION[ethereum.networkVersion]}
+        let params = {address: accounts[0], chainType: NET_WORK_VERSION[ethereum.networkVersion]}
 
         dispatch(setProfileAddress(params))
         dispatch(setProfileToken(params))
@@ -208,7 +208,7 @@ const GlobalHeader = (props) => {
         {currentNetIndex != undefined && (
           <React.Fragment>
             <div
-              style={{background:'transparent'}}
+              style={{background: 'transparent'}}
               className={actionItem}
               onClick={() => {
                 setIsNetListVisible(true);
