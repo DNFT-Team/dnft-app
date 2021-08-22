@@ -1194,6 +1194,7 @@ const styleInputContainer = css`
     background: transparent;
     height: 50px;
     font-size: 20px;
+    text-align: right;
   }
 `;
 
