@@ -450,9 +450,9 @@ const Mining = (props) => {
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Stake</span>
-                <span>Balance: {balance}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom:'8px' }}>
+                <span style={{color: '#000000'}}>Stake</span>
+                <span>Balance: <span style={{color: '#FF313C', fontSize: '17px'}}>{balance}</span></span>
               </div>
               <div className={styleInputContainer}>
                 <div className={styleStakeDNF}>DNF</div>
@@ -1153,10 +1153,11 @@ const styleStakeTips = css`
   font-size: 14px;
   color: #8f9bba;
   letter-spacing: -1px;
+  margin-top: 15px;
 `;
 
 const styleApproveButton = css`
-  width: 152px;
+  width: 134px;
   height: 46px;
   background: #112df2;
   color: #ffffff;
@@ -1182,12 +1183,12 @@ const styleInputContainer = css`
   border-radius: 10px;
   display: flex;
   flex-direction: row;
-  height: 64px;
+  height: 50px;
   margin: 5px 0;
   input {
     border: none;
     background: transparent;
-    height: 64px;
+    height: 50px;
     font-size: 20px;
   }
 `;
