@@ -99,7 +99,7 @@ const CreateNFT = (props) => {
           createNFTAbi,
           contractAddress
         );
-        const createNFTResult = myContract.methods
+        const createNFTResult = await myContract.methods
           .create({
             _initialOwner: address,
             _initialSupply: form.supply,
@@ -110,14 +110,16 @@ const CreateNFT = (props) => {
           .send({
             from: address,
           });
-        if (createNFTResult) {
+        if (createNFTResult.transactionHash) {
           const result = await post(
             '/api/v1/nft/',
             {
               ...form,
               address: address,
               chainType: chainType,
-              hash: createNFTResult,
+              hash: createNFTResult.transactionHash,
+              tokenId: createNFTResult.tokenId,
+              tokenAddr: contractAddress
             },
             token
           );

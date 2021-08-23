@@ -23,9 +23,13 @@ import nft from '../../images/mining/logo.svg';
 import label from '../../images/mining/label.svg';
 import defaultHeadSvg from '../../images/asset/Head.svg';
 import contractSvg from '../../images/mining/contract.svg';
+import { post } from 'utils/request';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const Mining = (props) => {
   let history = useHistory();
+  const { token } = props;
 
   const initState = useMemo(
     () => ({
@@ -693,10 +697,11 @@ const Mining = (props) => {
 
   const renderClaim = useCallback(
     (stakeInfo) => {
-      const isValidGetNft =
-        stakeInfo?.isRewardNft?.[0] === true &&
-        stakeInfo?.isRewardNft?.[1] === false;
+      // const isValidGetNft =
+      //   stakeInfo?.isRewardNft?.[0] === true &&
+      //   stakeInfo?.isRewardNft?.[1] === false;
 
+      const isValidGetNft = true
       return (
         <div>
           <div className={styleClaimCardContainer}>
@@ -775,9 +780,29 @@ const Mining = (props) => {
                     contractAddress
                   );
 
-                  await stakeContract.methods.claimNft().send({
+                  let result =  await stakeContract.methods.claimNft().send({
                     from: stakeInfo.account,
                   });
+                  console.log(result, 'result')
+
+                  if (result.transactionHash) {
+                    const nftTokenId = result.events.Claim.returnValues.nftTokenId;
+                    const result = await post(
+                      '/api/v1/nft/',
+                      {
+                        name: nftTokenId,
+                        supply: 1,
+                        avatorUrl: `https://dnft.world/staking/pool${nftTokenId}.png`,
+                        address: stakeInfo.account,
+                        chainType: 'BSC',
+                        hash: result.transactionHash,
+                        tokenId: nftTokenId,
+                        tokenAddr: contractAddress
+                      },
+                      token
+                    );
+                  }
+
                 } finally {
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isClaiming = false;
@@ -855,7 +880,11 @@ const Mining = (props) => {
     </div>
   );
 };
-export default Mining;
+
+const mapStateToProps = ({ profile }) => ({
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(Mining));
 
 const styleContainer = css`
   background: #f5f7fa;
