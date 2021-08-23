@@ -11,13 +11,16 @@ import DataDetailScreen from 'pages/data/detail';
 import ProfileEditScreen from 'pages/profile/edit'
 import CreateNFT from 'pages/asset/create'
 
+/*
+  reqComing - 是否需要显示coming-soon
+ */
 const MENU_MAP = [
   { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
   { path: '/mining', Component: MiningScreen, navName: 'Mining' },
   { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
-  { path: '/market', exact: true, Component: MarketScreen, navName: 'Market'},
+  { path: '/market', exact: true, Component: MarketScreen, navName: 'Market', reqComing: true},
   { path: '/igo', Component: IGOScreen, navName: 'IGO' },
-  { path: '/data', exact: true, Component: DataScreen, navName: 'Data', },
+  { path: '/data', exact: true, Component: DataScreen, navName: 'Data', reqComing: true },
 
 ];
 const ROUTER_MAP = [

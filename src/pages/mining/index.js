@@ -1,5 +1,4 @@
 import { Dialog, Input, Loading } from 'element-react';
-import SoonModal from './../../components/SoonModal';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -451,7 +450,7 @@ const Mining = (props) => {
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom:'8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{color: '#000000'}}>Stake</span>
                 <span>Balance: <span style={{color: '#FF313C', fontSize: '17px'}}>{balance}</span></span>
               </div>
@@ -728,10 +727,10 @@ const Mining = (props) => {
                   color: '#000',
                   fontSize: '15px',
                   display: 'flex',
-                  alignItems :'center'
+                  alignItems: 'center'
                 }}
               >
-                <img style={{width:18, height:18, marginRight: '8px'}} src={contractSvg} />
+                <img style={{width: 18, height: 18, marginRight: '8px'}} src={contractSvg} />
                 <span>Contract</span>
               </span>
               <span>Description ：</span>
@@ -832,7 +831,6 @@ const Mining = (props) => {
 
   return (
     <div className={styleContainer}>
-      <SoonModal/>
       {renderAssetHeader}
       <div className={styleBody}>
         <div>

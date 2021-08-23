@@ -1,8 +1,8 @@
 import React from 'react';
 import comHead from './dnft_head.png';
 import comSoon from './coming_soon.gif';
-const flag = 2 // 1---主网，2---测试服
-const SoonModal = (props) => flag === 2 ? '' : (
+import globalConfig from '../../config'
+const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
   <div style={{
     zIndex: 888,
     background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
@@ -48,5 +48,5 @@ const SoonModal = (props) => flag === 2 ? '' : (
       }}>Coming Soon</p>
     </div>
   </div>
-)
+))
 export default SoonModal
