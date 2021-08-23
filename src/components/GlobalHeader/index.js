@@ -19,6 +19,7 @@ import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
 import hecoSvg from '../../images/networks/logo_heco.svg'
 import dnftSvg from '../../images/networks/logo_dnft.svg'
+import globalConf from '../../config'
 
 
 // import { toast } from 'react-toastify';
@@ -166,6 +167,7 @@ const GlobalHeader = (props) => {
         <i className='el-icon-search' />
         <Input placeholder={'Search Art,Game or Fun'} />
       </div>
+      <span>{globalConf.net_env}</span>
       <div className={styles.actionContainer}>
         <span
           className={address ? '' : styleAddress}
