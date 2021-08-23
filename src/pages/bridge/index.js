@@ -325,7 +325,7 @@ const BridgeScreen = (props) => {
                     </Text>
                     <Divider style={{margin: '1rem .8rem'}}/>
                     <p>Transfer {transaction.amount} DNF from {transaction.from} to {transaction.to} at {new Date(transaction.timestamp).toISOString()}</p>
-                    <p>You can check via this hash:<Link color="brand.600">{transaction.hash}</Link> </p>
+                    <p>You can check via this hash:<Link href={`https://etherscan.io/tx/${transaction.hash}`} color="brand.600" isExternal>{transaction.hash}</Link> </p>
                   </Box>
                 </Fade>) : ''}
               </Box>
