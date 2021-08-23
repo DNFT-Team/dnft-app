@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { Dialog, Input, Upload } from 'element-react';
-import { Badge, Text } from '@chakra-ui/react'
+import { Input, Upload } from 'element-react';
+import {
+  Badge, Text, Button, IconButton,
+  Modal, ModalOverlay,
+  ModalHeader, ModalFooter,
+  ModalBody, ModalContent
+} from '@chakra-ui/react'
+import {Icon} from '@iconify/react'
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
 import { post } from 'utils/request';
@@ -28,7 +34,7 @@ const CreateCollectionModal = (props) => {
   );
   const submitColl = async () => {
     const {address, chainType} = colData
-    if (token || !address) {return}
+    if (!token || !address) {return}
     if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
       toast.warning('Wrong network', {
         position: toast.POSITION.TOP_CENTER,
@@ -43,10 +49,18 @@ const CreateCollectionModal = (props) => {
       return
     }
     try {
-      const url = `/api/v1/${isNew ? 'collection' : 'collection/update'}`
-      const result = await post(url, colData, token);
-      console.log(result, 'result')
-      onSuccess(result)
+      const url = `/api/v1/${isNew ? 'collection/' : 'collection/update'}`
+      const {data} = await post(url, colData, token);
+      if (data.success) {
+        toast.success(data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        onSuccess(data)
+      } else {
+        toast.error(data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
     } catch (e) {
       console.log(e, 'e')
       toast.error(e, {
@@ -56,67 +70,78 @@ const CreateCollectionModal = (props) => {
   }
 
   return (
-    <Dialog
-      customClass={styleModalContainer}
-      title={`${!isNew ? 'Edit' : 'Create'} your collection`}
-      visible
-      onCancel={onClose}
-    >
-      <Dialog.Body>
-        <Upload
-          className={styleUploadContainer}
-          drag
-          showFileList={false}
-          action='//jsonplaceholder.typicode.com/posts/'
-          tip={
-            <div className='el-upload__tip'>
-              Drag or choose your file to upload
+    <Modal closeOnOverlayClick={false} blockScrollOnMount={false}  borderRadius="10px"
+      isCentered isOpen onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent width="564px" maxW="60vw">
+        <ModalHeader color="#11142d"
+          p="32px" fontSize="18px"
+          display="flex" justifyContent="space-between"
+          alignItems="center">
+          {`${!isNew ? 'Edit' : 'Create'} your collection`}
+          <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
+            icon={<Icon icon="mdi:close"/>}/>
+        </ModalHeader>
+        <ModalBody p="0 32px">
+          <Upload
+            className={styleUploadContainer}
+            drag
+            showFileList={false}
+            action='//jsonplaceholder.typicode.com/posts/'
+            tip={
+              <div className='el-upload__tip'>
+                    Drag or choose your file to upload
+              </div>
+            }
+          >
+            <i className='el-icon-upload2' />
+            <div className='el-upload__text'>
+                PNG, GIF, WEBP. Max 1Gb.
             </div>
-          }
-        >
-          <i className='el-icon-upload2' />
-          <div className='el-upload__text'>
-            PNG, GIF, WEBP. Max 1Gb.
-          </div>
-          {colData.avatorUrl ? <img src={colData.avatorUrl} alt="avatar"/> : ''}
-        </Upload>
-        <Text mb="2rem">
-          Network
-          <Badge
-            variant="solid" borderRadius="14px"
-            bg="brand.600" color="white"
-            p=".2rem 1.4rem" ml={2}
-            fontSize="1.2em" fontWeight="bold"
-          >{colData.chainType || 'Unknown Net'}</Badge>
-        </Text>
-        {renderFormItem(
-          'Name',
-          <Input
-            placeholder='e. g. David'
-            onChange={(value) => {
-              setColData({
-                ...colData,
-                name: value
-              })
-            }}/>
-        )}
-        {renderFormItem(
-          'Description',
-          <Input
-            type='textarea'
-            placeholder='e. g. David'
-            autosize={{ minRows: 4, maxRows: 4 }}
-            onChange={(value) => {
-              setColData({
-                ...colData,
-                description: value
-              })
-            }}
-          />
-        )}
-        <div className={styleCreateNFT} onClick={submitColl}>Submit</div>
-      </Dialog.Body>
-    </Dialog>
+            {colData.avatorUrl ? <img src={colData.avatorUrl} alt="avatar"/> : ''}
+          </Upload>
+          <Text mb="2rem">
+              Network
+            <Badge
+              variant="solid"
+              bg="brand.400" color="white"
+              p=".2rem 1.4rem" ml={4}
+              fontSize="1.2em" fontWeight="bold"
+            >{colData.chainType || 'Unknown Net'}</Badge>
+          </Text>
+          {renderFormItem(
+            'Name',
+            <Input
+              placeholder='e. g. David'
+              onChange={(value) => {
+                setColData({
+                  ...colData,
+                  name: value
+                })
+              }}/>
+          )}
+          {renderFormItem(
+            'Description',
+            <Input
+              type='textarea'
+              placeholder='e. g. David'
+              autosize={{ minRows: 4, maxRows: 4 }}
+              onChange={(value) => {
+                setColData({
+                  ...colData,
+                  description: value
+                })
+              }}
+            />
+          )}
+
+        </ModalBody>
+        <ModalFooter justifyContent="flex-start">
+          <Button colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
+            onClick={submitColl}>Submit</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 export default CreateCollectionModal;
@@ -136,36 +161,6 @@ const styleUploadContainer = css`
     .el-upload__text {
       margin-top: 10px;
     }
-  }
-`;
-
-const styleCreateNFT = css`
-  background-color: #0049c6;
-  color: white;
-  padding: 18px 42px;
-  font-size: 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  width: fit-content;
-`;
-
-const styleModalContainer = css`
-  width: 564px;
-  border-radius: 10px;
-
-  .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 12px;
-  }
-  .el-dialog__title {
-    color: #11142d;
-    font-size: 18px;
-  }
-  .el-dialog__header {
-    padding: 32px;
-  }
-  .el-dialog__body {
-    padding: 0 32px 32px 32px;
   }
 `;
 

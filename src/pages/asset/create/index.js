@@ -1,6 +1,5 @@
 import {
   Alert,
-  Dialog,
   Input,
   InputNumber,
   Select,
@@ -226,12 +225,12 @@ const CreateNFT = (props) => {
       </div>
       {showCreateCollection && (
         <CreateCollectionModal
-          formDs={{address, chainType}}
+          formDs={{address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628', chainType}}
           token={token}
           isNew
-          onSuccess={(res) => {
+          onSuccess={() => {
             //  do your callback here
-            console.log(res);
+            setShowCreateCollection(false);
             getCollectionList()
           }}
           onClose={() => {
