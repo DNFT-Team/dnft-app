@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { Dialog, Input, Upload } from 'element-react';
 import { Badge, Text } from '@chakra-ui/react'
 import { toast } from 'react-toastify';
@@ -15,12 +15,9 @@ const CreateCollectionModal = (props) => {
     isNew = false, // editStatus
     formDs = COLL_SCHEMA //  form Data
   } = props;
-  const [colData, setColData] = useState(COLL_SCHEMA)
-  useEffect(() => {
-    setColData({
-      ...COLL_SCHEMA,
-      ...formDs
-    })
+  const [colData, setColData] = useState({
+    ...COLL_SCHEMA,
+    ...formDs
   })
 
   const renderFormItem = (label, item) => (
@@ -38,13 +35,16 @@ const CreateCollectionModal = (props) => {
       });
       return;
     }
+    colData.name = colData.name.trim()
+    if (!colData.name) {
+      toast.warning('Name is required', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return
+    }
     try {
-      // const url = isNew?'collection':'collection/edit'
-      const result = await post(
-        '/api/v1/collection/',
-        colData,
-        token
-      );
+      const url = `/api/v1/${isNew ? 'collection' : 'collection/update'}`
+      const result = await post(url, colData, token);
       console.log(result, 'result')
       onSuccess(result)
     } catch (e) {
@@ -66,6 +66,7 @@ const CreateCollectionModal = (props) => {
         <Upload
           className={styleUploadContainer}
           drag
+          showFileList={false}
           action='//jsonplaceholder.typicode.com/posts/'
           tip={
             <div className='el-upload__tip'>
@@ -73,10 +74,11 @@ const CreateCollectionModal = (props) => {
             </div>
           }
         >
-          <i className='el-icon-upload2'></i>
+          <i className='el-icon-upload2' />
           <div className='el-upload__text'>
             PNG, GIF, WEBP. Max 1Gb.
           </div>
+          {colData.avatorUrl ? <img src={colData.avatorUrl} alt="avatar"/> : ''}
         </Upload>
         <Text mb="2rem">
           Network
@@ -87,13 +89,29 @@ const CreateCollectionModal = (props) => {
             fontSize="1.2em" fontWeight="bold"
           >{colData.chainType || 'Unknown Net'}</Badge>
         </Text>
-        {renderFormItem('Name', <Input placeholder='e. g. David' />)}
+        {renderFormItem(
+          'Name',
+          <Input
+            placeholder='e. g. David'
+            onChange={(value) => {
+              setColData({
+                ...colData,
+                name: value
+              })
+            }}/>
+        )}
         {renderFormItem(
           'Description',
           <Input
             type='textarea'
             placeholder='e. g. David'
             autosize={{ minRows: 4, maxRows: 4 }}
+            onChange={(value) => {
+              setColData({
+                ...colData,
+                description: value
+              })
+            }}
           />
         )}
         <div className={styleCreateNFT} onClick={submitColl}>Submit</div>

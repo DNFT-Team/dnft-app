@@ -232,6 +232,7 @@ const CreateNFT = (props) => {
           onSuccess={(res) => {
             //  do your callback here
             console.log(res);
+            getCollectionList()
           }}
           onClose={() => {
             setShowCreateCollection(false);
