@@ -82,7 +82,7 @@ const NFTCard = (props) => {
       await post(
         '/api/v1/nft/like',
         {
-          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          address: address,
           like: item.isLiked ? 0 : 1,
           id: item.id
         },
@@ -97,7 +97,7 @@ const NFTCard = (props) => {
       await post(
         '/api/v1/nft/save',
         {
-          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          address: address,
           saved: item.isSaved ? 0 : 1,
           id: item.id
         },

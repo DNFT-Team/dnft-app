@@ -1,5 +1,6 @@
 import {
   Alert,
+  Button,
   Input,
   InputNumber,
   Select,
@@ -14,6 +15,9 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
+import { createNFTContract } from '../../../utils/contract';
+import { createNFTAbi } from '../../../utils/abi';
+import Web3 from 'web3';
 
 const CreateNFT = (props) => {
   const { dispatch, datas, location, address, chainType, token } = props;
@@ -21,8 +25,8 @@ const CreateNFT = (props) => {
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({
-    supply: 1
-  })
+    supply: 1,
+  });
 
   let history = useHistory();
 
@@ -41,17 +45,14 @@ const CreateNFT = (props) => {
       const fileData = new FormData();
       fileData.append('file', file);
 
-      const { data } = await ipfs_post(
-        '/api/v0/add',
-        fileData
-      );
+      const { data } = await ipfs_post('/api/v0/add', fileData);
 
       setForm({
         ...form,
-        avatorUrl: data.Hash
-      })
+        avatorUrl: data.Hash,
+      });
     } catch (e) {
-      console.log(e, 'e')
+      console.log(e, 'e');
     }
   };
 
@@ -60,7 +61,7 @@ const CreateNFT = (props) => {
       const { data } = await post(
         '/api/v1/collection/batch',
         {
-          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          address: address,
           sortOrder: 'ASC',
           sortTag: 'createTime',
           page: 0,
@@ -75,12 +76,12 @@ const CreateNFT = (props) => {
         }))
       );
     } catch (e) {
-      console.log(e, 'e')
+      console.log(e, 'e');
     }
   };
 
   const createNFT = async () => {
-    if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
+    if (!['BSC'].includes(chainType)) {
       toast.dark('Wrong network', {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -88,22 +89,44 @@ const CreateNFT = (props) => {
     }
 
     try {
-      const result = await post(
-        '/api/v1/nft/',
-        {
-          ...form,
-          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
-          chainType: chainType,
-          hash: new Date().valueOf()
-        },
-        token
-      );
-      console.log(result, 'result')
-      history.push('/asset');
+      if (window.ethereum) {
+        let ethereum = window.ethereum;
+        window.web3 = new Web3(ethereum);
+        await ethereum.enable();
+
+        const contractAddress = createNFTContract;
+        const myContract = new window.web3.eth.Contract(
+          createNFTAbi,
+          contractAddress
+        );
+        const createNFTResult = myContract.methods
+          .create({
+            _initialOwner: address,
+            _initialSupply: form.supply,
+            _uri: `http://92.205.29.153:8080/ipfs/${form.avatorUrl}`,
+            _data:
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
+          })
+          .send({
+            from: address,
+          });
+        if (createNFTResult) {
+          const result = await post(
+            '/api/v1/nft/',
+            {
+              ...form,
+              address: address,
+              chainType: chainType,
+              hash: createNFTResult,
+            },
+            token
+          );
+        }
+      }
     } catch (e) {
-      console.log(e, 'e')
+      console.log(e, 'e');
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -111,18 +134,19 @@ const CreateNFT = (props) => {
     }
   }, [token]);
 
-  const renderFormItem = (label, item) =>
+  const renderFormItem = (label, item) => (
     <div className={styleFormItemContainer}>
       <div className='label'>{label}</div>
       {item}
     </div>
+  );
 
   return (
     <React.Fragment>
       <Alert
         className={styleAlert}
         title={
-          "You have not created the collection yet.   OpenSea will include a link to this URL on this item's detail page"
+          'You have not created the collection yet.   OpenSea will include a link to this URL on this item\'s detail page'
         }
         type='warning'
       />
@@ -134,10 +158,10 @@ const CreateNFT = (props) => {
           drag
           multiple={false}
           withCredentials
-          action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
+          action='https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/'
           limit={1}
           httpRequest={(e) => {
-            uploadFile(e.file)
+            uploadFile(e.file);
           }}
           tip={
             <div className='el-upload__tip'>
@@ -151,87 +175,106 @@ const CreateNFT = (props) => {
           </div>
         </Upload>
         <h3>Item Details</h3>
-        {renderFormItem('Name', <Input placeholder='e. g. David' onChange={(value) => {
-          setForm({
-            ...form,
-            name: value
-          })
-        }}/>)}
+        {renderFormItem(
+          'Name',
+          <Input
+            placeholder='e. g. David'
+            onChange={(value) => {
+              setForm({
+                ...form,
+                name: value,
+              });
+            }}
+          />
+        )}
         {renderFormItem(
           'Description',
           <Input
             type='textarea'
-            placeholder='e. g. David'
+            placeholder='description'
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {
               setForm({
                 ...form,
-                description: value
-              })
+                description: value,
+              });
             }}
           />
         )}
         {renderFormItem(
           'Collection',
+          <div style={{
+            display: 'flex'
+          }}>
+            <Select
+              placeholder='Please choose'
+              defaultValue={form.collectionId}
+              value={form.collectionId}
+              style={{flex: 1, marginRight: '8px'}}
+              onChange={(value) => {
+                setForm({
+                  ...form,
+                  collectionId: value,
+                });
+              }}
+            >
+              {options.map((el) => (
+                <Select.Option key={el.value} label={el.label} value={el.value} />
+              ))}
+            </Select>
+            <Button onClick={() => {
+              setShowCreateCollection(true);
+            }}>+ Add</Button>
+          </div>
+        )}
+        {renderFormItem(
+          'Category',
           <Select
-            placeholder='please choose'
+            placeholder='Please choose'
             onChange={(value) => {
-              if (value === 'other') {
-                setShowCreateCollection(true);
-                return;
-              }
-
               setForm({
                 ...form,
-                collectionId: value
-              })
+                category: value,
+              });
             }}
           >
-            <Select.Option key='other' label='New collection +' value='other'/>
-            {options.map((el) =>
-              <Select.Option
-                key={el.value}
-                label={el.label}
-                value={el.value}
-              />
+            {cateType.map((el) => <Select.Option
+              key={el.value}
+              label={el.label}
+              value={el.value}
+            />
             )}
           </Select>
         )}
         {renderFormItem(
-          'Category',
-          <Select placeholder='please choose' onChange={(value) => {
-            setForm({
-              ...form,
-              category: value
-            })
-          }}>
-            {cateType.map((el) => {
-              <Select.Option
-                key={el.value}
-                label={el.label}
-                value={el.value}
-              />
-            })}
-          </Select>
+          'Supply',
+          <InputNumber
+            defaultValue={1}
+            min={1}
+            onChange={(value) => {
+              setForm({
+                ...form,
+                supply: value,
+              });
+            }}
+          />
         )}
-        {renderFormItem('Supply', <InputNumber defaultValue={1} min={1} onChange={(value) => {
-          setForm({
-            ...form,
-            supply: value
-          })
-        }}/>)}
-        {renderFormItem('BlockChain', <Input disabled placeholder={chainType} />)}
-        <div className={styleCreateNFT} onClick={createNFT}>Create</div>
+        {renderFormItem(
+          'BlockChain',
+          <Input disabled placeholder={chainType} />
+        )}
+        <div className={styleCreateNFT} onClick={createNFT}>
+          Create
+        </div>
       </div>
       {showCreateCollection && (
         <CreateCollectionModal
-          formDs={{address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628', chainType}}
+          formDs={{ address, chainType }}
           token={token}
           isNew
-          onSuccess={() => {
-            //  do your callback here
+          onSuccess={(res) => {
             setShowCreateCollection(false);
-            getCollectionList()
+            getCollectionList();
           }}
           onClose={() => {
             setShowCreateCollection(false);

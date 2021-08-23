@@ -70,7 +70,7 @@ const AssetScreen = (props) => {
       const { data } = await post(
         '/api/v1/nft/batch',
         {
-          address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
+          address: address,
           category: category,
           sortOrder: 'ASC',
           status: selectedTab.value,
