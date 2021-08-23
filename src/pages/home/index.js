@@ -29,10 +29,6 @@ const HomeScreen = (props) => {
       title: 'NFT gallery of the week',
     },
     {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'NFT gallery of the week',
-    },
-    {
       src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
       title: 'NFT gallery of the week',
     },
