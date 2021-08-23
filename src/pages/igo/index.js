@@ -10,14 +10,18 @@ import infoBg from '../../images/igo/info-bg.png';
 import people from '../../images/igo/people.png';
 import champion from '../../images/igo/champion.png';
 import asset from '../../images/igo/asset.png';
-import { busdContract, igoContract } from 'utils/contract';
+import { busdContract, igoContract, nft1155Contract } from 'utils/contract';
 import { igoAbi, busdAbi } from 'utils/abi';
 import Web3 from 'web3';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router';
+import { post } from 'utils/request';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const IGOScreen = () => {
+const IGOScreen = (props) => {
   let history = useHistory();
+  const { token } = props;
 
   const [address, setAddress] = useState();
   const [medalData, setMedalData] = useState({
@@ -162,6 +166,17 @@ const IGOScreen = () => {
     }
   }, [address]);
 
+  const getFormatName = (nftId) => {
+    switch (nftId) {
+    case '100':
+      return 'Gold';
+    case '200':
+      return 'Silver';
+    case '300':
+      return 'Bronze';
+    }
+  };
+
   const handleRaffle = useCallback(async () => {
     setIsLoading(true);
 
@@ -174,12 +189,30 @@ const IGOScreen = () => {
       const raffle = await myIgoContract.methods.raffle().send({
         from: address,
       });
+      console.log(raffle, 'raffle')
 
       toast.info(`success! txhash:${raffle.transactionHash}`, {
         position: toast.POSITION.TOP_RIGHT,
       });
 
       let nftId = raffle.events.Raffled.returnValues.nftId;
+
+      await post(
+        '/api/v1/nft/',
+        {
+          name: `${getFormatName(nftId)} Medal NFT`,
+          address: address,
+          chainType: 'BSC',
+          supply: 1,
+          hash: raffle.transactionHashraffle.transactionHash,
+          avatorUrl: `https://dnft.world/igo/${nftId}.png`,
+          tokenAddr: nft1155Contract,
+          tokenId: nftId,
+          category: 'Game'
+        },
+        token
+      );
+
       setNftId(nftId);
       setShowSuccess(false);
       setShowRaffle(true);
@@ -518,7 +551,11 @@ const IGOScreen = () => {
     </div>
   );
 };
-export default IGOScreen;
+
+const mapStateToProps = ({ profile }) => ({
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(IGOScreen));
 
 const styleContainer = css`
   background: url(${bg}) no-repeat 100% 100%;
