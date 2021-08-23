@@ -207,7 +207,8 @@ const IGOScreen = (props) => {
           hash: raffle.transactionHashraffle.transactionHash,
           avatorUrl: `https://dnft.world/igo/${nftId}.png`,
           tokenAddr: nft1155Contract,
-          tokenId: nftId
+          tokenId: nftId,
+          category: 'Game'
         },
         token
       );

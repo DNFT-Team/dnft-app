@@ -797,7 +797,8 @@ const Mining = (props) => {
                         chainType: 'BSC',
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
-                        tokenAddr: contractAddress
+                        tokenAddr: contractAddress,
+                        category: 'Art'
                       },
                       token
                     );
