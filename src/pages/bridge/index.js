@@ -175,7 +175,7 @@ const BridgeScreen = (props) => {
               amount,
               from: 'ETH',
               to: 'BSC',
-              hash: receipt
+              hash: receipt?.transactionHash
             })
             toast.success('Trade Write Success', {position: toast.POSITION.TOP_CENTER})
           })
@@ -308,11 +308,15 @@ const BridgeScreen = (props) => {
                     p="1.14rem 2.14rem"
                     onClick={submitCross}
                     isLoading={loading}
+                    loadingText="Trading..."
                   >
                     Confirm
                   </Button>
                   <Button  colorScheme="teal" variant="outline" fontSize="1.14rem" p="1.14rem 2.14rem" onClick={skipHistory}>History</Button>
                 </HStack>
+                {loading ? (<Text color="brand.600" mt="2rem" fontWeight="600">
+                  Transactions are being processed and raising fuel can speed up
+                </Text>) : ''}
                 {transaction ? (<Fade in>
                   <Box
                     mt="4" p="1.8rem"

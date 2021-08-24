@@ -186,14 +186,13 @@ const HomeScreen = (props) => {
 
   const GameCard = (src) => (
     <div className={styleCard}>
-      <img
-        src={src.item.src}
+      <div
         style={{
+          background: `center / cover no-repeat url('${src.item.src}')`,
           height: 350,
           marginBottom: 20,
           borderRadius: 10,
         }}
-        alt="img"
       />
       <div>
         <div className={styleContentContainer}>
