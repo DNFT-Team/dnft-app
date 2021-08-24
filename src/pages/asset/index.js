@@ -42,8 +42,8 @@ const AssetScreen = (props) => {
 
   const sortTagType = [
     { label: 'Most favorited', value: 'likeCount' },
-    { label: 'Price:high to low', value: 1 },
-    { label: 'Price:low to high', value: 2 },
+    { label: 'Price:high to low', value: 'ASC-price' },
+    { label: 'Price:low to high', value: 'DESC-price' },
   ];
   const [selectedTab, setSelectedTab] = useState({
     label: 'In Wallet',
@@ -53,7 +53,8 @@ const AssetScreen = (props) => {
   const [balance, setBalance] = useState(0);
   const [category, setCategory] = useState('LASTED');
   const [sortTag, setSortTag] = useState('likeCount')
-  const [list, setList] = useState()
+  const [list, setList] = useState();
+  const [sortOrder, setSortOrder] = useState('ASC')
 
   let history = useHistory();
 
@@ -66,21 +67,38 @@ const AssetScreen = (props) => {
   };
 
   const getNFTList = async () => {
+    console.log(selectedTab, 'selectedTab', selectedTab.value === 'MYFAVORITE')
     try {
-      const { data } = await post(
-        '/api/v1/nft/batch',
-        {
-          address: address,
-          category: category,
-          sortOrder: 'ASC',
-          status: selectedTab.value,
-          sortTag: sortTag,
-          page: 0,
-          size: 10
-        },
-        token
-      );
-      setList(data?.data?.content || [])
+      if (selectedTab.value === 'MYFAVORITE') {
+        const { data } = await post(
+          '/api/v1/nft/favorite',
+          {
+            address: address,
+            category: category,
+            sortOrder: sortOrder,
+            sortTag: sortTag,
+            page: 0,
+            size: 100
+          },
+          token
+        );
+        setList(data?.data?.content || [])
+      } else {
+        const { data } = await post(
+          '/api/v1/nft/batch',
+          {
+            address: address,
+            category: category,
+            sortOrder: sortOrder,
+            status: selectedTab.value,
+            sortTag: sortTag,
+            page: 0,
+            size: 100
+          },
+          token
+        );
+        setList(data?.data?.content || [])
+      }
     } catch (e) {
       console.log(e, 'e')
     }
@@ -281,7 +299,12 @@ const AssetScreen = (props) => {
                 ))}
               </Select>
               <Select value={sortTag} placeholder='please choose' onChange={(value) => {
-                setSortTag(value)
+                if (value.includes('price')) {
+                  setSortTag('price')
+                  setSortOrder(value.split('-')[0])
+                }else {
+                  setSortTag(value)
+                }
               }}>
                 {sortTagType.map((el) => (
                   <Select.Option

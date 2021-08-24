@@ -564,7 +564,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={isApproveLoading || isStakeLoading} />
-              {stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
+              {isApproveLoading || isStakeLoading ? 'loading...' : stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
             </div>
           </div>
         </div>
@@ -683,7 +683,7 @@ const Mining = (props) => {
                           styleDisableButton
                       )}
                     >
-                      UNstake
+                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'UNstake'}
                     </div>
                   </span>
                 )}
@@ -813,7 +813,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={stateData[stakeIndex].isClaiming} />
-              claim
+              {stateData[stakeIndex].isClaiming ? 'loading...' : 'Claim'}
             </div>
           </div>
         </div>

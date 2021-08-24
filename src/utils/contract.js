@@ -31,3 +31,4 @@ export const busdContract = '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
 
 // asset
 export const createNFTContract = '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955';
+export const tradableNFTContract = '0x49325F97Dbb9C88A8D63E30498b6e4232cF2F39a';

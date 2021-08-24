@@ -6,6 +6,9 @@ import {Icon} from '@iconify/react';
 import { post } from 'utils/request';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Web3 from 'web3';
+import { tradableNFTContract } from '../../utils/contract';
+import { tradableNFTAbi } from '../../utils/abi';
 
 const NFTCard = (props) => {
   const { needAction, item, index, currentStatus, token, address, onLike, onSave } = props;
@@ -23,10 +26,14 @@ const NFTCard = (props) => {
     setShowOffShelfModal(true)
   }
 
-  const renderFormItem = (label, item) => {<div className={styleFormItemContainer}>
-    <div className='label'>{label}</div>
-    {item}
-  </div>
+  const renderFormItem = (label, item) => {
+    console.log()
+    return(
+      <div className={styleFormItemContainer}>
+        <div className='label'>{label}</div>
+        {item}
+      </div>
+    )
   };
 
   const renderAction = (item) => {
@@ -154,11 +161,65 @@ const NFTCard = (props) => {
               price: value
             })
           }} />)}
-          <div className={styleCreateNFT}>Confirm</div>
+          <div className={styleCreateNFT} onClick={async () => {
+            try {
+              if (window.ethereum) {
+                let ethereum = window.ethereum;
+                window.web3 = new Web3(ethereum);
+                await ethereum.enable();
+
+                const contractAddress = tradableNFTContract;
+                const myContract = new window.web3.eth.Contract(
+                  tradableNFTAbi,
+                  contractAddress
+                );
+                const data = {
+                  _tokenAddr: item._tokenAddr,
+                  _tokenId: item._tokenId,
+                  _price: sellForm.price,
+                  _quantity: sellForm.amount
+                };
+
+                let putOnResult;
+
+                // if (sellForm.type === 'DNFT') {
+                //   putOnResult = await myContract.methods
+                //     .putOnByDnft(data)
+                //     .send({
+                //       from: address,
+                //     });
+                // } else if (sellForm.type === 'BUSD') {
+                //   putOnResult = await myContract.methods
+                //     .putOnByBusd(data)
+                //     .send({
+                //       from: address,
+                //     });
+                // }
+
+                // if (putOnResult?.orderId) {
+                const result = await post(
+                  '/api/v1/sell_up',
+                  {
+                    ...sellForm,
+                    nftId: item.id,
+                    // orderId: putOnResult.orderId
+                    orderId: 'lalala'
+                  },
+                  token
+                );
+                setShowSellModal(false)
+                // }
+              }
+
+            } catch (e) {
+              console.log(e, 'e');
+            }
+
+          }}>Confirm</div>
         </Dialog.Body>
       </Dialog>
     )
-  }, []);
+  }, [sellForm]);
 
   const renderOffShelfModal = () => {
     console.log('off shelf modal ')
