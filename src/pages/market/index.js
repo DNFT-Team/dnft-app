@@ -96,7 +96,7 @@ const AssetsScreen = (props) => {
   }
   return (
     <div className={styles.container}>
-      <SoonModal />
+      {/* <SoonModal /> */}
       <Header />
       <div className={styles.ArtContainer}>
         <div className={styles.content1}>
@@ -106,23 +106,27 @@ const AssetsScreen = (props) => {
               <div onClick={() => handleToDetail(obj)} className={styles.card} key={index}>
                 <div style={{
                   background: `center / cover no-repeat url(${obj.src})`,
-                  height: 284,
+                  height: 281,
                   marginBottom: 7,
+                  borderRadius: 14
                 }} />
                 <div className={styles.content}>
                   <span className={styles.title}>{obj.title}</span>
                   <span className={styles.starContainer}>
-                    <Icon icon="mdi:account-child-circle" />
+                    {/* <Icon icon="mdi:account-child-circle" />
                     <Icon icon="flat-color-icons:approval" />
                     <Icon icon="noto:alien" />
                     <Icon icon="logos:apple" />
-                    <Icon icon="fxemoji:2hearts" />
-                    <span className={styles.starAccount}>{obj.star}</span>
+                    <Icon icon="fxemoji:2hearts" /> */}
+                    <span className={styles.starAccount}>{obj.price}</span>
                   </span>
                 </div>
                 <div className={styles.info}>
-                  <span className={styles.name}>{obj.custom}</span>
-                  <span className={styles.price}>{obj.price}</span>
+                  <span className={styles.nameInfo}><img className={styles.avatar} src={obj.src} />{obj.custom}</span>
+                  <span className={styles.like}>
+                    <Icon icon="bx:bx-like" style={{ color: obj.isLiked ? '#F13030' : '#c4c4c4', marginRight: 5 }} />
+                    980
+                  </span>
                 </div>
               </div>
             ))

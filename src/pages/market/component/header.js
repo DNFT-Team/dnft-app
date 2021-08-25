@@ -17,7 +17,9 @@ const cateType1 = [
 ]
 const Header = (props) => (
   <div className={styles.header}>
-    <span className={styles.headerT}>Market/Coming Soon</span>
+    <span className={styles.headerT}>Market
+      {/* /Coming Soon */}
+    </span>
     <div className={styles.headerR}>
       <Select style={{ marginRight: 20 }} value={0} placeholder="请选择">
         {

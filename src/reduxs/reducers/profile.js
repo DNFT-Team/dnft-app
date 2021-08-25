@@ -5,6 +5,7 @@ const initialState = {
   datas: null,
   address: null,
   chainType: null,
+  token: null,
   batch: null,
   owned: null,
   created: null,
