@@ -1,5 +1,4 @@
 import { Dialog, Input, Loading } from 'element-react';
-import SoonModal from './../../components/SoonModal';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -14,7 +13,6 @@ import {
   secondStakeConTract,
   thirdStakeConTract,
 } from 'utils/contract';
-import { nfIconSvg } from 'utils/svg';
 import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -23,9 +21,15 @@ import { useHistory } from 'react-router';
 import bg from '../../images/mining/bg.svg';
 import nft from '../../images/mining/logo.svg';
 import label from '../../images/mining/label.svg';
+import defaultHeadSvg from '../../images/asset/Head.svg';
+import contractSvg from '../../images/mining/contract.svg';
+import { post } from 'utils/request';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const Mining = (props) => {
   let history = useHistory();
+  const { token } = props;
 
   const initState = useMemo(
     () => ({
@@ -266,7 +270,7 @@ const Mining = (props) => {
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined);
         setStateData(initState);
-        getBalance();
+        init();
       });
     } else {
       alert('Please install wallet');
@@ -289,7 +293,9 @@ const Mining = (props) => {
           style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
         >
           <div className={styleAssetAccountContainer}>
-            <div className={styleIcon}>{nfIconSvg}</div>
+            <div className={styleIcon}>
+              <img src={defaultHeadSvg} />
+            </div>
             <span className={styleCoinName}>DNF</span>
 
             <span className='el-loading-demo'>{balance}</span>
@@ -444,13 +450,13 @@ const Mining = (props) => {
           <div className={styleTableBody}>
             <span>DNF</span>
             <span>{stakeInfo?.rewardRate}</span>
-            <span>{stakeInfo?.duration}days</span>
+            <span>{Math.round(stakeInfo?.duration)}days</span>
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Stake</span>
-                <span>Balance: {balance}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{color: '#000000'}}>Stake</span>
+                <span>Balance: <span style={{color: '#FF313C', fontSize: '17px'}}>{balance}</span></span>
               </div>
               <div className={styleInputContainer}>
                 <div className={styleStakeDNF}>DNF</div>
@@ -558,7 +564,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={isApproveLoading || isStakeLoading} />
-              {stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
+              {isApproveLoading || isStakeLoading ? 'loading...' : stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
             </div>
           </div>
         </div>
@@ -677,7 +683,7 @@ const Mining = (props) => {
                           styleDisableButton
                       )}
                     >
-                      UNstake
+                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'UNstake'}
                     </div>
                   </span>
                 )}
@@ -691,10 +697,11 @@ const Mining = (props) => {
 
   const renderClaim = useCallback(
     (stakeInfo) => {
-      const isValidGetNft =
-        stakeInfo?.isRewardNft?.[0] === true &&
-        stakeInfo?.isRewardNft?.[1] === false;
+      // const isValidGetNft =
+      //   stakeInfo?.isRewardNft?.[0] === true &&
+      //   stakeInfo?.isRewardNft?.[1] === false;
 
+      const isValidGetNft = true
       return (
         <div>
           <div className={styleClaimCardContainer}>
@@ -704,21 +711,32 @@ const Mining = (props) => {
               />
             </div>
             <div className={styleClaimInfo}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <span
+                  style={{
+                    fontWeight: 900,
+                    fontSize: 20,
+                    color: '#1B2559',
+                  }}
+                >
+                  Shanghaibar
+                </span>
+                <span className={styleTag}>On sale</span>
+              </div>
               <span
                 style={{
-                  fontWeight: 900,
-                  fontSize: 20,
-                  color: '#1B2559',
+                  padding: '10px 0 20px 0',
+                  color: '#000',
+                  fontSize: '15px',
+                  display: 'flex',
+                  alignItems: 'center'
                 }}
               >
-                Shanghaibar
-              </span>
-              <span
-                style={{
-                  padding: '15px 0 20px 0',
-                }}
-              >
-                Contract
+                <img style={{width: 18, height: 18, marginRight: '8px'}} src={contractSvg} />
+                <span>Contract</span>
               </span>
               <span>Description ：</span>
               <span style={{ color: '#8F9BBA' }}>
@@ -762,9 +780,30 @@ const Mining = (props) => {
                     contractAddress
                   );
 
-                  await stakeContract.methods.claimNft().send({
+                  let result =  await stakeContract.methods.claimNft().send({
                     from: stakeInfo.account,
                   });
+                  console.log(result, 'result')
+
+                  if (result.transactionHash) {
+                    const nftTokenId = result.events.Claim.returnValues.nftTokenId;
+                    const result = await post(
+                      '/api/v1/nft/',
+                      {
+                        name: nftTokenId,
+                        supply: 1,
+                        avatorUrl: `https://dnft.world/staking/pool${nftTokenId}.png`,
+                        address: stakeInfo.account,
+                        chainType: 'BSC',
+                        hash: result.transactionHash,
+                        tokenId: nftTokenId,
+                        tokenAddr: contractAddress,
+                        category: 'Art'
+                      },
+                      token
+                    );
+                  }
+
                 } finally {
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isClaiming = false;
@@ -774,7 +813,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={stateData[stakeIndex].isClaiming} />
-              claim
+              {stateData[stakeIndex].isClaiming ? 'loading...' : 'Claim'}
             </div>
           </div>
         </div>
@@ -797,7 +836,7 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            DNF staking（{stakeInfo?.duration}days）
+            DNF staking（{Math.round(stakeInfo?.duration)}days）
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
@@ -818,27 +857,35 @@ const Mining = (props) => {
 
   return (
     <div className={styleContainer}>
-      <SoonModal/>
       {renderAssetHeader}
       <div className={styleBody}>
         <div>
           {renderFilter}
-          <Loading loading={isStakeInfoLoading} />
-          <div
-            className={styleCardList}
-            style={{ opacity: isStakeInfoLoading || isWrongNetWork ? 0.3 : 1 }}
-          >
-            {renderCard(stakeData[0], 0)}
-            {renderCard(stakeData[1], 1)}
-            {renderCard(stakeData[2], 2)}
-          </div>
+          {
+            selectedTab === 'Ongoing' &&
+            <React.Fragment>
+              <Loading loading={isStakeInfoLoading} />
+              <div
+                className={styleCardList}
+                style={{ opacity: isStakeInfoLoading || isWrongNetWork ? 0.3 : 1 }}
+              >
+                {renderCard(stakeData[0], 0)}
+                {renderCard(stakeData[1], 1)}
+                {renderCard(stakeData[2], 2)}
+              </div>
+            </React.Fragment>
+          }
         </div>
       </div>
       {renderModal(stakeData[stakeIndex])}
     </div>
   );
 };
-export default Mining;
+
+const mapStateToProps = ({ profile }) => ({
+  token: profile.token,
+});
+export default withRouter(connect(mapStateToProps)(Mining));
 
 const styleContainer = css`
   background: #f5f7fa;
@@ -1038,26 +1085,28 @@ const styleCardButton = css`
 
 const styleTab = css`
   color: #8588a7;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 16px;
   cursor: pointer;
 `;
 
 const activeTab = css`
-  color: #ff313c;
+  color: #112DF2;
+  font-weight: bold;
 `;
 
 const styleModalContainer = css`
-  width: 950px;
+  width: 650px;
   border-radius: 10px;
-  padding: 24px 42px;
+  padding: 30px 20px;
   overflow: auto;
 
   .el-dialog__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0;
+    padding: 0 0 24px 0;
+    border-bottom: 1px solid #F2F2F2;
     &::before,
     &::after {
       display: none;
@@ -1065,15 +1114,15 @@ const styleModalContainer = css`
   }
 
   .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 24px;
+    color: #575D6F;
+    font-size: 16px;
   }
   .el-dialog__title {
     color: #233a7d;
     font-size: 24px;
   }
   .el-dialog__body {
-    padding: 20px 16px;
+    padding: 0;
   }
 `;
 
@@ -1093,7 +1142,7 @@ const styleBodyTitle = css`
 const styleBodyTips = css`
   font-weight: 600;
   font-size: 17px;
-  /* color: #49c1ab; */
+  color: #49C1AB;
 `;
 
 const styleTableHeader = css`
@@ -1102,7 +1151,7 @@ const styleTableHeader = css`
   color: #8f9bba;
   display: flex;
   justify-content: space-between;
-  margin-top: 50px;
+  margin-top: 30px;
   padding: 10px 0 10px 50px;
   span {
     display: flex;
@@ -1117,7 +1166,8 @@ const styleTableBody = css`
   display: flex;
   justify-content: space-between;
   padding: 10px 0 10px 50px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
+  align-items: center;
   span {
     display: flex;
     flex: 1;
@@ -1134,10 +1184,12 @@ const styleTableBody = css`
 const styleStakeTips = css`
   font-size: 14px;
   color: #8f9bba;
+  letter-spacing: -1px;
+  margin-top: 15px;
 `;
 
 const styleApproveButton = css`
-  width: 152px;
+  width: 134px;
   height: 46px;
   background: #112df2;
   color: #ffffff;
@@ -1145,7 +1197,7 @@ const styleApproveButton = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 54px;
+  margin-top: 28px;
   cursor: pointer;
 
   .circular {
@@ -1163,13 +1215,14 @@ const styleInputContainer = css`
   border-radius: 10px;
   display: flex;
   flex-direction: row;
-  height: 64px;
+  height: 50px;
   margin: 5px 0;
   input {
     border: none;
     background: transparent;
-    height: 64px;
+    height: 50px;
     font-size: 20px;
+    text-align: right;
   }
 `;
 
@@ -1188,7 +1241,7 @@ const styleClaimCardContainer = css`
   background: #ffffff;
   box-shadow: 0px 12px 22px rgba(0, 0, 0, 0.05);
   border-radius: 14px;
-  padding: 30px;
+  padding: 30px 22px;
   display: flex;
   flex-direction: row;
 `;
@@ -1196,6 +1249,9 @@ const styleClaimCardContainer = css`
 const stylePicture = css`
   width: 250px;
   margin-right: 20px;
+  img {
+    border-radius: 10px 0 0 10px;
+  }
 `;
 
 const styleClaimInfo = css`
@@ -1203,9 +1259,14 @@ const styleClaimInfo = css`
   flex-direction: column;
   font-size: 14px;
   color: #233a7d;
-  span {
-    margin-bottom: 4px;
-  }
+`;
+
+const styleTag = css`
+  background: #D8F6F0;
+  padding: 4px 12px;
+  border-radius: 5px;
+  color: #169981;
+  margin-left: 14px;
 `;
 
 const styleUnStake = css`
@@ -1226,7 +1287,7 @@ const styleUnstakeContainer = css`
   flex-direction: column;
   flex: 1;
   overflow: auto;
-  min-height: 300px;
+  min-height: 200px;
   max-height: 50vh;
 `;
 

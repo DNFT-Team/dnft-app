@@ -5,12 +5,13 @@ import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { tokenAbi, nftAbi, nft1155Abi } from 'utils/abi';
 import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
-import { nfIconSvg, noDataSvg } from 'utils/svg';
+import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import defaultHeadSvg from '../../images/asset/Head.svg'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -41,8 +42,8 @@ const AssetScreen = (props) => {
 
   const sortTagType = [
     { label: 'Most favorited', value: 'likeCount' },
-    { label: 'Price:high to low', value: 1 },
-    { label: 'Price:low to high', value: 2 },
+    { label: 'Price:high to low', value: 'ASC-price' },
+    { label: 'Price:low to high', value: 'DESC-price' },
   ];
   const [selectedTab, setSelectedTab] = useState({
     label: 'In Wallet',
@@ -52,7 +53,8 @@ const AssetScreen = (props) => {
   const [balance, setBalance] = useState(0);
   const [category, setCategory] = useState('LASTED');
   const [sortTag, setSortTag] = useState('likeCount')
-  const [list, setList] = useState()
+  const [list, setList] = useState();
+  const [sortOrder, setSortOrder] = useState('ASC')
 
   let history = useHistory();
 
@@ -65,27 +67,48 @@ const AssetScreen = (props) => {
   };
 
   const getNFTList = async () => {
-    const { data } = await post(
-      '/api/v1/nft/batch',
-      {
-        address: '0x39ba0111ae2b073552c4ced8520a5bcb93437628',
-        category: category,
-        sortOrder: 'ASC',
-        status: selectedTab.value,
-        sortTag: sortTag,
-        page: 0,
-        size: 10
-      },
-      token
-    );
-    setList(data?.data?.content || [])
+    console.log(selectedTab, 'selectedTab', selectedTab.value === 'MYFAVORITE')
+    try {
+      if (selectedTab.value === 'MYFAVORITE') {
+        const { data } = await post(
+          '/api/v1/nft/favorite',
+          {
+            address: address,
+            category: category,
+            sortOrder: sortOrder,
+            sortTag: sortTag,
+            page: 0,
+            size: 100
+          },
+          token
+        );
+        setList(data?.data?.content || [])
+      } else {
+        const { data } = await post(
+          '/api/v1/nft/batch',
+          {
+            address: address,
+            category: category,
+            sortOrder: sortOrder,
+            status: selectedTab.value,
+            sortTag: sortTag,
+            page: 0,
+            size: 100
+          },
+          token
+        );
+        setList(data?.data?.content || [])
+      }
+    } catch (e) {
+      console.log(e, 'e')
+    }
   }
 
   useEffect(() => {
     if (token) {
       getNFTList()
     }
-  },[token, category, selectedTab, sortTag])
+  },[token, category, selectedTab, sortTag, address])
 
   useEffect(() => {
     let ethereum = window.ethereum;
@@ -159,9 +182,11 @@ const AssetScreen = (props) => {
     () => (
       <div className={styleHeader}>
         <div className={styleAssetAccountContainer}>
-          <div className={styleIcon}>{nfIconSvg}</div>
-          <span className={styleCoinName}>DNF</span>
-          <span>{balance}</span>
+          <div className={styleIcon}>
+            <img src={defaultHeadSvg} />
+          </div>
+          <span className={styleCoinName}>{chainType}</span>
+          <span>{chainType === 'DNFT' && balance }</span>
         </div>
         <div
           className={styleCreateNFT}
@@ -260,7 +285,7 @@ const AssetScreen = (props) => {
               <Select
                 style={{ marginRight: 20 }}
                 value={category}
-                placeholder='请选择'
+                placeholder='please choose'
                 onChange={(value) => {
                   setCategory(value)
                 }}
@@ -273,8 +298,13 @@ const AssetScreen = (props) => {
                   />
                 ))}
               </Select>
-              <Select value={sortTag} placeholder='请选择' onChange={(value) => {
-                setSortTag(value)
+              <Select value={sortTag} placeholder='please choose' onChange={(value) => {
+                if (value.includes('price')) {
+                  setSortTag('price')
+                  setSortOrder(value.split('-')[0])
+                }else {
+                  setSortTag(value)
+                }
               }}>
                 {sortTagType.map((el) => (
                   <Select.Option
@@ -372,10 +402,9 @@ const styleTabContainer = css`
 `;
 
 const styleIcon = css`
-  background: #c0beff;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
+  width: 70px;
+  height: 70px;
+  border-radius: 70px;
   display: flex;
   align-items: center;
   justify-content: center;

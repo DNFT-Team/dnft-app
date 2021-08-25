@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import SoonModal from './../../components/SoonModal';
-
 import { getHomeList } from 'reduxs/actions/home';
 import { _setLng } from 'reduxs/actions/lng';
 import { connect } from 'react-redux';
@@ -11,6 +9,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { css, cx } from 'emotion';
 import {Icon} from '@iconify/react';
+import syncBtc from '../../images/home/igo-syncbtc.jpg'
 
 const HomeScreen = (props) => {
   const { dispatch, datas, location } = props;
@@ -23,19 +22,15 @@ const HomeScreen = (props) => {
 
   const data = [
     {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
+      src: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg',
       title: 'NFT gallery of the week',
     },
     {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
+      src: 'https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a',
       title: 'NFT gallery of the week',
     },
     {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
+      src: 'http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg',
       title: 'NFT gallery of the week',
     },
   ];
@@ -138,7 +133,7 @@ const HomeScreen = (props) => {
     <div className={styleCard}>
       <div
         style={{
-          background: `center / cover no-repeat ${src.item.src}`,
+          background: `center / cover no-repeat url('${src.item.src}')`,
           height: 350,
           marginBottom: 20,
           borderRadius: 10,
@@ -146,7 +141,7 @@ const HomeScreen = (props) => {
       />
       <div>
         <div className={styleContentContainer}>
-          <span>Shanghaibar</span>
+          <span>ShanghaiBar</span>
           <span className={styleStarContainer}>
             <Icon icon="ant-design:heart-outlined" />
             <span className={styleStarAccount}>234</span>
@@ -189,15 +184,65 @@ const HomeScreen = (props) => {
     </div>
   ), []);
 
+  const GameCard = (src) => (
+    <div className={styleCard}>
+      <div
+        style={{
+          background: `center / cover no-repeat url('${src.item.src}')`,
+          height: 350,
+          marginBottom: 20,
+          borderRadius: 10,
+        }}
+      />
+      <div>
+        <div className={styleContentContainer}>
+          <span>{src.item.name || 'IGO'}</span>
+          <span className={styleStarContainer}>
+            <Icon icon="ant-design:heart-outlined" />
+            <span className={styleStarAccount}>234</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+  const renderGameList = useCallback((title) => (
+    <div className={styleArtContainer}>
+      <h1 className={styleTitle}>{title}</h1>
+      <Slider {...settings}>
+        <GameCard item={{src: syncBtc, name: 'Sync BTC', title: 'Sync BTC'}} key='syncBtc'/>
+        {data.slice(0, 3).map((item, i) => <GameCard item={item} key={i}/>)}
+        {data.slice(1, 4).map((item, i) => <GameCard item={item} key={i}/>)}
+        {data.map((item, i) => <GameCard item={item} key={i}/>)}
+        <div className={styleCard}>
+          <div
+            style={{
+              background: 'center / cover no-repeat url(\'http://www.ruanyifeng.com/blogimg/asset/201211/bg2012111401.jpg\')',
+              height: 350,
+              margin: ' 0 50px 20px 0',
+              backgroundSize: 'cover',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 900,
+              borderRadius: 10,
+            }}
+          >
+                        Explore More
+          </div>
+        </div>
+      </Slider>
+    </div>
+  ), []);
+
   return (
     <div className={styleContainer}>
-      <SoonModal />
       <Carousel trigger="click" height={'70vh'}>
         {data?.map((item, index) => (
           <Carousel.Item key={index}>
             <div style={{
-              background: 'center / cover no-repeat ' + item.src,
               height: '100%',
+              background: "center / cover no-repeat url('" + item.src + "')",
             }}>
               <span style={{
                 position: 'absolute',
@@ -214,7 +259,7 @@ const HomeScreen = (props) => {
         ))}
       </Carousel>
       {renderHotList('Hot Art')}
-      {renderHotList('Hot Game')}
+      {renderGameList('Hot Game')}
       {renderHotList('Hot Collections')}
     </div>
   );
@@ -254,6 +299,10 @@ const styleNextArrow = css`
   right: 50px;
   width: 36px;
   height: 36px;
+  color: #1b2559;
+  &:hover{
+    color: #1b2559;
+  }
   svg {
     width: 36px;
     height: 36px;
@@ -268,6 +317,10 @@ const stylePrevArrow = css`
   left: calc(100% - 150px);
   width: 36px;
   height: 36px;
+  color: #1b2559;
+  &:hover{
+    color: #1b2559;
+  }
   svg {
     width: 36px;
     height: 36px;

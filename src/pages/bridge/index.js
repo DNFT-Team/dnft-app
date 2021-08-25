@@ -16,6 +16,8 @@ import gitbook from '../../config/gitbook';
 import Web3 from 'web3';
 import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from '../../utils/contract';
 import {toDecimal, WEB3_MAX_NUM} from '../../utils/web3Tools';
+import axios from '../../http/default'
+import globalConf from '../../config'
 import {curveArrow, combineArrow} from '../../utils/svg';
 import styles from './index.less';
 import bgWindow from '../../images/bridge/bg_window.png';
@@ -166,25 +168,29 @@ const BridgeScreen = (props) => {
           from: chainSuit.address,
           gas: gasNum,
           gasPrice: gasPrice
-        })
-          .then((receipt) => {
-            console.info('===>receipt', receipt);
+        }, (err, hash) => {
+          console.log('#nerveContract', err, hash);
+          setLoading(false)
+          if (err) {
+            toast.error(err.message, {position: toast.POSITION.TOP_CENTER})
+          } else {
+            toast.success('Trade Packing Success', {position: toast.POSITION.TOP_CENTER})
             setTransaction({
               timestamp: Date.now(),
               account: address,
-              amount,
-              from: 'ETH',
-              to: 'BSC',
-              hash: receipt
+              amount, hash,
+              from: 'ETH', to: 'BSC'
             })
-            toast.success('Trade Write Success', {position: toast.POSITION.TOP_CENTER})
-          })
-          .catch((err) => {
-            toast.error(err.message, {position: toast.POSITION.TOP_CENTER})
-          })
-          .finally(() => {
-            setLoading(false)
-          })
+            axios.post('/transaction/monitor', {
+              amount,
+              to_address: address,
+              tx_hash: hash,
+              chain_id: '9'
+            }, {baseURL: globalConf.bridgeApi}).then(() => {
+              toast.success('Cross Service has got your withdraw!', {position: toast.POSITION.TOP_CENTER})
+            })
+          }
+        })
       }
     } else {
       setLoading(false)
@@ -212,11 +218,10 @@ const BridgeScreen = (props) => {
                 <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem'}} /> Learn how to cross
               </Link>
               <Text color="brand.100" className={styles.subTitle} lineHeight="2rem">
-                Swift, easy and reliable solution to cross your DNF over chains<br/>
-                The whole process of cross-chain is as easy as 1,2,3<br/>
-                - 1. Packing data<br/>
-                - 2. Transfer transaction confirm<br/>
-                - 3. Trading-center withdrawal
+                The whole process of providing a quick, simple and reliable solution to get your DNF running across the chain in just 3 short steps, as shown below:<br/>
+                1. Swiftly data packing<br/>
+                2. Reliable transaction confirmation after data transfer<br/>
+                3. Easily withdraw your money from Trading-center
               </Text>
               <Grid
                 gap={4}
@@ -309,11 +314,15 @@ const BridgeScreen = (props) => {
                     p="1.14rem 2.14rem"
                     onClick={submitCross}
                     isLoading={loading}
+                    loadingText="Trading..."
                   >
                     Confirm
                   </Button>
                   <Button  colorScheme="teal" variant="outline" fontSize="1.14rem" p="1.14rem 2.14rem" onClick={skipHistory}>History</Button>
                 </HStack>
+                {loading ? (<Text color="brand.600" mt="2rem" fontWeight="600">
+                  Transactions are being processed and raising fuel can speed up
+                </Text>) : ''}
                 {transaction ? (<Fade in>
                   <Box
                     mt="4" p="1.8rem"
@@ -326,7 +335,7 @@ const BridgeScreen = (props) => {
                     </Text>
                     <Divider style={{margin: '1rem .8rem'}}/>
                     <p>Transfer {transaction.amount} DNF from {transaction.from} to {transaction.to} at {new Date(transaction.timestamp).toISOString()}</p>
-                    <p>You can check via this hash:<Link color="brand.600">{transaction.hash}</Link> </p>
+                    <p>You can check via this hash:<Link href={`https://etherscan.io/tx/${transaction.hash}`} color="brand.600" isExternal>{transaction.hash}</Link> </p>
                   </Box>
                 </Fade>) : ''}
               </Box>
