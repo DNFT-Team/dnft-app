@@ -59,13 +59,13 @@ const NFTCard = (props) => {
         <div className={styleButtonContainer}>
           <span>
             <span className={styleText}>Sold for </span>
-            <span className={stylePrice}>1.8ETH</span>
+            <span className={stylePrice}>{item.price}</span>
           </span>
           <div className={styleText}>14/06/2021</div>
         </div>
       ) : (
         <div className={styleButtonContainer}>
-          <span className={stylePrice}>1.8ETH</span>
+          <span className={stylePrice}>{item.price}ETH</span>
         </div>
       );
     case 'SOLD':
@@ -73,7 +73,7 @@ const NFTCard = (props) => {
         <div className={styleButtonContainer}>
           <span>
             <span className={styleText}>Sold for </span>
-            <span className={stylePrice}>1.8ETH</span>
+            <span className={stylePrice}>{item.price}TH</span>
           </span>
           <div className={styleText}>14/06/2021</div>
         </div>
@@ -198,7 +198,7 @@ const NFTCard = (props) => {
 
                 // if (putOnResult?.orderId) {
                 const result = await post(
-                  '/api/v1/sell_up',
+                  '/api/v1/trans/sell_up',
                   {
                     ...sellForm,
                     nftId: item.id,
@@ -269,10 +269,9 @@ const NFTCard = (props) => {
               <div className={styleStarIconContainer} onClick={handleLike}>
                 <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
               </div>
-              <span>{item.account}</span>
             </div>
           </div>
-          <span className="title">{item.name}</span>
+          <div><span className='title'>{item.name}</span><span>{item.supply}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>

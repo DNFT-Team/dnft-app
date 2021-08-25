@@ -189,7 +189,6 @@ const IGOScreen = (props) => {
       const raffle = await myIgoContract.methods.raffle().send({
         from: address,
       });
-      console.log(raffle, 'raffle')
 
       toast.info(`success! txhash:${raffle.transactionHash}`, {
         position: toast.POSITION.TOP_RIGHT,
@@ -296,6 +295,30 @@ const IGOScreen = (props) => {
     };
   }, [address]);
 
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0x38',
+            chainName: 'Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  },[]);
+
   return (
     <div className={styleContainer}>
       <img className={styleTopMedal} src={medal} />
@@ -306,6 +329,8 @@ const IGOScreen = (props) => {
           className={stylePlayButton}
           src={playButton}
           onClick={async () => {
+            let ethereum = window.ethereum;
+
             if (medalData.Total.isNotEnough) {
               toast.info('Ended', {
                 position: toast.POSITION.TOP_CENTER,
@@ -314,7 +339,6 @@ const IGOScreen = (props) => {
             }
 
             if (!address) {
-              let ethereum = window.ethereum;
               await ethereum.enable();
 
               const accounts = await ethereum.request({
@@ -327,6 +351,7 @@ const IGOScreen = (props) => {
             }
 
             if (isWrongNetWork && history.location.pathname === '/igo') {
+              // goToRightNetwork(ethereum)
               toast.dark('Please Choose BSC Testnet', {
                 position: toast.POSITION.TOP_CENTER,
               });

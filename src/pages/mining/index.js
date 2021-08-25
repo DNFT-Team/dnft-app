@@ -219,9 +219,29 @@ const Mining = (props) => {
     init();
   }, [init]);
 
-  useEffect(() => {
-    console.log(stateData);
-  }, [stateData]);
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0x38',
+            chainName: 'Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  },[]);
 
   useEffect(() => {
     let ethereum = window.ethereum;
@@ -229,6 +249,8 @@ const Mining = (props) => {
     if (ethereum) {
       console.log(ethereum, 'ethereum')
       if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/mining') {
+        // goToRightNetwork(ethereum);
+
         setIsWrongNetWork(true);
         toast.dark('Please Choose Rinkeby', {
           position: toast.POSITION.TOP_CENTER,
@@ -239,7 +261,7 @@ const Mining = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, []);
+  }, [window.ethereum]);
 
   //  get metaMask connect
   const injectWallet = useCallback(async () => {
@@ -253,6 +275,7 @@ const Mining = (props) => {
         setStateData(initState);
 
         if (Number(networkIDstring) !== 4 && history.location.pathname === '/mining') {
+          // goToRightNetwork(ethereum);
           setIsWrongNetWork(true);
           toast.dark('Please Choose Rinkeby', {
             position: toast.POSITION.TOP_CENTER,
