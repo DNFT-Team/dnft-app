@@ -143,6 +143,11 @@ const BridgeScreen = (props) => {
       toast.warning('Please Input active number.', {position: toast.POSITION.TOP_CENTER});
       return
     }
+    if (amount < 5) {
+      toast.warning('Quantity is at least 5.', {position: toast.POSITION.TOP_CENTER});
+      return
+    }
+
     setLoading(true)
     setTransaction(null)
     const chainSuit = await checkSuit(4)
