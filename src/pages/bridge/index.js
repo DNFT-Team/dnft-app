@@ -16,6 +16,8 @@ import gitbook from '../../config/gitbook';
 import Web3 from 'web3';
 import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from '../../utils/contract';
 import {toDecimal, WEB3_MAX_NUM} from '../../utils/web3Tools';
+import axios from '../../http/default'
+import globalConf from '../../config'
 import {curveArrow, combineArrow} from '../../utils/svg';
 import styles from './index.less';
 import bgWindow from '../../images/bridge/bg_window.png';
@@ -166,25 +168,29 @@ const BridgeScreen = (props) => {
           from: chainSuit.address,
           gas: gasNum,
           gasPrice: gasPrice
-        })
-          .then((receipt) => {
-            console.info('===>receipt', receipt);
+        }, (err, hash) => {
+          console.log('#nerveContract', err, hash);
+          setLoading(false)
+          if (err) {
+            toast.error(err.message, {position: toast.POSITION.TOP_CENTER})
+          } else {
+            toast.success('Trade Packing Success', {position: toast.POSITION.TOP_CENTER})
             setTransaction({
               timestamp: Date.now(),
               account: address,
-              amount,
-              from: 'ETH',
-              to: 'BSC',
-              hash: receipt?.transactionHash
+              amount, hash,
+              from: 'ETH', to: 'BSC'
             })
-            toast.success('Trade Write Success', {position: toast.POSITION.TOP_CENTER})
-          })
-          .catch((err) => {
-            toast.error(err.message, {position: toast.POSITION.TOP_CENTER})
-          })
-          .finally(() => {
-            setLoading(false)
-          })
+            axios.post('/transaction/monitor', {
+              amount,
+              to_address: address,
+              tx_hash: hash,
+              chain_id: '9'
+            }, {baseURL: globalConf.bridgeApi}).then(() => {
+              toast.success('Cross Service has got your withdraw!', {position: toast.POSITION.TOP_CENTER})
+            })
+          }
+        })
       }
     } else {
       setLoading(false)
