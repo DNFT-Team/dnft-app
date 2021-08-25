@@ -9,6 +9,8 @@ import {
   InputLeftElement, InputRightAddon,
   AlertDialog, AlertDialogBody,
   AlertDialogContent, AlertDialogOverlay,
+  Drawer, DrawerBody, DrawerHeader,
+  DrawerOverlay, DrawerContent, IconButton
 } from '@chakra-ui/react';
 import { Divider } from 'ui-neumorphism'
 import { toast } from 'react-toastify';
@@ -51,6 +53,9 @@ const BridgeScreen = (props) => {
   //  form - input
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState(0)
+  //  drawer bottom
+  const [isDrawer, setIsDrawer] = useState(false)
+  const [historyList, setHistoryList] = useState([])
   //  alert pop-up
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
@@ -202,7 +207,19 @@ const BridgeScreen = (props) => {
     }
   }
   const skipHistory = () => {
-    toast('This page is coming soon', {position: toast.POSITION.TOP_CENTER});
+    let list = []
+    axios.get(`/transaction/query?address=${address}`, {baseURL: globalConf.bridgeApi})
+      .then((res) => {list = res.data.data})
+      .finally(() => {
+        if (list.length > 0) {
+          setIsDrawer(true)
+          setHistoryList(list)
+        } else {
+          setIsDrawer(false)
+          setHistoryList([])
+          toast('No record has been found yet', {position: toast.POSITION.TOP_CENTER})
+        }
+      })
   }
   //  render Dom
   return (
@@ -348,6 +365,31 @@ const BridgeScreen = (props) => {
           )}
         </Grid>
       </div>
+      <Drawer placement="bottom" onClose={() => {setIsDrawer(false)}} isOpen={isDrawer} isFullHeight>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">
+            Trade History
+            <IconButton onClick={() => {setIsDrawer(false)}} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
+              icon={<Icon icon="mdi:close"/>}/>
+          </DrawerHeader>
+          <DrawerBody>
+            {historyList.map((e) => (
+              <Text border="1px solid" p="1rem" color="brand.100" className={styles.history}>
+                <span>AMOUNT:{e.amount || '---'}</span>
+                <span>STATUS:{e.status || '---'}</span>
+                <span>DYNAMIC INFO:{e.dynamic_info || '---'}</span>
+                <span>FAILED CODE:{e.failed_code || '---'}</span>
+                <br/>
+                <span>TXHASH:<Link href={`https://etherscan.io/tx/${e.tx_hash}`} color="brand.600" isExternal>{e.tx_hash}</Link></span>
+                <br/>
+                <span>UPDATED AT:{e.updated_at || '---'}</span>
+                <span>CREATED AT:{e.created_at || '---'}</span>
+              </Text>
+            ))}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
