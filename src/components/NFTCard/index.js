@@ -254,7 +254,7 @@ const NFTCard = (props) => {
       <div
         style={{
           background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
         }}
         className={styleShortPicture}
       />
@@ -271,7 +271,7 @@ const NFTCard = (props) => {
               </div>
             </div>
           </div>
-          <div><span className='title'>{item.name}</span><span>{item.supply}</span></div>
+          <div className={styleInfo}><span className='title'>{item.name}</span><span>supply: {item.supply || 1}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
@@ -437,11 +437,24 @@ const styleCardHeader = css`
   padding-bottom: 12px;
   border-bottom: 1px solid #f5f7fa;
   position: relative;
+`;
+
+const styleInfo = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
   .title {
     color: #11142D;
-    margin-top: 14px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin-right: 10px;
   }
-`;
+`
 
 const styleChainType = css`
   background: #FEDDBD;
