@@ -91,6 +91,11 @@ const IGOScreen = (props) => {
         medalIds.map((item) => myContract.methods.tokenIds(item).call())
       );
 
+      // main
+      // const goldMintedTotal = Number(data[0][2]) - 10;
+      // const silverMintedTotal = Number(data[1][2]) - 50;
+      // const bronzeMintedTotal = Number(data[2][2]) + 60;
+
       const goldMintedTotal =
         Number(data[0][1]) - Number(data[0][2]) < 5
           ? Number(data[0][1]) - 5
