@@ -69,6 +69,23 @@ const BridgeScreen = (props) => {
     if (!isInjected) {await injectWallet()}
     return await checkSuit()
   }
+
+  const goToRightNetwork = async (ethereum) => {
+    try {
+      await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [
+          {
+            chainId:'0x1',
+          },
+        ],
+      })
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  };
+
   //  setUp wallet
   const injectWallet = async () => {
     try {
@@ -87,6 +104,7 @@ const BridgeScreen = (props) => {
   const checkSuit = async (step = 3) => {
     let res = {netOk: false, address: '', balance: 0, isApprove: false}
     if (chainType !== 'ETH') {
+      goToRightNetwork();
       toast.warning('Please connect ETH-NET', {position: toast.POSITION.TOP_CENTER});
       res.netOk = false
       setBalance(0)
