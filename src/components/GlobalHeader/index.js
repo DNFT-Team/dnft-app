@@ -217,7 +217,7 @@ const GlobalHeader = (props) => {
           }}
         >
           {address
-            ? <span><img src={defaultHeadSvg} /><span>{address?.slice(0, 8)}...{address?.slice(38)}</span></span>
+            ? <span><span className='styleDot'></span><span>{address?.slice(0, 8)}...{address?.slice(38)}</span></span>
             : 'connect wallet'}
         </span>
         {address && (
@@ -376,29 +376,33 @@ const styleHasAddress = css`
   align-items: center;
   padding: 0 14px;
   border: 1px solid #E1E6FF;
+  color: #23262F;
+  font-weight: bold;
   &>span{
     display: flex;
     align-items: center;
-    img {
-      height: 28px;
-      width: 28px;
-      margin-right: 8px;
+    .styleDot {
+      background: #68d3bc;
+      border-radius: 6px;
+      width: 6px;
+      height: 6px;
+      margin-right: 6px;
     }
   }
 
 `
 const styleAddress = css`
   cursor: pointer;
-  background: #233a7d;
+  background: #112DF2;
   color: white;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: bold;
 `;
 
 const styleAssetTarget = css`
-  background: #1B2559;
+  background: #0834e8;
   height: 40px;
   display: flex;
   align-items: center;
