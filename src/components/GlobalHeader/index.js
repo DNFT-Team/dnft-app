@@ -4,9 +4,6 @@ import styles from './index.less';
 import { css } from 'emotion';
 import {
   assetSvg,
-  netEthSvg,
-  bscNetSvg,
-  heroNetSvg,
   polkadotNetSvg,
   polkadotSvg,
 } from '../../utils/svg';
@@ -17,9 +14,8 @@ import { NET_WORK_VERSION } from 'utils/constant'
 
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
-import hecoSvg from '../../images/networks/logo_heco.svg'
-import dnftSvg from '../../images/networks/logo_dnft.svg'
 import globalConf from '../../config'
+import defaultHeadSvg from '../../images/asset/Head.svg'
 
 // import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
@@ -62,6 +58,7 @@ const GlobalHeader = (props) => {
     ],
     []
   );
+  console.log(currentNetIndex, 'currentNetIndex')
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -75,6 +72,7 @@ const GlobalHeader = (props) => {
 
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
+        console.log(networkIDstring, 'networkIDstring')
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
@@ -196,7 +194,7 @@ const GlobalHeader = (props) => {
       <span>{globalConf.net_env}</span>
       <div className={styles.actionContainer}>
         <span
-          className={address ? '' : styleAddress}
+          className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
 
             if (address) {
@@ -219,49 +217,45 @@ const GlobalHeader = (props) => {
           }}
         >
           {address
-            ? `${address?.slice(0, 8)}...${address?.slice(28)}`
+            ? <span><img src={defaultHeadSvg} /><span>{address?.slice(0, 8)}...{address?.slice(38)}</span></span>
             : 'connect wallet'}
         </span>
         {address && (
           <div
-            className={actionItem}
+            className={styleAssetTarget}
             style={{ cursor: 'pointer' }}
             onClick={() => {
               history.push('/asset');
             }}
           >
-            {assetSvg}
+            <span>{assetSvg}</span>
+            <span>Asset</span>
           </div>
         )}
-        {currentNetIndex != undefined && (
-          <React.Fragment>
-            <div
-              style={{background: 'transparent'}}
-              className={actionItem}
-              onClick={() => {
-                setIsNetListVisible(true);
-              }}
-            >
-              <img src={netArray[currentNetIndex]?.shortIcon} />
+        <div className={styleActionContainer}>
+          <div
+            style={{background: 'transparent'}}
+            className={actionItem}
+            onClick={() => {
+              setIsNetListVisible(true);
+            }}
+          >
+            <img src={netArray[currentNetIndex]?.shortIcon} />
+          </div>
+          <div
+            className={styleNetContainer}
+            onClick={() => {
+              setIsNetListVisible(true);
+            }}
+          >
+            <div className={styleNetContainer}>
+              {/* {downArrowSvg} */}
             </div>
-            <div
-              className={styleNetContainer}
-              onClick={() => {
-                setIsNetListVisible(true);
-              }}
-            >
-              <div className={styleNetContainer}>
-                <span className={styleNetName}>
-                  {netArray[currentNetIndex]?.shortName[0]}
-                </span>
-                {/* {downArrowSvg} */}
-              </div>
-              <div style={{ color: '#8F9BBA' }}>
-                {netArray[currentNetIndex]?.shortName[1]}
-              </div>
+            <div style={{ color: '#23262F', fontWeight: 'bold' }}>
+              {netArray[currentNetIndex]?.shortName[1] || 'default'}
             </div>
-          </React.Fragment>
-        )}
+          </div>
+        </div>
         <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer">
           {/* {polkadotNetSvg} */}
         </a>
@@ -301,10 +295,7 @@ const actionItem = css`
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  margin-left: 30px;
   margin-right: 10px;
-  filter: drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.25));
-  /* cursor: pointer; */
 `;
 
 const styleNetContainer = css`
@@ -317,11 +308,15 @@ const styleNetContainer = css`
     top: -4px;
   }
 `;
-const styleNetName = css`
-  font-weight: bold;
-  margin-right: 24px;
+const styleActionContainer = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 30px;
+  border: 1px solid #E1E6FF;
+  border-radius: 8px;
+  cursor: pointer;
 `;
-
 const styleModalContainer = css`
   width: 650px;
   border-radius: 10px;
@@ -374,6 +369,24 @@ const styleSearchContainer = css`
   }
 `;
 
+const styleHasAddress = css`
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #E1E6FF;
+  &>span{
+    display: flex;
+    align-items: center;
+    img {
+      height: 28px;
+      width: 28px;
+      margin-right: 8px;
+    }
+  }
+
+`
 const styleAddress = css`
   cursor: pointer;
   background: #233a7d;
@@ -383,3 +396,20 @@ const styleAddress = css`
   font-size: 16px;
   font-weight: bold;
 `;
+
+const styleAssetTarget = css`
+  background: #1B2559;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 8px;
+  margin-left: 30px;
+  span{
+    color: white;
+    display: flex;
+    padding: 0 4px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+`
