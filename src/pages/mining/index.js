@@ -26,6 +26,7 @@ import contractSvg from '../../images/mining/contract.svg';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import globalConfig from '../../config'
 
 const Mining = (props) => {
   let history = useHistory();
@@ -70,6 +71,7 @@ const Mining = (props) => {
   const [isStakeInfoLoading, setIsStakeInfoLoading] = useState(false);
 
   const [stateData, setStateData] = useState(initState);
+  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
 
   const getBalance = async () => {
     try {
@@ -221,21 +223,34 @@ const Mining = (props) => {
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
-      let result = await ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          {
-            chainId: '0x38',
-            chainName: 'Smart Chain',
-            nativeCurrency: {
-              name: 'BNB',
-              symbol: 'bnb',
-              decimals: 18,
+      let result;
+
+      if (globalConfig.net_env === 'testnet') {
+        result = await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId:'0x4',
             },
-            rpcUrls: ['https://bsc-dataseed.binance.org/'],
-          },
-        ],
-      });
+          ],
+        })
+      } else {
+        result = await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+              chainName: 'Smart Chain',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            },
+          ],
+        });
+      }
 
       if (result === null) {
         setIsWrongNetWork(false);
@@ -253,13 +268,9 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      console.log(ethereum, 'ethereum')
-      if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/mining') {
+      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/mining') {
         setIsWrongNetWork(true)
-        // goToRightNetwork(ethereum);
-        toast.dark('Please Choose Rinkeby', {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        goToRightNetwork(ethereum);
       } else {
         setIsWrongNetWork(false);
       }
@@ -277,13 +288,9 @@ const Mining = (props) => {
         setBalance(undefined);
         setStateData(initState);
 
-        if (Number(networkIDstring) !== 4 && history.location.pathname === '/mining') {
+        if (Number(networkIDstring) !== rightChainId && history.location.pathname === '/mining') {
           setIsWrongNetWork(true)
-          // goToRightNetwork(ethereum);
-          toast.dark('Please Choose Rinkeby', {
-            position: toast.POSITION.TOP_CENTER,
-          });
-
+          goToRightNetwork(ethereum);
           return;
         }
 
@@ -808,7 +815,6 @@ const Mining = (props) => {
                   let result =  await stakeContract.methods.claimNft().send({
                     from: stakeInfo.account,
                   });
-                  console.log(result, 'result')
 
                   if (result.transactionHash) {
                     const nftTokenId = result.events.Claim.returnValues.nftTokenId;

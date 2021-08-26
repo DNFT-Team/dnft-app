@@ -1,3 +1,7 @@
+import globalConfig from '../config';
+
+const isMainNet = globalConfig.net_env === 'mainnet';
+
 //  mining
 export const tokenContract = '0x5C80D4aDC0cAa8a01554fe7a935a1209151173e3';
 
@@ -24,10 +28,10 @@ export const NERVE_BRIDGE = {
 
 // igo
 
-export const igoContract = '0x7689EbFFB41C5B12F749aA26283a1877685Fe439';
+export const igoContract = isMainNet ? '0x7c8911c69257c074593fD9EFDC431F200be27107' : '0x7689EbFFB41C5B12F749aA26283a1877685Fe439';
 
-export const nft1155Contract = '0xe5a2758146bea3422532eeB537bE230113bacDd7';
-export const busdContract = '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
+export const nft1155Contract = isMainNet ? '0x854714e65bba4ea0b990483e439aa428dcb2cad1' : '0xe5a2758146bea3422532eeB537bE230113bacDd7';
+export const busdContract = isMainNet ? '0xe9e7cea3dedca5984780bafc599bd69add087d56' : '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
 
 // asset
 export const createNFTContract = '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955';

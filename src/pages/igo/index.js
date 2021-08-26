@@ -18,6 +18,7 @@ import { useHistory } from 'react-router';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import globalConfig from '../../config'
 
 const IGOScreen = (props) => {
   let history = useHistory();
@@ -42,6 +43,9 @@ const IGOScreen = (props) => {
   const [showStepGif, setShowStepGif] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
+  const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
+  const right16ChainId =  globalConfig.net_env === 'testnet' ? '0x61' : '0x38';
+  const rightRpcUrl = globalConfig.net_env === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
@@ -49,14 +53,14 @@ const IGOScreen = (props) => {
     if (ethereum) {
       setAddress(ethereum.selectedAddress);
 
-      if (Number(ethereum.networkVersion) !== 97) {
+      if (Number(ethereum.networkVersion) !== rightChainId) {
         setIsWrongNetWork(true);
       } else {
         setIsWrongNetWork(false);
       }
 
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 97) {
+        if (Number(networkIDstring) !== rightChainId) {
           setIsWrongNetWork(true);
         } else {
           setIsWrongNetWork(false);
@@ -306,14 +310,14 @@ const IGOScreen = (props) => {
         method: 'wallet_addEthereumChain',
         params: [
           {
-            chainId: '0x38',
+            chainId: right16ChainId,
             chainName: 'Smart Chain',
             nativeCurrency: {
               name: 'BNB',
               symbol: 'bnb',
               decimals: 18,
             },
-            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            rpcUrls: rightRpcUrl,
           },
         ],
       })
@@ -356,10 +360,7 @@ const IGOScreen = (props) => {
             }
 
             if (isWrongNetWork && history.location.pathname === '/igo') {
-              // goToRightNetwork(ethereum)
-              toast.dark('Please Choose BSC Testnet', {
-                position: toast.POSITION.TOP_CENTER,
-              });
+              goToRightNetwork(ethereum)
               return;
             }
 
