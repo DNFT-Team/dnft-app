@@ -2,19 +2,19 @@ import React from 'react';
 import styles from '../index.less';
 import { Select } from 'element-react';
 const cateType = [
-  { label: 'Lasted', value: 0, },
-  { label: 'Virtual reality', value: 1, },
-  { label: 'Domain', value: 2, },
-  { label: 'Art', value: 3, },
-  { label: 'Cooection', value: 4, },
-  { label: 'Sports', value: 5, },
-  { label: 'Game', value: 6, },
-]
-const cateType1 = [
-  { label: 'Most favorited', value: 0, },
-  { label: 'Price:high to low', value: 1, },
-  { label: 'Price:low to high', value: 2, },
-]
+  { label: 'Lasted', value: 'LASTED' },
+  { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+  { label: 'Domain', value: 'DOMAIN' },
+  { label: 'Art', value: 'ART' },
+  { label: 'Cooection', value: 'COOECTION' },
+  { label: 'Sports', value: 'SPORTS' },
+  { label: 'Game', value: 'GAME' },
+];
+const sortTagType = [
+  { label: 'Most favorited', value: 'likeCount' },
+  { label: 'Price:high to low', value: 'ASC-price' },
+  { label: 'Price:low to high', value: 'DESC-price' },
+];
 const Header = (props) => (
   <div className={styles.header}>
     <span className={styles.headerT}>Market
@@ -28,7 +28,7 @@ const Header = (props) => (
       </Select>
       <Select value={0} placeholder="请选择">
         {
-          cateType1.map((el) => <Select.Option key={el.value} label={el.label} value={el.value} />)
+          sortTagType.map((el) => <Select.Option key={el.value} label={el.label} value={el.value} />)
         }
       </Select>
     </div>

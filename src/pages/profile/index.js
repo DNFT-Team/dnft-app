@@ -31,7 +31,7 @@ const ProfileScreen = (props) => {
   let history = useHistory();
   useEffect(() => {
     if (token) {
-      dispatch(getMyProfileList({}, token));
+      dispatch(getMyProfileList({userId: address}, token));
       dispatch(
         getMyProfileBatch(
           {
