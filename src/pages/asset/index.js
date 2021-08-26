@@ -12,6 +12,7 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import defaultHeadSvg from '../../images/asset/Head.svg'
+import globalConfig from '../../config'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -104,6 +105,42 @@ const AssetScreen = (props) => {
     }
   }
 
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      if (globalConfig.net_env === 'testnet') {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId:'0x4',
+            },
+          ],
+        })
+      } else {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+              chainName: 'Smart Chain',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            },
+          ],
+        });
+      }
+
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  },[]);
+
   useEffect(() => {
     if (token) {
       getNFTList()
@@ -115,9 +152,7 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/asset') {
-        toast.dark('Please Choose Rinkeby', {
-          position: toast.POSITION.TOP_CENTER,
-        });
+        goToRightNetwork(ethereum);
       }
     }
   }, []);
@@ -128,9 +163,7 @@ const AssetScreen = (props) => {
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
         if (Number(networkIDstring) !== 97 && history.location.pathname === '/asset') {
-          toast.dark('Please Choose Rinkeby', {
-            position: toast.POSITION.TOP_CENTER,
-          });
+          goToRightNetwork(ethereum);
           setBalance(undefined);
 
           return;
@@ -185,8 +218,8 @@ const AssetScreen = (props) => {
           <div className={styleIcon}>
             <img src={defaultHeadSvg} />
           </div>
-          <span className={styleCoinName}>{chainType}</span>
-          <span>{chainType === 'DNFT' && balance }</span>
+          <span className={styleCoinName}>DNF</span>
+          <span>{balance}</span>
         </div>
         <div
           className={styleCreateNFT}

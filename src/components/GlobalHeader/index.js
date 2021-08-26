@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
 import styles from './index.less';
 import { css } from 'emotion';
@@ -21,12 +21,12 @@ import hecoSvg from '../../images/networks/logo_heco.svg'
 import dnftSvg from '../../images/networks/logo_dnft.svg'
 import globalConf from '../../config'
 
-
 // import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
   const { dispatch, chainType } = props;
+  const ref = useRef();
 
   const [isNetListVisible, setIsNetListVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
@@ -35,30 +35,10 @@ const GlobalHeader = (props) => {
     () => [
       {
         name: 'Ethereum Mainnet',
-        icon: netEthSvg,
+        icon: ethSvg,
         shortName: ['ETH', 'Ethereum'],
         shortIcon: ethSvg,
         netWorkId: 1,
-      },
-      {
-        name: 'Bsc Mainnet',
-        icon: bscNetSvg,
-        shortName: ['BSC', 'Bsc'],
-        shortIcon: bscSvg,
-        netWorkId: 56,
-      },
-      {
-        name: 'Bsc Mainnet',
-        icon: bscNetSvg,
-        shortName: ['BSC', 'Bsc'],
-        shortIcon: bscSvg,
-        netWorkId: 97,
-      },
-      {
-        name: 'Heco Mainnet',
-        icon: heroNetSvg,
-        shortName: ['HECO', 'Heco'],
-        shortIcon: hecoSvg,
       },
       {
         name: 'Polkadot Mainnet',
@@ -66,22 +46,18 @@ const GlobalHeader = (props) => {
         shortName: ['DOT', 'Polkadot'],
         shortIcon: polkadotSvg,
       },
-      {
-        name: 'DNFT Mainnet',
-        icon: dnftSvg,
-        shortName: ['DNFT', 'Dnft'],
-        shortIcon: dnftSvg,
-        netWorkId: 4,
-      },
-      {
-        name: 'Ropsten Test Mainnet',
-        shortName: ['Ropsten', 'Ropsten'],
-        netWorkId: 3,
-      },
-      {
-        name: 'Kovan Test Mainnet',
-        shortName: ['Kovan', 'Kovan'],
-        netWorkId: 42,
+      globalConf.net_env === 'mainnet' ? {
+        name: 'Bsc Mainnet',
+        icon: bscSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+        netWorkId: 56,
+      } : {
+        name: 'Bsc Mainnet Test',
+        icon: bscSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+        netWorkId: 97,
       },
     ],
     []
@@ -124,11 +100,56 @@ const GlobalHeader = (props) => {
     } else {
       alert('Please install wallet');
     }
-  }, [address, currentNetIndex, netArray]);
+  }, [address, netArray]);
 
   useEffect(() => {
     injectWallet();
   }, [injectWallet, window.ethereum]);
+
+  const goToRightNetwork = async (ethereum, netWorkId) => {
+    try {
+      if (netWorkId === 1) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId:'0x1',
+            },
+          ],
+        })
+      } else {
+        if (globalConf.net_env === 'testnet') {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [
+              {
+                chainId:'0x4',
+              },
+            ],
+          })
+        } else {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x38',
+                chainName: 'Smart Chain',
+                nativeCurrency: {
+                  name: 'BNB',
+                  symbol: 'bnb',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+              },
+            ],
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  };
 
   const renderModal = useMemo(
     () => (
@@ -148,17 +169,22 @@ const GlobalHeader = (props) => {
               style={{ border: index === netArray.length - 1 && 'none' }}
               onClick={() => {
                 setIsNetListVisible(false);
-                setCurrentNetIndex(index);
+                if (item.name === 'Polkadot Mainnet') {
+                  ref.current.click();
+                } else {
+                  goToRightNetwork(window.ethereum, item.netWorkId)
+                  setCurrentNetIndex(index);
+                }
               }}
             >
-              <span className={styleNetIcon}>{item.icon}</span>
+              <span className={styleNetIcon}><img src={item.icon} /></span>
               <span>{item.name}</span>
             </div>
           ))}
         </Dialog.Body>
       </Dialog>
     ),
-    [netArray]
+    [netArray, isNetListVisible]
   );
 
   return (
@@ -236,11 +262,11 @@ const GlobalHeader = (props) => {
             </div>
           </React.Fragment>
         )}
-        <a style={{cursor: 'pointer'}} href={mvpUrl} target="_blank" rel="noreferrer">
-          {polkadotNetSvg}
+        <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer">
+          {/* {polkadotNetSvg} */}
         </a>
       </div>
-      {/* {renderModal} */}
+      {renderModal}
     </header>
   );
 };
