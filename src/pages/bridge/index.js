@@ -104,7 +104,7 @@ const BridgeScreen = (props) => {
   const checkSuit = async (step = 3) => {
     let res = {netOk: false, address: '', balance: 0, isApprove: false}
     if (chainType !== 'ETH') {
-      goToRightNetwork();
+      goToRightNetwork(window.ethereum);
       toast.warning('Please connect ETH-NET', {position: toast.POSITION.TOP_CENTER});
       res.netOk = false
       setBalance(0)

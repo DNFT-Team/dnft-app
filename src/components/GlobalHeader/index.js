@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
 import styles from './index.less';
 import { css } from 'emotion';
 import {
   assetSvg,
-  netEthSvg,
-  bscNetSvg,
-  heroNetSvg,
   polkadotNetSvg,
   polkadotSvg,
 } from '../../utils/svg';
@@ -17,16 +14,15 @@ import { NET_WORK_VERSION } from 'utils/constant'
 
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
-import hecoSvg from '../../images/networks/logo_heco.svg'
-import dnftSvg from '../../images/networks/logo_dnft.svg'
 import globalConf from '../../config'
-
+import defaultHeadSvg from '../../images/asset/Head.svg'
 
 // import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
   const { dispatch, chainType } = props;
+  const ref = useRef();
 
   const [isNetListVisible, setIsNetListVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
@@ -35,30 +31,10 @@ const GlobalHeader = (props) => {
     () => [
       {
         name: 'Ethereum Mainnet',
-        icon: netEthSvg,
+        icon: ethSvg,
         shortName: ['ETH', 'Ethereum'],
         shortIcon: ethSvg,
         netWorkId: 1,
-      },
-      {
-        name: 'Bsc Mainnet',
-        icon: bscNetSvg,
-        shortName: ['BSC', 'Bsc'],
-        shortIcon: bscSvg,
-        netWorkId: 56,
-      },
-      {
-        name: 'Bsc Mainnet',
-        icon: bscNetSvg,
-        shortName: ['BSC', 'Bsc'],
-        shortIcon: bscSvg,
-        netWorkId: 97,
-      },
-      {
-        name: 'Heco Mainnet',
-        icon: heroNetSvg,
-        shortName: ['HECO', 'Heco'],
-        shortIcon: hecoSvg,
       },
       {
         name: 'Polkadot Mainnet',
@@ -66,26 +42,23 @@ const GlobalHeader = (props) => {
         shortName: ['DOT', 'Polkadot'],
         shortIcon: polkadotSvg,
       },
-      {
-        name: 'DNFT Mainnet',
-        icon: dnftSvg,
-        shortName: ['DNFT', 'Dnft'],
-        shortIcon: dnftSvg,
-        netWorkId: 4,
-      },
-      {
-        name: 'Ropsten Test Mainnet',
-        shortName: ['Ropsten', 'Ropsten'],
-        netWorkId: 3,
-      },
-      {
-        name: 'Kovan Test Mainnet',
-        shortName: ['Kovan', 'Kovan'],
-        netWorkId: 42,
+      globalConf.net_env === 'mainnet' ? {
+        name: 'Bsc Mainnet',
+        icon: bscSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+        netWorkId: 56,
+      } : {
+        name: 'Bsc Mainnet Test',
+        icon: bscSvg,
+        shortName: ['BSC', 'Bsc'],
+        shortIcon: bscSvg,
+        netWorkId: 97,
       },
     ],
     []
   );
+  console.log('globalheader', chainType)
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -99,9 +72,14 @@ const GlobalHeader = (props) => {
 
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
+        console.log(networkIDstring, 'networkIDstring')
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
+        let params = {address: ethereum.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+        // 存储address
+        dispatch(setProfileAddress(params))
+        dispatch(setProfileToken(params))
 
         setCurrentNetIndex(currentIndex);
       });
@@ -124,11 +102,63 @@ const GlobalHeader = (props) => {
     } else {
       alert('Please install wallet');
     }
-  }, [address, currentNetIndex, netArray]);
+  }, [address, netArray]);
 
   useEffect(() => {
     injectWallet();
   }, [injectWallet, window.ethereum]);
+
+  const goToRightNetwork = async (ethereum, netWorkId) => {
+    try {
+      if (netWorkId === 1) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [
+            {
+              chainId:'0x1',
+            },
+          ],
+        })
+      } else {
+        if (globalConf.net_env === 'testnet') {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x61',
+                chainName: 'Smart Chain Test',
+                nativeCurrency: {
+                  name: 'BNB',
+                  symbol: 'bnb',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+              },
+            ],
+          });
+        } else {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x38',
+                chainName: 'Smart Chain',
+                nativeCurrency: {
+                  name: 'BNB',
+                  symbol: 'bnb',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+              },
+            ],
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  };
 
   const renderModal = useMemo(
     () => (
@@ -148,17 +178,21 @@ const GlobalHeader = (props) => {
               style={{ border: index === netArray.length - 1 && 'none' }}
               onClick={() => {
                 setIsNetListVisible(false);
-                setCurrentNetIndex(index);
+                if (item.name === 'Polkadot Mainnet') {
+                  ref.current.click();
+                } else {
+                  goToRightNetwork(window.ethereum, item.netWorkId)
+                }
               }}
             >
-              <span className={styleNetIcon}>{item.icon}</span>
+              <span className={styleNetIcon}><img src={item.icon} /></span>
               <span>{item.name}</span>
             </div>
           ))}
         </Dialog.Body>
       </Dialog>
     ),
-    [netArray]
+    [netArray, isNetListVisible]
   );
 
   return (
@@ -170,7 +204,7 @@ const GlobalHeader = (props) => {
       <span>{globalConf.net_env}</span>
       <div className={styles.actionContainer}>
         <span
-          className={address ? '' : styleAddress}
+          className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
 
             if (address) {
@@ -193,54 +227,50 @@ const GlobalHeader = (props) => {
           }}
         >
           {address
-            ? `${address?.slice(0, 8)}...${address?.slice(28)}`
+            ? <span><span className='styleDot'></span><span>{address?.slice(0, 8)}...{address?.slice(38)}</span></span>
             : 'connect wallet'}
         </span>
         {address && (
           <div
-            className={actionItem}
+            className={styleAssetTarget}
             style={{ cursor: 'pointer' }}
             onClick={() => {
               history.push('/asset');
             }}
           >
-            {assetSvg}
+            <span>{assetSvg}</span>
+            <span>Asset</span>
           </div>
         )}
-        {currentNetIndex != undefined && (
-          <React.Fragment>
-            <div
-              style={{background: 'transparent'}}
-              className={actionItem}
-              onClick={() => {
-                setIsNetListVisible(true);
-              }}
-            >
-              <img src={netArray[currentNetIndex]?.shortIcon} />
+        <div className={styleActionContainer}>
+          <div
+            style={{background: 'transparent'}}
+            className={actionItem}
+            onClick={() => {
+              setIsNetListVisible(true);
+            }}
+          >
+            <img src={netArray[currentNetIndex]?.shortIcon} />
+          </div>
+          <div
+            className={styleNetContainer}
+            onClick={() => {
+              setIsNetListVisible(true);
+            }}
+          >
+            <div className={styleNetContainer}>
+              {/* {downArrowSvg} */}
             </div>
-            <div
-              className={styleNetContainer}
-              onClick={() => {
-                setIsNetListVisible(true);
-              }}
-            >
-              <div className={styleNetContainer}>
-                <span className={styleNetName}>
-                  {netArray[currentNetIndex]?.shortName[0]}
-                </span>
-                {/* {downArrowSvg} */}
-              </div>
-              <div style={{ color: '#8F9BBA' }}>
-                {netArray[currentNetIndex]?.shortName[1]}
-              </div>
+            <div style={{ color: '#23262F', fontWeight: 'bold' }}>
+              {netArray[currentNetIndex]?.shortName[1] || 'default'}
             </div>
-          </React.Fragment>
-        )}
-        <a style={{cursor: 'pointer'}} href={mvpUrl} target="_blank" rel="noreferrer">
-          {polkadotNetSvg}
+          </div>
+        </div>
+        <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer">
+          {/* {polkadotNetSvg} */}
         </a>
       </div>
-      {/* {renderModal} */}
+      {renderModal}
     </header>
   );
 };
@@ -275,10 +305,7 @@ const actionItem = css`
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  margin-left: 30px;
   margin-right: 10px;
-  filter: drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.25));
-  /* cursor: pointer; */
 `;
 
 const styleNetContainer = css`
@@ -291,11 +318,15 @@ const styleNetContainer = css`
     top: -4px;
   }
 `;
-const styleNetName = css`
-  font-weight: bold;
-  margin-right: 24px;
+const styleActionContainer = css`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 30px;
+  border: 1px solid #E1E6FF;
+  border-radius: 8px;
+  cursor: pointer;
 `;
-
 const styleModalContainer = css`
   width: 650px;
   border-radius: 10px;
@@ -348,12 +379,51 @@ const styleSearchContainer = css`
   }
 `;
 
+const styleHasAddress = css`
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #E1E6FF;
+  color: #23262F;
+  font-weight: bold;
+  &>span{
+    display: flex;
+    align-items: center;
+    .styleDot {
+      background: #68d3bc;
+      border-radius: 6px;
+      width: 6px;
+      height: 6px;
+      margin-right: 6px;
+    }
+  }
+
+`
 const styleAddress = css`
   cursor: pointer;
-  background: #233a7d;
+  background: #112DF2;
   color: white;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: bold;
 `;
+
+const styleAssetTarget = css`
+  background: #0834e8;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 8px;
+  margin-left: 30px;
+  span{
+    color: white;
+    display: flex;
+    padding: 0 4px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+`
