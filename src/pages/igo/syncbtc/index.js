@@ -14,6 +14,7 @@ import {Icon} from '@iconify/react'
 import { busdContract, igoContract, nft1155Contract } from 'utils/contract';
 import { igoAbi, busdAbi } from 'utils/abi';
 import Web3 from 'web3';
+import { WEB3_MAX_NUM } from 'utils/web3Tools';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router';
 import { post } from 'utils/request';
@@ -458,15 +459,8 @@ const SyncBtcScreen = (props) => {
                   );
 
                   await myBusdContract.methods
-                    .approve(
-                      igoContract,
-                      Web3.utils.toBN(
-                        '115792089237316195423570985008687907853269984665640564039457584007913129639935'
-                      )
-                    )
-                    .send({
-                      from: address,
-                    });
+                    .approve(igoContract, WEB3_MAX_NUM)
+                    .send({ from: address });
 
                   setIsApproved(true);
                 } catch (e) {
