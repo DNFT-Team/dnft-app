@@ -155,7 +155,8 @@ const Mining = (props) => {
         rewardList.push(currentRewardInfo);
       }
 
-      let isRewardNft = await myContract.methods.isRewardNft().call();
+      let isRewardNft = await myContract.methods.isRewardNftOf(account).call();
+      let isClaimNft = await myContract.methods.isClaimNftOf(account).call();
 
       return {
         rewardRate,
@@ -169,6 +170,7 @@ const Mining = (props) => {
         account,
         rewardList,
         isRewardNft,
+        isClaimNft
       };
     },
     []
@@ -503,7 +505,7 @@ const Mining = (props) => {
             </div>
           )}
           <div className={styleStakeTips}>
-            Note：you will not be able to UNstake your DNF or claim your rewards
+            Note：you will not be able to Unstake your DNF or claim your rewards
             before the staking period has ended
           </div>
           <div
@@ -700,7 +702,7 @@ const Mining = (props) => {
                           dealWithIndexArray;
 
                         setStateData(cloneDeep(dealWithStateData));
-                        getBalance();
+                        init()
                       }
                     }}
                   >
@@ -715,7 +717,7 @@ const Mining = (props) => {
                           styleDisableButton
                       )}
                     >
-                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'UNstake'}
+                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'Unstake'}
                     </div>
                   </span>
                 )}
@@ -724,16 +726,15 @@ const Mining = (props) => {
           })}
       </div>
     ),
-    [renderNoData, stakeIndex, stateData]
+    [renderNoData, stakeIndex, stateData, init]
   );
 
   const renderClaim = useCallback(
     (stakeInfo) => {
-      // const isValidGetNft =
-      //   stakeInfo?.isRewardNft?.[0] === true &&
-      //   stakeInfo?.isRewardNft?.[1] === false;
+      const isValidGetNft =
+        stakeInfo?.isRewardNft === true &&
+        stakeInfo?.isClaimNft === false;
 
-      const isValidGetNft = true
       return (
         <div>
           <div className={styleClaimCardContainer}>
@@ -818,7 +819,7 @@ const Mining = (props) => {
 
                   if (result.transactionHash) {
                     const nftTokenId = result.events.Claim.returnValues.nftTokenId;
-                    const result = await post(
+                    await post(
                       '/api/v1/nft/',
                       {
                         name: nftTokenId,
@@ -829,7 +830,8 @@ const Mining = (props) => {
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
                         tokenAddr: contractAddress,
-                        category: 'Art'
+                        category: 'Art',
+                        collectionId: -1
                       },
                       token
                     );
@@ -838,6 +840,7 @@ const Mining = (props) => {
                 } finally {
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isClaiming = false;
+                  init()
 
                   setStateData(cloneDeep(dealWithStateData));
                 }
