@@ -218,7 +218,8 @@ const SyncBtcScreen = (props) => {
           avatorUrl: `https://dnft.world/igo/${nftId}.png`,
           tokenAddr: nft1155Contract,
           tokenId: nftId,
-          category: 'Game'
+          category: 'Game',
+          collectionId: -1,
         },
         token
       );
