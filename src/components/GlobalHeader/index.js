@@ -115,7 +115,7 @@ const GlobalHeader = (props) => {
           method: 'wallet_switchEthereumChain',
           params: [
             {
-              chainId:'0x1',
+              chainId: '0x1',
             },
           ],
         })
@@ -201,7 +201,6 @@ const GlobalHeader = (props) => {
         <i className='el-icon-search' />
         <Input placeholder={'Search Art,Game or Fun'} />
       </div>
-      <span>{globalConf.net_env}</span>
       <div className={styles.actionContainer}>
         <span
           className={address ? styleHasAddress : styleAddress}
