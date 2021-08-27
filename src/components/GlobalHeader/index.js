@@ -58,7 +58,7 @@ const GlobalHeader = (props) => {
     ],
     []
   );
-  console.log(currentNetIndex, 'currentNetIndex')
+  console.log('globalheader', chainType)
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -76,6 +76,10 @@ const GlobalHeader = (props) => {
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
+        let params = {address: ethereum.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+        // 存储address
+        dispatch(setProfileAddress(params))
+        dispatch(setProfileToken(params))
 
         setCurrentNetIndex(currentIndex);
       });
@@ -118,13 +122,20 @@ const GlobalHeader = (props) => {
       } else {
         if (globalConf.net_env === 'testnet') {
           await ethereum.request({
-            method: 'wallet_switchEthereumChain',
+            method: 'wallet_addEthereumChain',
             params: [
               {
-                chainId:'0x4',
+                chainId: '0x61',
+                chainName: 'Smart Chain Test',
+                nativeCurrency: {
+                  name: 'BNB',
+                  symbol: 'bnb',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
               },
             ],
-          })
+          });
         } else {
           await ethereum.request({
             method: 'wallet_addEthereumChain',
@@ -171,7 +182,6 @@ const GlobalHeader = (props) => {
                   ref.current.click();
                 } else {
                   goToRightNetwork(window.ethereum, item.netWorkId)
-                  setCurrentNetIndex(index);
                 }
               }}
             >
