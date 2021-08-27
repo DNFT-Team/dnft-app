@@ -55,7 +55,8 @@ const AssetScreen = (props) => {
   const [category, setCategory] = useState('LASTED');
   const [sortTag, setSortTag] = useState('likeCount')
   const [list, setList] = useState();
-  const [sortOrder, setSortOrder] = useState('ASC')
+  const [sortOrder, setSortOrder] = useState('ASC');
+  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
 
   let history = useHistory();
 
@@ -68,7 +69,6 @@ const AssetScreen = (props) => {
   };
 
   const getNFTList = async () => {
-    console.log(selectedTab, 'selectedTab', selectedTab.value === 'MYFAVORITE')
     try {
       if (selectedTab.value === 'MYFAVORITE') {
         const { data } = await post(
@@ -162,10 +162,9 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== 97 && history.location.pathname === '/asset') {
+        if (Number(networkIDstring) !== rightChainId && history.location.pathname === '/asset') {
+          setBalance(undefined)
           goToRightNetwork(ethereum);
-          setBalance(undefined);
-
           return;
         }
 
