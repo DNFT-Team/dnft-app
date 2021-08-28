@@ -215,6 +215,7 @@ const Mining = (props) => {
   }, [getItemStakeInfoByContract]);
 
   const init = useCallback(async () => {
+    setIsVisible(false)
     await getBalance();
     await getStakeInfo();
   }, [getStakeInfo]);
@@ -553,6 +554,9 @@ const Mining = (props) => {
                         amount: Web3.utils.toWei(stakeValue, 'ether'),
                         from: stakeInfo.account,
                       });
+                    toast.info('Operation succeeded！', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                   } finally {
                     const dealWithStateData = stateData;
                     dealWithStateData[stakeIndex].isStaking = false;
@@ -688,6 +692,9 @@ const Mining = (props) => {
                           from: stakeInfo.account,
                           idx: index,
                         });
+                        toast.info('Operation succeeded！', {
+                          position: toast.POSITION.TOP_CENTER,
+                        });
                       } finally {
                         const currentUnstakeLoadingIndex =
                           stateData[stakeIndex].unstakeLoadingIndex;
@@ -817,6 +824,10 @@ const Mining = (props) => {
                     from: stakeInfo.account,
                   });
 
+                  toast.info('Operation succeeded！', {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+
                   if (result.transactionHash) {
                     const nftTokenId = result.events.Claim.returnValues.nftTokenId;
                     await post(
@@ -840,7 +851,7 @@ const Mining = (props) => {
                 } finally {
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isClaiming = false;
-                  init()
+                  init();
 
                   setStateData(cloneDeep(dealWithStateData));
                 }
