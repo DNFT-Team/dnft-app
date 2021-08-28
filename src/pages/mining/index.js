@@ -847,7 +847,7 @@ const Mining = (props) => {
                     await post(
                       '/api/v1/nft/',
                       {
-                        name: nftTokenId,
+                        name: `reward#${nftTokenId}`,
                         supply: 1,
                         avatorUrl: `https://dnft.world/staking/pool${nftTokenId}.png`,
                         address: stakeInfo.account,
@@ -855,7 +855,7 @@ const Mining = (props) => {
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
                         tokenAddr: contractAddress,
-                        category: 'Art',
+                        category: 'ART',
                         collectionId: -1
                       },
                       token

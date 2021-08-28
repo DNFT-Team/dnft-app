@@ -253,7 +253,8 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
+          // background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
+          background: `100% 100% no-repeat url(${item.avatorUrl})`,
           backgroundSize: 'cover',
         }}
         className={styleShortPicture}
