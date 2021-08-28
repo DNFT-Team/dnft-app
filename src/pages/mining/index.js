@@ -411,43 +411,40 @@ const Mining = (props) => {
       >
         <div>
           <div className={styleCardTitle}>
-            <img src={nft} style={{ width: 40 }} />
-            DNF Staking Pool
+            <div>
+              <img src={nft} style={{ width: 40 }} />
+              <span>DNF Staking Pool</span>
+            </div>
+            <span>{(stakeInfo?.duration / 30) || 0} Months</span>
           </div>
           <div className={styleCardInfo}>
             <div className={styleItemContainer}>
-              <div className={styleText}>Reward</div>
+              <div className={styleText}>Total DNF Reward</div>
               <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
             </div>
             <div className={styleItemContainer}>
-              <div className={styleText}>DNF</div>
+              <div className={styleText}>Total DNF Staked</div>
               <div className={styleDollar}>
-                {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
+                {Number(stakeInfo?.totalStaked || 0).toFixed(
                   2
                 )}
-              </div>
-            </div>
-            <div className={styleItemContainer}>
-              <div className={styleText}>DNF</div>
-              <div className={styleDollar}>
-                {(
-                  (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
-                ).toFixed(2)}
-                %
               </div>
             </div>
           </div>
           <div className={styleBottomContainer}>
             <div className={styleAPY}>
-              <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
-              <div>APY(%)</div>
+              <div className={stylePercent}>{(
+                (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
+              ).toFixed(2)}
+                %</div>
+              <div>Current Progress</div>
             </div>
             <div className={styleCardButton}>Stake</div>
           </div>
         </div>
         <div className={styleLabelContainer}>
           <div className='percent'>{stakeInfo?.rewardRate || 0.0}</div>
-          <div>APY(%)</div>
+          <div>APR(%)</div>
         </div>
       </div>
     ),
@@ -500,7 +497,7 @@ const Mining = (props) => {
         <div>
           <div className={styleTableHeader}>
             <span>Token</span>
-            <span>APY(%)</span>
+            <span>APR(%)</span>
             <span>Staking Period(Pays)</span>
           </div>
           <div className={styleTableBody}>
@@ -648,7 +645,7 @@ const Mining = (props) => {
     (stakeInfo) => (
       <div className={styleUnstakeContainer}>
         <div className={styleTableHeader}>
-          <span>Staked DNF</span>
+          <span>Staked (DNF)</span>
           <span>Reward (DNF)</span>
           <span>Total（DNF）</span>
           <span>Status</span>
@@ -912,7 +909,7 @@ const Mining = (props) => {
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
-              'StakeDNF for DNF under a  fixed APY（Annual percent yield）'}
+              'StakeDNF for DNF under a  fixed APR（Annual percent yield）'}
             {stakeTab === 'unstake' &&
               'Click “Unstake” button to get your staked DNF and the rewards back'}
             {stakeTab === 'claim' &&
@@ -1085,12 +1082,25 @@ const styleCardIsActive = css`
 
 const styleCardTitle = css`
   display: flex;
-  align-items: center;
   font-weight: 600;
   font-size: 20px;
   color: #B3B7DD;
   padding-bottom: 16px;
   border-bottom: 1px dashed #EDEDED;
+  flex-direction: column;
+  div {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    & > span{
+      color: #0834e8;
+    }
+  }
+  & > span{
+    margin-left: 60px;
+    font-size: 14px;
+    color: #B3B7DD;
+  }
   img {
     margin-right: 20px;
   }
@@ -1122,9 +1132,9 @@ const stylePercent = css`
 const styleCardInfo = css`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   padding: 22px 0 30px 0;
   border-bottom: 1px dashed #EDEDED;
+  justify-content: space-around;
 `;
 
 const styleItemContainer = css`
