@@ -210,6 +210,9 @@ const GlobalHeader = (props) => {
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
+            if (globalConf.net_env === 'mainnet') {
+              return;
+            }
 
             if (address) {
               history.push(`/profile/address/${address}`)
