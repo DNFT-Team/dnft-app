@@ -126,7 +126,7 @@ const Mining = (props) => {
       duration = duration / 60 / 60 / 24;
 
       let rewardRate = await myContract.methods.rewardRate().call();
-      rewardRate = getFormatNumber(rewardRate * 100 * (duration / 30));
+      rewardRate = getFormatNumber(rewardRate * 100 * (12 / (duration / 30)));
 
       let stakeListLength = await myContract.methods
         .getStakeInfoLength(account)

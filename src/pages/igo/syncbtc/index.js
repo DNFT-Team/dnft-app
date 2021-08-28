@@ -285,10 +285,31 @@ const SyncBtcScreen = (props) => {
   }, [injectWallet, window.ethereum]);
 
   useEffect(() => {
-    getMedalInfo();
-    getRewardInfo();
-    getIsApproved();
-    getBusdAmount();
+    if (isTestnet) {
+      getMedalInfo();
+      getRewardInfo();
+      getIsApproved();
+      getBusdAmount();
+    } else {
+      setMedalData({
+        Gold: {
+          total: 50,
+          mintedTotal: 50,
+        },
+        Silver: {
+          total: 450,
+          mintedTotal: 450,
+        },
+        Bronze: {
+          total: 2500,
+          mintedTotal: 2500,
+        },
+        Total: {
+          total: 3000,
+          mintedTotal: 3000,
+        },
+      })
+    }
   }, [address, isWrongNetWork]);
 
   useEffect(() => {
@@ -344,6 +365,9 @@ const SyncBtcScreen = (props) => {
           src={playButton}
           onClick={async () => {
             if (!isTestnet) {
+              toast.info('Ended!', {
+                position: toast.POSITION.TOP_CENTER,
+              });
               return;
             }
 
@@ -537,6 +561,7 @@ const SyncBtcScreen = (props) => {
           4.The total amount of Gold/Silver/Bronze medal NFT are 50/450/2500.
         </p>
         <p>5.Each address is only allowed to participate once.</p>
+        <p>6.Start Date: 2021-08-08, End Date: 2021-08-28.</p>
 
         <b>Rewards:</b>
         <p>

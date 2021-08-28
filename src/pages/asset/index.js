@@ -32,7 +32,7 @@ const AssetScreen = (props) => {
   }];
 
   const cateType = [
-    { label: 'Lasted', value: 'LASTED' },
+    // { label: 'Lasted', value: 'LASTED' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
@@ -52,7 +52,7 @@ const AssetScreen = (props) => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [category, setCategory] = useState('LASTED');
+  const [category, setCategory] = useState('ART');
   const [sortTag, setSortTag] = useState('likeCount')
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
@@ -223,14 +223,14 @@ const AssetScreen = (props) => {
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
         </div>
-        <div
+        {/* <div
           className={styleCreateNFT}
           onClick={() => {
             history.push('/asset/create');
           }}
         >
           Create NFT
-        </div>
+        </div> */}
       </div>
     ),
     [balance]

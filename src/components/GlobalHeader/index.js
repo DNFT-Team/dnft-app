@@ -360,7 +360,7 @@ const styleNetItem = css`
   font-size: 18px;
   color: #233a7d;
   font-weight: bold;
-  padding: 0 20px;
+  padding: 0 20px 0 16px;
   cursor: pointer;
   &:hover {
     background: #f6f7f9;
