@@ -215,7 +215,8 @@ const Mining = (props) => {
   }, [getItemStakeInfoByContract]);
 
   const init = useCallback(async () => {
-    setIsVisible(false)
+    setIsVisible(false);
+    setStakeValue(undefined);
     await getBalance();
     await getStakeInfo();
   }, [getStakeInfo]);
