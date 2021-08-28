@@ -69,6 +69,7 @@ const Mining = (props) => {
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [isBalanceLoading, setBalanceIsLoading] = useState(false);
   const [isStakeInfoLoading, setIsStakeInfoLoading] = useState(false);
+  const [isUnStakeLoading, setIsUnStakeLoading] = useState(false);
 
   const [stateData, setStateData] = useState(initState);
   const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
@@ -214,11 +215,14 @@ const Mining = (props) => {
     }
   }, [getItemStakeInfoByContract]);
 
-  const init = useCallback(async () => {
-    setIsVisible(false);
+  const init = useCallback(async (doNotNeedModalHidden) => {
+    if (!doNotNeedModalHidden) {
+      setIsVisible(false);
+    }
     setStakeValue(undefined);
     await getBalance();
     await getStakeInfo();
+    setIsUnStakeLoading(false)
   }, [getStakeInfo]);
 
   useEffect(() => {
@@ -561,7 +565,9 @@ const Mining = (props) => {
                   } finally {
                     const dealWithStateData = stateData;
                     dealWithStateData[stakeIndex].isStaking = false;
-                    init();
+                    setIsUnStakeLoading(true)
+                    setStakeTab('unstake');
+                    init(true);
 
                     setStateData(cloneDeep(dealWithStateData));
                   }
@@ -631,7 +637,11 @@ const Mining = (props) => {
           <span>Total（DNF）</span>
           <span>Status</span>
         </div>
-        {!(stakeInfo?.stakeInfoList.length > 0)
+        <Loading
+          loading={isUnStakeLoading}
+          style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
+        />
+        {isUnStakeLoading ? null : !(stakeInfo?.stakeInfoList.length > 0)
           ? renderNoData
           : stakeInfo?.stakeInfoList?.map((item, index) => {
             const startDay = dayjs(item[1] * 1000);
@@ -734,7 +744,7 @@ const Mining = (props) => {
           })}
       </div>
     ),
-    [renderNoData, stakeIndex, stateData, init]
+    [renderNoData, stakeIndex, stateData, init, isUnStakeLoading]
   );
 
   const renderClaim = useCallback(
@@ -1219,11 +1229,11 @@ const styleTableBody = css`
     flex: 1;
   }
   .circular {
-    width: 34px;
-    height: 25px;
+    width: 34px !important;
+    height: 25px !important;
     left: 26px;
-    position: relative;
-    top: 10px;
+    position: relative !important;
+    top: 10px !important;
   }
 `;
 
@@ -1335,6 +1345,12 @@ const styleUnstakeContainer = css`
   overflow: auto;
   min-height: 200px;
   max-height: 50vh;
+  .circular {
+    position: relative;
+    top: 100px;
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 const styleNoDataContainer = css`
