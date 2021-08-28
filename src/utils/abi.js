@@ -953,6 +953,20 @@ export const firstStakeAbi = [
     'outputs': [],
     'stateMutability': 'nonpayable',
     'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawDnftOfOwner',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawNftOfOwner',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
   }
 ]
 
@@ -1533,6 +1547,20 @@ export const secondStakeAbi = [
     'outputs': [],
     'stateMutability': 'nonpayable',
     'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawDnftOfOwner',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawNftOfOwner',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
   }
 ]
 
@@ -2109,6 +2137,20 @@ export const thirdStakeAbi = [
       }
     ],
     'name': 'withdraw',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawDnftOfOwner',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
+  },
+  {
+    'inputs': [],
+    'name': 'withdrawNftOfOwner',
     'outputs': [],
     'stateMutability': 'nonpayable',
     'type': 'function'

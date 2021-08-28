@@ -263,7 +263,7 @@ const GlobalHeader = (props) => {
             }}
           >
             <div style={{ color: '#23262F', fontWeight: 'bold',marginRight: '10px', textAlign: 'right' }}>
-              {netArray[currentNetIndex]?.shortName[1] || 'network'}
+              {netArray[currentNetIndex]?.shortName[1] || 'Network'}
             </div>
           </div>
         </div>

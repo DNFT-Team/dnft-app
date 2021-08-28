@@ -48,6 +48,7 @@ const SyncBtcScreen = (props) => {
   const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
   const right16ChainId =  globalConfig.net_env === 'testnet' ? '0x61' : '0x38';
   const rightRpcUrl = globalConfig.net_env === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
+  const isTestnet = globalConfig.net_env === 'testnet';
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
@@ -55,14 +56,14 @@ const SyncBtcScreen = (props) => {
     if (ethereum) {
       setAddress(ethereum.selectedAddress);
 
-      if (Number(ethereum.networkVersion) !== rightChainId) {
+      if ((Number(ethereum.networkVersion) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
         setIsWrongNetWork(true);
       } else {
         setIsWrongNetWork(false);
       }
 
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== rightChainId) {
+        if ((Number(networkIDstring) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
           setIsWrongNetWork(true);
         } else {
           setIsWrongNetWork(false);
@@ -97,11 +98,6 @@ const SyncBtcScreen = (props) => {
         medalIds.map((item) => myContract.methods.tokenIds(item).call())
       );
 
-      // main
-      // const goldMintedTotal = Number(data[0][2]) - 10;
-      // const silverMintedTotal = Number(data[1][2]) - 50;
-      // const bronzeMintedTotal = Number(data[2][2]) + 60;
-
       const goldMintedTotal =
         Number(data[0][1]) - Number(data[0][2]) < 5
           ? Number(data[0][1]) - 5
@@ -127,24 +123,24 @@ const SyncBtcScreen = (props) => {
         Gold: {
           id: data[0][0],
           total: Number(data[0][1]),
-          mintedTotal: isNotEnough ? Number(data[0][1]) : goldMintedTotal,
+          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[0][1]) : goldMintedTotal,
           isValid: data[0][3],
         },
         Silver: {
           id: data[1][0],
           total: Number(data[1][1]),
-          mintedTotal: isNotEnough ? Number(data[1][1]) : silverMintedTotal,
+          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[1][1]) : silverMintedTotal,
           isValid: data[1][3],
         },
         Bronze: {
           id: data[2][0],
           total: Number(data[2][1]),
-          mintedTotal: isNotEnough ? Number(data[2][1]) : bronzeMintedTotal,
+          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[2][1]) : bronzeMintedTotal,
           isValid: data[2][3],
         },
         Total: {
           total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
-          mintedTotal: isNotEnough
+          mintedTotal: (!isTestnet || isNotEnough)
             ? Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1])
             : goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
           isValid: data[0][3] || data[1][3] || data[2][3],
@@ -309,6 +305,10 @@ const SyncBtcScreen = (props) => {
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
+      if (history.location.pathname !== '/igo/syncBtc') {
+        return;
+      }
+
       await ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [
@@ -340,9 +340,13 @@ const SyncBtcScreen = (props) => {
       {!playing && (
         <img
           alt="img"
-          className={stylePlayButton}
+          className={isTestnet ? stylePlayButton : styleStopPlayButton}
           src={playButton}
           onClick={async () => {
+            if (!isTestnet) {
+              return;
+            }
+
             let ethereum = window.ethereum;
 
             if (medalData.Total.isNotEnough) {
@@ -635,6 +639,21 @@ const styleFiveRings = css`
   left: 50%;
   transform: translateX(-50%);
 `;
+
+const styleStopPlayButton = css`
+  top: 52%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: not-allowed;
+  width: 10%;
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
+`
 
 const stylePlayButton = css`
   @keyframes slidein {

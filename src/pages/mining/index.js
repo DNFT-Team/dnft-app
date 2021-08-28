@@ -230,6 +230,9 @@ const Mining = (props) => {
   }, [init]);
 
   const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/mining') {
+      return;
+    }
     try {
       let result;
 

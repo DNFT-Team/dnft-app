@@ -106,6 +106,9 @@ const AssetScreen = (props) => {
   }
 
   const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/asset') {
+      return;
+    }
     try {
       if (globalConfig.net_env === 'testnet') {
         await ethereum.request({
