@@ -98,19 +98,6 @@ const SyncBtcScreen = (props) => {
         medalIds.map((item) => myContract.methods.tokenIds(item).call())
       );
 
-      const goldMintedTotal =
-        Number(data[0][1]) - Number(data[0][2]) < 5
-          ? Number(data[0][1]) - 5
-          : Number(data[0][2]);
-      const silverMintedTotal =
-        Number(data[1][1]) - Number(data[1][2]) < 5
-          ? Number(data[1][1]) - 5
-          : Number(data[1][2]);
-      const bronzeMintedTotal =
-        Number(data[2][1]) - Number(data[2][2]) < 5
-          ? Number(data[2][1]) - 5
-          : Number(data[2][2]);
-
       const isNotEnough =
         Number(data[0][1]) -
           Number(data[0][2]) +
@@ -119,30 +106,29 @@ const SyncBtcScreen = (props) => {
           Number(data[2][1]) -
           Number(data[2][2]) ===
         0;
+
       setMedalData({
         Gold: {
           id: data[0][0],
           total: Number(data[0][1]),
-          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[0][1]) : goldMintedTotal,
+          mintedTotal: data[0][2],
           isValid: data[0][3],
         },
         Silver: {
           id: data[1][0],
           total: Number(data[1][1]),
-          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[1][1]) : silverMintedTotal,
+          mintedTotal: data[1][2],
           isValid: data[1][3],
         },
         Bronze: {
           id: data[2][0],
           total: Number(data[2][1]),
-          mintedTotal: (!isTestnet || isNotEnough) ? Number(data[2][1]) : bronzeMintedTotal,
+          mintedTotal: data[2][2],
           isValid: data[2][3],
         },
         Total: {
           total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
-          mintedTotal: (!isTestnet || isNotEnough)
-            ? Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1])
-            : goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
+          mintedTotal: data[0][2] + data[1][2] + data[2][2],
           isValid: data[0][3] || data[1][3] || data[2][3],
           isNotEnough: isNotEnough,
         },
@@ -439,12 +425,12 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>Gold Medal NFT</span>
             <span className='goal'>Supply：{medalData.Gold.total}</span>
-            <div className='raised'>Minted：{medalData.Gold.mintedTotal}</div>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Gold.mintedTotal}</div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>Silver Medal NFT</span>
             <span className='goal'>Supply：{medalData.Silver.total}</span>
-            <div className='raised'>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
               Minted：
               {medalData.Silver.mintedTotal}
             </div>
@@ -454,7 +440,7 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>Bronze Medal NFT</span>
             <span className='goal'>Supply：{medalData.Bronze.total}</span>
-            <div className='raised'>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
               Minted：
               {medalData.Bronze.mintedTotal}
             </div>
@@ -462,7 +448,7 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>All Medal’s NFT</span>
             <span className='goal'>Supply：{medalData.Total.total}</span>
-            <div className='raised'>Minted：{medalData.Total.mintedTotal}</div>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Total.mintedTotal}</div>
           </div>
         </div>
       </div>
@@ -561,7 +547,7 @@ const SyncBtcScreen = (props) => {
           4.The total amount of Gold/Silver/Bronze medal NFT are 50/450/2500.
         </p>
         <p>5.Each address is only allowed to participate once.</p>
-        <p>6.Start Date: 2021-08-08, End Date: 2021-08-28.</p>
+        {!isTestnet && <p>6.Start Date: 2021-08-08, End Date: 2021-08-28.</p>}
 
         <b>Rewards:</b>
         <p>

@@ -28,6 +28,19 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../config'
 
+const stakingJson = [{
+  'name':'The Spirit Of Silence',
+  'description':'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
+  'image':'https://www.dnft.world/staking/pool1.png'
+},{
+  'name':'FRIDA\'S TEARS',
+  'description':'I drank to drown my sorrows, but the damned things learned how to swim.',
+  'image':'https://www.dnft.world/staking/pool2.png',
+},{
+  'name':'THERE ARE NO STRANGE LANDS',
+  'description':'There are no strange lands. It is the traveler who is the only stranger.',
+  'image':'https://www.dnft.world/staking/pool3.png',
+}]
 const Mining = (props) => {
   let history = useHistory();
   const { token } = props;
@@ -761,7 +774,7 @@ const Mining = (props) => {
           <div className={styleClaimCardContainer}>
             <div className={stylePicture}>
               <img
-                src={`https://dnft.world/staking/pool${stakeIndex + 1}.png`}
+                src={stakingJson[stakeIndex].image}
               />
             </div>
             <div className={styleClaimInfo}>
@@ -774,9 +787,10 @@ const Mining = (props) => {
                     fontWeight: 900,
                     fontSize: 20,
                     color: '#1B2559',
+                    width: '210px'
                   }}
                 >
-                  Shanghaibar
+                  {stakingJson[stakeIndex].name}
                 </span>
                 <span className={styleTag}>On sale</span>
               </div>
@@ -794,9 +808,7 @@ const Mining = (props) => {
               </span>
               <span>Description ：</span>
               <span style={{ color: '#8F9BBA' }}>
-                Version 02 of Editting screen is all about fitting it as a side
-                bar. One of the reasons for this is that we wanted to have all
-                the content visible on multiple{' '}
+                {stakingJson[stakeIndex].description}
               </span>
             </div>
           </div>
@@ -847,16 +859,17 @@ const Mining = (props) => {
                     await post(
                       '/api/v1/nft/',
                       {
-                        name: `reward#${nftTokenId}`,
+                        name: stakingJson[Number(nftTokenId) - 1].name,
                         supply: 1,
-                        avatorUrl: `https://dnft.world/staking/pool${nftTokenId}.png`,
+                        avatorUrl:stakingJson[Number(nftTokenId) - 1].image,
                         address: stakeInfo.account,
                         chainType: 'BSC',
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
                         tokenAddr: contractAddress,
                         category: 'ART',
-                        collectionId: -1
+                        collectionId: -1,
+                        description: stakingJson[Number(nftTokenId) - 1].description,
                       },
                       token
                     );
@@ -895,13 +908,13 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            DNF staking（{Math.round(stakeInfo?.duration)}days）
+            DNF Staking（{Math.round(stakeInfo?.duration)}days）
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
               'StakeDNF for DNF under a  fixed APY（Annual percent yield）'}
             {stakeTab === 'unstake' &&
-              'Click “UNstake” button to get your staked DNF and the rewards back'}
+              'Click “Unstake” button to get your staked DNF and the rewards back'}
             {stakeTab === 'claim' &&
               'If your have staked more than 200 DNF in a single staking，you will be eligible to claim the reward DNF.'}
           </div>
@@ -1306,7 +1319,8 @@ const styleClaimCardContainer = css`
 `;
 
 const stylePicture = css`
-  width: 250px;
+  min-width: 220px;
+  max-width: 220px;
   margin-right: 20px;
   img {
     border-radius: 10px 0 0 10px;
