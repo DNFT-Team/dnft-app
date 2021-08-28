@@ -11,7 +11,7 @@ const IGOScreen = (props) => {
   let history = useHistory();
 
   const gameList = [
-    { title: 'SyncBtc', description: 'Get Nft while syncing the tokens', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
+    { title: 'SyncBtc', description: 'Get NFT while syncing the tokens', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
     { title: 'Gamify-Age', description: 'Bunch of games are on their way', avatarUrl: comingSoon, isComing: true }
   ]
 
@@ -59,7 +59,7 @@ const IGOScreen = (props) => {
   return (
     <div className={styleIgo}>
       <div className="content">
-        <Heading as="h3"  fontSize={['1.8rem', '2.6rem', '3rem', '3rem', '3.429rem']}>Game List</Heading>
+        <Heading as="h3"  fontSize={['1.8rem', '2.6rem', '3rem', '3rem', '3.429rem']}>IGO</Heading>
         <Text className="describe" fontSize={['.6rem', '.8rem', '.8rem', '1rem', '1.2rem']}>
           <strong>Gamify</strong>
           to adapt (a task) so that it takes on the form of a game
