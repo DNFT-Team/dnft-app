@@ -12,7 +12,7 @@ const IGOScreen = (props) => {
 
   const gameList = [
     { title: 'SyncBtc', description: 'Get NFT while syncing the tokens', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
-    { title: 'Gamify-Age', description: 'Bunch of games are on their way', avatarUrl: comingSoon, isComing: true }
+    { title: 'GameFi-Age', description: 'Bunch of games are on their way', avatarUrl: comingSoon, isComing: true }
   ]
 
   const handlePlay = (item) => {
