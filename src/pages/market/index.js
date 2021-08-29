@@ -15,7 +15,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { getMarketList } from 'reduxs/actions/market';
 const Market = (props) => {
   let history = useHistory();
-  const { dispatch, token, datas } = props;
+  const { dispatch, token, datas, pending } = props;
   const [category, setCategory] = useState('LASTED');
   const [sortTag, setSortTag] = useState('likeCount');
   const [sortOrder, setSortOrder] = useState('ASC');
@@ -129,6 +129,10 @@ const Market = (props) => {
         </div>
       </div>
       <div className={styles.ArtContainer}>
+        <Loading
+          loading={pending}
+          style={{ position: 'absolute', top: '40%', width: 'calc(100% - 76px)' }}
+        />
         <div className={styles.content111}>
           <InfiniteScroll
             initialLoad={false}
@@ -158,6 +162,7 @@ const Market = (props) => {
 const mapStateToProps = ({ profile, market }) => ({
   token: profile.token,
   datas: market.datas,
+  pending: market.pending,
 });
 export default withRouter(connect(mapStateToProps)(Market));
 const styleNoDataContainer = css`

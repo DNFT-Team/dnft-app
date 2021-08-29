@@ -103,7 +103,7 @@ const ProfileEditScreen = (props) => {
               handleAvatarScucess(e.file);
             }}
           >
-            {<img src={imageUrl || datas.avatorUrl || camera} className={styles.avatarImg} />}
+            {<img src={imageUrl || datas?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>
           {renderFormItem(
             'Name',
