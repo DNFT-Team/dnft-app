@@ -1094,6 +1094,7 @@ const styleCardTitle = css`
     flex-direction: row;
     & > span{
       color: #0834e8;
+      opacity: 0.8;
     }
   }
   & > span{
