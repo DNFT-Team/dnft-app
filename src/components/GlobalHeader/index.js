@@ -210,27 +210,28 @@ const GlobalHeader = (props) => {
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
-            if (globalConf.net_env === 'mainnet') {
-              return;
-            }
 
-            if (address) {
+            if (globalConf.net_env !== 'mainnet' && address) {
               history.push(`/profile/address/${address}`)
               return;
             }
-            let ethereum = window.ethereum;
-            await ethereum.enable();
-            const accounts = await ethereum.request({
-              method: 'eth_requestAccounts',
-            });
-            const account = accounts[0];
-            const currentIndex = netArray.findIndex(
-              (item) =>
-                Number(item.netWorkId) === Number(ethereum.networkVersion)
-            );
+            try {
+              let ethereum = window.ethereum;
+              await ethereum.enable();
+              const accounts = await ethereum.request({
+                method: 'eth_requestAccounts',
+              });
+              const account = accounts[0];
+              const currentIndex = netArray.findIndex(
+                (item) =>
+                  Number(item.netWorkId) === Number(ethereum.networkVersion)
+              );
 
-            setCurrentNetIndex(currentIndex);
-            setAddress(account);
+              setCurrentNetIndex(currentIndex);
+              setAddress(account);
+            } catch(e) {
+              console.log(e, 'e')
+            }
           }}
         >
           {address
