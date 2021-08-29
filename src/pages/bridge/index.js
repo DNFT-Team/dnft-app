@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { Divider } from 'ui-neumorphism'
 import { toast } from 'react-toastify';
-import gitbook from '../../config/gitbook';
+import helper from '../../config/helper';
 import Web3 from 'web3';
 import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from '../../utils/contract';
 import {toDecimal, WEB3_MAX_NUM} from '../../utils/web3Tools';
@@ -76,7 +76,7 @@ const BridgeScreen = (props) => {
         method: 'wallet_switchEthereumChain',
         params: [
           {
-            chainId:'0x1',
+            chainId: '0x1',
           },
         ],
       })
@@ -254,8 +254,12 @@ const BridgeScreen = (props) => {
             /* Banner Left/Top */
             <GridItem colSpan={[10, 10, 10, 5, 4]} p={['1.785rem', '1.785rem', '1.785rem', '2rem', '3.785rem']} color="white">
               <Heading as="h4" className={styles.title}>Bridge</Heading>
-              <Link href={gitbook.bridge} isExternal color="brand.100" mt="2rem" display="inline-block">
-                <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem'}} /> Learn how to cross
+              <Link href={helper.bridge.book} isExternal color="brand.100" mt="2rem" display="inline-block">
+                <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#fff'}} /> Learn How To Cross
+              </Link>
+              <br/>
+              <Link href={helper.bridge.youtube} isExternal color="brand.100" mt="2rem" display="inline-block">
+                <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.bridge.title}
               </Link>
               <Text color="brand.100" className={styles.subTitle} lineHeight="2rem">
                 The whole process of providing a quick, simple and reliable solution to get your DNF running across the chain in just 3 short steps, as shown below:<br/>

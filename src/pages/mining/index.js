@@ -27,19 +27,22 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../config'
+import helper from '../../config/helper';
+import {Icon} from '@iconify/react';
+import {Link, Divider} from '@chakra-ui/react';
 
 const stakingJson = [{
-  'name':'The Spirit Of Silence',
-  'description':'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
-  'image':'https://www.dnft.world/staking/pool1.png'
-},{
-  'name':'FRIDA\'S TEARS',
-  'description':'I drank to drown my sorrows, but the damned things learned how to swim.',
-  'image':'https://www.dnft.world/staking/pool2.png',
-},{
-  'name':'THERE ARE NO STRANGE LANDS',
-  'description':'There are no strange lands. It is the traveler who is the only stranger.',
-  'image':'https://www.dnft.world/staking/pool3.png',
+  'name': 'The Spirit Of Silence',
+  'description': 'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
+  'image': 'https://www.dnft.world/staking/pool1.png'
+}, {
+  'name': 'FRIDA\'S TEARS',
+  'description': 'I drank to drown my sorrows, but the damned things learned how to swim.',
+  'image': 'https://www.dnft.world/staking/pool2.png',
+}, {
+  'name': 'THERE ARE NO STRANGE LANDS',
+  'description': 'There are no strange lands. It is the traveler who is the only stranger.',
+  'image': 'https://www.dnft.world/staking/pool3.png',
 }]
 const Mining = (props) => {
   let history = useHistory();
@@ -254,7 +257,7 @@ const Mining = (props) => {
           method: 'wallet_switchEthereumChain',
           params: [
             {
-              chainId:'0x4',
+              chainId: '0x4',
             },
           ],
         })
@@ -278,7 +281,7 @@ const Mining = (props) => {
 
       if (result === null) {
         setIsWrongNetWork(false);
-      }else {
+      } else {
         setIsWrongNetWork(true);
       }
       return true
@@ -286,7 +289,7 @@ const Mining = (props) => {
       console.error('Failed to setup the network in Metamask:', error)
       return false
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     let ethereum = window.ethereum;
@@ -858,7 +861,7 @@ const Mining = (props) => {
                       {
                         name: stakingJson[Number(nftTokenId) - 1].name,
                         supply: 1,
-                        avatorUrl:stakingJson[Number(nftTokenId) - 1].image,
+                        avatorUrl: stakingJson[Number(nftTokenId) - 1].image,
                         address: stakeInfo.account,
                         chainType: 'BSC',
                         hash: result.transactionHash,
@@ -927,6 +930,15 @@ const Mining = (props) => {
   return (
     <div className={styleContainer}>
       {renderAssetHeader}
+      <Divider />
+      <Link href={helper.mining.book} isExternal fontWeight="600" color="brand.900"
+        mt="2rem" mr="2rem" display="inline-block">
+        <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#112df2'}} /> Learn How To Stake
+      </Link>
+      <Link href={helper.mining.youtube} isExternal fontWeight="600" color="brand.900" mt="2rem"
+        display="inline-block">
+        <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.mining.title}
+      </Link>
       <div className={styleBody}>
         <div>
           {renderFilter}
