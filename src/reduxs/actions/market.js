@@ -10,7 +10,7 @@ export const getMarketList = (params = {},token) => (dispatch) => {
       if (res && res.status == 200) {
         dispatch({
           type: GET_MARKET_LIST.SUCCESS, payload: {
-            data: res.data,
+            data: res.data?.data?.content || [],
           }
         })
       } else {

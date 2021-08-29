@@ -7,9 +7,11 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import {Notification} from 'element-react'
-import { useHistory } from 'react-router-dom';
-
-const AssetsScreen = (props) => {
+import { withRouter, Link, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+const MarketDetailScreen = (props) => {
+  const {location} = props;
+  console.log(location,'location')
   let history = useHistory();
   const data = [
     {
@@ -199,4 +201,9 @@ const AssetsScreen = (props) => {
     </div>
   )
 }
-export default AssetsScreen;
+const mapStateToProps = ({ profile, market }) => ({
+  token: profile.token,
+  datas: market.datas,
+});
+export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
+

@@ -24,9 +24,15 @@
   display: flex;
 }
 .authorImg {
-  width: 120px;
-  height: 120px;
+  min-width: 120px;
+  min-height: 120px;
+  max-width: 120px;
+  max-height: 120px;
   margin-right: 48px;
+  display: block;
+  border: 0;
+  border-color: #fff;
+
 }
 .authorInfo {
   margin-top: 13px;
@@ -213,4 +219,13 @@
   border-radius: 10px;
   margin-bottom: 61px;
   cursor: pointer;
+}
+.avatarUploader {
+  width: 200px;
+  height: 200px;
+}
+.avatarImg {
+  background-color: #bfcbd9;
+  max-width: 84px;
+  max-height: 84px;
 }

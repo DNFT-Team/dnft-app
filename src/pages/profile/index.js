@@ -22,7 +22,7 @@ import NFTCard from './card';
 import { toast } from 'react-toastify';
 
 const ProfileScreen = (props) => {
-  const { dispatch, address, token, batch, owned, created, location } = props;
+  const { dispatch, address, datas, token, batch, owned, created, location } = props;
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
   let newAddress = location?.pathname?.split('/') || [];
@@ -31,7 +31,7 @@ const ProfileScreen = (props) => {
   let history = useHistory();
   useEffect(() => {
     if (token) {
-      dispatch(getMyProfileList({userId: address}, token));
+      dispatch(getMyProfileList({userId: newAddress}, token));
       dispatch(
         getMyProfileBatch(
           {
@@ -137,14 +137,15 @@ const ProfileScreen = (props) => {
     },
     [selectedTab]
   );
+  console.log({datas})
   return (
     <div className={styles.box}>
       <div className={styles.container}>
         <div className={styles.profile}>
           <div className={styles.left}>
-            <img className={styles.authorImg} src={copyImg} />
+            <img className={styles.authorImg} src={datas?.avatorUrl} />
             <div className={styles.authorInfo}>
-              <div className={styles.authorName}>daljj</div>
+              <div className={styles.authorName}>{datas?.nickName}</div>
               <div className={styles.addressBox}>
                 <span className={styles.address}>
                   {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`}
@@ -159,8 +160,8 @@ const ProfileScreen = (props) => {
                 <a>
                   <Icon icon='ri:telegram-line' />
                 </a>
-                <a>
-                  <Icon icon='jam:twitter-circle' />
+                <a href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
+                  <Icon  icon='jam:twitter-circle' />
                 </a>
                 <a>
                   <Icon icon='jam:medium-circle' />
@@ -172,7 +173,7 @@ const ProfileScreen = (props) => {
             newAddress === address &&
             <div className={styles.profileEdit}>
               <div
-                onClick={() => history.push('/profile/edit')}
+                onClick={() => history.push('/profile/edit',{datas: datas})}
                 className={styles.edit}
               >
                 Edit Profile

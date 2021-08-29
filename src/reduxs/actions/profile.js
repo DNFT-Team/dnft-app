@@ -4,12 +4,12 @@ import { Message } from 'element-react';
 import { get, post } from 'utils/request';
 export const getMyProfileList = (params = {},token) => (dispatch) => {
   dispatch({ type: GET_MY_PROFILE_LIST.PENDING });
-  return get(`/api/v1/users/${params.userId}`, {}, token)
+  return post(`/api/v1/users/address/${params.userId}`, {}, token)
     .then((res) => {
       if (res && res.status == 200) {
         dispatch({
           type: GET_MY_PROFILE_LIST.SUCCESS, payload: {
-            data: res.data,
+            data: res.data?.data,
           }
         })
       } else {

@@ -18,6 +18,7 @@ export default function request (url, options) {
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {
+    console.log(!(newOptions.body instanceof FormData),'!(newOptions.body instanceof FormData)')
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',
@@ -29,7 +30,7 @@ export default function request (url, options) {
     } else { // newOptions.body is FormData
       newOptions.headers = {
         Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'multipart/form-data',
         // Authorization: _token,
         ...newOptions.headers,
       }
@@ -96,15 +97,16 @@ export const put = (url, params, token) => request(url, {
   method: 'PUT',
   body: params,
   headers: {
-    Authorization: token
+    Authorization: token,
   }
 })
 
-export const post = (url, params, token) => request(url, {
+export const post = (url, params, token, headers = {}) => request(url, {
   method: 'POST',
   body: params,
   headers: {
-    Authorization: token
+    Authorization: token,
+    ...headers,
   }
 })
 
