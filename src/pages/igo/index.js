@@ -61,8 +61,8 @@ const IGOScreen = (props) => {
       <div className="content">
         <Heading as="h3"  fontSize={['1.8rem', '2.6rem', '3rem', '3rem', '3.429rem']}>IGO</Heading>
         <Text className="describe" fontSize={['.6rem', '.8rem', '.8rem', '1rem', '1.2rem']}>
-          <strong>Gamify</strong>
-          to adapt (a task) so that it takes on the form of a game
+          <strong>GameFi</strong>
+          to have fun in games and earn tokens
         </Text>
         <Grid className="cardList"  gap={10} height="max-content"  templateColumns="repeat(10, 1fr)">
           {
@@ -71,7 +71,7 @@ const IGOScreen = (props) => {
                 <Box className="cardBox" p=".8rem">
                   <div className={g.isComing ? 'avatar isComing' : 'avatar'} style={{backgroundImage: "url('" + g.avatarUrl + "')"}} />
                   <h4>
-                    <strong>#{g.title}: </strong>
+                    <strong>{g.title}: </strong>
                     {g.description}
                   </h4>
                   <Button colorScheme="custom" onClick={() => {handlePlay(g)}}
