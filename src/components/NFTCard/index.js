@@ -272,7 +272,7 @@ const NFTCard = (props) => {
               </div> */}
             </div>
           </div>
-          <div className={styleInfo}><span className='title'>{item.name}</span><span>supply: {item.supply || 1}</span></div>
+          <div className={styleInfo}><span className='title'>{item.name}</span><span>quantity: {item.quantity || 1}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
