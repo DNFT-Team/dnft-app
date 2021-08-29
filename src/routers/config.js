@@ -16,7 +16,7 @@ import CreateNFT from 'pages/asset/create';
   reqComing - 是否需要显示coming-soon
  */
 const MENU_MAP = [
-  { path: '/', Component: HomeScreen, navName: 'Home', exact: true },
+  { path: '/', Component: HomeScreen, navName: 'Home', exact: true, reqComing: true},
   { path: '/mining', Component: MiningScreen, navName: 'Mining' },
   { path: '/bridge', Component: BridgeScreen, navName: 'Bridge' },
   { path: '/market', exact: true, Component: MarketScreen, navName: 'Market', reqComing: true},

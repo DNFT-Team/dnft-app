@@ -5,7 +5,6 @@ import { css } from 'emotion';
 import {
   assetSvg,
   polkadotNetSvg,
-  polkadotSvg,
 } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
@@ -14,6 +13,12 @@ import { NET_WORK_VERSION } from 'utils/constant'
 
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
+import polkadotSvg from '../../images/networks/logo_pk.svg'
+
+import selectEthSvg from '../../images/networks/logo_select_eth.svg'
+import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
+import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
+
 import globalConf from '../../config'
 import defaultHeadSvg from '../../images/asset/Head.svg'
 
@@ -31,26 +36,26 @@ const GlobalHeader = (props) => {
     () => [
       {
         name: 'Ethereum Mainnet',
-        icon: ethSvg,
+        icon: selectEthSvg,
         shortName: ['ETH', 'Ethereum'],
         shortIcon: ethSvg,
         netWorkId: 1,
       },
       {
         name: 'Polkadot Mainnet',
-        icon: polkadotNetSvg,
+        icon: selectPolkadotSvg,
         shortName: ['DOT', 'Polkadot'],
         shortIcon: polkadotSvg,
       },
       globalConf.net_env === 'mainnet' ? {
         name: 'Bsc Mainnet',
-        icon: bscSvg,
+        icon: selectBscSvg,
         shortName: ['BSC', 'Bsc'],
         shortIcon: bscSvg,
         netWorkId: 56,
       } : {
         name: 'Bsc Mainnet Test',
-        icon: bscSvg,
+        icon: selectBscSvg,
         shortName: ['BSC', 'Bsc'],
         shortIcon: bscSvg,
         netWorkId: 97,
@@ -115,7 +120,7 @@ const GlobalHeader = (props) => {
           method: 'wallet_switchEthereumChain',
           params: [
             {
-              chainId:'0x1',
+              chainId: '0x1',
             },
           ],
         })
@@ -201,29 +206,32 @@ const GlobalHeader = (props) => {
         <i className='el-icon-search' />
         <Input placeholder={'Search Art,Game or Fun'} />
       </div>
-      <span>{globalConf.net_env}</span>
       <div className={styles.actionContainer}>
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
 
-            if (address) {
+            if (globalConf.net_env !== 'mainnet' && address) {
               history.push(`/profile/address/${address}`)
               return;
             }
-            let ethereum = window.ethereum;
-            await ethereum.enable();
-            const accounts = await ethereum.request({
-              method: 'eth_requestAccounts',
-            });
-            const account = accounts[0];
-            const currentIndex = netArray.findIndex(
-              (item) =>
-                Number(item.netWorkId) === Number(ethereum.networkVersion)
-            );
+            try {
+              let ethereum = window.ethereum;
+              await ethereum.enable();
+              const accounts = await ethereum.request({
+                method: 'eth_requestAccounts',
+              });
+              const account = accounts[0];
+              const currentIndex = netArray.findIndex(
+                (item) =>
+                  Number(item.netWorkId) === Number(ethereum.networkVersion)
+              );
 
-            setCurrentNetIndex(currentIndex);
-            setAddress(account);
+              setCurrentNetIndex(currentIndex);
+              setAddress(account);
+            } catch(e) {
+              console.log(e, 'e')
+            }
           }}
         >
           {address
@@ -258,11 +266,8 @@ const GlobalHeader = (props) => {
               setIsNetListVisible(true);
             }}
           >
-            <div className={styleNetContainer}>
-              {/* {downArrowSvg} */}
-            </div>
-            <div style={{ color: '#23262F', fontWeight: 'bold' }}>
-              {netArray[currentNetIndex]?.shortName[1] || 'default'}
+            <div style={{ color: '#23262F', fontWeight: 'bold',marginRight: '10px', textAlign: 'right' }}>
+              {netArray[currentNetIndex]?.shortName[1] || 'Network'}
             </div>
           </div>
         </div>
@@ -306,11 +311,13 @@ const actionItem = css`
   justify-content: center;
   font-size: 24px;
   margin-right: 10px;
+  img {
+    width: 16px;
+  }
 `;
 
 const styleNetContainer = css`
   position: relative;
-  top: -2px;
   /* cursor: pointer; */
   width: 90px;
   svg {
@@ -328,19 +335,24 @@ const styleActionContainer = css`
   cursor: pointer;
 `;
 const styleModalContainer = css`
-  width: 650px;
-  border-radius: 10px;
+  width: 400px;
+  border-radius: 30px;
 
+  .el-dialog__header {
+    padding: 20px 32px;
+  }
   .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 24px;
+    color: #23262F;
+    font-size: 16px;
+    position: relative;
+    top: 8px;
   }
   .el-dialog__title {
-    color: #233a7d;
-    font-size: 24px;
+    color: #23262F;
+    font-size: 32px;
   }
   .el-dialog__body {
-    padding: 20px 16px;
+    padding: 0 16px 20px 16px;
   }
 `;
 
@@ -352,7 +364,7 @@ const styleNetItem = css`
   font-size: 18px;
   color: #233a7d;
   font-weight: bold;
-  padding: 0 20px;
+  padding: 0 20px 0 16px;
   cursor: pointer;
   &:hover {
     background: #f6f7f9;
@@ -361,6 +373,7 @@ const styleNetItem = css`
 
 const styleNetIcon = css`
   margin-right: 20px;
+  line-height: 14px;
 `;
 
 const styleSearchContainer = css`

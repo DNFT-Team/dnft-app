@@ -31,7 +31,7 @@ const CreateNFT = (props) => {
   let history = useHistory();
 
   const cateType = [
-    { label: 'Lasted', value: 'LASTED' },
+    // { label: 'Lasted', value: 'LASTED' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
@@ -99,33 +99,32 @@ const CreateNFT = (props) => {
           createNFTAbi,
           contractAddress
         );
-        // const createNFTResult = await myContract.methods
-        //   .create({
-        //     _initialOwner: address,
-        //     _initialSupply: form.supply,
-        //     _uri: `http://92.205.29.153:8080/ipfs/${form.avatorUrl}`,
-        //     _data:
-        //       '0x0000000000000000000000000000000000000000000000000000000000000000',
-        //   })
-        //   .send({
-        //     from: address,
-        //   });
-        // if (createNFTResult.transactionHash) {
-        const result = await post(
-          '/api/v1/nft/',
-          {
-            ...form,
-            address: address,
-            chainType: chainType,
-            hash: new Date(),
-            // hash: createNFTResult.transactionHash,
-            // tokenId: createNFTResult.tokenId,
-            tokenAddr: contractAddress
-          },
-          token
-        );
-        history.push('/asset')
-        // }
+        const createNFTResult = await myContract.methods
+          .create(
+            address,
+            form.supply,
+            `http://92.205.29.153:8080/ipfs/${form.avatorUrl}`,
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+          )
+          .send({
+            from: address,
+          });
+        console.log(createNFTResult, 'createNFTResult')
+        if (createNFTResult.transactionHash) {
+          const result = await post(
+            '/api/v1/nft/',
+            {
+              ...form,
+              address: address,
+              chainType: chainType,
+              hash: createNFTResult.transactionHash,
+              tokenId: createNFTResult.events.TransferSingle.returnValues.id,
+              tokenAddr: contractAddress
+            },
+            token
+          );
+          history.push('/asset')
+        }
       }
     } catch (e) {
       console.log(e, 'e');

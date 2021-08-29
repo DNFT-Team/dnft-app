@@ -1,20 +1,22 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { css } from 'emotion';
-import { Button, Box, Grid, GridItem } from '@chakra-ui/react';
+import { Heading, Text, Button, Box, Grid, GridItem } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import ParticlesBg from 'particles-bg';
+import comingSoon from 'components/SoonModal/coming_soon.gif';
+import igoAvatar from 'images/igo/igoAvatar.png';
 
 const IGOScreen = (props) => {
   let history = useHistory();
 
   const gameList = [
-    { title: 'SyncBtc', description: 'Get Nft while syncing the tokens', avatarUrl: '', skipTo: '/igo/syncBtc', start_at: '', end_at: '' },
-    { title: 'Gamify-Age', description: 'Bunch of games are on their way, keep watching.', avatarUrl: '', start_at: '', end_at: '' }
+    { title: 'SyncBtc', description: 'Get NFT while syncing the tokens', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
+    { title: 'GameFi-Age', description: 'Bunch of games are on their way', avatarUrl: comingSoon, isComing: true }
   ]
 
   const handlePlay = (item) => {
-    if (item.skipTo) {
+    if (!item.isComing && item.skipTo) {
       history.push(item.skipTo)
     } else {
       toast('Coming soon!', {position: toast.POSITION.TOP_CENTER})
@@ -57,26 +59,30 @@ const IGOScreen = (props) => {
   return (
     <div className={styleIgo}>
       <div className="content">
-        <h3>Game List</h3>
-        <p className="describe">
-          <strong>Gamify</strong>
-          to adapt (a task) so that it takes on the form of a game
-        </p>
+        <Heading as="h3"  fontSize={['1.8rem', '2.6rem', '3rem', '3rem', '3.429rem']}>IGO</Heading>
+        <Text className="describe" fontSize={['.6rem', '.8rem', '.8rem', '1rem', '1.2rem']}>
+          <strong>GameFi</strong>
+          to have fun in games and earn tokens
+        </Text>
         <Grid className="cardList"  gap={10} height="max-content"  templateColumns="repeat(10, 1fr)">
           {
             gameList.map((g) => (
               <GridItem colSpan={[10, 10, 10, 5, 5]}>
-                <Box className="cardBox" bg="brand.100" p=".8rem">
-                  <div className="avatar">{g.avatarUrl}</div>
-                  <h4>{g.title}</h4>
-                  <p>{g.description}</p>
-                  <Button colorScheme="custom" onClick={() => {handlePlay(g)}}>Play</Button>
+                <Box className="cardBox" p=".8rem">
+                  <div className={g.isComing ? 'avatar isComing' : 'avatar'} style={{backgroundImage: "url('" + g.avatarUrl + "')"}} />
+                  <h4>
+                    <strong>{g.title}: </strong>
+                    {g.description}
+                  </h4>
+                  <Button colorScheme="custom" onClick={() => {handlePlay(g)}}
+                    p="1.2rem 2.8rem" my="2.1rem"
+                    minWidth="10rem" fontWeight="bolder">Play</Button>
                 </Box>
               </GridItem>
             ))
           }
         </Grid>
-        <p className="describe">We do not own your private keys and cannot access your funds without your confirmation.</p>
+        <p className="describe">Hadouken! Lok-Tar Ogar! Fire in the hole.</p>
       </div>
       <ParticlesBg type="custom" config={config} bg className="particlesBg"/>
     </div>
@@ -94,13 +100,15 @@ const styleIgo = css`
   position: relative;
   z-index: 0;
   .content{
-    background: transparent;
+    min-height: calc(100vh - 30rem);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
     h3 {
       color: rgba(35, 38, 47, 1);
       font-family: DM Sans, sans-serif;
       font-weight: bold;
-      font-size: 3.429rem;
-      line-height: 4rem;
       letter-spacing: .2rem;
     }
     .describe {
@@ -109,7 +117,6 @@ const styleIgo = css`
       text-align: center;
       color: rgba(119, 126, 144, 1);
       font-family: Poppins, sans-serif;
-      font-size: 1rem;
       line-height: 1.714rem;
       box-sizing: border-box;
       strong{
@@ -120,17 +127,37 @@ const styleIgo = css`
     .cardList{
       padding: 1.5rem 0;
       box-sizing: border-box;
-      width: 60%;
+      width: max-content;
+      min-width: 60%;
       margin: 5.357rem auto;
       background: transparent;
       .cardBox{
-        border-radius: 1.429rem;
+        border-radius: 20px;
         width: 100%;
+        border: 2px solid #E6E8EC;
         .avatar{
           border-radius: 1.429rem;
-          background: #2C386F;
           width: 100%;
-          height: 10rem;
+          height: 18rem;
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        .isComing{
+          background-color: #1B225C;
+          background-repeat: repeat;
+          background-position: center;
+        }
+        h4{
+          font-family: Poppins, sans-serif;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 1.2rem;
+          margin: 1.6rem 0 3rem 0;
+          line-height: 1.4rem;
+          align-items: center;
+          text-align: center;
+          color: #1B2559;
         }
       }
     } 

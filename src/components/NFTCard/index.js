@@ -253,25 +253,24 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `100% 100% no-repeat url(http://92.205.29.153:8080/ipfs/${item.avatorUrl})`,
-          backgroundSize: 'cover',
+          background: `url(${item.avatorUrl}) 50% 50% / contain no-repeat`
         }}
         className={styleShortPicture}
       />
-      <div className={styleCollectionIconContainer} onClick={handleSave}>
+      {/* <div className={styleCollectionIconContainer} onClick={handleSave}>
         <Icon icon="ant-design:inbox-outlined" style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
-      </div>
+      </div> */}
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
           <div>
             <span className={styleChainType}>{item.chainType}</span>
             <div className={styleStarInfo}>
-              <div className={styleStarIconContainer} onClick={handleLike}>
+              {/* <div className={styleStarIconContainer} onClick={handleLike}>
                 <Icon icon="ant-design:heart-filled" style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className={styleInfo}><span className='title'>{item.name}</span><span>supply: {item.supply || 1}</span></div>
+          <div className={styleInfo}><span className='title'>{item.name}</span><span>quantity: {item.quantity || 1}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
@@ -352,7 +351,7 @@ const styleCardContainer = css`
   max-width: 288px;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
+  /* cursor: pointer; */
   position: relative;
   flex: 1;
   min-width: 288px;

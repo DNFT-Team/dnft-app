@@ -3,15 +3,15 @@ import globalConfig from '../config';
 const isMainNet = globalConfig.net_env === 'mainnet';
 
 //  mining
-export const tokenContract = '0x5C80D4aDC0cAa8a01554fe7a935a1209151173e3';
+export const tokenContract = isMainNet ? '0x018f49822d593f88843777e0956af74c87012219' : '0xe7B6570553e04b865a95C2B93dE31693A1E5EF3a';
 
-export const nftContract = '0x49325F97Dbb9C88A8D63E30498b6e4232cF2F39a'
+export const nftContract = isMainNet ? '0x854714E65bBa4Ea0b990483e439Aa428DCb2Cad1' : '0x9CC6276baa2d8BD670114Cf14BafAd93BED393b8'
 
-export const firstStakeContract = '0x54eB11F2def49B1652424C7A682ace9797D14016'
+export const firstStakeContract = isMainNet ? '0x736b80804069eb7179762a76fb57acc135507ee5' : '0xE678e3CFaA3990258bB2F453252a6fC806A3e1b8'
 
-export const secondStakeConTract = '0x50B129482914f64554f57E7DCD24939e17702f7D'
+export const secondStakeConTract = isMainNet ? '0x39e020713b8298e23b8dcdf7c94515ad8da1c388' : '0x79D03feC9840Db078A11d1D9935E0D082a500901'
 
-export const thirdStakeConTract = '0x55Bcd2355E6eF5e1F9C31D439d2c5902fBF2FC89'
+export const thirdStakeConTract = isMainNet ? '0xacd3cc608b64bec0ee515d69c6079d567a5665c1' : '0x0D739117730f543e960587F3109Ea16c96682b29'
 
 // bridge
 export const NERVE_WALLET_ADDR = 'NERVEepb62r5fqkgdm5gbNZTkCZHrNFr9EVjeE'

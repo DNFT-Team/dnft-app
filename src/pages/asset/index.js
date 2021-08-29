@@ -32,7 +32,7 @@ const AssetScreen = (props) => {
   }];
 
   const cateType = [
-    { label: 'Lasted', value: 'LASTED' },
+    // { label: 'Lasted', value: 'LASTED' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
@@ -52,7 +52,7 @@ const AssetScreen = (props) => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [category, setCategory] = useState('LASTED');
+  const [category, setCategory] = useState('ART');
   const [sortTag, setSortTag] = useState('likeCount')
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
@@ -106,6 +106,9 @@ const AssetScreen = (props) => {
   }
 
   const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/asset') {
+      return;
+    }
     try {
       if (globalConfig.net_env === 'testnet') {
         await ethereum.request({
@@ -220,14 +223,14 @@ const AssetScreen = (props) => {
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
         </div>
-        <div
+        {/* <div
           className={styleCreateNFT}
           onClick={() => {
             history.push('/asset/create');
           }}
         >
           Create NFT
-        </div>
+        </div> */}
       </div>
     ),
     [balance]
@@ -264,7 +267,7 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={true} currentStatus={selectedTab} onLike={getNFTList} onSave={getNFTList} />,
+    (item, index) => <NFTCard item={item} index={index} needAction={false} currentStatus={selectedTab} onLike={getNFTList} onSave={getNFTList} />,
     [selectedTab]
   );
 

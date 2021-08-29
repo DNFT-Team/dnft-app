@@ -71,7 +71,7 @@ ReactDOM.render(
           <ChakraProvider resetCSS={false} theme={theme}>
             <App />
           </ChakraProvider>
-          <ToastContainer/>
+          <ToastContainer pauseOnFocusLoss={false}/>
         </BrowserRouter>
       )}
     </PersistGate>

@@ -1,9 +1,11 @@
-# 运行
+# Bootstrap
+
+`yarn install`
+
+# Serve
 
 `yarn start`
 
-# 打包
+# Build
 
 `yarn build`
-
-# 发布

@@ -28,6 +28,19 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../config'
 
+const stakingJson = [{
+  'name':'The Spirit Of Silence',
+  'description':'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
+  'image':'https://www.dnft.world/staking/pool1.png'
+},{
+  'name':'FRIDA\'S TEARS',
+  'description':'I drank to drown my sorrows, but the damned things learned how to swim.',
+  'image':'https://www.dnft.world/staking/pool2.png',
+},{
+  'name':'THERE ARE NO STRANGE LANDS',
+  'description':'There are no strange lands. It is the traveler who is the only stranger.',
+  'image':'https://www.dnft.world/staking/pool3.png',
+}]
 const Mining = (props) => {
   let history = useHistory();
   const { token } = props;
@@ -69,6 +82,7 @@ const Mining = (props) => {
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [isBalanceLoading, setBalanceIsLoading] = useState(false);
   const [isStakeInfoLoading, setIsStakeInfoLoading] = useState(false);
+  const [isUnStakeLoading, setIsUnStakeLoading] = useState(false);
 
   const [stateData, setStateData] = useState(initState);
   const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
@@ -125,7 +139,7 @@ const Mining = (props) => {
       duration = duration / 60 / 60 / 24;
 
       let rewardRate = await myContract.methods.rewardRate().call();
-      rewardRate = getFormatNumber(rewardRate * 100 * (duration / 30));
+      rewardRate = getFormatNumber(rewardRate * 100 * (12 / (duration / 30)));
 
       let stakeListLength = await myContract.methods
         .getStakeInfoLength(account)
@@ -155,7 +169,8 @@ const Mining = (props) => {
         rewardList.push(currentRewardInfo);
       }
 
-      let isRewardNft = await myContract.methods.isRewardNft().call();
+      let isRewardNft = await myContract.methods.isRewardNftOf(account).call();
+      let isClaimNft = await myContract.methods.isClaimNftOf(account).call();
 
       return {
         rewardRate,
@@ -169,6 +184,7 @@ const Mining = (props) => {
         account,
         rewardList,
         isRewardNft,
+        isClaimNft
       };
     },
     []
@@ -212,9 +228,14 @@ const Mining = (props) => {
     }
   }, [getItemStakeInfoByContract]);
 
-  const init = useCallback(async () => {
+  const init = useCallback(async (doNotNeedModalHidden) => {
+    if (!doNotNeedModalHidden) {
+      setIsVisible(false);
+    }
+    setStakeValue(undefined);
     await getBalance();
     await getStakeInfo();
+    setIsUnStakeLoading(false)
   }, [getStakeInfo]);
 
   useEffect(() => {
@@ -222,6 +243,9 @@ const Mining = (props) => {
   }, [init]);
 
   const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/mining') {
+      return;
+    }
     try {
       let result;
 
@@ -387,43 +411,40 @@ const Mining = (props) => {
       >
         <div>
           <div className={styleCardTitle}>
-            <img src={nft} style={{ width: 40 }} />
-            DNF Staking Pool
+            <div>
+              <img src={nft} style={{ width: 40 }} />
+              <span>DNF Staking Pool</span>
+            </div>
+            <span>{(stakeInfo?.duration / 30) || 0} Months</span>
           </div>
           <div className={styleCardInfo}>
             <div className={styleItemContainer}>
-              <div className={styleText}>Reward</div>
+              <div className={styleText}>Total DNF Reward</div>
               <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
             </div>
             <div className={styleItemContainer}>
-              <div className={styleText}>DNF</div>
+              <div className={styleText}>Total DNF Staked</div>
               <div className={styleDollar}>
-                {(stakeInfo?.totalLocked - stakeInfo?.totalStaked || 0).toFixed(
+                {Number(stakeInfo?.totalStaked || 0).toFixed(
                   2
                 )}
-              </div>
-            </div>
-            <div className={styleItemContainer}>
-              <div className={styleText}>DNF</div>
-              <div className={styleDollar}>
-                {(
-                  (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
-                ).toFixed(2)}
-                %
               </div>
             </div>
           </div>
           <div className={styleBottomContainer}>
             <div className={styleAPY}>
-              <div className={stylePercent}>{stakeInfo?.rewardRate || 0.0}%</div>
-              <div>APY(%)</div>
+              <div className={stylePercent}>{(
+                (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
+              ).toFixed(2)}
+                %</div>
+              <div>Current Progress</div>
             </div>
             <div className={styleCardButton}>Stake</div>
           </div>
         </div>
         <div className={styleLabelContainer}>
           <div className='percent'>{stakeInfo?.rewardRate || 0.0}</div>
-          <div>APY(%)</div>
+          <div>APR(%)</div>
         </div>
       </div>
     ),
@@ -476,7 +497,7 @@ const Mining = (props) => {
         <div>
           <div className={styleTableHeader}>
             <span>Token</span>
-            <span>APY(%)</span>
+            <span>APR(%)</span>
             <span>Staking Period(Pays)</span>
           </div>
           <div className={styleTableBody}>
@@ -503,7 +524,7 @@ const Mining = (props) => {
             </div>
           )}
           <div className={styleStakeTips}>
-            Note：you will not be able to UNstake your DNF or claim your rewards
+            Note：you will not be able to Unstake your DNF or claim your rewards
             before the staking period has ended
           </div>
           <div
@@ -551,10 +572,15 @@ const Mining = (props) => {
                         amount: Web3.utils.toWei(stakeValue, 'ether'),
                         from: stakeInfo.account,
                       });
+                    toast.info('Operation succeeded！', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                   } finally {
                     const dealWithStateData = stateData;
                     dealWithStateData[stakeIndex].isStaking = false;
-                    init();
+                    setIsUnStakeLoading(true)
+                    setStakeTab('unstake');
+                    init(true);
 
                     setStateData(cloneDeep(dealWithStateData));
                   }
@@ -619,12 +645,16 @@ const Mining = (props) => {
     (stakeInfo) => (
       <div className={styleUnstakeContainer}>
         <div className={styleTableHeader}>
-          <span>Staked DNF</span>
+          <span>Staked (DNF)</span>
           <span>Reward (DNF)</span>
           <span>Total（DNF）</span>
           <span>Status</span>
         </div>
-        {!(stakeInfo?.stakeInfoList.length > 0)
+        <Loading
+          loading={isUnStakeLoading}
+          style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
+        />
+        {isUnStakeLoading ? null : !(stakeInfo?.stakeInfoList.length > 0)
           ? renderNoData
           : stakeInfo?.stakeInfoList?.map((item, index) => {
             const startDay = dayjs(item[1] * 1000);
@@ -686,6 +716,9 @@ const Mining = (props) => {
                           from: stakeInfo.account,
                           idx: index,
                         });
+                        toast.info('Operation succeeded！', {
+                          position: toast.POSITION.TOP_CENTER,
+                        });
                       } finally {
                         const currentUnstakeLoadingIndex =
                           stateData[stakeIndex].unstakeLoadingIndex;
@@ -700,7 +733,7 @@ const Mining = (props) => {
                           dealWithIndexArray;
 
                         setStateData(cloneDeep(dealWithStateData));
-                        getBalance();
+                        init()
                       }
                     }}
                   >
@@ -715,7 +748,7 @@ const Mining = (props) => {
                           styleDisableButton
                       )}
                     >
-                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'UNstake'}
+                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'Unstake'}
                     </div>
                   </span>
                 )}
@@ -724,22 +757,21 @@ const Mining = (props) => {
           })}
       </div>
     ),
-    [renderNoData, stakeIndex, stateData]
+    [renderNoData, stakeIndex, stateData, init, isUnStakeLoading]
   );
 
   const renderClaim = useCallback(
     (stakeInfo) => {
-      // const isValidGetNft =
-      //   stakeInfo?.isRewardNft?.[0] === true &&
-      //   stakeInfo?.isRewardNft?.[1] === false;
+      const isValidGetNft =
+        stakeInfo?.isRewardNft === true &&
+        stakeInfo?.isClaimNft === false;
 
-      const isValidGetNft = true
       return (
         <div>
           <div className={styleClaimCardContainer}>
             <div className={stylePicture}>
               <img
-                src={`https://dnft.world/staking/pool${stakeIndex + 1}.png`}
+                src={stakingJson[stakeIndex].image}
               />
             </div>
             <div className={styleClaimInfo}>
@@ -752,9 +784,10 @@ const Mining = (props) => {
                     fontWeight: 900,
                     fontSize: 20,
                     color: '#1B2559',
+                    width: '210px'
                   }}
                 >
-                  Shanghaibar
+                  {stakingJson[stakeIndex].name}
                 </span>
                 <span className={styleTag}>On sale</span>
               </div>
@@ -772,9 +805,7 @@ const Mining = (props) => {
               </span>
               <span>Description ：</span>
               <span style={{ color: '#8F9BBA' }}>
-                Version 02 of Editting screen is all about fitting it as a side
-                bar. One of the reasons for this is that we wanted to have all
-                the content visible on multiple{' '}
+                {stakingJson[stakeIndex].description}
               </span>
             </div>
           </div>
@@ -816,20 +847,26 @@ const Mining = (props) => {
                     from: stakeInfo.account,
                   });
 
+                  toast.info('Operation succeeded！', {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+
                   if (result.transactionHash) {
                     const nftTokenId = result.events.Claim.returnValues.nftTokenId;
-                    const result = await post(
+                    await post(
                       '/api/v1/nft/',
                       {
-                        name: nftTokenId,
+                        name: stakingJson[Number(nftTokenId) - 1].name,
                         supply: 1,
-                        avatorUrl: `https://dnft.world/staking/pool${nftTokenId}.png`,
+                        avatorUrl:stakingJson[Number(nftTokenId) - 1].image,
                         address: stakeInfo.account,
                         chainType: 'BSC',
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
                         tokenAddr: contractAddress,
-                        category: 'Art'
+                        category: 'ART',
+                        collectionId: -1,
+                        description: stakingJson[Number(nftTokenId) - 1].description,
                       },
                       token
                     );
@@ -838,6 +875,7 @@ const Mining = (props) => {
                 } finally {
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isClaiming = false;
+                  init();
 
                   setStateData(cloneDeep(dealWithStateData));
                 }
@@ -867,13 +905,13 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            DNF staking（{Math.round(stakeInfo?.duration)}days）
+            DNF Staking（{Math.round(stakeInfo?.duration)}days）
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
-              'StakeDNF for DNF under a  fixed APY（Annual percent yield）'}
+              'StakeDNF for DNF under a  fixed APR（Annual percent yield）'}
             {stakeTab === 'unstake' &&
-              'Click “UNstake” button to get your staked DNF and the rewards back'}
+              'Click “Unstake” button to get your staked DNF and the rewards back'}
             {stakeTab === 'claim' &&
               'If your have staked more than 200 DNF in a single staking，you will be eligible to claim the reward DNF.'}
           </div>
@@ -1044,12 +1082,26 @@ const styleCardIsActive = css`
 
 const styleCardTitle = css`
   display: flex;
-  align-items: center;
   font-weight: 600;
   font-size: 20px;
   color: #B3B7DD;
   padding-bottom: 16px;
   border-bottom: 1px dashed #EDEDED;
+  flex-direction: column;
+  div {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    & > span{
+      color: #0834e8;
+      opacity: 0.8;
+    }
+  }
+  & > span{
+    margin-left: 60px;
+    font-size: 14px;
+    color: #B3B7DD;
+  }
   img {
     margin-right: 20px;
   }
@@ -1081,9 +1133,9 @@ const stylePercent = css`
 const styleCardInfo = css`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   padding: 22px 0 30px 0;
   border-bottom: 1px dashed #EDEDED;
+  justify-content: space-around;
 `;
 
 const styleItemContainer = css`
@@ -1204,11 +1256,11 @@ const styleTableBody = css`
     flex: 1;
   }
   .circular {
-    width: 34px;
-    height: 25px;
+    width: 34px !important;
+    height: 25px !important;
     left: 26px;
-    position: relative;
-    top: 10px;
+    position: relative !important;
+    top: 10px !important;
   }
 `;
 
@@ -1278,7 +1330,8 @@ const styleClaimCardContainer = css`
 `;
 
 const stylePicture = css`
-  width: 250px;
+  min-width: 220px;
+  max-width: 220px;
   margin-right: 20px;
   img {
     border-radius: 10px 0 0 10px;
@@ -1320,6 +1373,12 @@ const styleUnstakeContainer = css`
   overflow: auto;
   min-height: 200px;
   max-height: 50vh;
+  .circular {
+    position: relative;
+    top: 100px;
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 const styleNoDataContainer = css`

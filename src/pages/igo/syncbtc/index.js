@@ -48,6 +48,7 @@ const SyncBtcScreen = (props) => {
   const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
   const right16ChainId =  globalConfig.net_env === 'testnet' ? '0x61' : '0x38';
   const rightRpcUrl = globalConfig.net_env === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
+  const isTestnet = globalConfig.net_env === 'testnet';
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
@@ -55,14 +56,14 @@ const SyncBtcScreen = (props) => {
     if (ethereum) {
       setAddress(ethereum.selectedAddress);
 
-      if (Number(ethereum.networkVersion) !== rightChainId) {
+      if ((Number(ethereum.networkVersion) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
         setIsWrongNetWork(true);
       } else {
         setIsWrongNetWork(false);
       }
 
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== rightChainId) {
+        if ((Number(networkIDstring) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
           setIsWrongNetWork(true);
         } else {
           setIsWrongNetWork(false);
@@ -97,24 +98,6 @@ const SyncBtcScreen = (props) => {
         medalIds.map((item) => myContract.methods.tokenIds(item).call())
       );
 
-      // main
-      // const goldMintedTotal = Number(data[0][2]) - 10;
-      // const silverMintedTotal = Number(data[1][2]) - 50;
-      // const bronzeMintedTotal = Number(data[2][2]) + 60;
-
-      const goldMintedTotal =
-        Number(data[0][1]) - Number(data[0][2]) < 5
-          ? Number(data[0][1]) - 5
-          : Number(data[0][2]);
-      const silverMintedTotal =
-        Number(data[1][1]) - Number(data[1][2]) < 5
-          ? Number(data[1][1]) - 5
-          : Number(data[1][2]);
-      const bronzeMintedTotal =
-        Number(data[2][1]) - Number(data[2][2]) < 5
-          ? Number(data[2][1]) - 5
-          : Number(data[2][2]);
-
       const isNotEnough =
         Number(data[0][1]) -
           Number(data[0][2]) +
@@ -123,30 +106,29 @@ const SyncBtcScreen = (props) => {
           Number(data[2][1]) -
           Number(data[2][2]) ===
         0;
+
       setMedalData({
         Gold: {
           id: data[0][0],
           total: Number(data[0][1]),
-          mintedTotal: isNotEnough ? Number(data[0][1]) : goldMintedTotal,
+          mintedTotal: data[0][2],
           isValid: data[0][3],
         },
         Silver: {
           id: data[1][0],
           total: Number(data[1][1]),
-          mintedTotal: isNotEnough ? Number(data[1][1]) : silverMintedTotal,
+          mintedTotal: data[1][2],
           isValid: data[1][3],
         },
         Bronze: {
           id: data[2][0],
           total: Number(data[2][1]),
-          mintedTotal: isNotEnough ? Number(data[2][1]) : bronzeMintedTotal,
+          mintedTotal: data[2][2],
           isValid: data[2][3],
         },
         Total: {
           total: Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1]),
-          mintedTotal: isNotEnough
-            ? Number(data[0][1]) + Number(data[1][1]) + Number(data[2][1])
-            : goldMintedTotal + silverMintedTotal + bronzeMintedTotal,
+          mintedTotal: data[0][2] + data[1][2] + data[2][2],
           isValid: data[0][3] || data[1][3] || data[2][3],
           isNotEnough: isNotEnough,
         },
@@ -218,7 +200,8 @@ const SyncBtcScreen = (props) => {
           avatorUrl: `https://dnft.world/igo/${nftId}.png`,
           tokenAddr: nft1155Contract,
           tokenId: nftId,
-          category: 'Game'
+          category: 'Game',
+          collectionId: -1,
         },
         token
       );
@@ -288,10 +271,31 @@ const SyncBtcScreen = (props) => {
   }, [injectWallet, window.ethereum]);
 
   useEffect(() => {
-    getMedalInfo();
-    getRewardInfo();
-    getIsApproved();
-    getBusdAmount();
+    if (isTestnet) {
+      getMedalInfo();
+      getRewardInfo();
+      getIsApproved();
+      getBusdAmount();
+    } else {
+      setMedalData({
+        Gold: {
+          total: 50,
+          mintedTotal: 50,
+        },
+        Silver: {
+          total: 450,
+          mintedTotal: 450,
+        },
+        Bronze: {
+          total: 2500,
+          mintedTotal: 2500,
+        },
+        Total: {
+          total: 3000,
+          mintedTotal: 3000,
+        },
+      })
+    }
   }, [address, isWrongNetWork]);
 
   useEffect(() => {
@@ -308,6 +312,10 @@ const SyncBtcScreen = (props) => {
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
+      if (history.location.pathname !== '/igo/syncBtc') {
+        return;
+      }
+
       await ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [
@@ -339,9 +347,16 @@ const SyncBtcScreen = (props) => {
       {!playing && (
         <img
           alt="img"
-          className={stylePlayButton}
+          className={isTestnet ? stylePlayButton : styleStopPlayButton}
           src={playButton}
           onClick={async () => {
+            if (!isTestnet) {
+              toast.info('Ended!', {
+                position: toast.POSITION.TOP_CENTER,
+              });
+              return;
+            }
+
             let ethereum = window.ethereum;
 
             if (medalData.Total.isNotEnough) {
@@ -410,12 +425,12 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>Gold Medal NFT</span>
             <span className='goal'>Supply：{medalData.Gold.total}</span>
-            <div className='raised'>Minted：{medalData.Gold.mintedTotal}</div>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Gold.mintedTotal}</div>
           </div>
           <div className={styleInfoContainer}>
             <span className='title'>Silver Medal NFT</span>
             <span className='goal'>Supply：{medalData.Silver.total}</span>
-            <div className='raised'>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
               Minted：
               {medalData.Silver.mintedTotal}
             </div>
@@ -425,7 +440,7 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>Bronze Medal NFT</span>
             <span className='goal'>Supply：{medalData.Bronze.total}</span>
-            <div className='raised'>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
               Minted：
               {medalData.Bronze.mintedTotal}
             </div>
@@ -433,7 +448,7 @@ const SyncBtcScreen = (props) => {
           <div className={styleInfoContainer}>
             <span className='title'>All Medal’s NFT</span>
             <span className='goal'>Supply：{medalData.Total.total}</span>
-            <div className='raised'>Minted：{medalData.Total.mintedTotal}</div>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Total.mintedTotal}</div>
           </div>
         </div>
       </div>
@@ -532,6 +547,7 @@ const SyncBtcScreen = (props) => {
           4.The total amount of Gold/Silver/Bronze medal NFT are 50/450/2500.
         </p>
         <p>5.Each address is only allowed to participate once.</p>
+        {!isTestnet && <p>6.Start Date: 2021-08-08, End Date: 2021-08-28.</p>}
 
         <b>Rewards:</b>
         <p>
@@ -634,6 +650,21 @@ const styleFiveRings = css`
   left: 50%;
   transform: translateX(-50%);
 `;
+
+const styleStopPlayButton = css`
+  top: 52%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: not-allowed;
+  width: 10%;
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
+`
 
 const stylePlayButton = css`
   @keyframes slidein {
