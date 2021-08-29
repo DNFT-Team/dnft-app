@@ -10,6 +10,7 @@ import {Icon} from '@iconify/react'
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
 import { post } from 'utils/request';
+import globalConf from 'config/index';
 
 const COLL_SCHEMA = {chainType: '',  address: '',  avatorUrl: '', name: '', description: '', }
 
@@ -26,12 +27,28 @@ const CreateCollectionModal = (props) => {
     ...formDs
   })
 
+  const uploadFile = async (file) => {
+    try {
+      const fileData = new FormData();
+      fileData.append('file', file);
+
+      const { data = { fileUrl: '' } } = await post('/api/v1/file/uploadFile', fileData);
+      setColData({
+        ...colData,
+        avatorUrl: data.fileUrl || '',
+      });
+    } catch (e) {
+      console.log(e, 'e');
+    }
+  };
+
   const renderFormItem = (label, item) => (
     <div className={styleFormItemContainer}>
       <div className='label'>{label}</div>
       {item}
     </div>
   );
+
   const submitColl = async () => {
     const {address, chainType} = colData
     if (!token || !address) {return}
@@ -86,19 +103,18 @@ const CreateCollectionModal = (props) => {
           <Upload
             className={styleUploadContainer}
             drag
-            showFileList={false}
-            action='//jsonplaceholder.typicode.com/posts/'
-            tip={
-              <div className='el-upload__tip'>
-                    Drag or choose your file to upload
-              </div>
-            }
+            multiple={false}
+            withCredentials
+            limit={1}
+            action=""
+            httpRequest={(e) => {uploadFile(e.file)}}
+            tip={<div className='el-upload__tip'> Drag or choose your file to upload </div>}
           >
             <i className='el-icon-upload2' />
             <div className='el-upload__text'>
                 PNG, GIF, WEBP. Max 1Gb.
             </div>
-            {colData.avatorUrl ? <img src={colData.avatorUrl} alt="avatar"/> : ''}
+            {colData.avatorUrl ? <img src={globalConf.backendApi + '/data/' + colData.avatorUrl} alt="avatar"/> : ''}
           </Upload>
           <Text mb="2rem">
               Network
