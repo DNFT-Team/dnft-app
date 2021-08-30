@@ -24,8 +24,7 @@ const CreateCollectionModal = (props) => {
   } = props;
   const [colData, setColData] = useState({
     ...COLL_SCHEMA,
-    ...formDs,
-    avatorUrl: 'pcfiles/image/d48ed7677ceb46ac9c2b96b61c8b2b30_25890.jpg'
+    ...formDs
   })
 
   const uploadFile = async (file) => {
