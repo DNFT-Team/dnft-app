@@ -24,19 +24,24 @@ const CreateCollectionModal = (props) => {
   } = props;
   const [colData, setColData] = useState({
     ...COLL_SCHEMA,
-    ...formDs
+    ...formDs,
+    avatorUrl: 'pcfiles/image/d48ed7677ceb46ac9c2b96b61c8b2b30_25890.jpg'
   })
 
   const uploadFile = async (file) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
-
-      const { data = { fileUrl: '' } } = await post('/api/v1/file/uploadFile', fileData);
-      setColData({
-        ...colData,
-        avatorUrl: data.fileUrl || '',
-      });
+      const {data} = await post('/api/v1/file/uploadFile', fileData, token);
+      // console.log('uploadFile', data);
+      if (data.success) {
+        const url =  data?.data?.fileUrl
+        url && setColData({ ...colData, avatorUrl: url });
+      } else {
+        toast.error(data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
     } catch (e) {
       console.log(e, 'e');
     }
@@ -87,10 +92,10 @@ const CreateCollectionModal = (props) => {
   }
 
   return (
-    <Modal closeOnOverlayClick={false} blockScrollOnMount={false}  borderRadius="10px"
+    <Modal closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
       isCentered isOpen onClose={onClose}>
       <ModalOverlay />
-      <ModalContent width="564px" maxW="60vw">
+      <ModalContent width="564px" maxW="initial">
         <ModalHeader color="#11142d"
           p="32px" fontSize="18px"
           display="flex" justifyContent="space-between"
@@ -104,17 +109,16 @@ const CreateCollectionModal = (props) => {
             className={styleUploadContainer}
             drag
             multiple={false}
+            showFileList={false}
             withCredentials
             limit={1}
             action=""
             httpRequest={(e) => {uploadFile(e.file)}}
             tip={<div className='el-upload__tip'> Drag or choose your file to upload </div>}
           >
+            {colData.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.staticApi + '/data/' + colData.avatorUrl} alt="avatar"/> : ''}
             <i className='el-icon-upload2' />
-            <div className='el-upload__text'>
-                PNG, GIF, WEBP. Max 1Gb.
-            </div>
-            {colData.avatorUrl ? <img src={globalConf.backendApi + '/data/' + colData.avatorUrl} alt="avatar"/> : ''}
+            <div className='el-upload__text'>PNG, GIF, WEBP. Max 1Gb.</div>
           </Upload>
           <Text mb="2rem">
               Network
@@ -169,7 +173,8 @@ const styleUploadContainer = css`
     flex-direction: column;
     color: #777e90;
     background-color: #f4f5f6;
-    height: 182px;
+    min-height: 182px;
+    height: initial;
     width: 500px;
     justify-content: center;
     border-radius: 10px;

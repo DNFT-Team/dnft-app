@@ -299,6 +299,9 @@ const styleContainer = css`
   display: flex;
   flex-direction: column;
   margin: 16px auto;
+  background: #FFFFFF;
+  padding: .8rem;
+  border-radius: 12px;
   h1 {
     color: #23262f;
     font-size: 38px;
