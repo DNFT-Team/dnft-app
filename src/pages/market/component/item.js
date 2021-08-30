@@ -85,8 +85,8 @@ const NFTCard = (props) => {
           </div>
           <div className={styleInfo}>
             <div className={styleInfoProfile}>
-              <img />
-              <span></span>
+              <img src={item.userAvatorUrl} />
+              <span>{item.nickName}</span>
             </div>
             <span className={styleLike}>
               <Icon

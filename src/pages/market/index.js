@@ -6,7 +6,7 @@ import { css, cx } from 'emotion';
 import NFTCard from './component/item';
 import { noDataSvg } from 'utils/svg';
 
-import loading from 'images/market/loading.png';
+
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
@@ -85,7 +85,7 @@ const Market = (props) => {
     history.push('/market/detail',item)
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
     [category, sortTag]
   );
   console.log(datas, 'datas');
