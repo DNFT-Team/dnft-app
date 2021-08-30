@@ -1,16 +1,17 @@
 import React from 'react';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
-import e1 from 'images/market/e1.png';
+import close from 'images/market/close.png';
 import ellipse from 'images/market/ellipse.png'
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import {Notification} from 'element-react'
+import {Button, Notification} from 'element-react'
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 const MarketDetailScreen = (props) => {
   const {location} = props;
+  const datas = location?.state;
   console.log(location,'location')
   let history = useHistory();
   const data = [
@@ -108,7 +109,8 @@ const MarketDetailScreen = (props) => {
       <div
         style={{
           background: `center / cover no-repeat ${src.item.src}`,
-          height: 350,
+          // height: 350,
+          height: 467,
           marginBottom: 20,
           borderRadius: 10,
         }}
@@ -130,66 +132,67 @@ const MarketDetailScreen = (props) => {
   );
   return (
     <div className={styles.marketDetail}>
-      <div className={styles.backBtn} onClick={() => {
+      {/* <div className={styles.backBtn} onClick={() => {
         history.push('/market')
-      }}>Back</div>
+      }}>Back</div> */}
       <div className={styles.main}>
         <div className={styles.mainL} style={{
-          background: `center / cover no-repeat url(${e2})`,
-          height: 682,
+          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? 'http://92.205.29.153:8080/ipfs/' + datas?.avatorUrl : datas?.avatorUrl})`,
+          height: 482,
           padding: 10,
           borderRadius: 10,
         }}>
-          {/* <img className={styles.detail_img} src={e2} /> */}
         </div>
         <div className={styles.mainR}>
           <div className={styles.product}>
-            <div className={styles.productItem}>
-              <span className={styles.proName}>Geometry#01</span>
-              <span className={styles.proStars}>
-                <i style={{ marginRight: 10 }} className="el-icon-star-off"></i>
-                                123,000
-              </span>
+            <p className={styles.proName}>{datas?.name}</p>
+            <div className={styles.proPriceBox}>
+              <span className={styles.price}>{datas?.price}{datas?.type}</span>
+              <span className={styles.price}>$24234.32</span>
+              {datas?.supply - datas?.quantity} in stock
             </div>
-            <div className={styles.productInfo}>
-              <span className={styles.proCustom}>
-                <img className={styles.proImg} src={ellipse} />
-                                Daniele Fortuna</span>
+            <div className={styles.desc}>{datas?.description}</div>
+            <div className={styles.chain}>
+              <span className={styles.contract}>Contract address:</span>
+              <a
+                href={`https://www.bscscan.com/address/${datas?.tokenAddress}`}
+                className={styles.tokenAddress}
+                target='_blank'
+                rel="noopener noreferrer"
+              >
+                {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
+              </a>
             </div>
+            <div className={styles.user}>
+              <div className={styles.head}>
+                <img src={datas?.userAvatorUrl} className={styles.avatar}/>
+              </div>
+              <div>
+                <p className={styles.owner}>Owner</p>
+                <p className={styles.userName}>{datas?.nickName}</p>
+              </div>
+            </div>
+            <div className={styles.user}>
+              <div className={styles.head}>
+                <img className={styles.avatar}/>
+              </div>
+              <div>
+                <p className={styles.owner}>Creator</p>
+                <p className={styles.userName}>Raquel</p>
+              </div>
+            </div>
+            <Button disabled={!(datas?.supply - datas?.quantity)} className={styles.buyBtn} onClick={() => {
+              Notification.info('Coming Soon')
+            }}>Buy Now</Button>
           </div>
-          <div className={styles.intro}>
-            <div className={styles.introText}>IntroDuction</div>
-            <div className={styles.introInfoText}>
-                            To commemorate the Conflux Network's success as the third-largest decentralized network in the world during the testing phase, the Conflux community minted exclusive NFTs for the 5,405 miners who participated the testing phase of mining, which the community's talented designers designed to highlight their outstanding contributions.To commemorate the Conflux Network's success as the third-largest decentralized network in the world during the testing phase,To commemorate the Conflux Network's
-                            success as the third-largest decentralized network in the world
-            </div>
-            <div className={styles.introText}>Hash</div>
-            <div className={styles.hashText}>wuwghdisauhiusahiugfpiqughdpasudiusahdiusagiudgasipudgisaudjsah
-
-            </div>
-            <div className={styles.currentText}>
-                            Current price
-            </div>
-            <div className={styles.introMain}>
-              <div className={styles.mainLeft}>
-                <div className={styles.currentAll}>
-                  <span className={styles.priceToken}>0.7BNB</span>
-                  <span className={styles.line} />
-                  <span className={styles.currency}>¥344</span>
-                </div>
-                <div className={styles.buyBtn} onClick={() => {
-                  Notification.info('Coming Soon')
-                }}>Buy Now</div>
-              </div>
-              <div className={styles.mainRight}>
-                <div className={styles.ownerTitle}>Owner</div>
-                <div className={styles.owner}> <img className={styles.proImg} src={ellipse} />Daniele Fortuna</div>
-              </div>
-            </div>
+          <div>
+            <img onClick={() => {
+              history.push('/market')
+            }} className={styles.close} src={close} />
           </div>
         </div>
       </div>
-      <div className={styles.ReContainer}>
+      {/* <div className={styles.ReContainer}>
         <h1 className={styles.title}>Recommend</h1>
         <Slider {...settings}>
           {data.map((item) => {
@@ -197,7 +200,7 @@ const MarketDetailScreen = (props) => {
             return <ArtCard item={item} />;
           })}
         </Slider>
-      </div>
+      </div> */}
     </div>
   )
 }
