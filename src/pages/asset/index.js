@@ -34,11 +34,11 @@ const AssetScreen = (props) => {
 
   const cateType = [
     // { label: 'Lasted', value: 'LASTED' },
-    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
-    { label: 'Domain', value: 'DOMAIN' },
+    // { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    // { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
-    { label: 'Cooection', value: 'COOECTION' },
-    { label: 'Sports', value: 'SPORTS' },
+    // { label: 'Cooection', value: 'COOECTION' },
+    // { label: 'Sports', value: 'SPORTS' },
     { label: 'Game', value: 'GAME' },
   ];
 
