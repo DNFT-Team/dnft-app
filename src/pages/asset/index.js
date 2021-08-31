@@ -17,19 +17,20 @@ import { stakingJson } from 'pages/mining';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
+  const isTestNet = globalConfig.net_env === 'testnet';
 
-  const tabArray = [{
+  const tabArray =  isTestNet ? [{
     label: 'On Sale',
     value: 'ONSALE'
   },{
     label: 'In Wallet',
     value: 'INWALLET'
   },{
-    label: 'My Favorite',
-    value: 'MYFAVORITE'
-  },{
     label: 'Sold',
     value: 'SOLD'
+  }] : [{
+    label: 'In Wallet',
+    value: 'INWALLET'
   }];
 
   const cateType = [
@@ -43,7 +44,6 @@ const AssetScreen = (props) => {
   ];
 
   const sortTagType = [
-    { label: 'Most favorited', value: 'likeCount' },
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
@@ -54,7 +54,7 @@ const AssetScreen = (props) => {
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
   const [category, setCategory] = useState('ART');
-  const [sortTag, setSortTag] = useState('likeCount')
+  const [sortTag, setSortTag] = useState('ASC-price')
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
   const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
@@ -71,97 +71,81 @@ const AssetScreen = (props) => {
 
   const getNFTList = async () => {
     try {
-      if (selectedTab.value === 'MYFAVORITE') {
+      if (selectedTab.value === 'INWALLET' && category === 'ART') {
+        const contractAddress = nftContract;
+        let nftDataList = [];
+        const myContract = new window.web3.eth.Contract(
+          nftAbi,
+          contractAddress
+        );
+        const nft1 = await myContract.methods.balanceOf(address, 1).call({
+          from: address,
+        });
+        const nft2 = await myContract.methods.balanceOf(address, 2).call({
+          from: address,
+        });
+        const nft3 = await myContract.methods.balanceOf(address, 3).call({
+          from: address,
+        });
+
+        if (nft1 > 0) {
+          nftDataList.push({
+            name: stakingJson[Number(1) - 1].name,
+            supply: 1,
+            avatorUrl: stakingJson[Number(1) - 1].image,
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'ART',
+            collectionId: -1,
+            description: stakingJson[Number(1) - 1].description,
+          });
+        }
+        if (nft2 > 0) {
+          nftDataList.push({
+            name: stakingJson[Number(2) - 1].name,
+            supply: 1,
+            avatorUrl: stakingJson[Number(2) - 1].image,
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'ART',
+            collectionId: -1,
+            description: stakingJson[Number(2) - 1].description,
+          });
+        }
+        if (nft3 > 0) {
+          nftDataList.push({
+            name: stakingJson[Number(3) - 1].name,
+            supply: 1,
+            avatorUrl: stakingJson[Number(3) - 1].image,
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'ART',
+            collectionId: -1,
+            description: stakingJson[Number(3) - 1].description,
+          });
+        }
+        setList(nftDataList)
+      } else {
         const { data } = await post(
-          '/api/v1/nft/favorite',
+          '/api/v1/trans/personal',
           {
             address: address,
             category: category,
             sortOrder: sortOrder,
-            sortTag: sortTag,
+            status: selectedTab.value,
+            sortTag: 'price',
             page: 0,
             size: 100
           },
           token
         );
         setList(data?.data?.content || [])
-      } else {
-        if (selectedTab.value === 'INWALLET' && category === 'ART') {
-          const contractAddress = nftContract;
-          let nftDataList = [];
-          const myContract = new window.web3.eth.Contract(
-            nftAbi,
-            contractAddress
-          );
-          const nft1 = await myContract.methods.balanceOf(address, 1).call({
-            from: address,
-          });
-          const nft2 = await myContract.methods.balanceOf(address, 2).call({
-            from: address,
-          });
-          const nft3 = await myContract.methods.balanceOf(address, 3).call({
-            from: address,
-          });
-
-          if (nft1 > 0) {
-            nftDataList.push({
-              name: stakingJson[Number(1) - 1].name,
-              supply: 1,
-              avatorUrl: stakingJson[Number(1) - 1].image,
-              address: address,
-              chainType: 'BSC',
-              tokenId: 1,
-              tokenAddr: contractAddress,
-              category: 'ART',
-              collectionId: -1,
-              description: stakingJson[Number(1) - 1].description,
-            });
-          }
-          if (nft2 > 0) {
-            nftDataList.push({
-              name: stakingJson[Number(2) - 1].name,
-              supply: 1,
-              avatorUrl: stakingJson[Number(2) - 1].image,
-              address: address,
-              chainType: 'BSC',
-              tokenId: 1,
-              tokenAddr: contractAddress,
-              category: 'ART',
-              collectionId: -1,
-              description: stakingJson[Number(2) - 1].description,
-            });
-          }
-          if (nft3 > 0) {
-            nftDataList.push({
-              name: stakingJson[Number(3) - 1].name,
-              supply: 1,
-              avatorUrl: stakingJson[Number(3) - 1].image,
-              address: address,
-              chainType: 'BSC',
-              tokenId: 1,
-              tokenAddr: contractAddress,
-              category: 'ART',
-              collectionId: -1,
-              description: stakingJson[Number(3) - 1].description,
-            });
-          }
-          setList(nftDataList)
-        } else {
-          const { data } = await post(
-            '/api/v1/trans/personal',
-            {
-              address: address,
-              category: category,
-              sortOrder: sortOrder,
-              status: selectedTab.value,
-              sortTag: sortTag,
-              page: 0,
-              size: 100
-            },
-            token
-          );
-          setList(data?.data?.content || [])
-        }
       }
     } catch (e) {
       console.log(e, 'e')
@@ -381,7 +365,6 @@ const AssetScreen = (props) => {
             <div>{renderTabList}</div>
             <div>
               <Select
-                style={{ marginRight: 20 }}
                 value={category}
                 placeholder='please choose'
                 onChange={(value) => {
@@ -396,13 +379,9 @@ const AssetScreen = (props) => {
                   />
                 ))}
               </Select>
-              <Select value={sortTag} placeholder='please choose' onChange={(value) => {
-                if (value.includes('price')) {
-                  setSortTag('price')
-                  setSortOrder(value.split('-')[0])
-                }else {
-                  setSortTag(value)
-                }
+              {isTestNet && <Select value={sortTag} style={{ marginLeft: 20 }} placeholder='please choose' onChange={(value) => {
+                setSortTag(value)
+                setSortOrder(value.split('-')[0])
               }}>
                 {sortTagType.map((el) => (
                   <Select.Option
@@ -411,7 +390,7 @@ const AssetScreen = (props) => {
                     value={el.value}
                   />
                 ))}
-              </Select>
+              </Select>}
             </div>
           </div>
 
