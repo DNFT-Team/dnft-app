@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import globalConf from 'config/index';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
@@ -10,9 +10,14 @@ import 'slick-carousel/slick/slick-theme.css';
 import {Button, Notification} from 'element-react'
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { tradableNFTAbi } from '../../../utils/abi';
+import { tradableNFTContract } from '../../../utils/contract';
+import Web3 from 'web3';
+
 const MarketDetailScreen = (props) => {
   const {location} = props;
   const datas = location?.state;
+  const [loading, setLoading] = useState(false);
   console.log(location, 'location')
   let history = useHistory();
   const data = [
@@ -37,6 +42,38 @@ const MarketDetailScreen = (props) => {
       title: 'NFT gallery of the week',
     },
   ];
+
+  const clickBuyItem = async () => {
+    try {
+      if(window.ethereum) {
+        let ethereum = window.ethereum;
+        window.web3 = new Web3(ethereum);
+        await ethereum.enable();
+
+        const tradableNFTAddress = tradableNFTContract;
+
+        const myContract = new window.web3.eth.Contract(
+          tradableNFTAbi,
+          tradableNFTAddress
+        );
+        console.log(myContract,'myContract')
+        const tradableNFTResult = await myContract.methods
+          .buyByDnft(
+            datas?.address,
+            datas.tokenId,
+          )
+          // .send({
+          //   from: address,
+          // });
+        console.log(ethereum,myContract, tradableNFTResult)
+      }
+    } catch (e) {
+      console.log(e, 'e');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function SampleNextArrow (props) {
     const { className, style, onClick } = props;
     return (
@@ -183,7 +220,8 @@ const MarketDetailScreen = (props) => {
               </div>
             </div>
             <Button disabled={!(datas?.supply - datas?.quantity)} className={styles.buyBtn} onClick={() => {
-              Notification.info('Coming Soon')
+              // Notification.info('Coming Soon')
+              clickBuyItem()
             }}>Buy Now</Button>
           </div>
           <div>

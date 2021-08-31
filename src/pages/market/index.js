@@ -133,19 +133,10 @@ const Market = (props) => {
           loading={pending}
           style={{ position: 'absolute', top: '40%', width: 'calc(100% - 76px)' }}
         />
-        <div className={styles.content111}>
-          <InfiniteScroll
-            initialLoad={false}
-            pageStart={0}
-            loadMore={handleInfiniteOnLoad}
-            hasMore={loading && hasMore}
-            useWindow={false}
-            className={styles.content1}
-          >
-            {datas?.length > 0
-              ? datas.map((item, index) =>  renderCard(item, index))
-              : renderNoData}
-          </InfiniteScroll>
+        <div className={styles.content1}>
+          {datas?.length > 0
+            ? datas.map((item, index) =>  renderCard(item, index))
+            : renderNoData}
         </div>
         <Loading
           loading={loading}
