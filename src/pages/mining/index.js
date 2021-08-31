@@ -570,7 +570,7 @@ const Mining = (props) => {
                     });
                     return;
                   }
-                  if (String(stakeValue).split('.')[1].length > 2) {
+                  if (String(stakeValue).split('.')[1]?.length > 2) {
                     toast.warning('The result shall be quoted in two decimal places.', {
                       position: toast.POSITION.TOP_CENTER,
                     });
