@@ -6,6 +6,7 @@ import {Icon} from '@iconify/react';
 import { post } from 'utils/request';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import globalConf from 'config/index';
 import Web3 from 'web3';
 import { tradableNFTContract } from 'utils/contract';
 import { tradableNFTAbi } from 'utils/abi';
@@ -28,7 +29,7 @@ const NFTCard = (props) => {
 
   const renderFormItem = (label, item) => {
     console.log()
-    return(
+    return (
       <div className={styleFormItemContainer}>
         <div className='label'>{label}</div>
         {item}
@@ -71,7 +72,7 @@ const NFTCard = (props) => {
     <div key={`title-${index}`} onClick={clickDetail} className={styleCardContainer}>
       <div
         style={{
-          background: `center center / contain no-repeat url(${!item.avatorUrl.includes('http') ? 'http://92.205.29.153:8080/ipfs/' + item.avatorUrl : item.avatorUrl})`,
+          background: `center center / contain no-repeat url(${!item.avatorUrl.includes('http') ? (globalConf.ipfsDown + '/ipfs/' + item.avatorUrl) : item.avatorUrl})`,
           backgroundSize: 'contain',
         }}
         className={styleShortPicture}

@@ -1,4 +1,5 @@
-export const URL_CLOUD = 'http://92.205.29.153:8001';
+import globalConf from 'config/index';
+export const URL_CLOUD =  globalConf.backendApi;
 
 let BASE_URL = URL_CLOUD;
 
@@ -18,7 +19,7 @@ export default function request (url, options) {
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {
-    console.log(!(newOptions.body instanceof FormData),'!(newOptions.body instanceof FormData)')
+    console.log(!(newOptions.body instanceof FormData), '!(newOptions.body instanceof FormData)')
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',

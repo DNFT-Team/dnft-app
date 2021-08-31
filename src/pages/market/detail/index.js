@@ -1,4 +1,5 @@
 import React from 'react';
+import globalConf from 'config/index';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
 import close from 'images/market/close.png';
@@ -12,7 +13,7 @@ import { connect } from 'react-redux';
 const MarketDetailScreen = (props) => {
   const {location} = props;
   const datas = location?.state;
-  console.log(location,'location')
+  console.log(location, 'location')
   let history = useHistory();
   const data = [
     {
@@ -137,7 +138,7 @@ const MarketDetailScreen = (props) => {
       }}>Back</div> */}
       <div className={styles.main}>
         <div className={styles.mainL} style={{
-          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? 'http://92.205.29.153:8080/ipfs/' + datas?.avatorUrl : datas?.avatorUrl})`,
+          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + '/ipfs/' + datas?.avatorUrl) : datas?.avatorUrl})`,
           height: 482,
           padding: 10,
           borderRadius: 10,

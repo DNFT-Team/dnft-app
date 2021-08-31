@@ -8,6 +8,7 @@ import {
 } from 'element-react';
 import { css } from 'emotion';
 import React, { useEffect, useState } from 'react';
+import globalConf from 'config/index';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
@@ -103,7 +104,7 @@ const CreateNFT = (props) => {
           .create(
             address,
             form.supply,
-            `http://92.205.29.153:8080/ipfs/${form.avatorUrl}`,
+            `${globalConf.ipfsDown}/ipfs/${form.avatorUrl}`,
             '0x0000000000000000000000000000000000000000000000000000000000000000',
           )
           .send({
