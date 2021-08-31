@@ -1,4 +1,4 @@
-import { Dialog, Input, Loading } from 'element-react';
+import { Dialog, InputNumber, Loading } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -516,8 +516,9 @@ const Mining = (props) => {
               </div>
               <div className={styleInputContainer}>
                 <div className={styleStakeDNF}>DNF</div>
-                <Input
-                  placeholder={'0'}
+                <InputNumber
+                  controls={false}
+                  placeholder={0}
                   value={stakeValue}
                   onChange={(value) => {
                     setStakeValue(value);
@@ -563,6 +564,18 @@ const Mining = (props) => {
                 );
 
                 if (stateData[stakeIndex].isApprove) {
+                  if (typeof stakeValue !== 'number' || stakeValue === 0) {
+                    toast.warning('please input', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                    return;
+                  }
+                  if (String(stakeValue).split('.')[1].length > 2) {
+                    toast.warning('No more than two decimal places', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                    return;
+                  }
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isStaking = true;
 
@@ -570,9 +583,9 @@ const Mining = (props) => {
 
                   try {
                     await stakeContract.methods
-                      .stake(Web3.utils.toWei(stakeValue, 'ether'))
+                      .stake(Web3.utils.toWei(String(stakeValue), 'ether'))
                       .send({
-                        amount: Web3.utils.toWei(stakeValue, 'ether'),
+                        amount: Web3.utils.toWei(String(stakeValue), 'ether'),
                         from: stakeInfo.account,
                       });
                     toast.info('Operation succeeded！', {
@@ -1312,6 +1325,9 @@ const styleInputContainer = css`
   flex-direction: row;
   height: 50px;
   margin: 5px 0;
+  .el-input-number {
+    width: 100%;
+  }
   input {
     border: none;
     background: transparent;

@@ -10,7 +10,6 @@ import { noDataSvg } from 'utils/svg';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
-import InfiniteScroll from 'react-infinite-scroller';
 
 import { getMarketList } from 'reduxs/actions/market';
 const Market = (props) => {

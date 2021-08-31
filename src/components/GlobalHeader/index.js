@@ -203,8 +203,8 @@ const GlobalHeader = (props) => {
   return (
     <header className={styleHeader}>
       <div className={styleSearchContainer}>
-        <i className='el-icon-search' />
-        <Input placeholder={'Search Art,Game or Fun'} />
+        {/* <i className='el-icon-search' />
+        <Input placeholder={'Search Art,Game or Fun'} /> */}
       </div>
       <div className={styles.actionContainer}>
         <span
