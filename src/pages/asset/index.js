@@ -217,7 +217,7 @@ const AssetScreen = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== 4 && history.location.pathname === '/asset') {
+      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/asset') {
         goToRightNetwork(ethereum);
       }
     }
