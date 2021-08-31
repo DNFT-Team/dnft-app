@@ -13,6 +13,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import defaultHeadSvg from '../../images/asset/Head.svg'
 import globalConfig from '../../config'
+import { stakingJson } from 'pages/mining';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -85,20 +86,82 @@ const AssetScreen = (props) => {
         );
         setList(data?.data?.content || [])
       } else {
-        const { data } = await post(
-          '/api/v1/nft/batch',
-          {
-            address: address,
-            category: category,
-            sortOrder: sortOrder,
-            status: selectedTab.value,
-            sortTag: sortTag,
-            page: 0,
-            size: 100
-          },
-          token
-        );
-        setList(data?.data?.content || [])
+        if (selectedTab.value === 'INWALLET' && category === 'ART') {
+          const contractAddress = nftContract;
+          let nftDataList = [];
+          const myContract = new window.web3.eth.Contract(
+            nftAbi,
+            contractAddress
+          );
+          const nft1 = await myContract.methods.balanceOf(address, 1).call({
+            from: address,
+          });
+          const nft2 = await myContract.methods.balanceOf(address, 2).call({
+            from: address,
+          });
+          const nft3 = await myContract.methods.balanceOf(address, 3).call({
+            from: address,
+          });
+
+          if (nft1 > 0) {
+            nftDataList.push({
+              name: stakingJson[Number(1) - 1].name,
+              supply: 1,
+              avatorUrl: stakingJson[Number(1) - 1].image,
+              address: address,
+              chainType: 'BSC',
+              tokenId: 1,
+              tokenAddr: contractAddress,
+              category: 'ART',
+              collectionId: -1,
+              description: stakingJson[Number(1) - 1].description,
+            });
+          }
+          if (nft2 > 0) {
+            nftDataList.push({
+              name: stakingJson[Number(2) - 1].name,
+              supply: 1,
+              avatorUrl: stakingJson[Number(2) - 1].image,
+              address: address,
+              chainType: 'BSC',
+              tokenId: 1,
+              tokenAddr: contractAddress,
+              category: 'ART',
+              collectionId: -1,
+              description: stakingJson[Number(2) - 1].description,
+            });
+          }
+          if (nft3 > 0) {
+            nftDataList.push({
+              name: stakingJson[Number(3) - 1].name,
+              supply: 1,
+              avatorUrl: stakingJson[Number(3) - 1].image,
+              address: address,
+              chainType: 'BSC',
+              tokenId: 1,
+              tokenAddr: contractAddress,
+              category: 'ART',
+              collectionId: -1,
+              description: stakingJson[Number(3) - 1].description,
+            });
+          }
+          setList(nftDataList)
+        } else {
+          const { data } = await post(
+            '/api/v1/trans/personal',
+            {
+              address: address,
+              category: category,
+              sortOrder: sortOrder,
+              status: selectedTab.value,
+              sortTag: sortTag,
+              page: 0,
+              size: 100
+            },
+            token
+          );
+          setList(data?.data?.content || [])
+        }
       }
     } catch (e) {
       console.log(e, 'e')

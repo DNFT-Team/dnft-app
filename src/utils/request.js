@@ -1,4 +1,4 @@
-export const URL_CLOUD = 'http://92.205.29.153:8000';
+export const URL_CLOUD = 'http://92.205.29.153:8001';
 
 let BASE_URL = URL_CLOUD;
 

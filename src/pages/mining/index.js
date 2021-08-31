@@ -31,7 +31,7 @@ import helper from '../../config/helper';
 import {Icon} from '@iconify/react';
 import {Link, Divider} from '@chakra-ui/react';
 
-const stakingJson = [{
+export const stakingJson = [{
   'name': 'The Spirit Of Silence',
   'description': 'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
   'image': 'https://www.dnft.world/staking/pool1.png'
