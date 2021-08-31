@@ -15,7 +15,7 @@ import { tradableNFTContract } from '../../../utils/contract';
 import Web3 from 'web3';
 
 const MarketDetailScreen = (props) => {
-  const {location} = props;
+  const {location, address} = props;
   const datas = location?.state;
   const [loading, setLoading] = useState(false);
   console.log(location, 'location')
@@ -56,15 +56,20 @@ const MarketDetailScreen = (props) => {
           tradableNFTAbi,
           tradableNFTAddress
         );
-        console.log(myContract,'myContract')
+        const gasNum = 210000, gasPrice = '20000000000';
+
+        console.log(myContract,'myContract',datas,address, Web3.utils.toWei(datas?.price?.toString(), 'ether'))
         const tradableNFTResult = await myContract.methods
           .buyByDnft(
             datas?.address,
             datas.tokenId,
           )
-          // .send({
-          //   from: address,
-          // });
+          .send({
+            value: Web3.utils.toWei(datas?.price?.toString(), 'ether'),
+            from: address,
+            gas: gasNum,
+            gasPrice: gasPrice
+          });
         console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
@@ -246,6 +251,7 @@ const MarketDetailScreen = (props) => {
 const mapStateToProps = ({ profile, market }) => ({
   token: profile.token,
   datas: market.datas,
+  address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
 
