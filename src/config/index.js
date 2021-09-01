@@ -4,7 +4,7 @@ export default {
   backendApi: `${'http://92.205.29.153'}:8001`,
   staticApi: `${baseUrl}:8965`,
   bridgeApi: `${baseUrl}:8081`,
-  ipfsUp: `${baseUrl}:5001`,
+  ipfsUp: `${'http://92.205.29.153'}:5001`,
   ipfsDown: `${'http://92.205.29.153'}:8080`,
   baseUrl,
 }
