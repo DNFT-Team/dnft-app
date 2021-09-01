@@ -496,6 +496,8 @@ const Mining = (props) => {
       const isStakeLoading =
         stateData[stakeIndex].isApprove && stateData[stakeIndex].isStaking;
 
+      const isStakeValueInvalid = stateData[stakeIndex].isApprove && (typeof stakeValue !== 'number' || stakeValue === 0 || String(stakeValue).split('.')[1]?.length > 2);
+
       return (
         <div>
           <div className={styleTableHeader}>
@@ -541,9 +543,9 @@ const Mining = (props) => {
             <div
               className={styleApproveButton}
               style={{
-                opacity: isApproveLoading || isStakeLoading ? 0.3 : 1,
+                opacity: (isApproveLoading || isStakeLoading || isStakeValueInvalid) ? 0.3 : 1,
                 cursor:
-                  isApproveLoading || isStakeLoading
+                  (isApproveLoading || isStakeLoading || isStakeValueInvalid)
                     ? 'not-allowed'
                     : 'pointer',
               }}
@@ -564,18 +566,10 @@ const Mining = (props) => {
                 );
 
                 if (stateData[stakeIndex].isApprove) {
-                  if (typeof stakeValue !== 'number' || stakeValue === 0) {
-                    toast.warning('please input', {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
+                  if (isStakeValueInvalid) {
                     return;
                   }
-                  if (String(stakeValue).split('.')[1]?.length > 2) {
-                    toast.warning('The results are exhibited only at most in two decimal places.', {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                    return;
-                  }
+
                   const dealWithStateData = stateData;
                   dealWithStateData[stakeIndex].isStaking = true;
 

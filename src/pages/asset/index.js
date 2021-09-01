@@ -22,10 +22,10 @@ const AssetScreen = (props) => {
   const tabArray =  isTestNet ? [{
     label: 'On Sale',
     value: 'ONSALE'
-  },{
+  }, {
     label: 'In Wallet',
     value: 'INWALLET'
-  },{
+  }, {
     label: 'Sold',
     value: 'SOLD'
   }] : [{
@@ -131,6 +131,71 @@ const AssetScreen = (props) => {
           });
         }
         setList(nftDataList)
+      } else if (selectedTab.value === 'INWALLET' && category === 'GAME') {
+        let ethereum = window.ethereum;
+        window.web3 = new Web3(ethereum);
+        await ethereum.enable();
+
+        const accounts = await ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+
+        const account = accounts[0];
+        let nftDataList = [];
+        const contractAddress = nft1155Contract;
+        const myContract = new window.web3.eth.Contract(
+          nft1155Abi,
+          contractAddress
+        );
+        const nft1 = await myContract.methods.balanceOf(account, 100).call({
+          from: account,
+        });
+        const nft2 = await myContract.methods.balanceOf(account, 200).call({
+          from: account,
+        });
+        const nft3 = await myContract.methods.balanceOf(account, 300).call({
+          from: account,
+        });
+        if (nft1 > 0) {
+          nftDataList.push({
+            name: 'Gold Medal NFT',
+            supply: 1,
+            avatorUrl: 'https://dnft.world/igo/100.png',
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'GAME',
+            collectionId: -1,
+          });
+        }
+        if (nft2 > 0) {
+          nftDataList.push({
+            name: 'Silver Medal NFT',
+            supply: 1,
+            avatorUrl: 'https://dnft.world/igo/200.png',
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'GAME',
+            collectionId: -1,
+          });
+        }
+        if (nft3 > 0) {
+          nftDataList.push({
+            name: 'Bronze Medal NFT',
+            supply: 1,
+            avatorUrl: 'https://dnft.world/igo/300.png',
+            address: address,
+            chainType: 'BSC',
+            tokenId: 1,
+            tokenAddr: contractAddress,
+            category: 'GAME',
+            collectionId: -1,
+          });
+        }
+        setList(nftDataList)
       } else {
         const { data } = await post(
           '/api/v1/trans/personal',
@@ -162,7 +227,7 @@ const AssetScreen = (props) => {
           method: 'wallet_switchEthereumChain',
           params: [
             {
-              chainId:'0x4',
+              chainId: '0x4',
             },
           ],
         })
@@ -189,13 +254,13 @@ const AssetScreen = (props) => {
       console.error('Failed to setup the network in Metamask:', error)
       return false
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if (token) {
-      getNFTList()
-    }
-  },[token, category, selectedTab, sortTag, address])
+    // if (token) {
+    getNFTList()
+    // }
+  }, [token, category, selectedTab, sortTag, address, chainType])
 
   useEffect(() => {
     let ethereum = window.ethereum;
@@ -314,7 +379,8 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={isTestNet} currentStatus={selectedTab} onLike={getNFTList} onSave={getNFTList} />,
+    (item, index) => <NFTCard item={item} index={index} needAction={isTestNet} currentStatus={selectedTab} onLike={getNFTList}
+      onSave={getNFTList} />,
     [selectedTab]
   );
 
