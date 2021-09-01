@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import globalConf from 'config/index';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
@@ -7,42 +7,48 @@ import ellipse from 'images/market/ellipse.png'
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import {Button, Notification} from 'element-react'
-import { withRouter, Link, useHistory } from 'react-router-dom';
+// import {Button, Notification} from 'element-react'
+import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { tradableNFTAbi } from '../../../utils/abi';
 import { tradableNFTContract } from '../../../utils/contract';
 import Web3 from 'web3';
+import {Icon} from '@iconify/react';
+
+import {toDecimal, WEB3_MAX_NUM} from 'utils/web3Tools';
+import {
+  Select,
+} from 'element-react';
+import {
+  Button, Fade,Modal,
+  IconButton,
+  Badge, ModalOverlay,
+  ModalHeader, ModalFooter,
+  ModalBody, ModalContent,
+} from '@chakra-ui/react';
+import { post } from 'utils/request';
+import CreateCollectionModal from '../../../components/CreateCollectionModal';
+
 
 const MarketDetailScreen = (props) => {
-  const {location, address} = props;
+  const {location, address, token, chainType} = props;
   const datas = location?.state;
   const [loading, setLoading] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false)
+  const onClose = () => setIsOpen(false)
+  const [form, setForm] = useState({});
+  const [options, setOptions] = useState([]);
+  const [showCreateCollection, setShowCreateCollection] = useState(false);
+
   console.log(location, 'location')
   let history = useHistory();
-  const data = [
-    {
-      src: "url('http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg')",
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: "url('https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a')",
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: "url('https://cdnb.artstation.com/p/assets/images/images/014/135/359/medium/xiong-tang-05.jpg?1542638071')",
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: "url('http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg')",
-      title: 'NFT gallery of the week',
-    },
-  ];
 
+  useEffect(() => {
+    if (token) {
+      getCollectionList();
+    }
+  }, [token]);
   const clickBuyItem = async () => {
     try {
       if(window.ethereum) {
@@ -51,26 +57,27 @@ const MarketDetailScreen = (props) => {
         await ethereum.enable();
 
         const tradableNFTAddress = tradableNFTContract;
-
+        console.log(datas?.type,'datas,',datas)
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
         );
         const gasNum = 210000, gasPrice = '20000000000';
-
-        console.log(myContract,'myContract',datas,address, Web3.utils.toWei(datas?.price?.toString(), 'ether'))
-        const tradableNFTResult = await myContract.methods
-          .buyByDnft(
-            datas?.address,
-            datas.tokenId,
-          )
-          .send({
-            value: Web3.utils.toWei(datas?.price?.toString(), 'ether'),
-            from: address,
-            gas: gasNum,
-            gasPrice: gasPrice
-          });
-        console.log(ethereum,myContract, tradableNFTResult)
+        setIsOpen(true);
+        return true;
+        // console.log(myContract,'myContract',datas,address, Web3.utils.toWei(datas?.price?.toString(), 'ether'))
+        // const tradableNFTResult = await myContract.methods
+        //   .buyByDnft(
+        //     datas?.address,
+        //     datas.tokenId,
+        //   )
+        //   .send({
+        //     value: toDecimal(datas?.price, true, 'ether', true),
+        //     from: address,
+        //     gas: gasNum,
+        //     gasPrice: gasPrice
+        //   });
+        // console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
       console.log(e, 'e');
@@ -79,100 +86,40 @@ const MarketDetailScreen = (props) => {
     }
   }
 
-  function SampleNextArrow (props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{
-          ...style,
-          display: 'block',
-          position: 'absolute',
-          top: '-30px',
-          right: '50px',
-          color: '#1B2559',
-        }}
-        onClick={onClick}
-      />
-    );
+  const createDNFCollect = () => {
+    console.log('----1212', form,)
   }
 
-  function SamplePrevArrow (props) {
-    const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{
-          ...style,
-          display: 'block',
-          position: 'absolute',
-          top: '-30px',
-          left: 'calc(100% - 112px)',
-        }}
-        onClick={onClick}
-      />
-    );
-  }
-  const settings = {
-    infinite: false,
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    className: styles.sliderContainer,
-  };
-  const ArtCard = (src) => (
-    <div className={styles.card}>
-      <div
-        style={{
-          background: `center / cover no-repeat ${src.item.src}`,
-          // height: 350,
-          height: 467,
-          marginBottom: 20,
-          borderRadius: 10,
-        }}
-      />
-      <div>
-        <div className={styles.contentContainer}>
-          <span>Shanghaibar</span>
-          <span className={styles.starContainer}>
-            <i className="el-icon-star-off"></i>
-            <span className={styles.starAccount}>123,000</span>
-          </span>
-        </div>
-        <div className={styles.contentContainer}>
-          <span>C.K</span>
-          <span>1.8ETH</span>
-        </div>
-      </div>
+  const renderFormItem = (label, item) => (
+    <div className={styles.styleFormItemContainer}>
+      <div className='label'>{label}</div>
+      {item}
     </div>
   );
+  const getCollectionList = async () => {
+    try {
+      const { data } = await post(
+        '/api/v1/collection/batch',
+        {
+          address: address,
+          sortOrder: 'ASC',
+          sortTag: 'createTime',
+          page: 0,
+          size: 100,
+        },
+        token
+      );
+      setOptions(
+        data?.data?.content?.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }))
+      );
+    } catch (e) {
+      console.log(e, 'e');
+    }
+  };
+
   return (
     <div className={styles.marketDetail}>
       {/* <div className={styles.backBtn} onClick={() => {
@@ -224,10 +171,12 @@ const MarketDetailScreen = (props) => {
                 <p className={styles.userName}>Raquel</p>
               </div>
             </div>
-            <Button disabled={!(datas?.supply - datas?.quantity)} className={styles.buyBtn} onClick={() => {
+            <Button
+              // disabled={!(datas?.supply - datas?.quantity)}
+              className={styles.buyBtn} onClick={() => {
               // Notification.info('Coming Soon')
-              clickBuyItem()
-            }}>Buy Now</Button>
+                clickBuyItem()
+              }}>Buy Now</Button>
           </div>
           <div>
             <img onClick={() => {
@@ -236,21 +185,76 @@ const MarketDetailScreen = (props) => {
           </div>
         </div>
       </div>
-      {/* <div className={styles.ReContainer}>
-        <h1 className={styles.title}>Recommend</h1>
-        <Slider {...settings}>
-          {data.map((item) => {
-            console.log(item, 'item');
-            return <ArtCard item={item} />;
-          })}
-        </Slider>
-      </div> */}
+      <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+        isCentered isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent width="564px" maxW="initial">
+          <ModalHeader color="#11142d"
+            p="32px" fontSize="18px"
+            display="flex" justifyContent="space-between"
+            alignItems="center">
+            Select your collection
+            <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
+              icon={<Icon icon="mdi:close"/>}/>
+          </ModalHeader>
+          <ModalBody p="0 32px">
+            {renderFormItem(
+              'Collection',
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+                <Select
+                  placeholder='Please choose'
+                  defaultValue={form.collectionId}
+                  value={form.collectionId}
+                  style={{flex: 1, marginRight: '28px'}}
+                  onChange={(value) => {
+                    setForm({
+                      ...form,
+                      collectionId: value,
+                    });
+                  }}
+                >
+                  {options.map((el) => (
+                    <Select.Option key={el.value} label={el.label} value={el.value} />
+                  ))}
+                </Select>
+                <Button onClick={() => {
+                  setShowCreateCollection(true);
+                }}>+ Add</Button>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter justifyContent="flex-start">
+            <Button colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
+              onClick={() => createDNFCollect()}>Submit</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {showCreateCollection && (
+        <CreateCollectionModal
+          formDs={{ address, chainType }}
+          token={token}
+          isNew={true}
+          onSuccess={(res) => {
+            setShowCreateCollection(false);
+            getCollectionList();
+          }}
+          onClose={() => {
+            setShowCreateCollection(false);
+          }}
+        />
+      )}
     </div>
   )
 }
 const mapStateToProps = ({ profile, market }) => ({
   token: profile.token,
   datas: market.datas,
+  chainType: profile.chainType,
+
   address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
