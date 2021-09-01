@@ -571,7 +571,7 @@ const Mining = (props) => {
                     return;
                   }
                   if (String(stakeValue).split('.')[1]?.length > 2) {
-                    toast.warning('The result shall be quoted in two decimal places.', {
+                    toast.warning('The result should be rounded up to 2 decimal places.', {
                       position: toast.POSITION.TOP_CENTER,
                     });
                     return;
