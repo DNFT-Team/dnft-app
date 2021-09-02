@@ -1,4 +1,4 @@
-import { Dialog, InputNumber, Select } from 'element-react';
+import { Dialog, InputNumber, Select, Button } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useState, useMemo } from 'react';
 import {Icon} from '@iconify/react';
@@ -15,7 +15,7 @@ const NFTCard = (props) => {
   const [showSellModal, setShowSellModal] = useState(false);
   const [showOffShelfModal, setShowOffShelfModal] = useState(false);
   const [sellForm, setSellForm] = useState({
-    amount: 1
+    quantity: 1
   });
   const [isApproved, setIsApproved] = useState(false)
 
@@ -127,10 +127,10 @@ const NFTCard = (props) => {
         }}
       >
         <Dialog.Body>
-          {renderFormItem('Amount', <InputNumber min={1} defaultValue={1} onChange={(value) => {
+          {renderFormItem('Quantity', <InputNumber min={1} defaultValue={1} onChange={(value) => {
             setSellForm({
               ...sellForm,
-              amount: value
+              quantity: value
             })
           }}
           />)}
@@ -176,17 +176,17 @@ const NFTCard = (props) => {
                     contractAddress
                   );
 
-                  console.log(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount, 'aaaaa')
+                  console.log(item.tokenAddress, item.tokenId, sellForm.price, sellForm.quantity, 'aaaaa')
                   let putOnResult;
                   if (sellForm.type === 'DNFT') {
                     putOnResult = await myContract.methods
-                      .putOnByDnft(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount)
+                      .putOnByDnft(item.tokenAddress, item.tokenId, sellForm.price, sellForm.quantity)
                       .send({
                         from: address,
                       });
                   } else if (sellForm.type === 'BUSD') {
                     putOnResult = await myContract.methods
-                      .putOnByBusd(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount)
+                      .putOnByBusd(item.tokenAddress, item.tokenId, sellForm.price, sellForm.quantity)
                       .send({
                         from: address,
                       });
@@ -199,7 +199,7 @@ const NFTCard = (props) => {
                       '/api/v1/trans/sell_up',
                       {
                         ...sellForm,
-                        nftId: item.id,
+                        nftId: item.nftId,
                         orderId: orderId
                       },
                       token
@@ -247,7 +247,7 @@ const NFTCard = (props) => {
     )
   }, [sellForm, isApproved]);
 
-  const renderOffShelfModal = () => {
+  const renderOffShelfModal = useMemo(() => {
     console.log('off shelf modal ')
     return (
       <Dialog
@@ -255,7 +255,7 @@ const NFTCard = (props) => {
         size="tiny"
         visible
         onCancel={() => {
-          onShowOffShelfModal(false)
+          setShowOffShelfModal(false)
         }}
       >
         <Dialog.Body>
@@ -263,16 +263,47 @@ const NFTCard = (props) => {
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button onClick={() => {
-            onShowOffShelfModal(false)
+            setShowOffShelfModal(false)
           }}>Cancel</Button>
-          <Button type="primary" onClick={() => {
-            console.log('confirm');
-            onShowOffShelfModal(false)
+          <Button type="primary" onClick={async () => {
+            try {
+              if (window.ethereum) {
+                let ethereum = window.ethereum;
+                window.web3 = new Web3(ethereum);
+                await ethereum.enable();
+
+                const contractAddress = tradableNFTContract;
+                const myContract = new window.web3.eth.Contract(
+                  tradableNFTAbi,
+                  contractAddress
+                );
+
+                let offResult = await myContract.methods
+                  .off(item.orderId)
+                  .send({
+                    from: address,
+                  });
+                console.log(offResult, 'offResult')
+
+                if (offResult) {
+                  const result = await post(
+                    '/api/v1/trans/sell_back',
+                    {
+                      orderId: item.orderId
+                    },
+                    token
+                  );
+                  setShowOffShelfModal(false)
+                }
+              }
+            } catch (e) {
+              console.log(e, 'e');
+            }
           }}>Confirm</Button>
         </Dialog.Footer>
       </Dialog>
     )
-  }
+  },[])
 
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
