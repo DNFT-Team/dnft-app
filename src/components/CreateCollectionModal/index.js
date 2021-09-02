@@ -115,7 +115,7 @@ const CreateCollectionModal = (props) => {
             httpRequest={(e) => {uploadFile(e.file)}}
             tip={<div className='el-upload__tip'> Drag or choose your file to upload </div>}
           >
-            {colData.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.staticApi + '/data/' + colData.avatorUrl} alt="avatar"/> : ''}
+            {colData.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.staticApi + colData.avatorUrl} alt="avatar"/> : ''}
             <i className='el-icon-upload2' />
             <div className='el-upload__text'>PNG, GIF, WEBP. Max 1Gb.</div>
           </Upload>

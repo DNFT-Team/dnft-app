@@ -5,7 +5,7 @@ export default {
   /*java-core-api*/
   backendApi: baseUrl + `/api`,
   /*static-file-data*/
-  staticApi: baseUrl + `/data`,
+  staticApi: baseUrl + `/data/`,
   /*bridge-api*/
   bridgeApi: baseUrl + `/bridgeApi`,
   /*ipfs-api*/
