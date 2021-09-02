@@ -20,7 +20,7 @@ import {
   Select,
 } from 'element-react';
 import {
-  Button, Fade,Modal,
+  Button, Fade, Modal,
   IconButton,
   Badge, ModalOverlay,
   ModalHeader, ModalFooter,
@@ -51,13 +51,13 @@ const MarketDetailScreen = (props) => {
   }, [token]);
   const clickBuyItem = async () => {
     try {
-      if(window.ethereum) {
+      if (window.ethereum) {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
 
         const tradableNFTAddress = tradableNFTContract;
-        console.log(datas?.type,'datas,',datas)
+        console.log(datas?.type, 'datas,', datas)
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
@@ -127,7 +127,7 @@ const MarketDetailScreen = (props) => {
       }}>Back</div> */}
       <div className={styles.main}>
         <div className={styles.mainL} style={{
-          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + '/ipfs/' + datas?.avatorUrl) : datas?.avatorUrl})`,
+          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
           height: 482,
           padding: 10,
           borderRadius: 10,
@@ -185,7 +185,8 @@ const MarketDetailScreen = (props) => {
           </div>
         </div>
       </div>
-      <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+      <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside"
+        borderRadius="10px"
         isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent width="564px" maxW="initial">
@@ -237,7 +238,7 @@ const MarketDetailScreen = (props) => {
         <CreateCollectionModal
           formDs={{ address, chainType }}
           token={token}
-          isNew={true}
+          isNew
           onSuccess={(res) => {
             setShowCreateCollection(false);
             getCollectionList();

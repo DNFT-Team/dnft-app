@@ -209,7 +209,7 @@ const BridgeScreen = (props) => {
               amount, hash,
               from: 'ETH', to: 'BSC'
             })
-            axios.post('/transaction/monitor', {
+            axios.post('/monitor', {
               amount,
               to_address: address,
               tx_hash: hash,
@@ -226,7 +226,7 @@ const BridgeScreen = (props) => {
   }
   const skipHistory = () => {
     let list = []
-    axios.get(`/transaction/query?address=${address}`, {baseURL: globalConf.bridgeApi})
+    axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
       .then((res) => {list = res.data.data})
       .finally(() => {
         if (list.length > 0) {

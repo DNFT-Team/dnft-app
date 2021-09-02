@@ -72,7 +72,7 @@ const NFTCard = (props) => {
     <div key={`title-${index}`} onClick={clickDetail} className={styleCardContainer}>
       <div
         style={{
-          background: `center center / contain no-repeat url(${!item.avatorUrl.includes('http') ? (globalConf.ipfsDown + '/ipfs/' + item.avatorUrl) : item.avatorUrl})`,
+          background: `center center / contain no-repeat url(${!item.avatorUrl.includes('http') ? (globalConf.ipfsDown + item.avatorUrl) : item.avatorUrl})`,
           backgroundSize: 'contain',
         }}
         className={styleShortPicture}

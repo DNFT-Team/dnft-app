@@ -46,7 +46,7 @@ const CreateNFT = (props) => {
       const fileData = new FormData();
       fileData.append('file', file);
 
-      const { data } = await ipfs_post('/api/v0/add', fileData);
+      const { data } = await ipfs_post('/v0/add', fileData);
 
       setForm({
         ...form,
@@ -104,7 +104,7 @@ const CreateNFT = (props) => {
           .create(
             address,
             form.supply,
-            `${globalConf.ipfsDown}/ipfs/${form.avatorUrl}`,
+            `${globalConf.ipfsDown}${form.avatorUrl}`,
             '0x0000000000000000000000000000000000000000000000000000000000000000',
           )
           .send({

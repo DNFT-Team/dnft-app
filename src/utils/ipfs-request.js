@@ -1,4 +1,5 @@
-export const URL_CLOUD = '/ipfs';
+import globalConf from 'config/index';
+export const URL_CLOUD = globalConf.ipfsUp;
 
 let BASE_URL = URL_CLOUD;
 

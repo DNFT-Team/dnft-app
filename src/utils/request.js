@@ -1,5 +1,5 @@
 import globalConf from 'config/index';
-export const URL_CLOUD =  globalConf.backendApi;
+export const URL_CLOUD =  globalConf.baseUrl;
 
 let BASE_URL = URL_CLOUD;
 
