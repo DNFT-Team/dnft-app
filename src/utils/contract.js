@@ -37,3 +37,6 @@ export const busdContract = isMainNet ? '0xe9e7cea3dedca5984780bafc599bd69add087
 export const bscTestTokenContact = '0x18d68a172b6662aa9ef2b3376980e941d964d942'
 export const createNFTContract = '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955';
 export const tradableNFTContract = '0xBcF25238F74C2e7B02eb44B70b74b5B2723C3FaA';
+
+// market
+export const busdMarketContract = '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD';

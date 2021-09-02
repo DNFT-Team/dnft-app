@@ -10,8 +10,8 @@ import 'slick-carousel/slick/slick-theme.css';
 // import {Button, Notification} from 'element-react'
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { tradableNFTAbi } from '../../../utils/abi';
-import { tradableNFTContract,  } from '../../../utils/contract';
+import { tradableNFTAbi, busdAbi } from '../../../utils/abi';
+import { tradableNFTContract, busdContract, busdMarketContract } from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 
@@ -57,21 +57,29 @@ const MarketDetailScreen = (props) => {
         await ethereum.enable();
         setLoading(true)
         const tradableNFTAddress = tradableNFTContract;
+        const busdAddress = busdMarketContract;
         // console.log(datas?.type, 'datas,', datas)
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
         );
+        const myContractBusd = new window.web3.eth.Contract(
+          busdAbi,
+          busdAddress
+        );
         const gasNum = 210000, gasPrice = '20000000000';
         const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
           datas?.orderId,
-          getStock,
+          datas?.quantity,
         )
           .send({
             value: toDecimal(String(datas?.price), true, 'ether', false),
             from: address,
             gas: gasNum,
             gasPrice: gasPrice,
+            to: tradableNFTAddress,
+            value: '0x0',
+            data: myContractBusd.methods.transfer(datas?.address, datas?.price).encodeABI()
           }, function (error, transactionHash) {
             if(!error) {
               console.log('交易hash: ', transactionHash)
@@ -171,8 +179,8 @@ const MarketDetailScreen = (props) => {
             <p className={styles.proName}>{datas?.name}</p>
             <div className={styles.proPriceBox}>
               <span className={styles.price}>{datas?.price}{datas?.type}</span>
-              <span className={styles.price}>$24234.32</span>
-              {getStock} in stock
+              <span className={styles.price}>$0</span>
+              {datas?.quantity} in stock
             </div>
             <div className={styles.desc}>{datas?.description}</div>
             <div className={styles.chain}>
@@ -206,6 +214,7 @@ const MarketDetailScreen = (props) => {
             </div>
             <Button
               isLoading={loading}
+              disabled={!datas?.quantity}
               loadingText="Buy Now"
               // disabled={!(datas?.supply - datas?.quantity)}
               className={styles.buyBtn} onClick={() => {
