@@ -2,9 +2,6 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './index.less';
 import copyImg from 'images/profile/copy.png';
-import dnftLogo from 'images/home/dnftLogo.png';
-import contact_t from 'images/profile/t.png';
-import contact_m from 'images/profile/m.png';
 import like from 'images/profile/like.png';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
@@ -27,7 +24,7 @@ const ProfileScreen = (props) => {
   const [selectedTab, setSelectedTab] = useState('Collections');
   let newAddress = location?.pathname?.split('/') || [];
   newAddress = newAddress[newAddress.length - 1]
-  console.log(newAddress,'newAddress')
+  console.log(newAddress,'newAddress', address)
   let history = useHistory();
   useEffect(() => {
     if (token) {

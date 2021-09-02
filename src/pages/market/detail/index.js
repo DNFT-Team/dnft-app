@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import globalConf from 'config/index';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
@@ -11,7 +11,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { tradableNFTAbi } from '../../../utils/abi';
-import { tradableNFTContract } from '../../../utils/contract';
+import { tradableNFTContract,  } from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 
@@ -55,37 +55,70 @@ const MarketDetailScreen = (props) => {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
-
+        setLoading(true)
         const tradableNFTAddress = tradableNFTContract;
-        console.log(datas?.type, 'datas,', datas)
+        // console.log(datas?.type, 'datas,', datas)
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
         );
         const gasNum = 210000, gasPrice = '20000000000';
-        setIsOpen(true);
-        return true;
-        // console.log(myContract,'myContract',datas,address, Web3.utils.toWei(datas?.price?.toString(), 'ether'))
-        // const tradableNFTResult = await myContract.methods
-        //   .buyByDnft(
-        //     datas?.address,
-        //     datas.tokenId,
-        //   )
-        //   .send({
-        //     value: toDecimal(datas?.price, true, 'ether', true),
-        //     from: address,
-        //     gas: gasNum,
-        //     gasPrice: gasPrice
-        //   });
-        // console.log(ethereum,myContract, tradableNFTResult)
+        const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
+          datas?.orderId,
+          getStock,
+        )
+          .send({
+            value: toDecimal(String(datas?.price), true, 'ether', false),
+            from: address,
+            gas: gasNum,
+            gasPrice: gasPrice,
+          }, function (error, transactionHash) {
+            if(!error) {
+              console.log('交易hash: ', transactionHash)
+            } else {
+              console.log('error' ,error)
+            }
+          }).then(async function (receipt) { // 监听后续的交易情况
+            console.log(receipt)
+            setIsOpen(true)
+            setLoading(false)
+            const { data } = await post(
+              '/api/v1/trans/sell_up',
+              {
+                collectionId: datas?.collectionId,
+                nftId: datas?.nftId,
+                orderId: datas?.orderId,
+                price: datas?.price,
+                quantity: datas?.quantity,
+                tokenAddress: datas?.tokenAddress,
+                tokenId: datas?.tokenId,
+                type: datas?.tokenId
+              },
+              token
+            );
+            console.log('交易状态：', receipt.status)
+          });
+
+        // setIsOpen(true)
+        console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
+      setLoading(false)
       console.log(e, 'e');
     } finally {
       setLoading(false);
     }
   }
 
+  const getStock = useMemo(() => {
+    if(datas) {
+      let historyStock = datas?.historyList?.reduce((accumulator, currentValue) => accumulator + currentValue.quantity,0)
+      let stockNum = (datas?.quantity ?? 0) - (historyStock ?? 0)
+      return stockNum;
+    }
+    return ''
+  }, [datas])
+  console.log(getStock,'getStock')
   const createDNFCollect = () => {
     console.log('----1212', form,)
   }
@@ -139,7 +172,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.proPriceBox}>
               <span className={styles.price}>{datas?.price}{datas?.type}</span>
               <span className={styles.price}>$24234.32</span>
-              {datas?.supply - datas?.quantity} in stock
+              {getStock} in stock
             </div>
             <div className={styles.desc}>{datas?.description}</div>
             <div className={styles.chain}>
@@ -154,7 +187,7 @@ const MarketDetailScreen = (props) => {
               </a>
             </div>
             <div className={styles.user}>
-              <div className={styles.head}>
+              <div className={styles.head} onClick={() => {history.push(`/profile/address/${datas?.address}`)}}>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
               </div>
               <div>
@@ -172,6 +205,8 @@ const MarketDetailScreen = (props) => {
               </div>
             </div>
             <Button
+              isLoading={loading}
+              loadingText="Buy Now"
               // disabled={!(datas?.supply - datas?.quantity)}
               className={styles.buyBtn} onClick={() => {
               // Notification.info('Coming Soon')

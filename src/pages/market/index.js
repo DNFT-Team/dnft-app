@@ -130,17 +130,17 @@ const Market = (props) => {
       <div className={styles.ArtContainer}>
         <Loading
           loading={pending}
-          style={{ position: 'absolute', top: '40%', width: 'calc(100% - 76px)' }}
+          style={{ position: 'absolute', top: '50%', width: 'calc(100% - 76px)' }}
         />
-        <div className={styles.content1}>
+        <div className={styles.content1} style={{ opacity: pending ? 0.5 : 1 }}>
           {datas?.length > 0
             ? datas.map((item, index) =>  renderCard(item, index))
             : renderNoData}
         </div>
-        <Loading
-          loading={loading}
+        {/* <Loading
+          loading={pending}
           style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
-        />
+        /> */}
         {/* <div className={styles.loading}>
           loading
           <img className={styles.loadingImg} src={loading} />
