@@ -34,5 +34,6 @@ export const nft1155Contract = isMainNet ? '0x854714e65bba4ea0b990483e439aa428dc
 export const busdContract = isMainNet ? '0xe9e7cea3dedca5984780bafc599bd69add087d56' : '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
 
 // asset
+export const bscTestTokenContact = '0x18d68a172b6662aa9ef2b3376980e941d964d942'
 export const createNFTContract = '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955';
-export const tradableNFTContract = '0x49325F97Dbb9C88A8D63E30498b6e4232cF2F39a';
+export const tradableNFTContract = '0xBcF25238F74C2e7B02eb44B70b74b5B2723C3FaA';

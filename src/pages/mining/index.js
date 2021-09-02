@@ -873,7 +873,7 @@ const Mining = (props) => {
                         chainType: 'BSC',
                         hash: result.transactionHash,
                         tokenId: nftTokenId,
-                        tokenAddr: contractAddress,
+                        tokenAddress: contractAddress,
                         category: 'ART',
                         collectionId: -1,
                         description: stakingJson[Number(nftTokenId) - 1].description,

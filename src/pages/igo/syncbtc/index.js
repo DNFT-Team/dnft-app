@@ -198,7 +198,7 @@ const SyncBtcScreen = (props) => {
           supply: 1,
           hash: raffle.transactionHashraffle.transactionHash,
           avatorUrl: `https://dnft.world/igo/${nftId}.png`,
-          tokenAddr: nft1155Contract,
+          tokenAddress: nft1155Contract,
           tokenId: nftId,
           category: 'Game',
           collectionId: -1,

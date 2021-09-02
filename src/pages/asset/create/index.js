@@ -96,6 +96,7 @@ const CreateNFT = (props) => {
         await ethereum.enable();
 
         const contractAddress = createNFTContract;
+        console.log(contractAddress,'contractAddress')
         const myContract = new window.web3.eth.Contract(
           createNFTAbi,
           contractAddress
@@ -104,7 +105,8 @@ const CreateNFT = (props) => {
           .create(
             address,
             form.supply,
-            `${globalConf.ipfsDown}${form.avatorUrl}`,
+            'https://dnft.world/staking/pool2.png',
+            // `${globalConf.ipfsDown}${form.avatorUrl}`,
             '0x0000000000000000000000000000000000000000000000000000000000000000',
           )
           .send({
@@ -120,7 +122,8 @@ const CreateNFT = (props) => {
               chainType: chainType,
               hash: createNFTResult.transactionHash,
               tokenId: createNFTResult.events.TransferSingle.returnValues.id,
-              tokenAddr: contractAddress
+              tokenAddress: contractAddress,
+              avatorUrl: 'https://dnft.world/staking/pool2.png',
             },
             token
           );
