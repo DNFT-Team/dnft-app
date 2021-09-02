@@ -7,8 +7,8 @@ import { post } from 'utils/request';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Web3 from 'web3';
-import { tradableNFTContract } from '../../utils/contract';
-import { tradableNFTAbi } from '../../utils/abi';
+import { bscTestTokenContact, createNFTContract, tokenContract, tradableNFTContract } from '../../utils/contract';
+import { createNFTAbi, tokenAbi, tradableNFTAbi } from '../../utils/abi';
 
 const NFTCard = (props) => {
   const { needAction, item, index, currentStatus, token, address, onLike, onSave } = props;
@@ -17,6 +17,7 @@ const NFTCard = (props) => {
   const [sellForm, setSellForm] = useState({
     amount: 1
   });
+  const [isApproved, setIsApproved] = useState(false)
 
   const onShowSellModal = () => {
     setShowSellModal(true)
@@ -168,58 +169,83 @@ const NFTCard = (props) => {
                 window.web3 = new Web3(ethereum);
                 await ethereum.enable();
 
-                const contractAddress = tradableNFTContract;
-                const myContract = new window.web3.eth.Contract(
-                  tradableNFTAbi,
-                  contractAddress
-                );
-                const data = {
-                  _tokenAddr: item._tokenAddr,
-                  _tokenId: item._tokenId,
-                  _price: sellForm.price,
-                  _quantity: sellForm.amount
-                };
+                if (isApproved) {
+                  const contractAddress = tradableNFTContract;
+                  const myContract = new window.web3.eth.Contract(
+                    tradableNFTAbi,
+                    contractAddress
+                  );
 
-                let putOnResult;
+                  console.log(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount, 'aaaaa')
+                  let putOnResult;
+                  if (sellForm.type === 'DNFT') {
+                    putOnResult = await myContract.methods
+                      .putOnByDnft(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount)
+                      .send({
+                        from: address,
+                      });
+                  } else if (sellForm.type === 'BUSD') {
+                    putOnResult = await myContract.methods
+                      .putOnByBusd(item.tokenAddress, item.tokenId, sellForm.price, sellForm.amount)
+                      .send({
+                        from: address,
+                      });
+                  }
+                  console.log(putOnResult, 'putOnResult')
+                  const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId;
 
-                // if (sellForm.type === 'DNFT') {
-                //   putOnResult = await myContract.methods
-                //     .putOnByDnft(data)
-                //     .send({
-                //       from: address,
-                //     });
-                // } else if (sellForm.type === 'BUSD') {
-                //   putOnResult = await myContract.methods
-                //     .putOnByBusd(data)
-                //     .send({
-                //       from: address,
-                //     });
-                // }
+                  if (orderId != undefined) {
+                    const result = await post(
+                      '/api/v1/trans/sell_up',
+                      {
+                        ...sellForm,
+                        nftId: item.id,
+                        orderId: orderId
+                      },
+                      token
+                    );
+                    setShowSellModal(false)
+                  }
+                } else {
+                  const dnfTokenContract = new window.web3.eth.Contract(
+                    createNFTAbi,
+                    createNFTContract
+                  );
 
-                // if (putOnResult?.orderId) {
-                const result = await post(
-                  '/api/v1/trans/sell_up',
-                  {
-                    ...sellForm,
-                    nftId: item.id,
-                    // orderId: putOnResult.orderId
-                    orderId: 'lalala'
-                  },
-                  token
-                );
-                setShowSellModal(false)
-                // }
+                  console.log('aaa')
+                  let isApproved = await dnfTokenContract.methods
+                    .isApprovedForAll(address, tradableNFTContract)
+                    .call();
+                  console.log(isApproved, 'isApproved')
+
+                  if (!isApproved) {
+                    let result = await dnfTokenContract.methods
+                      .setApprovalForAll(
+                        tradableNFTContract,
+                        true
+                      )
+                      .send({
+                        from: address,
+                      });
+                    console.log(result, 'result');
+                    if (result) {
+                      setIsApproved(true)
+                    }
+                  }else {
+                    setIsApproved(true)
+                  }
+                }
               }
 
             } catch (e) {
               console.log(e, 'e');
             }
 
-          }}>Confirm</div>
+          }}>{isApproved ? 'Confirm' : 'Approve'}</div>
         </Dialog.Body>
       </Dialog>
     )
-  }, [sellForm]);
+  }, [sellForm, isApproved]);
 
   const renderOffShelfModal = () => {
     console.log('off shelf modal ')

@@ -1,3 +1,4 @@
+
 export const tokenAbi = [
   {
     inputs: [
@@ -3754,6 +3755,19 @@ export const tradableNFTAbi = [
     'type': 'function'
   },
   {
+    'inputs': [],
+    'name': 'currentOrderId',
+    'outputs': [
+      {
+        'internalType': 'uint256',
+        'name': '',
+        'type': 'uint256'
+      }
+    ],
+    'stateMutability': 'view',
+    'type': 'function'
+  },
+  {
     'inputs': [
       {
         'internalType': 'address',
@@ -4039,6 +4053,19 @@ export const tradableNFTAbi = [
   {
     'inputs': [],
     'name': 'renounceOwnership',
+    'outputs': [],
+    'stateMutability': 'nonpayable',
+    'type': 'function'
+  },
+  {
+    'inputs': [
+      {
+        'internalType': 'address',
+        'name': '_admin',
+        'type': 'address'
+      }
+    ],
+    'name': 'setAdmin',
     'outputs': [],
     'stateMutability': 'nonpayable',
     'type': 'function'

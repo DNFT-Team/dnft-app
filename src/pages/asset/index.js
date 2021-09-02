@@ -57,7 +57,7 @@ const AssetScreen = (props) => {
   const [sortTag, setSortTag] = useState('ASC-price')
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
-  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
+  const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
 
   let history = useHistory();
 
@@ -71,147 +71,147 @@ const AssetScreen = (props) => {
 
   const getNFTList = async () => {
     try {
-      if (selectedTab.value === 'INWALLET' && category === 'ART') {
-        const contractAddress = nftContract;
-        let nftDataList = [];
-        const myContract = new window.web3.eth.Contract(
-          nftAbi,
-          contractAddress
-        );
-        const nft1 = await myContract.methods.balanceOf(address, 1).call({
-          from: address,
-        });
-        const nft2 = await myContract.methods.balanceOf(address, 2).call({
-          from: address,
-        });
-        const nft3 = await myContract.methods.balanceOf(address, 3).call({
-          from: address,
-        });
+      // if (selectedTab.value === 'INWALLET' && category === 'ART') {
+      //   const contractAddress = nftContract;
+      //   let nftDataList = [];
+      //   const myContract = new window.web3.eth.Contract(
+      //     nftAbi,
+      //     contractAddress
+      //   );
+      //   const nft1 = await myContract.methods.balanceOf(address, 1).call({
+      //     from: address,
+      //   });
+      //   const nft2 = await myContract.methods.balanceOf(address, 2).call({
+      //     from: address,
+      //   });
+      //   const nft3 = await myContract.methods.balanceOf(address, 3).call({
+      //     from: address,
+      //   });
 
-        if (nft1 > 0) {
-          nftDataList.push({
-            name: stakingJson[Number(1) - 1].name,
-            supply: 1,
-            avatorUrl: stakingJson[Number(1) - 1].image,
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'ART',
-            collectionId: -1,
-            description: stakingJson[Number(1) - 1].description,
-          });
-        }
-        if (nft2 > 0) {
-          nftDataList.push({
-            name: stakingJson[Number(2) - 1].name,
-            supply: 1,
-            avatorUrl: stakingJson[Number(2) - 1].image,
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'ART',
-            collectionId: -1,
-            description: stakingJson[Number(2) - 1].description,
-          });
-        }
-        if (nft3 > 0) {
-          nftDataList.push({
-            name: stakingJson[Number(3) - 1].name,
-            supply: 1,
-            avatorUrl: stakingJson[Number(3) - 1].image,
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'ART',
-            collectionId: -1,
-            description: stakingJson[Number(3) - 1].description,
-          });
-        }
-        setList(nftDataList)
-      } else if (selectedTab.value === 'INWALLET' && category === 'GAME') {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
+      //   if (nft1 > 0) {
+      //     nftDataList.push({
+      //       name: stakingJson[Number(1) - 1].name,
+      //       supply: 1,
+      //       avatorUrl: stakingJson[Number(1) - 1].image,
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'ART',
+      //       collectionId: -1,
+      //       description: stakingJson[Number(1) - 1].description,
+      //     });
+      //   }
+      //   if (nft2 > 0) {
+      //     nftDataList.push({
+      //       name: stakingJson[Number(2) - 1].name,
+      //       supply: 1,
+      //       avatorUrl: stakingJson[Number(2) - 1].image,
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'ART',
+      //       collectionId: -1,
+      //       description: stakingJson[Number(2) - 1].description,
+      //     });
+      //   }
+      //   if (nft3 > 0) {
+      //     nftDataList.push({
+      //       name: stakingJson[Number(3) - 1].name,
+      //       supply: 1,
+      //       avatorUrl: stakingJson[Number(3) - 1].image,
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'ART',
+      //       collectionId: -1,
+      //       description: stakingJson[Number(3) - 1].description,
+      //     });
+      //   }
+      //   setList(nftDataList)
+      // } else if (selectedTab.value === 'INWALLET' && category === 'GAME') {
+      //   let ethereum = window.ethereum;
+      //   window.web3 = new Web3(ethereum);
+      //   await ethereum.enable();
 
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
+      //   const accounts = await ethereum.request({
+      //     method: 'eth_requestAccounts',
+      //   });
 
-        const account = accounts[0];
-        let nftDataList = [];
-        const contractAddress = nft1155Contract;
-        const myContract = new window.web3.eth.Contract(
-          nft1155Abi,
-          contractAddress
-        );
-        const nft1 = await myContract.methods.balanceOf(account, 100).call({
-          from: account,
-        });
-        const nft2 = await myContract.methods.balanceOf(account, 200).call({
-          from: account,
-        });
-        const nft3 = await myContract.methods.balanceOf(account, 300).call({
-          from: account,
-        });
-        if (nft1 > 0) {
-          nftDataList.push({
-            name: 'Gold Medal NFT',
-            supply: 1,
-            avatorUrl: 'https://dnft.world/igo/100.png',
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'GAME',
-            collectionId: -1,
-          });
-        }
-        if (nft2 > 0) {
-          nftDataList.push({
-            name: 'Silver Medal NFT',
-            supply: 1,
-            avatorUrl: 'https://dnft.world/igo/200.png',
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'GAME',
-            collectionId: -1,
-          });
-        }
-        if (nft3 > 0) {
-          nftDataList.push({
-            name: 'Bronze Medal NFT',
-            supply: 1,
-            avatorUrl: 'https://dnft.world/igo/300.png',
-            address: address,
-            chainType: 'BSC',
-            tokenId: 1,
-            tokenAddr: contractAddress,
-            category: 'GAME',
-            collectionId: -1,
-          });
-        }
-        setList(nftDataList)
-      } else {
-        const { data } = await post(
-          '/api/v1/trans/personal',
-          {
-            address: address,
-            category: category,
-            sortOrder: sortOrder,
-            status: selectedTab.value,
-            sortTag: 'price',
-            page: 0,
-            size: 100
-          },
-          token
-        );
-        setList(data?.data?.content || [])
-      }
+      //   const account = accounts[0];
+      //   let nftDataList = [];
+      //   const contractAddress = nft1155Contract;
+      //   const myContract = new window.web3.eth.Contract(
+      //     nft1155Abi,
+      //     contractAddress
+      //   );
+      //   const nft1 = await myContract.methods.balanceOf(account, 100).call({
+      //     from: account,
+      //   });
+      //   const nft2 = await myContract.methods.balanceOf(account, 200).call({
+      //     from: account,
+      //   });
+      //   const nft3 = await myContract.methods.balanceOf(account, 300).call({
+      //     from: account,
+      //   });
+      //   if (nft1 > 0) {
+      //     nftDataList.push({
+      //       name: 'Gold Medal NFT',
+      //       supply: 1,
+      //       avatorUrl: 'https://dnft.world/igo/100.png',
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'GAME',
+      //       collectionId: -1,
+      //     });
+      //   }
+      //   if (nft2 > 0) {
+      //     nftDataList.push({
+      //       name: 'Silver Medal NFT',
+      //       supply: 1,
+      //       avatorUrl: 'https://dnft.world/igo/200.png',
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'GAME',
+      //       collectionId: -1,
+      //     });
+      //   }
+      //   if (nft3 > 0) {
+      //     nftDataList.push({
+      //       name: 'Bronze Medal NFT',
+      //       supply: 1,
+      //       avatorUrl: 'https://dnft.world/igo/300.png',
+      //       address: address,
+      //       chainType: 'BSC',
+      //       tokenId: 1,
+      //       tokenAddr: contractAddress,
+      //       category: 'GAME',
+      //       collectionId: -1,
+      //     });
+      //   }
+      //   setList(nftDataList)
+      // } else {
+      const { data } = await post(
+        '/api/v1/trans/personal',
+        {
+          address: address,
+          category: category,
+          sortOrder: sortOrder,
+          status: selectedTab.value,
+          sortTag: 'price',
+          page: 0,
+          size: 100
+        },
+        token
+      );
+      setList(data?.data?.content || [])
+      // }
     } catch (e) {
       console.log(e, 'e')
     }
@@ -224,13 +224,20 @@ const AssetScreen = (props) => {
     try {
       if (globalConfig.net_env === 'testnet') {
         await ethereum.request({
-          method: 'wallet_switchEthereumChain',
+          method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0x4',
+              chainId: '0x61',
+              chainName: 'Smart Chain Test',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
             },
           ],
-        })
+        });
       } else {
         await ethereum.request({
           method: 'wallet_addEthereumChain',
@@ -335,14 +342,14 @@ const AssetScreen = (props) => {
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
         </div>
-        {/* <div
+        <div
           className={styleCreateNFT}
           onClick={() => {
             history.push('/asset/create');
           }}
         >
           Create NFT
-        </div> */}
+        </div>
       </div>
     ),
     [balance]
