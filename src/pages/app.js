@@ -167,7 +167,6 @@ const styleLeftNav = css`
 
     margin-top: 16px;
     margin-bottom: 100px;
-    display: flex;
     flex-direction: row;
     align-items: center;
     img {
