@@ -9,13 +9,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
 import { css } from 'emotion';
-import homeIcon from '../images/nav/home_selected.svg';
-import miningIcon from '../images/nav/mining_selected.svg';
-import bridgeIcon from '../images/nav/bridge_selected.svg';
-import marketIcon from '../images/nav/market_selected.svg';
-import igoIcon from '../images/nav/igo_selected.svg';
-import dataIcon from '../images/nav/data_selected.svg';
-import {Icon} from '@iconify/react';
+import { Icon } from '@iconify/react';
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -36,16 +30,6 @@ const App = (props) => {
     history.push(value.path);
     setTab(value.path);
   };
-
-  const navIconArray = [
-    <img src={homeIcon} style={{ width: 30 }} />,
-    <img src={miningIcon} style={{ width: 30 }} />,
-    <img src={bridgeIcon} style={{ width: 30 }} />,
-    <img src={marketIcon} style={{ width: 30 }} />,
-    <img src={igoIcon} style={{ width: 30 }} />,
-    <img src={dataIcon} style={{ width: 30 }} />,
-
-  ];
 
   const contectIconArray = [
     {
@@ -98,26 +82,17 @@ const App = (props) => {
                     isActive && styles.navActive
                   } `}
                 >
-                  {navIconArray[index]}
+                  {<img src={obj.icon} style={{ width: 30 }} alt={obj.navName}/>}
                 </div>
-                {obj.deActive ? (
+                {
                   <span
                     className={`${styles.navDeText} ${
                       isActive && styles.navActive
                     } styleNavText`}
                   >
-                    {obj.navName}*
-                  </span>
-                ) : (
-                  <span
-                    className={`${styles.navText} ${
-                      isActive && styles.navActive
-                    } styleNavText`}
-                  >
                     {obj.navName}
-                    {obj.deActive ? '*' : ''}
                   </span>
-                )}
+                }
               </nav>
             );
           })}
