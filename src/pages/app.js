@@ -10,6 +10,7 @@ import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
 import { css } from 'emotion';
 import { Icon } from '@iconify/react';
+import {Box} from '@chakra-ui/react'
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -60,7 +61,7 @@ const App = (props) => {
   ];
   return (
     <section className={styles.container}>
-      <section className={styleLeftNav}>
+      <Box className={styleLeftNav} display={['none', 'none', 'block', 'block', 'block']}>
         <div className={'styleLogoContainer'}>
           <img className={styles.logo} src={Logo} alt='logo' />
           <span className='logoText'>DNFT Protocol</span>
@@ -118,7 +119,7 @@ const App = (props) => {
             <div>2021 DNFT All rights reserved</div>
           </div>
         </section>
-      </section>
+      </Box>
       <section className={styles.rightContainer}>
         <GlobalHeader />
         <Router />

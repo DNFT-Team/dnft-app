@@ -39,16 +39,10 @@ export const MenuToggle = ({ toggle }) => (
   </div>
 );
 const styleToggle = css`
-  outline: none;
-  border: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   cursor: pointer;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
   position: relative;
 `

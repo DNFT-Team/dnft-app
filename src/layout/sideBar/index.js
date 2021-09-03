@@ -2,7 +2,7 @@ import * as React from 'react';
 import { motion, useCycle } from 'framer-motion';
 import { css } from 'emotion';
 import { Icon } from '@iconify/react';
-import {Divider, Flex, Box, Text} from '@chakra-ui/react'
+import {Divider, Flex, Box, Text, Avatar} from '@chakra-ui/react'
 import { MENU_MAP } from 'routers/config';
 import { MenuToggle } from './MenuToggle';
 import Logo from 'images/home/dnftLogo.png';
@@ -89,7 +89,7 @@ const variantsLi = {
   }
 };
 
-export const SideBar = () => {
+export const SideBar = ({address}) => {
   const [isOpen, toggleOpen] = useCycle(false, true);
 
   return (
@@ -100,7 +100,7 @@ export const SideBar = () => {
       <MenuToggle toggle={() => toggleOpen()} />
       <motion.nav className={styleNav} variants={variantsSidebar}>
         <motion.div className={styleBrandTitle} variants={variantsBrand}>
-          <img src={Logo} alt="DNFT" style={{width: '2rem', height: '2rem', marginRight: '1.5rem'}}/>
+          <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem"/>
           <span>DNFT Protocol</span>
         </motion.div>
         <motion.div
@@ -108,10 +108,10 @@ export const SideBar = () => {
           variants={variantsLi}
         >
           <Flex color="white" alignItems="center">
-            <img src={Logo} alt="" style={{width: '2rem', height: '2rem'}}/>
+            <Avatar src={Logo} width="2rem" height="2rem"/>
             <Box flex="1" width="100%" px=".6rem"  boxSizing="border-box">
               <Text isTruncated>Alice</Text>
-              <Text isTruncated>0xf16D2789cF63EDB255A5EB2805D8edA78b4EOOOO</Text>
+              <Text isTruncated>{address || '--'}</Text>
             </Box>
           </Flex>
         </motion.div>

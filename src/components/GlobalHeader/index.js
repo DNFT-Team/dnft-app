@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
+import { Box, Avatar } from '@chakra-ui/react'
 import styles from './index.less';
 import { css } from 'emotion';
 import { assetSvg } from '../../utils/svg';
@@ -18,6 +19,7 @@ import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 
 import globalConf from 'config/index'
 import {SideBar} from 'layout/sideBar'
+import Logo from '../../images/home/dnftLogo.png';
 
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
@@ -198,11 +200,11 @@ const GlobalHeader = (props) => {
 
   return (
     <header className={styleHeader}>
-      <div className={styleSearchContainer}>
-        {/* <i className='el-icon-search' />
-        <Input placeholder={'Search Art,Game or Fun'} /> */}
-      </div>
-      <div className={styles.actionContainer}>
+      {/* <div className={styleSearchContainer}>*/}
+      {/*  <i className='el-icon-search' />*/}
+      {/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
+      {/* </div>*/}
+      <Box className={styles.actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
@@ -268,8 +270,11 @@ const GlobalHeader = (props) => {
           </div>
         </div>
         <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>
-        <SideBar />
-      </div>
+      </Box>
+      <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']}>
+        <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem"/>
+        <SideBar address={address}/>
+      </Box>
       {renderModal}
     </header>
   );
