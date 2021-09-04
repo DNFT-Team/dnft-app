@@ -9,7 +9,7 @@ export default {
   /*bridge-api*/
   bridgeApi: baseUrl + `/bridgeApi`,
   /*ipfs-api*/
-  ipfsUp: baseUrl + `/ipfsApi`,
+  ipfsUp: `/ipfsApi`,
   /*ipfs-get*/
   ipfsDown: baseUrl + `/ipfsGet/`,
 }
