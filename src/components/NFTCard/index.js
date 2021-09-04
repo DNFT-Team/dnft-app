@@ -119,7 +119,8 @@ const NFTCard = (props) => {
   };
 
   const renderSellModal = useMemo(() => {
-    console.log('on shelf modal')
+    const isPriceInvalid = typeof sellForm.price !== 'number' || sellForm.price === 0 || String(sellForm.price).split('.')[1]?.length > 4;
+
     return (
       <Dialog
         customClass={styleModalContainer}
@@ -133,7 +134,7 @@ const NFTCard = (props) => {
         }}
       >
         <Dialog.Body>
-          {renderFormItem('Quantity', <InputNumber min={1} defaultValue={1} onChange={(value) => {
+          {renderFormItem('Quantity', <InputNumber min={1} max={item.quantity} defaultValue={1} onChange={(value) => {
             setSellForm({
               ...sellForm,
               quantity: value
@@ -168,7 +169,11 @@ const NFTCard = (props) => {
               price: value
             })
           }} />)}
-          <div style={{opacity: (isApproveLoading || isOnLoading) ? 0.5 : 1}} className={styleCreateNFT} onClick={async () => {
+          <div style={{opacity: (isPriceInvalid || isApproveLoading || isOnLoading) ? 0.5 : 1}} className={styleCreateNFT} onClick={async () => {
+            if (isPriceInvalid) {
+              return;
+            }
+
             try {
               if (window.ethereum) {
                 let ethereum = window.ethereum;
@@ -330,6 +335,7 @@ const NFTCard = (props) => {
     )
   },[])
 
+  console.log(item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether'), item.price > 0, item.type,  'aaaa')
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
@@ -344,13 +350,14 @@ const NFTCard = (props) => {
       </div> */}
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
-          <div>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
             <span className={styleChainType}>{item.chainType}</span>
-            <div className={styleStarInfo}>
-              {/* <div className={styleStarIconContainer} onClick={handleLike}>
-                <Icon icon='ant-design:heart-filled' style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
-              </div> */}
-            </div>
+            <span style={{color: '#FF6059', fontSize: '12px', fontWeight: 'bold'}}>{item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')} {item.type}</span>
+            {/* <div className={styleStarInfo}> */}
+            {/* <div className={styleStarIconContainer} onClick={handleLike}>
+              <Icon icon='ant-design:heart-filled' style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
+            </div> */}
+            {/* </div> */}
           </div>
           <div className={styleInfo}><span className='title'>{item.name}</span><span>quantity: {item.quantity || 1}</span></div>
         </div>
@@ -525,7 +532,8 @@ const styleInfo = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 14px;
+  margin-top: 8px;
+  color: #11142D;
   .title {
     color: #11142D;
     flex: 1;
@@ -556,11 +564,11 @@ const styleCreateNFT = css`
   cursor: pointer;
   width: fit-content;
   .circular {
-    width: 20px;
-    height: 20px;
-    left: -45px;
+    width: 20px!important;
+    height: 20px!important;
+    left: -45px!important;
     position: relative;
-    top: 24px;
+    top: 24px!important;
   }
 `;
 

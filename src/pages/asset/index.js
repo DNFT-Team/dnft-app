@@ -1,4 +1,4 @@
-import { Dialog, Input, Select } from 'element-react';
+import { Dialog, Loading, Select } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -58,6 +58,7 @@ const AssetScreen = (props) => {
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
   const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
+  const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
 
@@ -71,6 +72,7 @@ const AssetScreen = (props) => {
 
   const getNFTList = async () => {
     try {
+      setIsLoading(true)
       // if (selectedTab.value === 'INWALLET' && category === 'ART') {
       //   const contractAddress = nftContract;
       //   let nftDataList = [];
@@ -212,8 +214,8 @@ const AssetScreen = (props) => {
       );
       setList(data?.data?.content || [])
       // }
-    } catch (e) {
-      console.log(e, 'e')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -436,6 +438,10 @@ const AssetScreen = (props) => {
         <div className={styleBody}>
           <div className={styleTabContainer}>
             <div>{renderTabList}</div>
+            <Loading
+              loading={isLoading}
+              style={{ position: 'fixed', width: 'calc(100% - 76px)' }}
+            />
             <div>
               <Select
                 value={category}
@@ -467,7 +473,7 @@ const AssetScreen = (props) => {
             </div>
           </div>
 
-          <div className={styleCardList}>
+          <div className={styleCardList} style={{opacity: isLoading ? 0.5 : 1}}>
             {list?.length > 0
               ? list.map((item, index) =>  renderCard(item, index))
               : renderNoData}
@@ -538,6 +544,12 @@ const styleBody = css`
   padding: 24px 36px;
   display: flex;
   flex-direction: column;
+  .circular {
+    position: relative;
+    top: 120px;
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const styleTabContainer = css`
