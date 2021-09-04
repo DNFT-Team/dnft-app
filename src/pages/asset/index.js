@@ -70,7 +70,7 @@ const AssetScreen = (props) => {
     getBalance();
   };
 
-  const getNFTList = async () => {
+  const getNFTList = async (currentAddress, currentToken) => {
     try {
       setIsLoading(true)
       // if (selectedTab.value === 'INWALLET' && category === 'ART') {
@@ -202,7 +202,7 @@ const AssetScreen = (props) => {
       const { data } = await post(
         '/api/v1/trans/personal',
         {
-          address: address,
+          address: currentAddress || address,
           category: category,
           sortOrder: sortOrder,
           status: selectedTab.value,
@@ -210,7 +210,7 @@ const AssetScreen = (props) => {
           page: 0,
           size: 100
         },
-        token
+        currentToken || token
       );
       setList(data?.data?.content || [])
       // }
@@ -389,7 +389,7 @@ const AssetScreen = (props) => {
 
   const renderCard = useCallback(
     (item, index) => <NFTCard item={item} index={index} needAction={isTestNet} currentStatus={selectedTab} onLike={getNFTList}
-      onSave={getNFTList} onRefresh={getNFTList} />,
+      onSave={getNFTList} onRefresh={(currentAddress, currentToken) => getNFTList(currentAddress, currentToken)} />,
     [selectedTab]
   );
 
