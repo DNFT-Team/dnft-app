@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { css, cx } from 'emotion';
 import {Icon} from '@iconify/react';
 import syncBtc from '../../images/home/igo-syncbtc.jpg'
+import globalConfig from 'config/index'
 
 const HomeScreen = (props) => {
   const { dispatch, datas, location } = props;
@@ -33,6 +34,10 @@ const HomeScreen = (props) => {
       src: 'http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg',
       title: 'NFT gallery of the week',
     },
+    {
+      src: `${globalConfig.ipfsDown}/QmapcMxp8vBJQPywMwfzr8WykuGXJkxDwFhMFquDEq8aFN`,
+      title: 'NFT metaData via IPFS',
+    }
   ];
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
