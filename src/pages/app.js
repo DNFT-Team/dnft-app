@@ -9,13 +9,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
 import { css } from 'emotion';
-import homeIcon from '../images/nav/home_selected.svg';
-import miningIcon from '../images/nav/mining_selected.svg';
-import bridgeIcon from '../images/nav/bridge_selected.svg';
-import marketIcon from '../images/nav/market_selected.svg';
-import igoIcon from '../images/nav/igo_selected.svg';
-import dataIcon from '../images/nav/data_selected.svg';
-import {Icon} from '@iconify/react';
+import { Icon } from '@iconify/react';
+import {Box} from '@chakra-ui/react'
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -36,16 +31,6 @@ const App = (props) => {
     history.push(value.path);
     setTab(value.path);
   };
-
-  const navIconArray = [
-    <img src={homeIcon} style={{ width: 30 }} />,
-    <img src={miningIcon} style={{ width: 30 }} />,
-    <img src={bridgeIcon} style={{ width: 30 }} />,
-    <img src={marketIcon} style={{ width: 30 }} />,
-    <img src={igoIcon} style={{ width: 30 }} />,
-    <img src={dataIcon} style={{ width: 30 }} />,
-
-  ];
 
   const contectIconArray = [
     {
@@ -76,7 +61,7 @@ const App = (props) => {
   ];
   return (
     <section className={styles.container}>
-      <section className={styleLeftNav}>
+      <Box className={styleLeftNav} display={['none', 'none', 'block', 'block', 'block']}>
         <div className={'styleLogoContainer'}>
           <img className={styles.logo} src={Logo} alt='logo' />
           <span className='logoText'>DNFT Protocol</span>
@@ -98,26 +83,17 @@ const App = (props) => {
                     isActive && styles.navActive
                   } `}
                 >
-                  {navIconArray[index]}
+                  {<img src={obj.icon} style={{ width: 30 }} alt={obj.navName}/>}
                 </div>
-                {obj.deActive ? (
+                {
                   <span
                     className={`${styles.navDeText} ${
                       isActive && styles.navActive
                     } styleNavText`}
                   >
-                    {obj.navName}*
-                  </span>
-                ) : (
-                  <span
-                    className={`${styles.navText} ${
-                      isActive && styles.navActive
-                    } styleNavText`}
-                  >
                     {obj.navName}
-                    {obj.deActive ? '*' : ''}
                   </span>
-                )}
+                }
               </nav>
             );
           })}
@@ -143,9 +119,9 @@ const App = (props) => {
             <div>2021 DNFT All rights reserved</div>
           </div>
         </section>
-      </section>
+      </Box>
       <section className={styles.rightContainer}>
-        <GlobalHeader />
+        <GlobalHeader curPath={tab} skipTo={handleTo}/>
         <Router />
       </section>
     </section>
@@ -192,7 +168,6 @@ const styleLeftNav = css`
 
     margin-top: 16px;
     margin-bottom: 100px;
-    display: flex;
     flex-direction: row;
     align-items: center;
     img {

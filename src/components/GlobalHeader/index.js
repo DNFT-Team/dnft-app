@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
+import { Box, Avatar } from '@chakra-ui/react'
 import styles from './index.less';
 import { css } from 'emotion';
-import {
-  assetSvg,
-  polkadotNetSvg,
-} from '../../utils/svg';
+import { assetSvg } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
@@ -19,10 +17,10 @@ import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 
-import globalConf from '../../config'
-import defaultHeadSvg from '../../images/asset/Head.svg'
+import globalConf from 'config/index'
+import {SideBar} from 'layout/sideBar'
+import Logo from '../../images/home/dnftLogo.png';
 
-// import { toast } from 'react-toastify';
 const mvpUrl = 'http://mvp.dnft.world';
 const GlobalHeader = (props) => {
   let history = useHistory();
@@ -202,11 +200,11 @@ const GlobalHeader = (props) => {
 
   return (
     <header className={styleHeader}>
-      <div className={styleSearchContainer}>
-        {/* <i className='el-icon-search' />
-        <Input placeholder={'Search Art,Game or Fun'} /> */}
-      </div>
-      <div className={styles.actionContainer}>
+      {/* <div className={styleSearchContainer}>*/}
+      {/*  <i className='el-icon-search' />*/}
+      {/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
+      {/* </div>*/}
+      <Box className={styles.actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
@@ -229,7 +227,7 @@ const GlobalHeader = (props) => {
 
               setCurrentNetIndex(currentIndex);
               setAddress(account);
-            } catch(e) {
+            } catch (e) {
               console.log(e, 'e')
             }
           }}
@@ -266,15 +264,17 @@ const GlobalHeader = (props) => {
               setIsNetListVisible(true);
             }}
           >
-            <div style={{ color: '#23262F', fontWeight: 'bold',marginRight: '10px', textAlign: 'right' }}>
+            <div style={{ color: '#23262F', fontWeight: 'bold', marginRight: '10px', textAlign: 'right' }}>
               {netArray[currentNetIndex]?.shortName[1] || 'Network'}
             </div>
           </div>
         </div>
-        <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer">
-          {/* {polkadotNetSvg} */}
-        </a>
-      </div>
+        <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>
+      </Box>
+      <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']}>
+        <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem"/>
+        <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
+      </Box>
       {renderModal}
     </header>
   );

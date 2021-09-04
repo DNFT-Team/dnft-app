@@ -264,9 +264,9 @@ const AssetScreen = (props) => {
   }, []);
 
   useEffect(() => {
-    // if (token) {
-    getNFTList()
-    // }
+    if (token) {
+      getNFTList()
+    }
   }, [token, category, selectedTab, sortTag, address, chainType])
 
   useEffect(() => {
@@ -387,7 +387,7 @@ const AssetScreen = (props) => {
 
   const renderCard = useCallback(
     (item, index) => <NFTCard item={item} index={index} needAction={isTestNet} currentStatus={selectedTab} onLike={getNFTList}
-      onSave={getNFTList} />,
+      onSave={getNFTList} onRefresh={getNFTList} />,
     [selectedTab]
   );
 

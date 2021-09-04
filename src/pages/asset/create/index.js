@@ -28,6 +28,7 @@ const CreateNFT = (props) => {
   const [form, setForm] = useState({
     supply: 1,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
 
@@ -90,6 +91,7 @@ const CreateNFT = (props) => {
     }
 
     try {
+      setIsLoading(true);
       if (window.ethereum) {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
@@ -130,8 +132,8 @@ const CreateNFT = (props) => {
           history.push('/asset')
         }
       }
-    } catch (e) {
-      console.log(e, 'e');
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -270,7 +272,8 @@ const CreateNFT = (props) => {
           'BlockChain',
           <Input disabled placeholder={chainType} />
         )}
-        <div className={styleCreateNFT} onClick={createNFT}>
+        <div style={{opacity: isLoading ? 0.5 : 1}} className={styleCreateNFT} onClick={createNFT}>
+          <Loading loading={isLoading} />
           Create
         </div>
       </div>

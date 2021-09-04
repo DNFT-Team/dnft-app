@@ -51,29 +51,20 @@ const theme = extendTheme({
 //  measuring performance
 import reportWebVitals from './reportWebVitals';
 //  check device platform
-import isMobile from './utils/isMobile';
-const mobileVal = isMobile()
+// import isMobile from './utils/isMobile';
+// const mobileVal = isMobile()
 
 ReactDOM.render(
   // Fix---Warning: findDOMNode is deprecated in StrictMode
   // <React.StrictMode>
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      {mobileVal ? (
-        <div>
-          <p>Oops,This website is not available on Mobile Device</p>
-          <p>Please view on the PC client.</p>
-          <p>Or You can play some fun via here<a href="http://fun.dnft.world/syncbtc">SyncBTC!</a></p>
-          <p>See more information via here<a href="http://dnft.world">DNFT Official Site</a></p>
-        </div>
-      ) : (
-        <BrowserRouter>
-          <ChakraProvider resetCSS={false} theme={theme}>
-            <App />
-          </ChakraProvider>
-          <ToastContainer pauseOnFocusLoss={false}/>
-        </BrowserRouter>
-      )}
+      <BrowserRouter>
+        <ChakraProvider resetCSS={false} theme={theme}>
+          <App />
+        </ChakraProvider>
+        <ToastContainer pauseOnFocusLoss={false}/>
+      </BrowserRouter>
     </PersistGate>
   </Provider>
   // </React.StrictMode>
