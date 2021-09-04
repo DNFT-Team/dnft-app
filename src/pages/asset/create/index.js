@@ -5,6 +5,7 @@ import {
   InputNumber,
   Select,
   Upload,
+  Loading
 } from 'element-react';
 import { css } from 'emotion';
 import React, { useEffect, useState } from 'react';
@@ -358,6 +359,13 @@ const styleCreateNFT = css`
   border-radius: 10px;
   cursor: pointer;
   width: fit-content;
+  .circular {
+    width: 24px;
+    height: 24px;
+    left: -45px;
+    position: relative;
+    top: 24px;
+  }
 `;
 
 const styleAlert = css`

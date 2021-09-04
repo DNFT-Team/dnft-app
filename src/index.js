@@ -51,8 +51,17 @@ const theme = extendTheme({
 //  measuring performance
 import reportWebVitals from './reportWebVitals';
 //  check device platform
-// import isMobile from './utils/isMobile';
-// const mobileVal = isMobile()
+import isMobile from './utils/isMobile';
+//  setRem while mobile
+import {setRem} from './utils/rem';
+const mobileVal = isMobile()
+if (mobileVal) {
+  // 初始化
+  setRem()
+  // 改变窗口大小时重新设置 rem
+  window.onresize = function () {setRem()}
+}
+
 
 ReactDOM.render(
   // Fix---Warning: findDOMNode is deprecated in StrictMode
