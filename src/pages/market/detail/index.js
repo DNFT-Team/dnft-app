@@ -14,10 +14,11 @@ import { tradableNFTAbi, busdAbi } from '../../../utils/abi';
 import { tradableNFTContract, busdContract, busdMarketContract } from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
+import { toast } from 'react-toastify';
 
 import {toDecimal, WEB3_MAX_NUM} from 'utils/web3Tools';
 import {
-  Select,
+  Select, InputNumber
 } from 'element-react';
 import {
   Button, Fade, Modal,
@@ -49,6 +50,29 @@ const MarketDetailScreen = (props) => {
       getCollectionList();
     }
   }, [token]);
+  const isApproved = async () => {
+    const contractAddress = tradableNFTContract;
+    const myContract = new window.web3.eth.Contract(
+      tradableNFTAbi,
+      contractAddress
+    );
+    console.log(datas?.tokenAddress, datas?.tokenId, datas.price, datas.supply, 'aaaaa')
+    let putOnResult;
+    if (datas.type === 'DNFT') {
+      putOnResult = await myContract.methods
+        .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, datas.supply)
+        .send({
+          from: address,
+        });
+    } else if (datas.type === 'BUSD') {
+      putOnResult = await myContract.methods
+        .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, datas.supply)
+        .send({
+          from: address,
+        });
+    }
+    return putOnResult;
+  }
   const clickBuyItem = async () => {
     try {
       if (window.ethereum) {
@@ -56,9 +80,14 @@ const MarketDetailScreen = (props) => {
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
         setLoading(true)
+
+        // let putOnResult =  await isApproved();
+        // const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId;
+        // console.log(orderId, 'aaaaaaaaaaa')
+
+        setIsOpen(false)
         const tradableNFTAddress = tradableNFTContract;
         const busdAddress = busdMarketContract;
-        // console.log(datas?.type, 'datas,', datas)
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
@@ -67,19 +96,22 @@ const MarketDetailScreen = (props) => {
           busdAbi,
           busdAddress
         );
+        const chainId = await window.web3.eth.getChainId();
+        console.log(toDecimal(String(datas?.price), true, 'ether', true),'Web3.utils.fromWei((datas?.price), ),')
         const gasNum = 210000, gasPrice = '20000000000';
         const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
           datas?.orderId,
-          datas?.quantity,
+          form.quantity,
         )
           .send({
-            value: toDecimal(String(datas?.price), true, 'ether', false),
             from: address,
             gas: gasNum,
+            chainId,
             gasPrice: gasPrice,
-            to: tradableNFTAddress,
-            value: '0x0',
-            data: myContractBusd.methods.transfer(datas?.address, datas?.price).encodeABI()
+            value: toDecimal(String(datas?.price), true, 'ether', true),
+            // to: tradableNFTAddress,
+            data: datas?.tokenAddress,
+            // data: myContractBusd.methods.transferFrom(address, datas?.address, datas?.price).encodeABI()
           }, function (error, transactionHash) {
             if(!error) {
               console.log('交易hash: ', transactionHash)
@@ -90,30 +122,15 @@ const MarketDetailScreen = (props) => {
             console.log(receipt)
             setIsOpen(true)
             setLoading(false)
-            const { data } = await post(
-              '/api/v1/trans/sell_up',
-              {
-                collectionId: datas?.collectionId,
-                nftId: datas?.nftId,
-                orderId: datas?.orderId,
-                price: datas?.price,
-                quantity: datas?.quantity,
-                tokenAddress: datas?.tokenAddress,
-                tokenId: datas?.tokenId,
-                type: datas?.tokenId
-              },
-              token
-            );
             console.log('交易状态：', receipt.status)
           });
-
-        // setIsOpen(true)
         console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
       setLoading(false)
       console.log(e, 'e');
     } finally {
+      console.log('finally')
       setLoading(false);
     }
   }
@@ -127,8 +144,21 @@ const MarketDetailScreen = (props) => {
     return ''
   }, [datas])
   console.log(getStock,'getStock')
-  const createDNFCollect = () => {
+  const createDNFCollect = async () => {
     console.log('----1212', form,)
+    setIsOpen(true)
+    // const { data } = await post(
+    //   '/api/v1/trans/sell_out',
+    //   {
+    //     buyerAddress: address,
+    //     collectionId: form?.collectionId,
+    //     nftId: datas?.nftId,
+    //     orderId: datas?.orderId,
+    //     quantity: form.quantity,
+    //   },
+    //   token
+    // );
+
   }
 
   const renderFormItem = (label, item) => (
@@ -186,7 +216,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.chain}>
               <span className={styles.contract}>Contract address:</span>
               <a
-                href={`https://www.bscscan.com/address/${datas?.tokenAddress}`}
+                href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
                 className={styles.tokenAddress}
                 target='_blank'
                 rel="noopener noreferrer"
@@ -203,7 +233,7 @@ const MarketDetailScreen = (props) => {
                 <p className={styles.userName}>{datas?.nickName}</p>
               </div>
             </div>
-            <div className={styles.user}>
+            {/* <div className={styles.user}>
               <div className={styles.head}>
                 <img className={styles.avatar}/>
               </div>
@@ -211,15 +241,15 @@ const MarketDetailScreen = (props) => {
                 <p className={styles.owner}>Creator</p>
                 <p className={styles.userName}>Raquel</p>
               </div>
-            </div>
+            </div> */}
             <Button
               isLoading={loading}
-              disabled={!datas?.quantity}
+              disabled={!datas?.quantity || loading}
               loadingText="Buy Now"
               // disabled={!(datas?.supply - datas?.quantity)}
               className={styles.buyBtn} onClick={() => {
               // Notification.info('Coming Soon')
-                clickBuyItem()
+                createDNFCollect()
               }}>Buy Now</Button>
           </div>
           <div>
@@ -238,11 +268,18 @@ const MarketDetailScreen = (props) => {
             p="32px" fontSize="18px"
             display="flex" justifyContent="space-between"
             alignItems="center">
-            Select your collection
+            Buy
             <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
               icon={<Icon icon="mdi:close"/>}/>
           </ModalHeader>
           <ModalBody p="0 32px">
+            {renderFormItem('Quantity', <InputNumber style={{width: '100%', marginTop: 20,}} min={0} max={datas?.quantity} onChange={(value) => {
+              setForm({
+                ...form,
+                quantity: value
+              })
+            }}
+            />)}
             {renderFormItem(
               'Collection',
               <div style={{
@@ -274,7 +311,21 @@ const MarketDetailScreen = (props) => {
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
             <Button colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
-              onClick={() => createDNFCollect()}>Submit</Button>
+              onClick={() => {
+                if(!form.quantity) {
+                  toast.warn('Please enter the purchase quantity！', {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                  return;
+                }
+                if(!form.collectionId) {
+                  toast.warn('Please select collection！', {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                  return;
+                }
+                clickBuyItem()
+              }}>Submit</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

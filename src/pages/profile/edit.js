@@ -22,10 +22,14 @@ const ProfileEditScreen = (props) => {
   const {address, token, location} = props;
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
-  const [form, setForm] = useState({
-    avatorUrl: null
-  });
   const datas = location?.state?.datas
+  console.log(datas,'datas,lkjljlj')
+  const [form, setForm] = useState({
+    avatorUrl: null,
+    nickName: datas?.nickName,
+    twitterAddress: datas?.twitterAddress,
+    facebookAddress: datas?.facebookAddress,
+  });
   console.log(location,'location')
   const renderFormItem = (label, item) => {
     console.log(label, 'label');
@@ -108,6 +112,7 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Name',
             <Input
+              value={form?.nickName}
               placeholder='e. g. David'
               onChange={(value) => {
                 setForm({
@@ -120,6 +125,7 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Twitter',
             <Input
+              value={form?.twitterAddress}
               placeholder='Please input'
               onChange={(value) => {
                 setForm({
@@ -132,6 +138,7 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Facebook',
             <Input
+              value={form?.facebookAddress}
               placeholder='Please input'
               onChange={(value) => {
                 setForm({
