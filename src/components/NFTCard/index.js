@@ -219,7 +219,7 @@ const NFTCard = (props) => {
                       setShowSellModal(false);
                       setIsAprroveLoading(false);
                       setIsOnLoading(false)
-                      onRefresh();
+                      onRefresh(address, token);
                       setIsApproved(false)
                     }
                   } finally {
@@ -319,7 +319,7 @@ const NFTCard = (props) => {
                     token
                   );
                   setShowOffShelfModal(false);
-                  onRefresh()
+                  onRefresh(address, token)
                   setIsOffLoading(false)
                 }
               }
@@ -335,7 +335,6 @@ const NFTCard = (props) => {
     )
   },[])
 
-  console.log(item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether'), item.price > 0, item.type, item,  'aaaa')
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
