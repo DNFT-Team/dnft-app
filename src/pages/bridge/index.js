@@ -308,7 +308,8 @@ const BridgeScreen = (props) => {
                       borderColor="brand.300"
                       placeholder="Amount"
                       height="3.57rem"
-                      fontWeight="bold" fontSize="1.43rem"
+                      fontWeight="bold"
+                      fontSize={['0.8rem', '1rem', '1.43rem', '1.43rem', '1.43rem']}
                       autoFocus
                       isInvalid={amount < 0}
                       type="number"
@@ -338,7 +339,8 @@ const BridgeScreen = (props) => {
                       borderColor="brand.300"
                       placeholder="Received"
                       height="3.57rem"
-                      fontWeight="bold" fontSize="1.43rem"
+                      fontWeight="bold"
+                      fontSize={['0.8rem', '1rem', '1.43rem', '1.43rem', '1.43rem']}
                       isDisabled
                       _hover={{borderColor: 'inherit'}}
                       value={amount}
@@ -403,7 +405,8 @@ const BridgeScreen = (props) => {
                 <span>DYNAMIC INFO:{e.dynamic_info || '---'}</span>
                 <span>FAILED CODE:{e.failed_code || '---'}</span>
                 <br/>
-                <span>TXHASH:<Link href={`https://etherscan.io/tx/${e.tx_hash}`} color="brand.600" isExternal>{e.tx_hash}</Link></span>
+                <span>TXHASH:</span>
+                <Link href={`https://etherscan.io/tx/${e.tx_hash}`} color="brand.600" isExternal>{e.tx_hash}</Link>
                 <br/>
                 <span>UPDATED AT:{e.updated_at || '---'}</span>
                 <span>CREATED AT:{e.created_at || '---'}</span>
