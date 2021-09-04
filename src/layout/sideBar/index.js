@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion, useCycle } from 'framer-motion';
-import { css } from 'emotion';
+import { css, cx } from 'emotion';
 import { Icon } from '@iconify/react';
 import {Divider, Flex, Box, Text, Avatar} from '@chakra-ui/react'
 import { MENU_MAP } from 'routers/config';
@@ -89,7 +89,7 @@ const variantsLi = {
   }
 };
 
-export const SideBar = ({address}) => {
+export const SideBar = ({address, location, skipTo}) => {
   const [isOpen, toggleOpen] = useCycle(false, true);
 
   return (
@@ -117,12 +117,18 @@ export const SideBar = ({address}) => {
         </motion.div>
         <Divider mt="3rem" mb="1rem"/>
         <motion.ul className={styleMenuUl} variants={variantsUl}>
-          {MENU_MAP.map((item, i) => (
+          {MENU_MAP.map((item) => (
             <motion.li
-              className={styleMenuLi}
+              className={cx(
+                styleMenuLi,
+                location === item.path && styleMenuActive
+              )}
               variants={variantsLi}
               whileHover={{ scale: 1.1, borderLeft: '3px solid #0049c6' }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                toggleOpen(); skipTo(item)
+              }}
             >
               <div className={styleMenuRow}>
                 <img src={item.icon} alt="icon"/>
@@ -148,6 +154,10 @@ export const SideBar = ({address}) => {
   );
 };
 
+const styleMenuActive = css`
+  background: #0049c6;
+  border-radius: 15px;
+`
 const styleNav = css`
   position: fixed;
   top: 0;

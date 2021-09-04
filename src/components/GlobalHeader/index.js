@@ -273,7 +273,7 @@ const GlobalHeader = (props) => {
       </Box>
       <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']}>
         <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem"/>
-        <SideBar address={address}/>
+        <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
       </Box>
       {renderModal}
     </header>

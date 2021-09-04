@@ -121,7 +121,7 @@ const App = (props) => {
         </section>
       </Box>
       <section className={styles.rightContainer}>
-        <GlobalHeader />
+        <GlobalHeader curPath={tab} skipTo={handleTo}/>
         <Router />
       </section>
     </section>
