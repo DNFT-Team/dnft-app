@@ -35,6 +35,7 @@ const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
   const datas = location?.state;
   const [loading, setLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
@@ -51,22 +52,24 @@ const MarketDetailScreen = (props) => {
     }
   }, [token]);
   const isApproved = async () => {
+    setApproveLoading(true)
     const contractAddress = tradableNFTContract;
     const myContract = new window.web3.eth.Contract(
       tradableNFTAbi,
       contractAddress
     );
-    console.log(datas?.tokenAddress, datas?.tokenId, datas.price, datas.supply, 'aaaaa')
+    const price = window.web3.utils.toWei(String(datas.price))
+    console.log(price, datas.price, form.quantity, 'aaaaa')
     let putOnResult;
     if (datas.type === 'DNFT') {
       putOnResult = await myContract.methods
-        .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, datas.supply)
+        .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
         .send({
           from: address,
         });
     } else if (datas.type === 'BUSD') {
       putOnResult = await myContract.methods
-        .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, datas.supply)
+        .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
         .send({
           from: address,
         });
@@ -81,10 +84,10 @@ const MarketDetailScreen = (props) => {
         await ethereum.enable();
         setLoading(true)
 
-        // let putOnResult =  await isApproved();
-        // const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId;
-        // console.log(orderId, 'aaaaaaaaaaa')
-
+        let putOnResult =  await isApproved();
+        const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId;
+        console.log(orderId, 'aaaaaaaaaaa')
+        setApproveLoading(false)
         setIsOpen(false)
         const tradableNFTAddress = tradableNFTContract;
         const busdAddress = busdMarketContract;
@@ -92,12 +95,7 @@ const MarketDetailScreen = (props) => {
           tradableNFTAbi,
           tradableNFTAddress
         );
-        const myContractBusd = new window.web3.eth.Contract(
-          busdAbi,
-          busdAddress
-        );
         const chainId = await window.web3.eth.getChainId();
-        console.log(toDecimal(String(datas?.price), true, 'ether', true),'Web3.utils.fromWei((datas?.price), ),')
         const gasNum = 210000, gasPrice = '20000000000';
         const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
           datas?.orderId,
@@ -108,10 +106,8 @@ const MarketDetailScreen = (props) => {
             gas: gasNum,
             chainId,
             gasPrice: gasPrice,
-            value: toDecimal(String(datas?.price), true, 'ether', true),
-            // to: tradableNFTAddress,
-            data: datas?.tokenAddress,
-            // data: myContractBusd.methods.transferFrom(address, datas?.address, datas?.price).encodeABI()
+            value: datas.price,
+            // value: toDecimal(String(0), true, 'ether', true),
           }, function (error, transactionHash) {
             if(!error) {
               console.log('交易hash: ', transactionHash)
@@ -120,17 +116,29 @@ const MarketDetailScreen = (props) => {
             }
           }).then(async function (receipt) { // 监听后续的交易情况
             console.log(receipt)
-            setIsOpen(true)
             setLoading(false)
+            const { data } = await post(
+              '/api/v1/trans/sell_out',
+              {
+                buyerAddress: address,
+                collectionId: form?.collectionId,
+                nftId: datas?.nftId,
+                orderId: datas?.orderId,
+                quantity: form.quantity,
+              },
+              token
+            );
             console.log('交易状态：', receipt.status)
           });
         console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
       setLoading(false)
+      setApproveLoading(false)
       console.log(e, 'e');
     } finally {
       console.log('finally')
+      setApproveLoading(false)
       setLoading(false);
     }
   }
@@ -246,9 +254,7 @@ const MarketDetailScreen = (props) => {
               isLoading={loading}
               disabled={!datas?.quantity || loading}
               loadingText="Buy Now"
-              // disabled={!(datas?.supply - datas?.quantity)}
               className={styles.buyBtn} onClick={() => {
-              // Notification.info('Coming Soon')
                 createDNFCollect()
               }}>Buy Now</Button>
           </div>
@@ -303,14 +309,18 @@ const MarketDetailScreen = (props) => {
                     <Select.Option key={el.value} label={el.label} value={el.value} />
                   ))}
                 </Select>
-                <Button onClick={() => {
-                  setShowCreateCollection(true);
-                }}>+ Add</Button>
+                <Button
+                  onClick={() => {
+                    setShowCreateCollection(true);
+                  }}>+ Add</Button>
               </div>
             )}
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
-            <Button colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
+            <Button
+              isLoading={loading}
+              disabled={!datas?.quantity || loading}
+              colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
               onClick={() => {
                 if(!form.quantity) {
                   toast.warn('Please enter the purchase quantity！', {

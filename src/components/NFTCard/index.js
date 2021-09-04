@@ -335,7 +335,7 @@ const NFTCard = (props) => {
     )
   },[])
 
-  console.log(item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether'), item.price > 0, item.type,  'aaaa')
+  console.log(item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether'), item.price > 0, item.type, item,  'aaaa')
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
