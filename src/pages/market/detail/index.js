@@ -128,6 +128,9 @@ const MarketDetailScreen = (props) => {
               },
               token
             );
+            toast[data?.success ? 'success' : 'error'](data?.message, {
+              position: toast.POSITION.TOP_CENTER,
+            });
             console.log('交易状态：', receipt.status)
           });
         console.log(ethereum,myContract, tradableNFTResult)
