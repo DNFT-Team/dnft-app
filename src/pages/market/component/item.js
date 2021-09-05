@@ -81,7 +81,7 @@ const NFTCard = (props) => {
         <div className={styleCardHeader}>
           <div className={styleCardHeaderBox}>
             <span className={styleName}>{item.name}</span>
-            <div className={styleStarInfo}>{item.price}{item.type}
+            <div className={styleStarInfo}>{item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')}{item.type}
             </div>
           </div>
           <div className={styleInfo}>

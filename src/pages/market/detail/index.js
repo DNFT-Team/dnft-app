@@ -97,6 +97,7 @@ const MarketDetailScreen = (props) => {
         );
         const chainId = await window.web3.eth.getChainId();
         const gasNum = 210000, gasPrice = '20000000000';
+
         const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
           datas?.orderId,
           form.quantity,
@@ -104,10 +105,9 @@ const MarketDetailScreen = (props) => {
           .send({
             from: address,
             gas: gasNum,
-            chainId,
             gasPrice: gasPrice,
-            value: datas.price,
-            // value: toDecimal(String(0), true, 'ether', true),
+            // value: datas.price,
+            value: window.web3.utils.toBN(datas.price),
           }, function (error, transactionHash) {
             if(!error) {
               console.log('交易hash: ', transactionHash)
@@ -216,8 +216,8 @@ const MarketDetailScreen = (props) => {
           <div className={styles.product}>
             <p className={styles.proName}>{datas?.name}</p>
             <div className={styles.proPriceBox}>
-              <span className={styles.price}>{datas?.price}{datas?.type}</span>
-              <span className={styles.price}>$0</span>
+              <span className={styles.price}>{datas.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether')}{datas?.type}</span>
+              {/* <span className={styles.price}>$0</span> */}
               {datas?.quantity} in stock
             </div>
             <div className={styles.desc}>{datas?.description}</div>
@@ -319,6 +319,7 @@ const MarketDetailScreen = (props) => {
           <ModalFooter justifyContent="flex-start">
             <Button
               isLoading={loading}
+              loadingText="Submit"
               disabled={!datas?.quantity || loading}
               colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
               onClick={() => {

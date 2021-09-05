@@ -1,16 +1,12 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './index.less';
-
 import { css, cx } from 'emotion';
 import NFTCard from './component/item';
 import { noDataSvg } from 'utils/svg';
-
-
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
-
 import { getMarketList } from 'reduxs/actions/market';
 const Market = (props) => {
   let history = useHistory();
