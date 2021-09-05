@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import Web3 from 'web3';
 import { bscTestTokenContact, createNFTContract, tokenContract, tradableNFTContract } from '../../utils/contract';
 import { createNFTAbi, tokenAbi, tradableNFTAbi } from '../../utils/abi';
+import dayjs from 'dayjs'
 
 const NFTCard = (props) => {
   const { needAction, item, index, currentStatus, token, address, onLike, onSave, onRefresh } = props;
@@ -75,11 +76,7 @@ const NFTCard = (props) => {
     case 'SOLD':
       return (
         <div className={styleButtonContainer}>
-          <span>
-            <span className={styleText}>Sold for </span>
-            <span className={stylePrice}>{item.price}TH</span>
-          </span>
-          <div className={styleText}>14/06/2021</div>
+          <div className={styleText}>Time sold: {dayjs(item.createTime).format('DD/MM/YYYY')}</div>
         </div>
       );
 
@@ -351,14 +348,14 @@ const NFTCard = (props) => {
         <div className={styleCardHeader}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
             <span className={styleChainType}>{item.chainType}</span>
-            <span style={{color: '#FF6059', fontSize: '12px', fontWeight: 'bold'}}>{item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')} {item.type}</span>
+            <span style={{color: '#FF6059', fontSize: '12px', fontWeight: 'bold'}}>{(item.price > 0 && ['ONSALE', 'SOLD'].includes(currentStatus.value)) && `${Web3.utils.fromWei(String(item.price), 'ether')} ${item.type || ''}`}</span>
             {/* <div className={styleStarInfo}> */}
             {/* <div className={styleStarIconContainer} onClick={handleLike}>
               <Icon icon='ant-design:heart-filled' style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
             </div> */}
             {/* </div> */}
           </div>
-          <div className={styleInfo}><span className='title'>{item.name}</span><span>quantity: {item.quantity || 1}</span></div>
+          <div className={styleInfo}><span className='title'>{item.name}</span><span>Quantity: {currentStatus.value === 'SOLD' ? item.quantity * -1 : item.quantity || 1}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
