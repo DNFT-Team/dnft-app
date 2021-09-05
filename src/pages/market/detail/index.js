@@ -33,7 +33,11 @@ import CreateCollectionModal from '../../../components/CreateCollectionModal';
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
-  const datas = location?.state;
+  const datas = location?.state?.item;
+  const category = location?.state?.category;
+  const sortTag = location?.state?.sortTag;
+  let history = useHistory();
+
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
 
@@ -42,9 +46,6 @@ const MarketDetailScreen = (props) => {
   const [form, setForm] = useState({});
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
-
-  console.log(location, 'location')
-  let history = useHistory();
 
   useEffect(() => {
     if (token) {
@@ -131,6 +132,7 @@ const MarketDetailScreen = (props) => {
             toast[data?.success ? 'success' : 'error'](data?.message, {
               position: toast.POSITION.TOP_CENTER,
             });
+            historyBack();
             console.log('交易状态：', receipt.status)
           });
         console.log(ethereum,myContract, tradableNFTResult)
@@ -146,32 +148,9 @@ const MarketDetailScreen = (props) => {
     }
   }
 
-  const getStock = useMemo(() => {
-    if(datas) {
-      let historyStock = datas?.historyList?.reduce((accumulator, currentValue) => accumulator + currentValue.quantity,0)
-      let stockNum = (datas?.quantity ?? 0) - (historyStock ?? 0)
-      return stockNum;
-    }
-    return ''
-  }, [datas])
-  console.log(getStock,'getStock')
-  const createDNFCollect = async () => {
-    console.log('----1212', form,)
-    setIsOpen(true)
-    // const { data } = await post(
-    //   '/api/v1/trans/sell_out',
-    //   {
-    //     buyerAddress: address,
-    //     collectionId: form?.collectionId,
-    //     nftId: datas?.nftId,
-    //     orderId: datas?.orderId,
-    //     quantity: form.quantity,
-    //   },
-    //   token
-    // );
-
+  const historyBack = () => {
+    history.push('/market', {category, sortTag})
   }
-
   const renderFormItem = (label, item) => (
     <div className={styles.styleFormItemContainer}>
       <div className='label'>{label}</div>
@@ -244,27 +223,17 @@ const MarketDetailScreen = (props) => {
                 <p className={styles.userName}>{datas?.nickName}</p>
               </div>
             </div>
-            {/* <div className={styles.user}>
-              <div className={styles.head}>
-                <img className={styles.avatar}/>
-              </div>
-              <div>
-                <p className={styles.owner}>Creator</p>
-                <p className={styles.userName}>Raquel</p>
-              </div>
-            </div> */}
+
             <Button
               isLoading={loading}
               disabled={!datas?.quantity || loading}
               loadingText="Buy Now"
               className={styles.buyBtn} onClick={() => {
-                createDNFCollect()
+                setIsOpen(true)
               }}>Buy Now</Button>
           </div>
           <div>
-            <img onClick={() => {
-              history.push('/market')
-            }} className={styles.close} src={close} />
+            <img onClick={historyBack} className={styles.close} src={close} />
           </div>
         </div>
       </div>
@@ -321,7 +290,7 @@ const MarketDetailScreen = (props) => {
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
             <Button
-              isLoading={loading}
+              isLoading={approveLoading}
               loadingText="Submit"
               disabled={!datas?.quantity || loading}
               colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"

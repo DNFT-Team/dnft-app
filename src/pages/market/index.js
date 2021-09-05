@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { Icon } from '@iconify/react';
 import styles from './index.less';
 import { css, cx } from 'emotion';
 import NFTCard from './component/item';
@@ -10,12 +9,13 @@ import { Select, Loading } from 'element-react';
 import { getMarketList } from 'reduxs/actions/market';
 const Market = (props) => {
   let history = useHistory();
-  const { dispatch, token, datas, pending } = props;
-  const [category, setCategory] = useState('LASTED');
-  const [sortTag, setSortTag] = useState('likeCount');
+  const { dispatch, token, datas, pending, location } = props;
+  const categoryBack = location?.state?.category;
+  const sortTagBack = location?.state?.sortTag;
+
+  const [category, setCategory] = useState(categoryBack || 'LASTED');
+  const [sortTag, setSortTag] = useState(sortTagBack || 'likeCount');
   const [sortOrder, setSortOrder] = useState('ASC');
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
 
   const cateType = [
     { label: 'Lasted', value: 'LASTED' },
@@ -31,6 +31,7 @@ const Market = (props) => {
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
+
   useEffect(() => {
     if (token) {
       dispatch(
@@ -47,9 +48,7 @@ const Market = (props) => {
       );
     }
   }, [token, category, sortTag]);
-  const handleToDetail = (obj) => {
-    history.push('market/detail');
-  };
+
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -59,25 +58,10 @@ const Market = (props) => {
     ),
     []
   );
-  const handleInfiniteOnLoad = () => {
-    setLoading(true);
-    console.log(4131412);
-    dispatch(
-      getMarketList(
-        {
-          category: category,
-          sortOrder: sortOrder,
-          sortTag: sortTag,
-          page: 0,
-          size: 100,
-        },
-        token
-      )
-    );
-  };
+
   const clickDetail = (item) => {
     console.log(item,'item');
-    history.push('/market/detail',item)
+    history.push('/market/detail',{item,category,sortTag})
   }
   const renderCard = useCallback(
     (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
@@ -133,14 +117,6 @@ const Market = (props) => {
             ? datas.map((item, index) =>  renderCard(item, index))
             : renderNoData}
         </div>
-        {/* <Loading
-          loading={pending}
-          style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
-        /> */}
-        {/* <div className={styles.loading}>
-          loading
-          <img className={styles.loadingImg} src={loading} />
-        </div> */}
       </div>
     </div>
   );
