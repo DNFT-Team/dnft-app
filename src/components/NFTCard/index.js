@@ -77,7 +77,7 @@ const NFTCard = (props) => {
         <div className={styleButtonContainer}>
           <span>
             <span className={styleText}>Sold for </span>
-            <span className={stylePrice}>{item.price}TH</span>
+            <span className={stylePrice}>{item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')} {item.type}</span>
           </span>
           <div className={styleText}>14/06/2021</div>
         </div>
