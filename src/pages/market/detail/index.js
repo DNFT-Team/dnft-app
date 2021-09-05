@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import globalConf from 'config/index';
 import styles from './index.less'
 import e2 from 'images/market/e2.png';
@@ -10,8 +10,8 @@ import 'slick-carousel/slick/slick-theme.css';
 // import {Button, Notification} from 'element-react'
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { tradableNFTAbi, busdAbi } from '../../../utils/abi';
-import { tradableNFTContract, busdContract, busdMarketContract } from '../../../utils/contract';
+import { tradableNFTAbi, tokenAbi } from '../../../utils/abi';
+import { tradableNFTContract, tokenContract, TOKEN_DNF, bscTestTokenContact} from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 import { toast } from 'react-toastify';
@@ -29,6 +29,7 @@ import {
 } from '@chakra-ui/react';
 import { post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
+import globalConfig from '../../../config'
 
 
 const MarketDetailScreen = (props) => {
@@ -45,22 +46,102 @@ const MarketDetailScreen = (props) => {
   const onClose = () => setIsOpen(false)
   const [form, setForm] = useState({});
   const [options, setOptions] = useState([]);
+  const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
 
   useEffect(() => {
     if (token) {
       getCollectionList();
     }
   }, [token]);
+  useEffect(() => {
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/market/detail') {
+        setIsWrongNetWork(true)
+        goToRightNetwork(ethereum);
+      } else {
+        setIsWrongNetWork(false);
+      }
+    }
+  }, [window.ethereum]);
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/market/detail') {
+      return;
+    }
+    try {
+      let result;
+      if (globalConfig.net_env === 'testnet') {
+        result = await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x61',
+              chainName: 'Smart Chain Test',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+            },
+          ],
+        });
+      } else {
+        result = await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+              chainName: 'Smart Chain',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            },
+          ],
+        });
+      }
+
+      if (result === null) {
+        setIsWrongNetWork(false);
+      } else {
+        setIsWrongNetWork(true);
+      }
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  }, []);
   const isApproved = async () => {
     setApproveLoading(true)
+
+    const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
+    const dnfAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
+    if (!(dnfAuth > 0)) {
+      console.log(dnfAuth,'allowance')
+      await contract.methods
+        .approve(
+          tradableNFTContract,
+          Web3.utils.toBN(
+            '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+          )
+        )
+        .send({
+          from: address,
+        });
+    }
+
     const contractAddress = tradableNFTContract;
     const myContract = new window.web3.eth.Contract(
       tradableNFTAbi,
       contractAddress
     );
-    const price = window.web3.utils.toWei(String(datas.price))
-    console.log(price, datas.price, form.quantity, 'aaaaa')
     let putOnResult;
     if (datas.type === 'DNFT') {
       putOnResult = await myContract.methods
@@ -85,18 +166,15 @@ const MarketDetailScreen = (props) => {
         await ethereum.enable();
         setLoading(true)
 
-        let putOnResult =  await isApproved();
-        const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId;
-        console.log(orderId, 'aaaaaaaaaaa')
+        await isApproved();
+
         setApproveLoading(false)
         setIsOpen(false)
         const tradableNFTAddress = tradableNFTContract;
-        const busdAddress = busdMarketContract;
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbi,
           tradableNFTAddress
         );
-        const chainId = await window.web3.eth.getChainId();
         const gasNum = 210000, gasPrice = '20000000000';
 
         const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
@@ -108,7 +186,7 @@ const MarketDetailScreen = (props) => {
             gas: gasNum,
             gasPrice: gasPrice,
             // value: datas.price,
-            value: window.web3.utils.toBN(datas.price),
+            // value: window.web3.utils.toBN(datas.price),
           }, function (error, transactionHash) {
             if(!error) {
               console.log('交易hash: ', transactionHash)
@@ -135,7 +213,6 @@ const MarketDetailScreen = (props) => {
             historyBack();
             console.log('交易状态：', receipt.status)
           });
-        console.log(ethereum,myContract, tradableNFTResult)
       }
     } catch (e) {
       setLoading(false)

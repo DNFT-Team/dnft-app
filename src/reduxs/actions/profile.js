@@ -44,7 +44,7 @@ export const getMyProfileBatch = (params = {},token) => (dispatch) => {
 }
 export const getMyProfileOwned = (params = {},token) => (dispatch) => {
   dispatch({ type: GET_MY_PROFILE_OWNED.PENDING });
-  return post('/api/v1/nft/owned', params, token)
+  return post('/api/v1/trans/owned', params, token)
     .then((res) => {
       if (res && res.status == 200) {
         dispatch({
@@ -64,7 +64,7 @@ export const getMyProfileOwned = (params = {},token) => (dispatch) => {
 }
 export const getMyProfileCreated = (params = {},token) => (dispatch) => {
   dispatch({ type: GET_MY_PROFILE_CREATED.PENDING });
-  return post('/api/v1/nft/created', params, token)
+  return post('/api/v1/trans/created', params, token)
     .then((res) => {
       if (res && res.status == 200) {
         dispatch({
