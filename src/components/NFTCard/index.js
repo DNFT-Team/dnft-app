@@ -324,8 +324,7 @@ const NFTCard = (props) => {
               setIsOffLoading(false)
             }
           }}>
-            <Loading loading={isOffLoading} />
-            Confirm
+            {isOffLoading ? 'Loading...' : 'Confirm'}
           </Button>
         </Dialog.Footer>
       </Dialog>
@@ -391,6 +390,16 @@ const styleBorderButton = css`
   color: #000000;
   font-weight: 500;
 `;
+
+const styleConfirmOff = css`
+  .circular {
+    width: 20px!important;
+    height: 20px!important;
+    left: -45px!important;
+    position: relative;
+    top: 24px!important;
+  }
+`
 
 const styleButton = css`
   display: flex;

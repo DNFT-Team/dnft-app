@@ -3,8 +3,8 @@ import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
-import { tokenAbi, nftAbi, nft1155Abi } from 'utils/abi';
-import { tokenContract, nftContract, nft1155Contract } from 'utils/contract';
+import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi';
+import { tradableNFTContract, nftContract, nft1155Contract } from 'utils/contract';
 import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import defaultHeadSvg from '../../images/asset/Head.svg'
 import globalConfig from '../../config'
 import { stakingJson } from 'pages/mining';
+import { busdAbi, tokenAbi } from '../../utils/abi';
+import { bscTestTokenContact, busdContract } from '../../utils/contract';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
@@ -319,11 +321,11 @@ const AssetScreen = (props) => {
 
         const account = accounts[0];
 
-        const contractAddress = tokenContract;
         const myContract = new window.web3.eth.Contract(
           tokenAbi,
-          contractAddress
+          bscTestTokenContact
         );
+        console.log(myContract, 'myContract')
         const dnftBalance = await myContract.methods.balanceOf(account).call({
           from: account,
         });

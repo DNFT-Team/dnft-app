@@ -170,12 +170,14 @@ const CreateNFT = (props) => {
           httpRequest={(e) => {
             uploadFile(e.file);
           }}
+          fileList={form?.file ? [form?.file] : undefined}
           tip={
             <div className='el-upload__tip'>
               Drag or choose your file to upload
             </div>
           }
         >
+          {form.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.ipfsDown + form.avatorUrl} alt="avatar"/> : ''}
           <i className='el-icon-upload2'></i>
           <div className='el-upload__text'>
             PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
