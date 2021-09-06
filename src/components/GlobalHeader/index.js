@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
 import { Box, Avatar } from '@chakra-ui/react'
-import styles from './index.less';
 import { css } from 'emotion';
 import { assetSvg } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
 import { NET_WORK_VERSION } from 'utils/constant'
+import globalConf from 'config/index'
+import styles from './index.less';
+import { SideBar } from 'layout/sideBar'
 
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
@@ -16,9 +18,7 @@ import polkadotSvg from '../../images/networks/logo_pk.svg'
 import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
-
-import globalConf from 'config/index'
-import {SideBar} from 'layout/sideBar'
+import Head from '../../images/asset/Head.svg';
 import Logo from '../../images/home/dnftLogo.png';
 
 const mvpUrl = 'http://mvp.dnft.world';
@@ -46,15 +46,15 @@ const GlobalHeader = (props) => {
         shortIcon: polkadotSvg,
       },
       globalConf.net_env === 'mainnet' ? {
-        name: 'Bsc Mainnet',
+        name: 'BSC Mainnet',
         icon: selectBscSvg,
-        shortName: ['BSC', 'Bsc'],
+        shortName: ['BSC', 'BSC'],
         shortIcon: bscSvg,
         netWorkId: 56,
       } : {
-        name: 'Bsc Mainnet Test',
+        name: 'BSC Testnet',
         icon: selectBscSvg,
-        shortName: ['BSC', 'Bsc'],
+        shortName: ['BSC', 'Rinkeby'],
         shortIcon: bscSvg,
         netWorkId: 97,
       },
@@ -271,9 +271,12 @@ const GlobalHeader = (props) => {
         </div>
         <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>
       </Box>
-      <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']}>
-        <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem"/>
-        <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
+      <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
+        <strong>DNFT Protocol</strong>
+        <Box display="flex" alignItems="center">
+          <Avatar src={Head} mr="1.5rem" width="2rem" height="2rem"/>
+          <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
+        </Box>
       </Box>
       {renderModal}
     </header>
