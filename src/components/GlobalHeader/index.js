@@ -54,7 +54,7 @@ const GlobalHeader = (props) => {
       } : {
         name: 'BSC Testnet',
         icon: selectBscSvg,
-        shortName: ['BSC', 'BSC'],
+        shortName: ['BSC', 'Rinkeby'],
         shortIcon: bscSvg,
         netWorkId: 97,
       },
