@@ -11,7 +11,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { tradableNFTAbi, tokenAbi } from '../../../utils/abi';
-import { tradableNFTContract, tokenContract, TOKEN_DNF, bscTestTokenContact} from '../../../utils/contract';
+import { tradableNFTContract, tokenContract, busdMarketContract, bscTestTokenContact} from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 import { toast } from 'react-toastify';
@@ -120,22 +120,42 @@ const MarketDetailScreen = (props) => {
   }, []);
   const isApproved = async () => {
     setApproveLoading(true)
-
-    const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
-    const dnfAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
-    if (!(dnfAuth > 0)) {
-      console.log(dnfAuth,'allowance')
-      await contract.methods
-        .approve(
-          tradableNFTContract,
-          Web3.utils.toBN(
-            '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+    if(datas?.type === 'DNFT') {
+      const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
+      const dnfAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
+      if (!(dnfAuth > 0)) {
+        console.log(dnfAuth,'dnfAuth-allowance')
+        await contract.methods
+          .approve(
+            tradableNFTContract,
+            Web3.utils.toBN(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+            )
           )
-        )
-        .send({
-          from: address,
-        });
+          .send({
+            from: address,
+          });
+      }
     }
+
+    if(datas?.type === 'BUSD') {
+      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract);
+      const busdAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
+      if (!(busdAuth > 0)) {
+        console.log(busdAuth,'busdAuth-allowance')
+        await contract.methods
+          .approve(
+            tradableNFTContract,
+            Web3.utils.toBN(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+            )
+          )
+          .send({
+            from: address,
+          });
+      }
+    }
+
 
     const contractAddress = tradableNFTContract;
     const myContract = new window.web3.eth.Contract(
