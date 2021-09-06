@@ -20,18 +20,22 @@ import marketIcon from '../images/nav/market_selected.svg';
 import igoIcon from '../images/nav/igo_selected.svg';
 import dataIcon from '../images/nav/data_selected.svg';
 
+import globalConf from 'config/index';
+const nets = ['testnet', 'mainnet']
+
 /*
   reqComing - 是否需要显示coming-soon
  */
-const MENU_MAP = [
-  { path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: true},
-  { path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
-  { path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
-  { path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: true},
-  { path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
-  { path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true }
+const menuAll = [
+  { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: true},
+  { net_env: nets, path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
+  { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
+  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: true},
+  { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
+  { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true }
 
 ];
+const MENU_MAP = menuAll.filter((e) => e.net_env.includes(globalConf.net_env))
 const ROUTER_MAP = [
   ...MENU_MAP,
   { path: '/market/detail', exact: true, Component: MarketDetailScreen, navName: 'market' },
