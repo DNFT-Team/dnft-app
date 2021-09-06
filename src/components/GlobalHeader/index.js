@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Dialog, Input } from 'element-react';
-import { Box, Avatar } from '@chakra-ui/react'
+import { Box, Avatar, Button, Tooltip } from '@chakra-ui/react'
 import { css } from 'emotion';
 import { assetSvg } from '../../utils/svg';
 import { useHistory } from 'react-router';
@@ -10,6 +10,7 @@ import { NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
 import styles from './index.less';
 import { SideBar } from 'layout/sideBar'
+import { toast } from 'react-toastify';
 
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
@@ -163,6 +164,18 @@ const GlobalHeader = (props) => {
     }
   };
 
+  const grantDnf = async () => {
+    // toast.success('Congratulations! Get 10 DNF!', {
+    //   position: toast.POSITION.TOP_CENTER,
+    // });
+    toast.dark('Sorry, DNF faucet is not available.', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    // toast.error('DNF grant is limited.', {
+    //   position: toast.POSITION.TOP_CENTER,
+    // });
+  }
+
   const renderModal = useMemo(
     () => (
       <Dialog
@@ -205,6 +218,9 @@ const GlobalHeader = (props) => {
       {/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
       {/* </div>*/}
       <Box className={styles.actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
+        <Tooltip hasArrow label="Get More DNF" bg="red.600">
+          <Button colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem" onClick={grantDnf}>FAUCET</Button>
+        </Tooltip>
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
