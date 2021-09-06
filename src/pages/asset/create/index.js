@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
+import { Icon } from '@iconify/react'
 import { createNFTContract } from '../../../utils/contract';
 import { createNFTAbi } from '../../../utils/abi';
 import Web3 from 'web3';
@@ -153,13 +154,15 @@ const CreateNFT = (props) => {
       <Alert
         className={styleAlert}
         title={
-          'You have not created the collection yet.   OpenSea will include a link to this URL on this item\'s detail page'
+          'You have not created the collection yet. DNFT will include a link to this URL on this item\'s detail page'
         }
         type='warning'
       />
-
       <div className={styleContainer}>
-        <h1>Create new NFT</h1>
+        <h1>
+          <Icon className={styleBackArrow} icon="ic:round-arrow-back-ios-new" onClick={() => {history.push('/asset')}}/>
+          Create new NFT
+        </h1>
         <Upload
           className={styleUploadContainer}
           drag
@@ -314,6 +317,7 @@ const styleContainer = css`
     font-size: 38px;
     margin: 0 0 20px 0;
     padding: 0;
+    display: flex;
   }
   h3 {
     color: #23262f;
@@ -378,5 +382,21 @@ const styleAlert = css`
   z-index: 2;
   .el-icon-close {
     top: 24px;
+  }
+`;
+const styleBackArrow = css`
+  position: sticky;
+  padding: 1rem;
+  border-radius: 10px;
+  top: 10px;
+  left: 10px;
+  height: 24px;
+  width: 24px;
+  color: #b3bac6;
+  cursor: pointer;
+  transition: all .3s ease-in-out;
+  &:hover{
+    color: #0834e8;
+    opacity: .8;
   }
 `;
