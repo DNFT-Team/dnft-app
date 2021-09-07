@@ -61,6 +61,7 @@ const NFTCard = (props) => {
     const isEmpty = item.quantity === 0;
     switch (currentStatus.value) {
     case 'INWALLET':
+      const isEmpty = item.quantity === 0;
       return (
         <div className={styleButtonContainer}>
           <div
@@ -441,15 +442,7 @@ const NFTCard = (props) => {
             </div> */}
             {/* </div> */}
           </div>
-          <div className={styleInfo}>
-            <span className="title">{item.name}</span>
-            <span>
-              Quantity:{' '}
-              {currentStatus.value === 'SOLD'
-                ? item.quantity * -1
-                : item.quantity || 0}
-            </span>
-          </div>
+          <div className={styleInfo}><span className='title'>{item.name}</span><span>Quantity: {currentStatus.value === 'SOLD' ? item.quantity * -1 : item.quantity}</span></div>
         </div>
         {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
