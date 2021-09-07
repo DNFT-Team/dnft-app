@@ -402,8 +402,8 @@ const NFTCard = (props) => {
           </Button>
         </Dialog.Footer>
       </Dialog>
-    );
-  }, []);
+    )
+  },[isOffLoading])
 
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
