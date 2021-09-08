@@ -10,7 +10,8 @@ import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
 import { css } from 'emotion';
 import { Icon } from '@iconify/react';
-import {Box} from '@chakra-ui/react'
+import {Box, Tag, TagLabel} from '@chakra-ui/react'
+import globalConf from 'config/index'
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -66,6 +67,17 @@ const App = (props) => {
           <img className={styles.logo} src={Logo} alt='logo' />
           <span className='logoText'>DNFT Protocol</span>
         </div>
+        <Tag
+          borderRadius="full"
+          variant="solid"
+          transform="translateX(-50%)"
+          left="50%"
+          position="absolute"
+          top="70px"
+          colorScheme="green"
+        >
+          <TagLabel>{globalConf.net_env}</TagLabel>
+        </Tag>
         <section className={styles.menu}>
           {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;

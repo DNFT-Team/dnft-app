@@ -167,19 +167,25 @@ export default CreateCollectionModal;
 
 const styleUploadContainer = css`
   margin-bottom: 40px;
-  .el-upload-dragger {
-    display: flex;
-    flex-direction: column;
-    color: #777e90;
-    background-color: #f4f5f6;
-    min-height: 182px;
-    height: initial;
-    width: 500px;
-    justify-content: center;
-    border-radius: 10px;
-    border: none;
-    .el-upload__text {
-      margin-top: 10px;
+  .el-upload {
+    width: 100%;
+    .el-upload-dragger {
+      display: flex;
+      flex-direction: column;
+      color: #777e90;
+      background-color: #f4f5f6;
+      min-height: 182px;
+      height: initial;
+      width: 500px;
+      justify-content: center;
+      border-radius: 10px;
+      border: none;
+      @media (max-width: 900px) {
+        width: inherit;
+      }
+      .el-upload__text {
+        margin-top: 10px;
+      }
     }
   }
 `;
