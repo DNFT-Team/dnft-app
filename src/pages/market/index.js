@@ -13,11 +13,12 @@ const Market = (props) => {
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
 
-  const [category, setCategory] = useState(categoryBack || 'LASTED');
+  const [category, setCategory] = useState(categoryBack || 'ALL');
   const [sortTag, setSortTag] = useState(sortTagBack || 'likeCount');
   const [sortOrder, setSortOrder] = useState('ASC');
 
   const cateType = [
+    { label: 'All', value: 'ALL' },
     { label: 'Latest', value: 'LASTED' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
