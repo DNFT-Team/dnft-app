@@ -163,19 +163,19 @@ const MarketDetailScreen = (props) => {
       contractAddress
     );
     let putOnResult;
-    if (datas.type === 'DNFT') {
-      putOnResult = await myContract.methods
-        .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
-        .send({
-          from: address,
-        });
-    } else if (datas.type === 'BUSD') {
-      putOnResult = await myContract.methods
-        .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
-        .send({
-          from: address,
-        });
-    }
+    // if (datas.type === 'DNFT') {
+    //   putOnResult = await myContract.methods
+    //     .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
+    //     .send({
+    //       from: address,
+    //     });
+    // } else if (datas.type === 'BUSD') {
+    //   putOnResult = await myContract.methods
+    //     .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
+    //     .send({
+    //       from: address,
+    //     });
+    // }
     return putOnResult;
   }
   const clickBuyItem = async () => {

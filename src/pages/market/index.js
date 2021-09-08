@@ -18,7 +18,7 @@ const Market = (props) => {
   const [sortOrder, setSortOrder] = useState('ASC');
 
   const cateType = [
-    { label: 'Lasted', value: 'LASTED' },
+    { label: 'Latest', value: 'LASTED' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
@@ -27,7 +27,7 @@ const Market = (props) => {
     { label: 'Game', value: 'GAME' },
   ];
   const sortTagType = [
-    { label: 'Most favorited', value: 'likeCount' },
+    { label: 'Most popular', value: 'likeCount' },
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
