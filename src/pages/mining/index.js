@@ -1072,6 +1072,7 @@ const styleCardList = css`
   background: url(${bg}) no-repeat 100% 100%;
   background-size: cover;
   min-height: calc(100vh - 360px);
+  flex-wrap: wrap;
 `;
 
 const styleCardContainer = css`
@@ -1082,6 +1083,10 @@ const styleCardContainer = css`
   overflow: hidden;
   filter: drop-shadow(0px 11px 21px rgba(0, 0, 0, 0.05));
   height: fit-content;
+  min-width: 370px;
+  @media (max-width: 768px) {
+    flex: initial;
+  }
   &>div{
     &:first-child{
       margin: 10px 0;

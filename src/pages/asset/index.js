@@ -691,7 +691,9 @@ const styleCardList = css`
   flex-direction: row;
   height: 100%;
   margin-top: 20px;
-  justify-content: center;
+  @media (max-width: 900px) {
+    justify-content: center;
+  }
 `;
 
 const styleModalContainer = css`
