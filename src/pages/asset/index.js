@@ -475,7 +475,7 @@ const AssetScreen = (props) => {
             <div>
               <Select
                 value={category}
-                placeholder='please choose'
+                placeholder="please choose"
                 onChange={(value) => {
                   setCategory(value);
                 }}
@@ -491,8 +491,7 @@ const AssetScreen = (props) => {
               {isTestNet && (
                 <Select
                   value={sortTag}
-                  style={{ marginLeft: 20 }}
-                  placeholder='please choose'
+                  placeholder="please choose"
                   onChange={(value) => {
                     setSortTag(value);
                     setSortOrder(value.split('-')[0]);
@@ -548,6 +547,9 @@ const styleContainer = css`
       flex-direction: column;
       flex: 1;
       height: calc(100% - 64px);
+      @media (max-width: 900px) {
+        padding:0;
+      }
     }
   }
 `;
@@ -559,6 +561,10 @@ const styleHeader = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 900px) {
+    padding: 24px 12px;
+    flex-wrap: wrap;
+  }
 `;
 
 const styleCreateNFT = css`
@@ -568,6 +574,13 @@ const styleCreateNFT = css`
   font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
+  @media (max-width: 900px) {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 16px;
+  }
 `;
 
 const styleAssetAccountContainer = css`
@@ -577,6 +590,9 @@ const styleAssetAccountContainer = css`
   span {
     font-weight: bold;
     font-size: 30px;
+    @media (max-width: 900px) {
+      font-size: 20px;
+    }
   }
 `;
 
@@ -584,11 +600,15 @@ const styleBody = css`
   padding: 24px 36px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   .circular {
     position: relative;
     top: 120px;
     width: 100px;
     height: 100px;
+  }
+  @media (max-width: 900px) {
+    padding: 24px 12px 80px 12px;
   }
 `;
 
@@ -597,9 +617,31 @@ const styleTabContainer = css`
   flex-direction: row;
   flex: 1;
   justify-content: space-between;
+  flex-wrap: wrap;
+
   & > div {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    @media (max-width: 900px) {
+      &:first-child{
+        width: 100%;
+        display: flex;
+        margin-bottom: 20px;
+      }
+      &:last-child {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .el-select {
+        flex: 1;
+        display: flex;
+        min-width: 160px;
+      }
+    }
   }
 `;
 
@@ -626,11 +668,21 @@ const styleTabButton = css`
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
+  @media (max-width: 900px) {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+  }
 `;
 
 const styleActiveTabButton = css`
   background: #1b2559;
   color: white;
+  @media (max-width: 900px) {
+    flex: 1;
+    justify-content: center;
+    font-size: 12px;
+  }
 `;
 
 const styleCardList = css`
@@ -639,6 +691,7 @@ const styleCardList = css`
   flex-direction: row;
   height: 100%;
   margin-top: 20px;
+  justify-content: center;
 `;
 
 const styleModalContainer = css`

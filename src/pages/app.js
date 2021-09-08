@@ -155,7 +155,7 @@ const styleLeftNav = css`
   width: 56px;
   cursor: pointer;
   background-color: rgb(20, 23, 74);
-  height: 100vh;
+  min-height: 100vh;
   position: sticky;
   top: 0;
   padding: 0 20px;

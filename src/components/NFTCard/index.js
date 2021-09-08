@@ -549,9 +549,6 @@ const styleCardContainer = css`
     position: relative;
     top: -20px;
   }
-  &:last-child {
-    margin-right: auto;
-  }
 `;
 
 const styleShortPicture = css`
