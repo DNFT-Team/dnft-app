@@ -4,15 +4,19 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi';
-import { tradableNFTContract, nftContract, nft1155Contract } from 'utils/contract';
+import {
+  tradableNFTContract,
+  nftContract,
+  nft1155Contract,
+} from 'utils/contract';
 import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import defaultHeadSvg from '../../images/asset/Head.svg'
-import globalConfig from '../../config'
+import defaultHeadSvg from '../../images/asset/Head.svg';
+import globalConfig from '../../config';
 import { stakingJson } from 'pages/mining';
 import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
@@ -21,22 +25,30 @@ const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token } = props;
   const isTestNet = globalConfig.net_env === 'testnet';
 
-  const tabArray =  isTestNet ? [{
-    label: 'On Sale',
-    value: 'ONSALE'
-  }, {
-    label: 'In Wallet',
-    value: 'INWALLET'
-  }, {
-    label: 'Sold',
-    value: 'SOLD'
-  }] : [{
-    label: 'In Wallet',
-    value: 'INWALLET'
-  }];
+  const tabArray = isTestNet
+    ? [
+      {
+        label: 'On Sale',
+        value: 'ONSALE',
+      },
+      {
+        label: 'In Wallet',
+        value: 'INWALLET',
+      },
+      {
+        label: 'Sold',
+        value: 'SOLD',
+      },
+    ]
+    : [
+      {
+        label: 'In Wallet',
+        value: 'INWALLET',
+      },
+    ];
 
   const cateType = [
-    // { label: 'Lasted', value: 'LASTED' },
+    { label: 'All', value: 'ALL' },
     { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
@@ -51,15 +63,15 @@ const AssetScreen = (props) => {
   ];
   const [selectedTab, setSelectedTab] = useState({
     label: 'In Wallet',
-    value: 'INWALLET'
+    value: 'INWALLET',
   });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [category, setCategory] = useState('ART');
-  const [sortTag, setSortTag] = useState('ASC-price')
+  const [category, setCategory] = useState('ALL');
+  const [sortTag, setSortTag] = useState('ASC-price');
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
-  const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
+  const rightChainId = globalConfig.net_env === 'testnet' ? 97 : 56;
   const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
@@ -74,7 +86,7 @@ const AssetScreen = (props) => {
 
   const getNFTList = async (currentAddress, currentToken) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       // if (selectedTab.value === 'INWALLET' && category === 'ART') {
       //   const contractAddress = nftContract;
       //   let nftDataList = [];
@@ -210,16 +222,16 @@ const AssetScreen = (props) => {
           status: selectedTab.value,
           sortTag: 'price',
           page: 0,
-          size: 100
+          size: 100,
         },
         currentToken || token
       );
-      setList(data?.data?.content || [])
+      setList(data?.data?.content || []);
       // }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     if (history.location.pathname !== '/asset') {
@@ -260,24 +272,27 @@ const AssetScreen = (props) => {
         });
       }
 
-      return true
+      return true;
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
-      return false
+      console.error('Failed to setup the network in Metamask:', error);
+      return false;
     }
   }, []);
 
   useEffect(() => {
     if (token) {
-      getNFTList()
+      getNFTList();
     }
-  }, [token, category, selectedTab, sortTag, address, chainType])
+  }, [token, category, selectedTab, sortTag, address, chainType]);
 
   useEffect(() => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/asset') {
+      if (
+        Number(ethereum.networkVersion) !== rightChainId &&
+        history.location.pathname === '/asset'
+      ) {
         goToRightNetwork(ethereum);
       }
     }
@@ -288,8 +303,11 @@ const AssetScreen = (props) => {
 
     if (ethereum) {
       ethereum.on('networkChanged', (networkIDstring) => {
-        if (Number(networkIDstring) !== rightChainId && history.location.pathname === '/asset') {
-          setBalance(undefined)
+        if (
+          Number(networkIDstring) !== rightChainId &&
+          history.location.pathname === '/asset'
+        ) {
+          setBalance(undefined);
           goToRightNetwork(ethereum);
           return;
         }
@@ -325,7 +343,7 @@ const AssetScreen = (props) => {
           tokenAbi,
           bscTestTokenContact
         );
-        console.log(myContract, 'myContract')
+        console.log(myContract, 'myContract');
         const dnftBalance = await myContract.methods.balanceOf(account).call({
           from: account,
         });
@@ -377,7 +395,6 @@ const AssetScreen = (props) => {
     [selectedTab]
   );
 
-
   const getFormatName = (nftId) => {
     switch (nftId) {
     case '100':
@@ -390,8 +407,19 @@ const AssetScreen = (props) => {
   };
 
   const renderCard = useCallback(
-    (item, index) => <NFTCard item={item} index={index} needAction={isTestNet} currentStatus={selectedTab} onLike={getNFTList}
-      onSave={getNFTList} onRefresh={(currentAddress, currentToken) => getNFTList(currentAddress, currentToken)} />,
+    (item, index) => (
+      <NFTCard
+        item={item}
+        index={index}
+        needAction={isTestNet}
+        currentStatus={selectedTab}
+        onLike={getNFTList}
+        onSave={getNFTList}
+        onRefresh={(currentAddress, currentToken) =>
+          getNFTList(currentAddress, currentToken)
+        }
+      />
+    ),
     [selectedTab]
   );
 
@@ -449,7 +477,7 @@ const AssetScreen = (props) => {
                 value={category}
                 placeholder='please choose'
                 onChange={(value) => {
-                  setCategory(value)
+                  setCategory(value);
                 }}
               >
                 {cateType.map((el) => (
@@ -460,24 +488,34 @@ const AssetScreen = (props) => {
                   />
                 ))}
               </Select>
-              {isTestNet && <Select value={sortTag} style={{ marginLeft: 20 }} placeholder='please choose' onChange={(value) => {
-                setSortTag(value)
-                setSortOrder(value.split('-')[0])
-              }}>
-                {sortTagType.map((el) => (
-                  <Select.Option
-                    key={el.value}
-                    label={el.label}
-                    value={el.value}
-                  />
-                ))}
-              </Select>}
+              {isTestNet && (
+                <Select
+                  value={sortTag}
+                  style={{ marginLeft: 20 }}
+                  placeholder='please choose'
+                  onChange={(value) => {
+                    setSortTag(value);
+                    setSortOrder(value.split('-')[0]);
+                  }}
+                >
+                  {sortTagType.map((el) => (
+                    <Select.Option
+                      key={el.value}
+                      label={el.label}
+                      value={el.value}
+                    />
+                  ))}
+                </Select>
+              )}
             </div>
           </div>
 
-          <div className={styleCardList} style={{opacity: isLoading ? 0.5 : 1}}>
+          <div
+            className={styleCardList}
+            style={{ opacity: isLoading ? 0.5 : 1 }}
+          >
             {!isLoading && list?.length > 0
-              ? list.map((item, index) =>  renderCard(item, index))
+              ? list.map((item, index) => renderCard(item, index))
               : renderNoData}
             {/* {nftData?.length > 0
               ? nftData.map((item, index) => renderCard(item, index))
@@ -559,7 +597,7 @@ const styleTabContainer = css`
   flex-direction: row;
   flex: 1;
   justify-content: space-between;
-  &>div{
+  & > div {
     display: flex;
     flex-direction: row;
   }
