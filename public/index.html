@@ -15,6 +15,7 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="init_loading.css" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -25,67 +26,21 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>DNFT</title>
-    <style>
-      .init-loading{
-        background: #0f0c29;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        position: absolute;
-        margin: 0;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .init-loading svg text {
-        letter-spacing: 10px;
-        font-size: 60px;
-        text-anchor: middle;
-        dominant-baseline: middle;
-        animation: stroke infinite alternate;
-        animation-duration: 4s;
-      }
-      @media (max-width: 900px)  {
-        .init-loading svg text {
-          font-size: 100px;
-          animation-duration: 2s;
-        }
-      }
-      @keyframes stroke {
-        0% {
-          fill: rgba(72, 138, 20, 0);
-          stroke: #AFB5D3;
-          stroke-dashoffset: 25%;
-          stroke-dasharray: 0 50%;
-          stroke-width: 1;
-        }
-        70% {
-          fill: rgba(72, 138, 20, 0);
-          stroke: rgba(17, 45, 242, 1);
-          stroke-width: 3;
-        }
-        90%,
-        100% {
-          fill: rgba(72, 138, 204, 1);
-          stroke: rgba(54, 95, 160, 0);
-          stroke-dashoffset: -25%;
-          stroke-dasharray: 50% 0;
-          stroke-width: 0;
-        }
-      }
-    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="init-loading">
-        <svg viewBox="0 0 400 200">
-          <text x="50%" y="50%"> DNFT </text>
-        </svg>
+        <p style="color: #FFFFFF;font-size: 3rem;margin-bottom: 2rem;">Loading...</p>
+        <div class="container">
+          <span class="girl"></span>
+          <div class="boys">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       </div>
     </div>
     <!--
