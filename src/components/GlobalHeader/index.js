@@ -290,7 +290,7 @@ const GlobalHeader = (props) => {
       <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
         <strong>DNFT Protocol</strong>
         <Box display="flex" alignItems="center">
-          <Avatar src={Head} mr="1.5rem" width="2rem" height="2rem"/>
+          <Avatar src={Head} mr="1.5rem" width="2rem" height="2rem"  onClick={() => {history.push('/asset')}}/>
           <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
         </Box>
       </Box>
