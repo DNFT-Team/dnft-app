@@ -113,7 +113,7 @@ const Market = (props) => {
           loading={pending}
           style={{ position: 'absolute', top: '50%', width: 'calc(100% - 76px)' }}
         />
-        <div className={styles.content1} style={{ opacity: pending ? 0.5 : 1 }}>
+        <div className={styles.contentBox} style={{ opacity: pending ? 0.5 : 1 }}>
           {datas?.length > 0
             ? datas.map((item, index) =>  renderCard(item, index))
             : renderNoData}
@@ -129,6 +129,9 @@ const mapStateToProps = ({ profile, market }) => ({
 });
 export default withRouter(connect(mapStateToProps)(Market));
 const styleNoDataContainer = css`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;

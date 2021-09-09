@@ -1,0 +1,136 @@
+.styleCardContainer {
+  background: #ffffff;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.styleCardContainer:hover {
+  box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
+}
+.styleShortPicture {
+  min-height: 220px;
+  border-radius: 18px;
+}
+.styleInfoContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+.styleCardHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  position: relative;
+}
+.styleCardHeaderBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.styleName {
+  box-sizing: border-box;
+  margin: 16px 0px 12px;
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 0%;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(30, 35, 41);
+}
+.chainType {
+  margin: 0px 0px 0px 8px;
+  appearance: none;
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: inherit;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  font-weight: 500;
+  line-height: 20px;
+  word-break: keep-all;
+  color: rgb(30, 35, 41);
+  border-radius: 4px;
+  min-height: 24px;
+  border: none;
+  background-color: rgb(234, 236, 239);
+  min-width: 39px;
+  height: 24px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.styleInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.styleInfoLine {
+  margin-bottom: 7px;
+}
+.creator {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #707a8a;
+  margin-right: 20px;
+}
+.styleInfoProfile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.styleInfoProfileImg {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+  border-radius: 50%;
+}
+.styleInfoProfileImg[src=""],
+.styleInfoProfileImg:not([src]) {
+  opacity: 0;
+}
+.nickName {
+  box-sizing: border-box;
+  margin: 0px;
+  min-width: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(71, 77, 87);
+  box-sizing: border-box;
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.price {
+  box-sizing: border-box;
+  margin: 0px;
+  min-width: 0px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
