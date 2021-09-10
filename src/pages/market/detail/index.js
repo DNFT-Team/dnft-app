@@ -1,13 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import globalConf from 'config/index';
 import styles from './index.less'
-import e2 from 'images/market/e2.png';
 import close from 'images/market/close.png';
-import ellipse from 'images/market/ellipse.png'
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-// import {Button, Notification} from 'element-react'
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { tradableNFTAbi, tokenAbi } from '../../../utils/abi';
@@ -15,8 +9,6 @@ import { tradableNFTContract, tokenContract, busdMarketContract, bscTestTokenCon
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 import { toast } from 'react-toastify';
-
-import {toDecimal, WEB3_MAX_NUM} from 'utils/web3Tools';
 import {
   Select, InputNumber
 } from 'element-react';
@@ -156,28 +148,8 @@ const MarketDetailScreen = (props) => {
       }
     }
 
-
-    const contractAddress = tradableNFTContract;
-    const myContract = new window.web3.eth.Contract(
-      tradableNFTAbi,
-      contractAddress
-    );
-    let putOnResult;
-    // if (datas.type === 'DNFT') {
-    //   putOnResult = await myContract.methods
-    //     .putOnByDnft(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
-    //     .send({
-    //       from: address,
-    //     });
-    // } else if (datas.type === 'BUSD') {
-    //   putOnResult = await myContract.methods
-    //     .putOnByBusd(datas.tokenAddress, datas.tokenId, datas.price, form.quantity)
-    //     .send({
-    //       from: address,
-    //     });
-    // }
-    return putOnResult;
   }
+  console.log(datas)
   const clickBuyItem = async () => {
     try {
       if (window.ethereum) {
@@ -280,12 +252,9 @@ const MarketDetailScreen = (props) => {
 
   return (
     <div className={styles.marketDetail}>
-      {/* <div className={styles.backBtn} onClick={() => {
-        history.push('/market')
-      }}>Back</div> */}
       <div className={styles.main}>
         <div className={styles.mainL} style={{
-          background: `center center / contain no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
+          background: `center center / cover no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
           height: 482,
           padding: 10,
           borderRadius: 10,
@@ -293,13 +262,42 @@ const MarketDetailScreen = (props) => {
         </div>
         <div className={styles.mainR}>
           <div className={styles.product}>
-            <p className={styles.proName}>{datas?.name}</p>
-            <div className={styles.proPriceBox}>
-              <span className={styles.price}>{datas.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether')}{datas?.type}</span>
-              {/* <span className={styles.price}>$0</span> */}
-              {datas?.quantity} in stock
+            <div className={styles.proName}>
+              <div className={styles.proNameText}>{datas?.name}</div>
+              <div className={styles.proNameType}>{datas?.category}</div>
+            </div>
+            <div className={styles.userInfo}>
+              <div className={styles.user}>
+                <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
+                <div className={styles.userInfoText}>
+                  <p className={styles.owner}>Owner</p>
+                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                </div>
+              </div>
+              <div className={styles.userLine} />
+              {/* <div className={styles.user}>
+                <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
+                <div className={styles.userInfoText}>
+                  <p className={styles.owner}>Owner</p>
+                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                </div>
+              </div> */}
             </div>
             <div className={styles.desc}>{datas?.description}</div>
+            <div className={styles.priceBox}>
+              <div className={styles.currentPrice}>
+                <div className={styles.currentPriceTitle}>Current Price</div>
+                <div className={styles.priceAll}>
+                  <h4 className={styles.priceAmount}>{datas.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether')} {datas?.type}</h4>
+                  <div className={styles.worth}>≈ $
+                    {/* 3,090.75  */}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.stock}>
+              {datas?.quantity} in stock
+            </div>
             <div className={styles.chain}>
               <span className={styles.contract}>Contract address:</span>
               <a
@@ -310,15 +308,6 @@ const MarketDetailScreen = (props) => {
               >
                 {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
               </a>
-            </div>
-            <div className={styles.user}>
-              <div className={styles.head} onClick={() => {history.push(`/profile/address/${datas?.address}`)}}>
-                <img src={datas?.userAvatorUrl} className={styles.avatar}/>
-              </div>
-              <div>
-                <p className={styles.owner}>Owner</p>
-                <p className={styles.userName}>{datas?.nickName}</p>
-              </div>
             </div>
 
             <Button

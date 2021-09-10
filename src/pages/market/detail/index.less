@@ -5,6 +5,7 @@
 }
 .main {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     padding: 30px;
     height: 768px;
@@ -55,12 +56,48 @@
     //border-bottom: 1px solid #E0E0E0;
 }
 .proName {
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 48px;
-    letter-spacing: -0.01em;
-    color: #23262F;
-    padding-bottom: 8px;
+    box-sizing: border-box;
+    margin: 0px 0px 24px;
+    min-width: 0px;
+    display: flex;
+    width: 100%;
+}
+.proNameText {
+    box-sizing: border-box;
+    margin: 0px 10px 0px 0px;
+    min-width: 0px;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 36px;
+    overflow: hidden;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.proNameType {
+    margin-top: 6px;
+    box-sizing: border-box;
+    margin: 10px 0px 0px;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 24px;
+    line-height: 24px;
+    background-color: rgb(245, 245, 245);
+    color: rgb(24, 26, 32);
+    padding-left: 12px;
+    padding-right: 12px;
+    font-weight: 500;
+}
+.userInfo {
+    box-sizing: border-box;
+    margin: 0px 0px 25px;
+    min-width: 0px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
 }
 .proPriceBox {
     display: flex;
@@ -69,6 +106,57 @@
     font-size: 16px;
     line-height: 16px;
     color: #777E91;
+}
+.priceBox {
+    box-sizing: border-box;
+    margin: 0px 0px 24px;
+    min-width: 0px;
+    display: flex;
+}
+.currentPrice {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+.currentPriceTitle {
+    box-sizing: border-box;
+    margin: 0px 0px 4px;
+    min-width: 0px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+}
+.priceAll {
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+.priceAmount {
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 36px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.worth {
+    box-sizing: border-box;
+    margin: 0px 0px 0px 4px;
+    min-width: 0px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgb(112, 122, 138);
+    padding-bottom: 4px;
 }
 .price {
     padding: 6px 8px;
@@ -83,19 +171,30 @@
     border: 2px solid #E6E8EC;
 }
 .desc {
-    font-size: 16px;
-    line-height: 24px;
-    color: #777E91;
-    margin: 40px 0;
+    box-sizing: border-box;
+    margin: 0px 0px 24px;
+    min-width: 0px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-word;
+    white-space: pre-line;
+    max-height: 80px;
+    overflow: auto;
+    color: rgb(30, 35, 41);
 }
 .user {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    margin-bottom: 20px;
-    height: 50px;
-    box-sizing: content-box;
-    min-width: 262px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #E6E8EC;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 .head {
    width: 50px;
@@ -104,20 +203,46 @@
    cursor: pointer;
 }
 .avatar {
+    box-sizing: border-box;
+    margin: 0px 8px 0px 0px;
+    min-width: 0px;
     max-width: 100%;
-    max-height: 100%;
-    border-radius: 50%;
+    border-radius: 99999px;
+    object-fit: cover;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}
+.userInfoText {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
 }
 .owner {
-    font-size: 14px;
-    line-height: 24px;
-    color: #777E91;
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgb(183, 189, 198);
 }
 .userName {
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
     font-weight: 500;
     font-size: 14px;
-    line-height: 24px;
-    color: #23262F;
+    line-height: 20px;
+    color: rgb(30, 35, 41);
+}
+.userLine {
+    box-sizing: border-box;
+    margin: 0px 32px;
+    min-width: 0px;
+    width: 1px;
+    height: 20px;
+    background: rgb(234, 236, 239);
 }
 .chain {
     margin-bottom: 20px;
@@ -279,10 +404,11 @@ color: #2C386F;
     color: #68769F;
 }
 .buyBtn{
-    width: 90%!important;
-    height: 50px;
+    width: 188px!important;
+    height: 48px;
+    font-family: DM Sans;
     padding: 0;
-    background: #1B2559!important;
+    background: #3772FF!important;
     border-radius: 10px;
     font-weight: bold;
     font-size: 16px;
