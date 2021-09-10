@@ -1,21 +1,34 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { Dialog, Input } from 'element-react';
-import { Box, Avatar, Button, Tooltip } from '@chakra-ui/react'
-import { css } from 'emotion';
-import { assetSvg } from '../../utils/svg';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
+
+import { Dialog, Input } from 'element-react';
+import {
+  Box, Avatar, Link,
+  Button, Tooltip, Text,
+  Menu, MenuButton,
+  MenuList, MenuOptionGroup,
+  MenuItemOption, MenuDivider,
+  Drawer, DrawerOverlay, DrawerContent,
+  DrawerHeader, IconButton, DrawerBody,
+  Stat, StatLabel, StatNumber, StatHelpText
+} from '@chakra-ui/react';
+import { SideBar } from 'layout/sideBar';
+import { toast } from 'react-toastify';
+import { Icon } from '@iconify/react';
+
+import { css } from 'emotion';
+import axios from 'axios';
+
 import { NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
 import styles from './index.less';
-import { SideBar } from 'layout/sideBar'
-import { toast } from 'react-toastify';
 
+import { assetSvg } from '../../utils/svg';
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
 import polkadotSvg from '../../images/networks/logo_pk.svg'
-
 import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
@@ -23,6 +36,8 @@ import Head from '../../images/asset/Head.svg';
 import Logo from '../../images/home/dnftLogo.png';
 
 const mvpUrl = 'http://mvp.dnft.world';
+const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
+
 const GlobalHeader = (props) => {
   let history = useHistory();
   const { dispatch, chainType } = props;
@@ -164,17 +179,102 @@ const GlobalHeader = (props) => {
     }
   };
 
-  const grantDnf = async () => {
-    // toast.success('Congratulations! Get 10 DNF!', {
-    //   position: toast.POSITION.TOP_CENTER,
-    // });
-    toast.dark('Sorry, DNF faucet is not available.', {
-      position: toast.POSITION.TOP_CENTER,
-    });
-    // toast.error('DNF grant is limited.', {
-    //   position: toast.POSITION.TOP_CENTER,
-    // });
+  const [giftLoading, setGiftLoading] = useState(false);
+  const [isDrawer, setIsDrawer] = useState(false)
+  const [healthData, setHealthData] = useState({tdnf: {...DEFAULT_STAT }, tbusd: {...DEFAULT_STAT}, list: []})
+  const getToken = (assetId, chainId, giftMode) => {
+    if (assetId && chainId && address && !giftLoading) {
+      setGiftLoading(true)
+      axios.get(
+        `/gift/${address}?assetId=${assetId}&chainId=${chainId}&giftMode=${giftMode}`,
+        {baseURL: globalConf.faucetApi, withCredentials: false}
+      ).then((res) => {
+        if (res.data.error) {
+          toast.error(res.data.message, {position: toast.POSITION.TOP_CENTER})
+        } else {
+          toast.success('Request Send Successfully!', {position: toast.POSITION.TOP_CENTER})
+        }
+      })
+        .catch((err) => {toast.dark(err.message, {position: toast.POSITION.TOP_CENTER})})
+        .finally(() => {setGiftLoading(false)})
+    }
   }
+  const getFaucetMore = () => {
+    let tdnf = {...DEFAULT_STAT }
+    let tbusd = {...DEFAULT_STAT}
+    let list = []
+    Promise.allSettled([
+      axios.get('/health?chainId=97&assetId=TDNF', {baseURL: globalConf.faucetApi, withCredentials: false}),
+      axios.get('/health?chainId=97&assetId=TBUSD', {baseURL: globalConf.faucetApi, withCredentials: false}),
+      axios.get('/history', {baseURL: globalConf.faucetApi, withCredentials: false})
+    ]).then((results) => {
+      if (results[0].status === 'fulfilled') {tdnf = results[0].value.data || DEFAULT_STAT}
+      if (results[1].status === 'fulfilled') {tbusd = results[1].value.data || DEFAULT_STAT}
+      if (results[2].status === 'fulfilled') {list = results[2].value.data || []}
+    })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setHealthData({ tdnf, tbusd, list })
+        setIsDrawer(true)
+      })
+  }
+  const menuData = [
+    {
+      token: 'DNF',
+      chainId: '97',
+      assetId: 'TDNF',
+      color: 'brand.600',
+      giftModes: [
+        {value: '2024', label: '20 DNF / 24 H'},
+        {value: '1012', label: '10 DNF / 12 H'},
+        {value: '506', label: '50 DNF / 6 H'},
+      ]
+    },
+    {
+      token: 'TBUSD',
+      chainId: '97',
+      assetId: 'TBUSD',
+      color: 'yellow.500',
+      giftModes: [
+        {value: '2024', label: '20 DNF / 24 H'},
+        {value: '1012', label: '10 DNF / 12 H'},
+        {value: '506', label: '50 DNF / 6 H'},
+      ]
+    }
+  ]
+  const renderFaucet = () => (
+    globalConf.net_env === 'testnet' && address && (
+      <Tooltip hasArrow label="Get More Token" bg="red.600">
+        <Menu closeOnSelect>
+          <MenuButton as={Button} colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem">
+            FAUCET
+          </MenuButton>
+          <MenuList width="max-content">
+            {
+              menuData.map((item) => (
+                <MenuOptionGroup title={item.token}>
+                  {
+                    item.giftModes.map((gift) => (
+                      <MenuItemOption color={item.color} fontWeight="bolder" boxSizing="border-box"
+                        onClick={() => {
+                          getToken(item.assetId, item.chainId, gift.value)
+                        }}>{gift.label}</MenuItemOption>
+                    ))
+                  }
+                </MenuOptionGroup>
+              ))
+            }
+            <MenuDivider />
+            <MenuOptionGroup title="More+">
+              <MenuItemOption fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItemOption>
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
+      </Tooltip>
+    )
+  )
 
   const renderModal = useMemo(
     () => (
@@ -218,9 +318,7 @@ const GlobalHeader = (props) => {
       {/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
       {/* </div>*/}
       <Box className={styles.actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
-        <Tooltip hasArrow label="Get More DNF" bg="red.600">
-          <Button colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem" onClick={grantDnf}>FAUCET</Button>
-        </Tooltip>
+        {renderFaucet()}
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
@@ -295,6 +393,48 @@ const GlobalHeader = (props) => {
         </Box>
       </Box>
       {renderModal}
+      <Drawer placement="bottom" onClose={() => {setIsDrawer(false)}} isOpen={isDrawer} isFullHeight>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">
+            Faucet Board
+            <IconButton onClick={() => {setIsDrawer(false)}} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
+              icon={<Icon icon="mdi:close"/>}/>
+          </DrawerHeader>
+          <DrawerBody>
+            <Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Stat>
+                  <StatLabel>TDNF</StatLabel>
+                  <StatNumber>{healthData?.tdnf?.balance || 0}</StatNumber>
+                  <StatHelpText>Count:{healthData?.tdnf?.count || 0} / Tol:{healthData?.tdnf?.total || 0}</StatHelpText>
+                </Stat>
+                <Stat>
+                  <StatLabel>TBUSD</StatLabel>
+                  <StatNumber>{healthData?.tbusd?.balance || 0}</StatNumber>
+                  <StatHelpText>Count:{healthData?.tbusd?.count || 0} / Tol:{healthData?.tbusd?.total || 0}</StatHelpText>
+                </Stat>
+              </Box>
+              <Box>
+                {
+                  healthData.list.map((l) => (
+                    <Text border="1px solid" p="1rem" color="brand.100" my=".2rem">
+                      <label>ChainId:</label>{l.chainId} |
+                      <label>AssetId:</label>{l.address} |
+                      <label>Address:</label>{l.address} |
+                      <label>Amount:</label>{l.amount} |
+                      <label>UpdatedAt:</label>{l.updatedAt} |
+                      <label>Expired_at:</label>{l.expired_at} |
+                      <label>Txhash:</label>
+                      <Link href={`https://testnet.bscscan.com/tx/${l.txhash}`} color="brand.600" isExternal>{l.txhash}</Link>
+                    </Text>
+                  ))
+                }
+              </Box>
+            </Box>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </header>
   );
 };
