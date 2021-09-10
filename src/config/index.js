@@ -8,6 +8,8 @@ export default {
   staticApi: baseUrl + `/data/`,
   /*bridge-api*/
   bridgeApi: baseUrl + `/bridgeApi`,
+  /*faucet-api*/
+  faucetApi: baseUrl + `/faucet`,
   /*ipfs-api*/
   ipfsUp: `/ipfsApi`,
   /*ipfs-get*/
