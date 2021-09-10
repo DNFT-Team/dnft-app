@@ -8,8 +8,8 @@ import {
   Box, Avatar, Link,
   Button, Tooltip, Text,
   Menu, MenuButton,
-  MenuList, MenuOptionGroup,
-  MenuItemOption, MenuDivider,
+  MenuList, MenuGroup,
+  MenuItem, MenuDivider,
   Drawer, DrawerOverlay, DrawerContent,
   DrawerHeader, IconButton, DrawerBody,
   Stat, StatLabel, StatNumber, StatHelpText
@@ -227,7 +227,7 @@ const GlobalHeader = (props) => {
       giftModes: [
         {value: '2024', label: '20 DNF / 24 H'},
         {value: '1012', label: '10 DNF / 12 H'},
-        {value: '506', label: '50 DNF / 6 H'},
+        {value: '506', label: '5 DNF / 6 H'},
       ]
     },
     {
@@ -236,9 +236,9 @@ const GlobalHeader = (props) => {
       assetId: 'TBUSD',
       color: 'yellow.500',
       giftModes: [
-        {value: '2024', label: '20 DNF / 24 H'},
-        {value: '1012', label: '10 DNF / 12 H'},
-        {value: '506', label: '50 DNF / 6 H'},
+        {value: '2024', label: '20 TBUSD / 24 H'},
+        {value: '1012', label: '10 TBUSD / 12 H'},
+        {value: '506', label: '5 TBUSD / 6 H'},
       ]
     }
   ]
@@ -252,22 +252,22 @@ const GlobalHeader = (props) => {
           <MenuList width="max-content">
             {
               menuData.map((item) => (
-                <MenuOptionGroup title={item.token}>
+                <MenuGroup title={item.token}>
                   {
                     item.giftModes.map((gift) => (
-                      <MenuItemOption color={item.color} fontWeight="bolder" boxSizing="border-box"
+                      <MenuItem color={item.color} fontWeight="bolder" boxSizing="border-box"
                         onClick={() => {
                           getToken(item.assetId, item.chainId, gift.value)
-                        }}>{gift.label}</MenuItemOption>
+                        }}>{gift.label}</MenuItem>
                     ))
                   }
-                </MenuOptionGroup>
+                </MenuGroup>
               ))
             }
             <MenuDivider />
-            <MenuOptionGroup title="More+">
-              <MenuItemOption fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItemOption>
-            </MenuOptionGroup>
+            <MenuGroup title="More+">
+              <MenuItem fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItem>
+            </MenuGroup>
           </MenuList>
         </Menu>
       </Tooltip>
