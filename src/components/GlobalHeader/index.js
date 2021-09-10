@@ -17,7 +17,6 @@ import {
 import { SideBar } from 'layout/sideBar';
 import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react';
-
 import { css } from 'emotion';
 import axios from 'axios';
 
@@ -188,14 +187,13 @@ const GlobalHeader = (props) => {
       axios.get(
         `/gift/${address}?assetId=${assetId}&chainId=${chainId}&giftMode=${giftMode}`,
         {baseURL: globalConf.faucetApi, withCredentials: false}
-      ).then((res) => {
-        if (res.data.error) {
-          toast.error(res.data.message, {position: toast.POSITION.TOP_CENTER})
-        } else {
-          toast.success('Request Send Successfully!', {position: toast.POSITION.TOP_CENTER})
-        }
+      ).then(() => {
+        toast.success('Request Send Successfully!', {position: toast.POSITION.TOP_CENTER})
       })
-        .catch((err) => {toast.dark(err.message, {position: toast.POSITION.TOP_CENTER})})
+        .catch((err) => {
+          const msg = err?.response?.data?.message || err.message
+          toast.dark(msg, {position: toast.POSITION.TOP_CENTER})
+        })
         .finally(() => {setGiftLoading(false)})
     }
   }
