@@ -73,7 +73,7 @@ const DataScreen = (props) => {
   return (
     <div className={styles.box}>
       <div className={styles.container}>
-        <h2>AI data</h2>
+        <h2 className={styles.h2}>AI data</h2>
         <div className={styles.describe}>
           Introducing the Developer home for our protocol's developer
           experience. Protocols in crypto
@@ -99,8 +99,10 @@ const DataScreen = (props) => {
               {datas.map((obj, i) => (
                 <div key={i} className={styles.product}>
                   <img className={styles.more} src={more} />
-                  <div className={styles.dataImg}>
-                    <img className={styles.dataImage} src={obj.image} />
+                  <div style={{
+                    background: `center center / cover no-repeat url(${obj.image})`,
+                  }} className={styles.dataImg}>
+                    {/* <img className={styles.dataImage} src={obj.image} /> */}
                   </div>
                   <div className={styles.avatarBox}>
                     <div className={styles.avatarContent}>

@@ -10,7 +10,7 @@
   border-radius: 10px;
   padding: 31px 30px 0;
 }
-h2 {
+.h2 {
   font-weight: 600;
   font-size: 24px;
   line-height: 16px;
@@ -50,22 +50,23 @@ h2 {
 
 }
 .datas {
-  display: flex;
   margin-top: 52px;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 20px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 
 }
 .product {
   background: #F9FBFC;
   border: 1px solid #E7E7E7;
   border-radius: 24px;
-  width: 345px;
-  width: calc((100% - 120px)/4);
+  //width: 345px;
+  //width: calc((100% - 120px)/4);
   padding: 10px;
   box-sizing: border-box;
   position: relative;
-  margin-right: 40px;
-  margin-bottom: 40px;
+  //margin-right: 40px;
+  //margin-bottom: 40px;
 }
 .product:nth-child(4n) {
   margin-right: 0;
@@ -79,9 +80,9 @@ h2 {
 }
 .dataImg {
   width: 100%;
-  max-height: 141px;
-  max-height: 141px;
+  height: 141px;
   margin-bottom: 14PX;
+  border-radius: 10px;
 }
 .dataImage {
   object-fit:cover;
@@ -154,6 +155,7 @@ h2 {
 .dataCount {
   width: 85px;
   height: 28px;
+  margin: 5px 0;
   position: relative;
   background: #F3F3F3;
   border-radius: 6px;
@@ -192,21 +194,20 @@ h2 {
 
 }
 .competitionBox {
-  height: 177px;
+  //height: 177px;
   box-sizing: border-box;
   padding: 9px;
-  padding-right: 44px;
   background: #F9FBFC;
   border: 1px solid #E7E7E7;
   border-radius: 24px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 26px;
 }
 .compeLeft {
   display: flex;
-
-
+  flex-wrap: wrap;
 }
 .comImg {
   width: 265px;
@@ -214,6 +215,15 @@ h2 {
   object-fit:cover;
   border-radius: 24px;
   margin-right: 37px;
+}
+@media (max-width: 1050px) {
+  .comImg {
+    width: 100%;
+    height: 158px;
+    object-fit:cover;
+    border-radius: 24px;
+    margin-right: 0px;
+  }
 }
 .comContent {
   margin-top: 20px;
@@ -242,6 +252,7 @@ h2 {
 }
 .progress {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 .progressCode {
@@ -280,6 +291,7 @@ h2 {
 }
 .compeRight {
   padding-top: 34px;
+  padding-right: 44px;
 }
 .compeCount {
   font-weight: bold;

@@ -71,17 +71,15 @@ const Market = (props) => {
   console.log(datas, 'datas');
   return (
     <div className={styles.container}>
-      {/* <SoonModal /> */}
       <div className={styles.header}>
         <span className={styles.headerT}>
           Market
-          {/* /Coming Soon */}
         </span>
         <div className={styles.headerR}>
           <Select
             style={{ marginRight: 20 }}
             value={category}
-            placeholder='请选择'
+            placeholder='please choose'
             onChange={(value) => {
               setCategory(value);
             }}
