@@ -418,7 +418,7 @@ const GlobalHeader = (props) => {
                   healthData.list.map((l) => (
                     <Text border="1px solid" p="1rem" color="brand.100" my=".2rem">
                       <label>ChainId:</label>{l.chainId} |
-                      <label>AssetId:</label>{l.address} |
+                      <label>AssetId:</label>{l.assetId} |
                       <label>Address:</label>{l.address} |
                       <label>Amount:</label>{l.amount} |
                       <label>UpdatedAt:</label>{l.updatedAt} |
