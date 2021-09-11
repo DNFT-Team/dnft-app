@@ -100,7 +100,7 @@ const App = (props) => {
                 {
                   <span
                     className={`${styles.navDeText} ${
-                      isActive && styles.navActive
+                      isActive && styles.navDeActive
                     } styleNavText`}
                   >
                     {obj.navName}

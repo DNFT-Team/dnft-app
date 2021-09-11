@@ -15,6 +15,7 @@ import {
 } from '../../utils/contract';
 import { createNFTAbi, tokenAbi, tradableNFTAbi } from '../../utils/abi';
 import dayjs from 'dayjs';
+import './extra.css'
 
 const NFTCard = (props) => {
   const {
@@ -408,9 +409,9 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          background: `url(${item.avatorUrl}) 50% 50% / contain no-repeat`,
+          backgroundImage: `url(${item.avatorUrl})`,
         }}
-        className={styleShortPicture}
+        className="shortPic"
       />
       {/* <div className={styleCollectionIconContainer} onClick={handleSave}>
         <Icon icon='ant-design:inbox-outlined' style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
@@ -543,17 +544,13 @@ const styleCardContainer = css`
   min-width: 288px;
   margin: 20px;
   padding: 8px;
+  border-top: 2px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
   &:hover {
     background: white;
     position: relative;
     top: -20px;
   }
-`;
-
-const styleShortPicture = css`
-  min-height: 220px;
-  border-radius: 24px;
 `;
 
 const styleStarInfo = css`
