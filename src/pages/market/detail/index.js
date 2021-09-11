@@ -255,6 +255,7 @@ const MarketDetailScreen = (props) => {
     return _amount;
   }
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
+  let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
     <div className={styles.marketDetail}>
       <div className={styles.main}>
@@ -313,7 +314,18 @@ const MarketDetailScreen = (props) => {
                 <span className={styles.tokenId}>{datas?.tokenId}</span>
               </div>
             </div>
-
+            <div className={`${styles.chain} ${styles.ipfsAddress}`}>
+              <span className={styles.contract}>ipfs address:</span>
+              <a
+                href={datas?.avatorUrl}
+                className={styles.tokenAddress}
+                target='_blank'
+                rel="noopener noreferrer"
+              >
+                {ipfs_address?.slice(0, 8)}...{ipfs_address?.slice(38)}
+                {/* {datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1]} */}
+              </a>
+            </div>
             <Button
               isLoading={loading}
               disabled={!datas?.quantity || loading}
