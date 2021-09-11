@@ -61,6 +61,7 @@ const NFTCard = (props) => {
     const isEmpty = item.quantity === 0;
     switch (currentStatus.value) {
     case 'INWALLET':
+      const isEmpty = item.quantity === 0;
       return (
         <div className={styleButtonContainer}>
           <div
@@ -76,7 +77,7 @@ const NFTCard = (props) => {
               onShowSellModal();
             }}
           >
-              On Shelf
+              Launch
           </div>
         </div>
       );
@@ -89,7 +90,7 @@ const NFTCard = (props) => {
               onShowOffShelfModal();
             }}
           >
-              Off Shelf
+              Phase Out
           </div>
         </div>
       );
@@ -111,7 +112,7 @@ const NFTCard = (props) => {
       return (
         <div className={styleButtonContainer}>
           <div className={styleText}>
-              Time sold: {dayjs(item.createTime).format('DD/MM/YYYY')}
+            Transaction Time: {dayjs(item.createTime).format('DD/MM/YYYY')}
           </div>
         </div>
       );
@@ -160,7 +161,7 @@ const NFTCard = (props) => {
     return (
       <Dialog
         customClass={styleModalContainer}
-        title="On Shelf"
+        title="Launch"
         visible
         onCancel={() => {
           setShowSellModal(false);
@@ -340,13 +341,14 @@ const NFTCard = (props) => {
         title="Tips"
         size="tiny"
         visible
+        customClass={styleOffShelfModal}
         onCancel={() => {
           setShowOffShelfModal(false);
           setIsOffLoading(false);
         }}
       >
         <Dialog.Body>
-          <span>Are you sure off shelf the nft?</span>
+          <span>Are you sure phase out the nft?</span>
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button
@@ -401,8 +403,8 @@ const NFTCard = (props) => {
           </Button>
         </Dialog.Footer>
       </Dialog>
-    );
-  }, []);
+    )
+  },[isOffLoading])
 
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
@@ -425,7 +427,10 @@ const NFTCard = (props) => {
               alignItems: 'center',
             }}
           >
-            <span className={styleChainType}>{item.chainType}</span>
+            <span>
+              <span className={styleChainType}>{item.chainType}</span>
+              <span className={styleContactype}>{item.contractType}</span>
+            </span>
             <span
               style={{ color: '#FF6059', fontSize: '12px', fontWeight: 'bold' }}
             >
@@ -444,7 +449,7 @@ const NFTCard = (props) => {
           <div className={styleInfo}>
             <span className="title">{item.name}</span>
             <span>
-              Quantity:{' '}
+              Stock:{' '}
               {currentStatus.value === 'SOLD'
                 ? item.quantity * -1
                 : item.quantity || 0}
@@ -534,7 +539,7 @@ const styleSoldOutBanner = css`
 
 const styleCardContainer = css`
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 20px;
   max-width: 288px;
   display: flex;
   flex-direction: column;
@@ -543,9 +548,9 @@ const styleCardContainer = css`
   flex: 1;
   min-width: 288px;
   margin: 20px;
-  padding: 8px;
+  padding: 8px 4px;
   border-top: 2px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E6E8EC;
   &:hover {
     background: white;
     position: relative;
@@ -602,7 +607,7 @@ const styleCollectionIconContainer = css`
 `;
 
 const styleInfoContainer = css`
-  padding: 14px 16px;
+  padding: 14px 0 0 0 ;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -644,6 +649,15 @@ const styleChainType = css`
   border-radius: 8px;
 `;
 
+const styleContactype = css`
+  background: #feddbd;
+  color: #a15f1e;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  margin-left: 10px;
+`
+
 const styleCreateNFT = css`
   background-color: #0049c6;
   color: white;
@@ -665,6 +679,10 @@ const styleCreateNFT = css`
 const styleModalContainer = css`
   width: 564px;
   border-radius: 10px;
+  @media (max-width: 768px) {
+    left: 50%;
+    transform: translateX(-50%) scale(0.55);
+  }
 
   .el-dialog__headerbtn .el-dialog__close {
     color: #233a7d;
@@ -693,3 +711,12 @@ const styleFormItemContainer = css`
     margin-bottom: 10px;
   }
 `;
+
+const styleOffShelfModal = css`
+  @media (max-width: 768px) {
+      left: 50%;
+      transform: translateX(-50%) scale(calc(564/768));
+      width: 100%;
+  }
+
+`

@@ -49,7 +49,7 @@ const AssetScreen = (props) => {
 
   const cateType = [
     { label: 'All', value: 'ALL' },
-    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
     { label: 'Cooection', value: 'COOECTION' },
@@ -470,7 +470,7 @@ const AssetScreen = (props) => {
             <div>{renderTabList}</div>
             <Loading
               loading={isLoading}
-              style={{ position: 'fixed', width: 'calc(100% - 76px)' }}
+              style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex:10000 }}
             />
             <div>
               <Select
@@ -536,8 +536,10 @@ export default withRouter(connect(mapStateToProps)(AssetScreen));
 
 const styleContainer = css`
   background: #f5f7fa;
+  @media (max-width: 900px) {
+    background: transparent;
+  }
   padding: 10px 16px;
-  height: 100%;
   & > div {
     &:first-child {
       background: white;
@@ -768,6 +770,7 @@ const styleNoDataContainer = css`
   flex: 1;
   flex-direction: column;
   color: #233a7d;
+  min-height: 100vh;
   span {
     margin-top: 20px;
   }

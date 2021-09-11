@@ -30,6 +30,8 @@ import globalConfig from '../../config'
 import helper from '../../config/helper';
 import {Icon} from '@iconify/react';
 import {Link, Divider} from '@chakra-ui/react';
+import { setRem } from 'utils/rem';
+import isMobile from 'utils/isMobile';
 
 export const stakingJson = [{
   'name': 'The Spirit Of Silence',
@@ -415,7 +417,7 @@ const Mining = (props) => {
         <div>
           <div className={styleCardTitle}>
             <div>
-              <img src={nft} style={{ width: 40 }} />
+              <img src={nft} />
               <span>DNF Staking Pool</span>
             </div>
             <span>{(stakeInfo?.duration / 30) || 0} Months</span>
@@ -979,8 +981,18 @@ const styleContainer = css`
   background: #f5f7fa;
   padding: 22px 20px 0 20px;
   height: 100%;
+  @media (max-width: 768px) {
+    padding: 22px 12px;
+    background: white;
+  }
   & > div {
     border-radius: 14px;
+    @media (max-width: 768px) {
+      &:first-child{
+        background: #F1F1F1;
+        padding: 10px 18px 0 18px
+      }
+    }
   }
 `;
 
@@ -999,6 +1011,9 @@ const styleHeader = css`
 
 const styleHeaderInfo = css`
   padding: 28px 30px;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 
 const styleAssetAccountContainer = css`
@@ -1008,6 +1023,9 @@ const styleAssetAccountContainer = css`
   span {
     font-weight: bold;
     font-size: 30px;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -1016,11 +1034,18 @@ const styleCapital = css`
   color: #8f9bba;
   position: relative;
   left: 62px;
+  @media (max-width: 768px) {
+    transform: scale(0.5);
+    top: -10px;
+    left: 14px;
+  }
 `;
 
 const styleBody = css`
   padding: 40px 0 0 0;
-
+  @media (max-width: 768px) {
+    padding: 10px 0 0 0;
+  }
   .circular {
     position: relative;
     top: 100px;
@@ -1037,6 +1062,13 @@ const styleIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    top: 4px;
+    position: relative;
+  }
 `;
 
 const styleCoinName = css`
@@ -1047,6 +1079,11 @@ const styleButtonContainer = css`
   display: flex;
   flex-direction: row;
   gap: 40px;
+  @media (max-width: 768px) {
+    justify-content: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #EDEDED;
+  }
 `;
 
 const styleButton = css`
@@ -1058,6 +1095,11 @@ const styleButton = css`
   justify-content: center;
   cursor: pointer;
   font-family: Poppins;
+  @media (max-width: 768px) {
+    border: 2px solid #E6E8EC;
+    border-radius: 12px;
+    padding: 8px 24px;
+  }
 `;
 
 const styleActiveButton = css`
@@ -1073,6 +1115,11 @@ const styleCardList = css`
   background-size: cover;
   min-height: calc(100vh - 360px);
   flex-wrap: wrap;
+  @media (max-width: 768px) {
+    gap: 20px;
+    background: white;
+    margin-top: 20px;
+  }
 `;
 
 const styleCardContainer = css`
@@ -1086,6 +1133,8 @@ const styleCardContainer = css`
   min-width: 370px;
   @media (max-width: 768px) {
     flex: initial;
+    min-width: auto;
+    width: 100%;
   }
   &>div{
     &:first-child{
@@ -1093,6 +1142,9 @@ const styleCardContainer = css`
       padding:16px 16px 20px 30px;
       background:white;
       border-radius: 20px;
+      @media (max-width: 768px) {
+        padding: 10px 18px;
+      }
     }
   }
 `;
@@ -1112,6 +1164,9 @@ const styleCardTitle = css`
   padding-bottom: 16px;
   border-bottom: 1px dashed #EDEDED;
   flex-direction: column;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
   div {
     display: flex;
     align-items: center;
@@ -1119,15 +1174,26 @@ const styleCardTitle = css`
     & > span{
       color: #0834e8;
       opacity: 0.8;
+      @media (max-width: 768px) {
+        font-size: 14px;
+      }
     }
   }
   & > span{
     margin-left: 60px;
     font-size: 14px;
     color: #B3B7DD;
+    @media (max-width: 768px) {
+      margin-left: 40px;
+    }
   }
   img {
     margin-right: 20px;
+    width: 40px;
+    @media (max-width: 768px) {
+      width: 28px;
+      margin-right: 12px;
+    }
   }
 `;
 
@@ -1140,7 +1206,7 @@ const styleBottomContainer = css`
 `
 
 const styleAPY = css`
-  font-size: 14px;
+  font-size: 12px;
   display: flex;
   flex-direction: row;
   align-items: baseline;
@@ -1152,6 +1218,9 @@ const stylePercent = css`
   font-weight: 800;
   color: #ff313c;
   padding-right: 10px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const styleCardInfo = css`
@@ -1160,6 +1229,9 @@ const styleCardInfo = css`
   padding: 22px 0 30px 0;
   border-bottom: 1px dashed #EDEDED;
   justify-content: space-around;
+  @media (max-width: 768px) {
+    padding: 18px 0 10px 0 ;
+  }
 `;
 
 const styleItemContainer = css`
@@ -1172,6 +1244,10 @@ const styleDollar = css`
   font-weight: bold;
   font-size: 20px;
   color: #1B2559;
+  @media (max-width: 768px) {
+    font-size: 12px;
+    transform: scale(0.8);
+  }
 `;
 
 const styleText = css`
@@ -1188,6 +1264,10 @@ const styleCardButton = css`
   justify-content: center;
   align-items: center;
   color: #fff;
+  @media (max-width: 768px) {
+    width: 72px;
+    padding: 8px 0;
+  }
 `;
 
 const styleTab = css`
@@ -1207,6 +1287,10 @@ const styleModalContainer = css`
   border-radius: 10px;
   padding: 30px 20px;
   overflow: auto;
+  @media (max-width: 768px) {
+    left: 50%;
+    transform: translateX(-50%) scale(0.5);
+  }
 
   .el-dialog__header {
     display: flex;
@@ -1214,6 +1298,10 @@ const styleModalContainer = css`
     align-items: center;
     padding: 0 0 24px 0;
     border-bottom: 1px solid #F2F2F2;
+    @media (max-width: 768px) {
+      padding: 0 0 10px 0;
+    }
+
     &::before,
     &::after {
       display: none;
@@ -1237,6 +1325,12 @@ const styleTabContainer = css`
   display: flex;
   flex-direction: row;
   gap: 30px;
+  @media (max-width: 768px) {
+    gap: 18px;
+    span{
+      transform: scale(0.5);
+    }
+  }
 `;
 
 const styleBodyTitle = css`
@@ -1244,6 +1338,11 @@ const styleBodyTitle = css`
   font-size: 24px;
   color: #21242e;
   margin-top: 30px;
+  @media (max-width: 768px) {
+    margin-top: 16px;
+    transform: scale(0.4);
+  }
+
 `;
 
 const styleBodyTips = css`
@@ -1433,6 +1532,11 @@ const styleLabelContainer = css`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 768px) {
+    transform: scale(0.6);
+    right: -12px;
+    top: -6px;
+  }
   div{
     position: relative;
     left: 3px;

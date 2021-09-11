@@ -5,14 +5,13 @@ import {Icon} from '@iconify/react';
 import {
   Grid, GridItem, Box, HStack,
   Heading, Text, Button, Fade,
-  Input, InputGroup, Link,
+  Input, InputGroup, Link, Divider,
   InputLeftElement, InputRightAddon,
   AlertDialog, AlertDialogBody,
   AlertDialogContent, AlertDialogOverlay,
   Drawer, DrawerBody, DrawerHeader,
   DrawerOverlay, DrawerContent, IconButton
 } from '@chakra-ui/react';
-import { Divider } from 'ui-neumorphism'
 import { toast } from 'react-toastify';
 import helper from '../../config/helper';
 import Web3 from 'web3';
@@ -379,7 +378,7 @@ const BridgeScreen = (props) => {
                       Transfer transaction has been written into the chain!<br/>
                       All you need to do now is just waiting for the withdraw.
                     </Text>
-                    <Divider style={{margin: '1rem .8rem'}}/>
+                    <Divider m="1rem .8rem" background="black"/>
                     <p>Transfer {transaction.amount} DNF from {transaction.from} to {transaction.to} at {new Date(transaction.timestamp).toISOString()}</p>
                     <p>You can check via this hash:<Link href={`https://etherscan.io/tx/${transaction.hash}`} color="brand.600" isExternal>{transaction.hash}</Link> </p>
                   </Box>

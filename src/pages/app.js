@@ -132,7 +132,7 @@ const App = (props) => {
           </div>
         </section>
       </Box>
-      <section className={styles.rightContainer}>
+      <section className={styleRightContainer}>
         <GlobalHeader curPath={tab} skipTo={handleTo}/>
         <Router />
       </section>
@@ -249,3 +249,16 @@ const styleLeftNav = css`
     }
   }
 `;
+
+const styleRightContainer = css`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: calc(100% - 256px);
+  background: rgba(245, 247, 250, 1);
+  height: 100vh;
+  overflow: auto;
+  @media (max-width: 768px) {
+    background-color: white;
+  }
+`

@@ -4,7 +4,7 @@ import comSoon from './coming_soon.gif';
 import globalConfig from '../../config'
 const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
   <div style={{
-    zIndex: 888,
+    zIndex: 100000,
     background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
     position: 'fixed',
     top: '64px',
@@ -13,7 +13,11 @@ const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
     right: '0',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    background: 'rgba(0, 0, 0, 0.5)',
+    width: '100vw',
+    height: '100vh',
+    left: 0
   }}>
     <div style={{
       position: 'relative',
