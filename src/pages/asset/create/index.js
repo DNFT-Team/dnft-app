@@ -36,7 +36,7 @@ const CreateNFT = (props) => {
 
   const cateType = [
     // { label: 'Lasted', value: 'LASTED' },
-    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
     { label: 'Cooection', value: 'COOECTION' },
@@ -312,12 +312,20 @@ const styleContainer = css`
   background: #FFFFFF;
   padding: .8rem;
   border-radius: 12px;
+  @media (max-width: 900px) {
+    margin: 16px 0;
+  }
+
   h1 {
     color: #23262f;
     font-size: 38px;
     margin: 0 0 20px 0;
     padding: 0;
     display: flex;
+    @media (max-width: 900px) {
+      font-size: 18px;
+    }
+
   }
   h3 {
     color: #23262f;
@@ -380,7 +388,6 @@ const styleCreateNFT = css`
 const styleAlert = css`
   background-color: #feddbd;
   color: #e27525;
-  height: 60px;
   overflow: initial;
   display: flex;
   align-items: center;
@@ -402,5 +409,8 @@ const styleBackArrow = css`
   &:hover{
     color: #0834e8;
     opacity: .8;
+  }
+  @media (max-width: 900px) {
+    padding:0 10px 0 0 ; 
   }
 `;

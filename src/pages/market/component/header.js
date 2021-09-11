@@ -3,7 +3,7 @@ import styles from '../index.less';
 import { Select } from 'element-react';
 const cateType = [
   { label: 'Lasted', value: 'LASTED' },
-  { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+  { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
   { label: 'Domain', value: 'DOMAIN' },
   { label: 'Art', value: 'ART' },
   { label: 'Cooection', value: 'COOECTION' },

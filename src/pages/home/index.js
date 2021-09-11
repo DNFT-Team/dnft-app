@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getHomeList } from 'reduxs/actions/home';
 import { _setLng } from 'reduxs/actions/lng';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { Carousel } from 'element-react';
+import { useHistory, withRouter } from 'react-router-dom';
+import { Carousel, Loading } from 'element-react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -11,30 +11,24 @@ import { css, cx } from 'emotion';
 import {Icon} from '@iconify/react';
 import syncBtc from '../../images/home/igo-syncbtc.jpg'
 import globalConfig from 'config/index'
+import { getMarketList } from 'reduxs/actions/market';
+import { noDataSvg } from 'utils/svg';
+import { post } from 'utils/request';
+import NFTCard from '../market/component/item';
 
 const HomeScreen = (props) => {
-  const { dispatch, datas, location } = props;
+  const { dispatch, location, token, address } = props;
+  let history = useHistory();
+
+  console.log(token, 'token')
   useEffect(() => {
     dispatch(getHomeList());
   }, []);
   const changeEn = () => {
     dispatch(_setLng());
   };
-
-  const data = [
-    {
-      src: 'http://img02.yohoboys.com/contentimg/2019/03/02/12/0212d8e8832ffd18801979243989648178.jpg',
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: 'https://s.yimg.com/os/creatr-uploaded-images/2021-01/449bc850-619a-11eb-bfbd-0eb0cfb5ab9a',
-      title: 'NFT gallery of the week',
-    },
-    {
-      src: 'http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg',
-      title: 'NFT gallery of the week',
-    }
-  ];
+  const [list , setList] = useState()
+  const [isLoading, setIsLoading] = useState(false);
 
   const dataTop = [
     {
@@ -56,6 +50,36 @@ const HomeScreen = (props) => {
   ]
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
+
+  const getNFTList = useCallback(async () => {
+    try{
+      setIsLoading(true);
+      console.log(token, 'token')
+
+      if (token) {
+        const { data } = await post(
+          '/api/v1/trans/personal',
+          {
+            address: '0xf16d2789cf63edb255a5eb2805d8eda78b4ecbbc',
+            category: 'ALL',
+            page: 0,
+            size: 100,
+            sortOrder: 'ASC',
+            sortTag: 'price',
+            status: 'INWALLET'
+          },
+          token
+        )
+        setList(data?.data?.content || []);
+      }
+    }finally{
+      setIsLoading(false)
+    }
+  },[token]);
+
+  useEffect(() => {
+    getNFTList()
+  }, [token]);
 
   useEffect(() => {
     window.addEventListener('resize', () => currentWindowWidth);
@@ -83,7 +107,7 @@ const HomeScreen = (props) => {
 
       return (
         <Icon
-          icon="ant-design:right-circle-outlined"
+          icon='ant-design:right-circle-outlined'
           className={cx(className, styleNextArrow)}
           style={{
             ...style,
@@ -103,7 +127,7 @@ const HomeScreen = (props) => {
 
     return (
       <Icon
-        icon="ant-design:left-circle-outlined"
+        icon='ant-design:left-circle-outlined'
         className={cx(className, stylePrevArrow)}
         style={{
           ...style,
@@ -143,121 +167,58 @@ const HomeScreen = (props) => {
           infinite: false,
         },
       },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: false,
+        },
+      },
     ],
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     className: styleSliderContainer,
   };
 
-  const ArtCard = (src) => (
-    <div className={styleCard}>
-      <div
-        style={{
-          background: `center / cover no-repeat url('${src.item.src}')`,
-          height: 350,
-          marginBottom: 20,
-          borderRadius: 10,
-        }}
-      />
-      <div>
-        <div className={styleContentContainer}>
-          <span>ShanghaiBar</span>
-          <span className={styleStarContainer}>
-            <Icon icon="ant-design:heart-outlined" />
-            <span className={styleStarAccount}>234</span>
-          </span>
-        </div>
-        <div className={styleContentContainer}>
-          <span>C.K</span>
-          <span>1.8ETH</span>
-        </div>
+  const renderNoData = useMemo(
+    () => (
+      <div className={styleNoDataContainer}>
+        <div>{noDataSvg}</div>
+        <span>No content</span>
       </div>
-    </div>
+    ),
+    []
   );
 
+  const clickDetail = (item) => {
+    console.log(item,'item');
+    history.push('/market/detail')
+  }
+  const renderCard = useCallback(
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
+    []
+  );
+
+  console.log(list, 'list');
   const renderHotList = useCallback((title) => (
     <div className={styleArtContainer}>
       <h1 className={styleTitle}>{title}</h1>
-      <Slider {...settings}>
-        {data.slice(0, 3).map((item, i) => <ArtCard item={item} key={i}/>)}
-        {data.slice(1, 4).map((item, i) => <ArtCard item={item} key={i}/>)}
-        {data.map((item, i) => <ArtCard item={item} key={i}/>)}
-        <div className={styleCard}>
-          <div
-            style={{
-              background: 'center / cover no-repeat url(\'http://www.ruanyifeng.com/blogimg/asset/201211/bg2012111401.jpg\')',
-              height: 350,
-              margin: ' 0 50px 20px 0',
-              backgroundSize: 'cover',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 900,
-              borderRadius: 10,
-            }}
-          >
-              Explore More
-          </div>
-        </div>
-      </Slider>
-    </div>
-  ), []);
-
-  const GameCard = (src) => (
-    <div className={styleCard}>
-      <div
-        style={{
-          background: `center / cover no-repeat url('${src.item.src}')`,
-          height: 350,
-          marginBottom: 20,
-          borderRadius: 10,
-        }}
+      <Loading
+        loading={isLoading}
+        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex:10000 }}
       />
-      <div>
-        <div className={styleContentContainer}>
-          <span>{src.item.name || 'IGO'}</span>
-          <span className={styleStarContainer}>
-            <Icon icon="ant-design:heart-outlined" />
-            <span className={styleStarAccount}>234</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-  const renderGameList = useCallback((title) => (
-    <div className={styleArtContainer}>
-      <h1 className={styleTitle}>{title}</h1>
       <Slider {...settings}>
-        <GameCard item={{src: syncBtc, name: 'Sync BTC', title: 'Sync BTC'}} key='syncBtc'/>
-        {data.slice(0, 3).map((item, i) => <GameCard item={item} key={i}/>)}
-        {data.slice(1, 4).map((item, i) => <GameCard item={item} key={i}/>)}
-        {data.map((item, i) => <GameCard item={item} key={i}/>)}
-        <div className={styleCard}>
-          <div
-            style={{
-              background: 'center / cover no-repeat url(\'http://www.ruanyifeng.com/blogimg/asset/201211/bg2012111401.jpg\')',
-              height: 350,
-              margin: ' 0 50px 20px 0',
-              backgroundSize: 'cover',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontWeight: 900,
-              borderRadius: 10,
-            }}
-          >
-                        Explore More
-          </div>
-        </div>
+        {list?.length > 0
+          ? list.map((item, index) =>  renderCard(item, index))
+          : renderNoData}
       </Slider>
     </div>
-  ), []);
+  ), [list, isLoading]);
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger="click" height={'27rem'}>
+      <Carousel trigger='click' height={'24rem'}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div style={{
@@ -269,14 +230,14 @@ const HomeScreen = (props) => {
           </Carousel.Item>
         ))}
       </Carousel>
-      {renderHotList('Hot Art')}
-      {renderGameList('Hot Game')}
-      {renderHotList('Hot Collections')}
+      {renderHotList('Hot NFTs')}
     </div>
   );
 };
-const mapStateToProps = ({ home }) => ({
-  datas: home.datas,
+const mapStateToProps = ({ home, profile }) => ({
+  address: profile.address,
+  chainType: profile.chainType,
+  token: profile.token,
 });
 export default withRouter(connect(mapStateToProps)(HomeScreen));
 
@@ -300,6 +261,7 @@ const styleContainer = css`
   margin: 10px 16px 0 16px;
   .el-carousel {
     border-radius: 10px;
+    background: white;
     .el-carousel__button {
       width: 10px;
       height: 10px;
@@ -322,36 +284,42 @@ const styleContainer = css`
 const styleNextArrow = css`
   display: block;
   position: absolute;
-  top: -50px;
-  right: 50px;
-  width: 36px;
-  height: 36px;
-  color: #1b2559;
+  top: -34px !important;
+  right: 50px !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #000000 !important;
+  @media (max-width: 768px) {
+    right: 6px !important;
+  }
   &:hover{
     color: #1b2559;
   }
   svg {
-    width: 36px;
-    height: 36px;
-    color: #1b2559;
+    width: 24px;
+    height: 24px;
+    color: #000000;
   }
 `;
 
 const stylePrevArrow = css`
   display: block;
   position: absolute;
-  top: -50px;
-  left: calc(100% - 150px);
-  width: 36px;
-  height: 36px;
-  color: #1b2559;
+  top: -34px !important;
+  left: calc(100% - 120px) !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #000000 !important;
+  @media (max-width: 768px) {
+    left: calc(100% - 70px) !important;
+  }
   &:hover{
     color: #1b2559;
   }
   svg {
-    width: 36px;
-    height: 36px;
-    color: #1b2559;
+    width: 24px;
+    height: 24px;
+    color: #000000;
   }
 `;
 
@@ -362,20 +330,28 @@ const styleCard = css`
 `;
 
 const styleTitle = css`
-  font-size: 40px;
+  font-size: 20px;
   font-weight: bold;
   padding-bottom: 20px;
-  color: #1b2559;
+  color: #000000;
   margin: 0;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const styleArtContainer = css`
-  background: #f6f8fd;
+  background: white;
   padding: 40px 0 56px 32px;
-  margin-top: 30px;
   height: 470px;
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 20px;
+  .circular {
+    position: relative;
+    top: 120px;
+    width: 100px;
+    height: 100px;
+  }
+  @media (max-width: 768px) {
+    padding: 40px 0;
+  }
 `;
 
 const styleSliderContainer = css`
@@ -405,4 +381,19 @@ const styleStarContainer = css`
 const styleStarAccount = css`
   margin-left: 8px;
   font-weight: normal;
+`;
+
+const styleNoDataContainer = css`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  flex-direction: column;
+  color: #233a7d;
+  span {
+    margin-top: 20px;
+  }
 `;

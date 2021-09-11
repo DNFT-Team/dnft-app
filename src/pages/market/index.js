@@ -20,7 +20,7 @@ const Market = (props) => {
   const cateType = [
     { label: 'All', value: 'ALL' },
     { label: 'Latest', value: 'LASTED' },
-    { label: 'Virtual reality', value: 'VIRTUAL_REALITY' },
+    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
     { label: 'Domain', value: 'DOMAIN' },
     { label: 'Art', value: 'ART' },
     { label: 'Cooection', value: 'COOECTION' },
