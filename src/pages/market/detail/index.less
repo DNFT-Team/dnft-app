@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     width: 100%;
     padding: 30px;
-    height: 768px;
+    //height: 768px;
     background-color: #fff;
     //padding: 10px;
     box-sizing: border-box;
@@ -20,12 +20,13 @@
     justify-content: center;
     align-items: center;
 }
+
+
 .detail_img {
     max-width: 100%;
     max-height: 100%;
 }
 .mainR {
-    //width:50%;
     flex: 1;
     margin-left: 20px;
     height: 702px;
@@ -34,6 +35,15 @@
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+}
+@media (max-width: 900px) {
+    .mainL {
+        width: 100%;
+    }
+    .mainR {
+        width: 100%;
+
+    }
 }
 .backBtn{
   width: max-content;
@@ -244,9 +254,20 @@
     height: 20px;
     background: rgb(234, 236, 239);
 }
+.chainInfo {
+    margin-top: 34px;
+    margin-bottom: 34px;
+    padding: 16px;
+    background: #fefefe;
+    -webkit-box-shadow: 0 10px 24px rgb(1 0 95 / 10%);
+    -moz-box-shadow: 0 10px 24px rgba(1,0,95,.1);
+    box-shadow: 0 10px 24px rgb(1 0 95 / 10%);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
 .chain {
-    margin-bottom: 20px;
-
+    margin-bottom: 8px;
 }
 .contract {
     font-weight: 500;
@@ -260,6 +281,9 @@
     font-size: 14px;
     line-height: 16px;
     color: #0066ed;
+}
+.tokenId {
+
 }
 .close {
     width: 38px;

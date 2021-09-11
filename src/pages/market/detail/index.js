@@ -274,7 +274,7 @@ const MarketDetailScreen = (props) => {
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
                 </div>
               </div>
-              <div className={styles.userLine} />
+              {/* <div className={styles.userLine} /> */}
               {/* <div className={styles.user}>
                 <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
@@ -298,16 +298,23 @@ const MarketDetailScreen = (props) => {
             <div className={styles.stock}>
               {datas?.quantity} in stock
             </div>
-            <div className={styles.chain}>
-              <span className={styles.contract}>Contract address:</span>
-              <a
-                href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
-                className={styles.tokenAddress}
-                target='_blank'
-                rel="noopener noreferrer"
-              >
-                {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
-              </a>
+            <div className={styles.chainInfo}>
+              <div className={styles.chain}>
+                <span className={styles.contract}>Contract address:</span>
+                <a
+                  href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
+                  className={styles.tokenAddress}
+                  target='_blank'
+                  rel="noopener noreferrer"
+                >
+                  {/* {datas?.tokenAddress} */}
+                  {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
+                </a>
+              </div>
+              <div>
+                <span className={styles.contract}>Token Id:</span>
+                <span className={styles.tokenId}>{datas?.tokenId}</span>
+              </div>
             </div>
 
             <Button
