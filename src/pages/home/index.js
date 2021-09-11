@@ -256,6 +256,15 @@ const styleCaroTitle = css`
   padding: 1rem 1.2rem;
   backdrop-filter: blur(4px);
   border-radius: 8px;
+  @media (max-width: 768px) {
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    font-size: 24px;
+    text-align: center;
+    padding: 0;
+  }
 `;
 const styleContainer = css`
   margin: 10px 16px 0 16px;

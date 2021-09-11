@@ -94,7 +94,7 @@ const CreateCollectionModal = (props) => {
     <Modal closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
       isCentered isOpen onClose={onClose}>
       <ModalOverlay />
-      <ModalContent width="564px" maxW="initial" className={styleModalContainer}>
+      <ModalContent width="calc(100% - 40px)" maxW="564px" >
         <ModalHeader color="#11142d"
           p="32px" fontSize="18px"
           display="flex" justifyContent="space-between"
@@ -198,10 +198,3 @@ const styleFormItemContainer = css`
     margin-bottom: 10px;
   }
 `;
-
-const styleModalContainer = css`
-  @media (max-width: 900px) {
-    left: 50%;
-    transform: translateX(-50%) scale(0.8) !important;
-  }
-`

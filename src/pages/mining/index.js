@@ -1325,12 +1325,7 @@ const styleTabContainer = css`
   display: flex;
   flex-direction: row;
   gap: 30px;
-  @media (max-width: 768px) {
-    gap: 18px;
-    span{
-      transform: scale(0.5);
-    }
-  }
+
 `;
 
 const styleBodyTitle = css`

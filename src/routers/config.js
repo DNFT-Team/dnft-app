@@ -28,7 +28,7 @@ const nets = ['testnet', 'mainnet']
  */
 const menuAll = [
   { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: true},
-  { net_env: [nets[1]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
+  { net_env: nets, path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
   { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
   { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: true},
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
