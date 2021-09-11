@@ -143,7 +143,7 @@ const ProfileScreen = (props) => {
             <img className={styles.authorImg} src={datas?.avatorUrl} />
             <div className={styles.authorInfo}>
               <div className={styles.authorName}>
-                <span>{datas?.nickName}</span>
+                <span style={{wordBreak: 'break-word'}} className={styles.nickName}>{datas?.nickName}</span>
                 {
                   newAddress === address &&
                   <button onClick={() => history.push('/profile/edit',{datas: datas})} className={styles.editProfile}>
@@ -152,7 +152,7 @@ const ProfileScreen = (props) => {
                 }
               </div>
               <div className={styles.addressBox}>
-                <span className={styles.address}>
+                <span  style={{wordBreak: 'break-word'}}  className={styles.address}>
                   {/* {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`} */}
                   {newAddress}
                 </span>

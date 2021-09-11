@@ -116,7 +116,6 @@ const MarketDetailScreen = (props) => {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
       const dnfAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
       if (!(dnfAuth > 0)) {
-        console.log(dnfAuth,'dnfAuth-allowance')
         await contract.methods
           .approve(
             tradableNFTContract,
@@ -134,7 +133,6 @@ const MarketDetailScreen = (props) => {
       const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract);
       const busdAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
       if (!(busdAuth > 0)) {
-        console.log(busdAuth,'busdAuth-allowance')
         await contract.methods
           .approve(
             tradableNFTContract,
@@ -149,7 +147,6 @@ const MarketDetailScreen = (props) => {
     }
 
   }
-  console.log(datas)
   const clickBuyItem = async () => {
     try {
       if (window.ethereum) {
@@ -186,7 +183,7 @@ const MarketDetailScreen = (props) => {
               console.log('error' ,error)
             }
           }).then(async function (receipt) { // 监听后续的交易情况
-            console.log(receipt)
+            // console.log(receipt)
             setLoading(false)
             const { data } = await post(
               '/api/v1/trans/sell_out',
@@ -249,7 +246,15 @@ const MarketDetailScreen = (props) => {
       console.log(e, 'e');
     }
   };
-
+  const transPrice = (amount) => {
+    if(isNaN(amount)) return amount;
+    let _amount;
+    try {
+      _amount = Number(Number(amount).toFixed(4))
+    }catch(e) {}
+    return _amount;
+  }
+  let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   return (
     <div className={styles.marketDetail}>
       <div className={styles.main}>
@@ -274,23 +279,15 @@ const MarketDetailScreen = (props) => {
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
                 </div>
               </div>
-              {/* <div className={styles.userLine} /> */}
-              {/* <div className={styles.user}>
-                <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div className={styles.userInfoText}>
-                  <p className={styles.owner}>Owner</p>
-                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
-                </div>
-              </div> */}
             </div>
             <div className={styles.desc}>{datas?.description}</div>
             <div className={styles.priceBox}>
               <div className={styles.currentPrice}>
                 <div className={styles.currentPriceTitle}>Current Price</div>
                 <div className={styles.priceAll}>
-                  <h4 className={styles.priceAmount}>{datas.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether')} {datas?.type}</h4>
+                  <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
                   <div className={styles.worth}>≈ $
-                    {datas?.amount}
+                    {transPrice(datas?.amount * price)}
                   </div>
                 </div>
               </div>
