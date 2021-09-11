@@ -2,7 +2,7 @@ import React from 'react';
 import comHead from './dnft_head.png';
 import comSoon from './coming_soon.gif';
 import globalConfig from '../../config'
-const SoonModal = () => (globalConfig.net_env !== 'testnet' ? '' : (
+const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
   <div style={{
     zIndex: 100000,
     background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',

@@ -77,7 +77,7 @@ const NFTCard = (props) => {
               onShowSellModal();
             }}
           >
-              On Shelf
+              Launch
           </div>
         </div>
       );
@@ -90,7 +90,7 @@ const NFTCard = (props) => {
               onShowOffShelfModal();
             }}
           >
-              Off Shelf
+              Phase Out
           </div>
         </div>
       );
@@ -112,7 +112,7 @@ const NFTCard = (props) => {
       return (
         <div className={styleButtonContainer}>
           <div className={styleText}>
-              Time sold: {dayjs(item.createTime).format('DD/MM/YYYY')}
+            Transaction Time: {dayjs(item.createTime).format('DD/MM/YYYY')}
           </div>
         </div>
       );
@@ -161,7 +161,7 @@ const NFTCard = (props) => {
     return (
       <Dialog
         customClass={styleModalContainer}
-        title="On Shelf"
+        title="Launch"
         visible
         onCancel={() => {
           setShowSellModal(false);
@@ -348,7 +348,7 @@ const NFTCard = (props) => {
         }}
       >
         <Dialog.Body>
-          <span>Are you sure off shelf the nft?</span>
+          <span>Are you sure phase out the nft?</span>
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button
