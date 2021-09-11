@@ -151,6 +151,11 @@ const styleContactItem = css`
   text-decoration: none;
   font-size: 23px;
   color: white;
+  transition: color .2s ease-in-out;
+  &:hover {
+    color: #3e9de5;
+    transform: scale(1.2);
+  }
 `;
 
 const styleFootNote = css`
@@ -165,9 +170,8 @@ const styleFootNote = css`
 
 const styleLeftNav = css`
   width: 56px;
-  cursor: pointer;
   background-color: rgb(20, 23, 74);
-  min-height: 100vh;
+  height: 100vh;
   position: sticky;
   top: 0;
   padding: 0 20px;

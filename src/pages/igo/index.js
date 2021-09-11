@@ -93,14 +93,14 @@ export default IGOScreen
 const styleIgo = css`
   margin: 1.357rem;
   border-radius: 1.429rem;
-  min-height: 50vh;
+  //min-height: 50vh;
   text-align: center;
   background: #FFFFFF;
   padding: 6.42rem 0;
   position: relative;
   z-index: 0;
   .content{
-    min-height: calc(100vh - 30rem);
+    //min-height: calc(100vh - 30rem);
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -127,8 +127,7 @@ const styleIgo = css`
     .cardList{
       padding: 1.5rem 0;
       box-sizing: border-box;
-      width: max-content;
-      min-width: 60%;
+      width: 80%;
       margin: 5.357rem auto;
       background: transparent;
       .cardBox{

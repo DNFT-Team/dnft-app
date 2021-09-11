@@ -73,14 +73,16 @@ const CreateNFT = (props) => {
         },
         token
       );
+      let list = data?.data?.content || []
       setOptions(
-        data?.data?.content?.map((item) => ({
+        list.map((item) => ({
           label: item.name,
           value: item.id,
         }))
       );
     } catch (e) {
       console.log(e, 'e');
+      setOptions([]);
     }
   };
 
@@ -215,9 +217,7 @@ const CreateNFT = (props) => {
         )}
         {renderFormItem(
           'Collection',
-          <div style={{
-            display: 'flex'
-          }}>
+          <div style={{display: 'flex'}}>
             <Select
               placeholder='Please choose'
               defaultValue={form.collectionId}
@@ -381,14 +381,12 @@ const styleAlert = css`
   background-color: #feddbd;
   color: #e27525;
   height: 60px;
+  overflow: initial;
   display: flex;
   align-items: center;
   position: sticky;
-  top: 84px;
+  top: 64px;
   z-index: 2;
-  .el-icon-close {
-    top: 24px;
-  }
 `;
 const styleBackArrow = css`
   position: sticky;
