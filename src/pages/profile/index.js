@@ -142,10 +142,19 @@ const ProfileScreen = (props) => {
           <div className={styles.left}>
             <img className={styles.authorImg} src={datas?.avatorUrl} />
             <div className={styles.authorInfo}>
-              <div className={styles.authorName}>{datas?.nickName}</div>
+              <div className={styles.authorName}>
+                <span>{datas?.nickName}</span>
+                {
+                  newAddress === address &&
+                  <button onClick={() => history.push('/profile/edit',{datas: datas})} className={styles.editProfile}>
+                    <span>Edit Profile</span>
+                  </button>
+                }
+              </div>
               <div className={styles.addressBox}>
                 <span className={styles.address}>
-                  {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`}
+                  {/* {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`} */}
+                  {newAddress}
                 </span>
                 <img
                   className={styles.copyAddress}
@@ -166,7 +175,7 @@ const ProfileScreen = (props) => {
               </div>
             </div>
           </div>
-          {
+          {/* {
             newAddress === address &&
             <div className={styles.profileEdit}>
               <div
@@ -176,7 +185,7 @@ const ProfileScreen = (props) => {
                 Edit Profile
               </div>
             </div>
-          }
+          } */}
         </div>
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>

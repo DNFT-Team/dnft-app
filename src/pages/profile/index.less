@@ -12,7 +12,8 @@
   width: 100%;
   box-sizing: border-box;
   height: 223px;
-  padding: 71px 87px 0 27px;
+  //padding: 71px 87px 0 27px;
+  padding: 50px;
   background: #ffffff;
   box-shadow: 0px 9px 20px rgba(27, 37, 89, 0.1);
   border-radius: 20px;
@@ -24,24 +25,38 @@
   display: flex;
 }
 .authorImg {
-  min-width: 120px;
-  min-height: 120px;
-  max-width: 120px;
-  max-height: 120px;
-  margin-right: 48px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 20px;
   display: block;
   border: 0;
   border-color: #fff;
 
 }
 .authorInfo {
-  margin-top: 13px;
+  //margin-top: 13px;
 }
 .authorName {
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 32px;
   color: #000000;
+  font-weight: 700;
+    font-size: 26px;
+    line-height: 36px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.editProfile {
+    flex-shrink: 0;
+    //background: hsla(0,0%,100%,.1);
+    height: 34px;
+    padding: 0 14px;
+    //color: #fff;
+    border-radius: 17px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 18px;
 }
 .title {
   font-weight: bold;
@@ -53,12 +68,12 @@
 .addressBox {
   display: flex;
   align-items: center;
-  height: 32px;
-  margin-bottom: 5px;
+  //height: 32px;
+  //margin-bottom: 5px;
 }
 .address {
   font-size: 16px;
-  line-height: 32px;
+  line-height: 21px;
   color: #000000;
 }
 .copyAddress {

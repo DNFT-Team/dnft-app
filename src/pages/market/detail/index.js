@@ -290,7 +290,7 @@ const MarketDetailScreen = (props) => {
                 <div className={styles.priceAll}>
                   <h4 className={styles.priceAmount}>{datas.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether')} {datas?.type}</h4>
                   <div className={styles.worth}>≈ $
-                    {/* 3,090.75  */}
+                    {datas?.amount}
                   </div>
                 </div>
               </div>
