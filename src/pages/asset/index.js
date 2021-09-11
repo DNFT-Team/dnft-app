@@ -770,7 +770,7 @@ const styleNoDataContainer = css`
   flex: 1;
   flex-direction: column;
   color: #233a7d;
-  min-height: 100vh;
+  min-height: calc(100vh - 400px);
   span {
     margin-top: 20px;
   }
