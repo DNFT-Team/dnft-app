@@ -6,7 +6,7 @@ import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
 import { Dialog, Input } from 'element-react';
 import {
   Box, Avatar, Link,
-  Button, Tooltip, Text,
+  Button, Text,
   Menu, MenuButton,
   MenuList, MenuGroup,
   MenuItem, MenuDivider,
@@ -244,33 +244,31 @@ const GlobalHeader = (props) => {
   ]
   const renderFaucet = () => (
     globalConf.net_env === 'testnet' && address && (
-      <Tooltip hasArrow label="Get More Token" bg="red.600">
-        <Menu closeOnSelect>
-          <MenuButton as={Button} colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem">
-            FAUCET
-          </MenuButton>
-          <MenuList width="max-content">
-            {
-              menuData.map((item) => (
-                <MenuGroup title={item.token}>
-                  {
-                    item.giftModes.map((gift) => (
-                      <MenuItem color={item.color} fontWeight="bolder" boxSizing="border-box"
-                        onClick={() => {
-                          getToken(item.assetId, item.chainId, gift.value)
-                        }}>{gift.label}</MenuItem>
-                    ))
-                  }
-                </MenuGroup>
-              ))
-            }
-            <MenuDivider />
-            <MenuGroup title="More+">
-              <MenuItem fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItem>
-            </MenuGroup>
-          </MenuList>
-        </Menu>
-      </Tooltip>
+      <Menu closeOnSelect>
+        <MenuButton as={Button} colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem">
+              FAUCET
+        </MenuButton>
+        <MenuList width="max-content">
+          {
+            menuData.map((item) => (
+              <MenuGroup title={item.token}>
+                {
+                  item.giftModes.map((gift) => (
+                    <MenuItem color={item.color} fontWeight="bolder" boxSizing="border-box"
+                      onClick={() => {
+                        getToken(item.assetId, item.chainId, gift.value)
+                      }}>{gift.label}</MenuItem>
+                  ))
+                }
+              </MenuGroup>
+            ))
+          }
+          <MenuDivider />
+          <MenuGroup title="More+">
+            <MenuItem fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItem>
+          </MenuGroup>
+        </MenuList>
+      </Menu>
     )
   )
 
@@ -550,6 +548,7 @@ const styleSearchContainer = css`
 `;
 
 const styleHasAddress = css`
+  cursor: pointer;
   height: 40px;
   border-radius: 8px;
   display: flex;
