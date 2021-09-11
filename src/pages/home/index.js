@@ -33,12 +33,27 @@ const HomeScreen = (props) => {
     {
       src: 'http://crawl.ws.126.net/901d09e9cb27673f0b0d852cc6fe411f.jpg',
       title: 'NFT gallery of the week',
+    }
+  ];
+
+  const dataTop = [
+    {
+      src: 'https://test.dnft.world/temp/top2.jpg',
+      title: 'NFT gallery of the week',
+    },
+    {
+      src: 'https://test.dnft.world/temp/top1.png',
+      title: 'GameFi news early',
+    },
+    {
+      src: 'https://test.dnft.world/temp/top3.png',
+      title: 'AI mixture thoughts',
     },
     {
       src: `${globalConfig.ipfsDown}/QmapcMxp8vBJQPywMwfzr8WykuGXJkxDwFhMFquDEq8aFN`,
       title: 'NFT metaData via IPFS',
     }
-  ];
+  ]
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
 
@@ -242,23 +257,14 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger="click" height={'70vh'}>
-        {data?.map((item, index) => (
+      <Carousel trigger="click" height={'27rem'}>
+        {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div style={{
               height: '100%',
               background: "center / cover no-repeat url('" + item.src + "')",
             }}>
-              <span style={{
-                position: 'absolute',
-                bottom: '90px',
-                left: '36px',
-                fontSize: '64px',
-                fontWeight: 'bold',
-                color: 'white',
-              }}>
-                {item.title}
-              </span>
+              <span className={styleCaroTitle}>{item.title}</span>
             </div>
           </Carousel.Item>
         ))}
@@ -274,6 +280,22 @@ const mapStateToProps = ({ home }) => ({
 });
 export default withRouter(connect(mapStateToProps)(HomeScreen));
 
+const styleCaroTitle = css`
+  position: absolute;
+  bottom: 90px;
+  left: 36px;
+  font-family: Poppins , sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 48px;
+  letter-spacing: -0.5px;
+  color: white;
+  background: linear-gradient(60deg, rgba(0,0,0,.6), rgba(0,0,0,.2));
+  padding: 1rem 1.2rem;
+  backdrop-filter: blur(4px);
+  border-radius: 8px;
+`;
 const styleContainer = css`
   margin: 10px 16px 0 16px;
   .el-carousel {

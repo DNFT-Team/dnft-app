@@ -12,7 +12,7 @@ import './index.less';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // [ui-neumorphism/](https://akaspanion.github.io/ui-neumorphism)
-import 'ui-neumorphism/dist/index.css';
+// import 'ui-neumorphism/dist/index.css';
 // Chakra-UI(https://chakra-ui.com/docs/getting-started)
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 const theme = extendTheme({
