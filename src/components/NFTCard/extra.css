@@ -1,6 +1,6 @@
 .shortPic{
     min-height: 280px;
-    border-radius: 20px;
+    border-radius: 16px;
     background-size: cover;
     background-repeat: no-repeat;
     animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
