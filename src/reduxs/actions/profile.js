@@ -94,8 +94,6 @@ export const setProfileToken = (params = {}) => (dispatch) => {
   dispatch({ type: GET_MY_PROFILE_TOKEN.PENDING });
   return post('/api/v1/auth/nonce', params)
     .then((res) => {
-      console.log('-------------------- GET_MY_PROFILE_LIST result is:', res)
-
       if (res && res.status == 200) {
         dispatch({
           type: GET_MY_PROFILE_TOKEN.SUCCESS, payload: {
@@ -116,7 +114,6 @@ export const setProfileToken = (params = {}) => (dispatch) => {
 export const setProfileLike = (params = {}, token) => (dispatch) => (
   post('/api/v1/nft/like', params, token)
     .then((res) => {
-      console.log('-------------------- GET_MY_PROFILE_LIST result is:', res)
 
       if (res && res.status == 200) {
         dispatch({
@@ -138,7 +135,6 @@ export const setProfileLike = (params = {}, token) => (dispatch) => (
 export const setProfileSave = (params = {}, token) => (dispatch) => (
   post('/api/v1/nft/save', params, token)
     .then((res) => {
-      console.log('-------------------- GET_MY_PROFILE_LIST result is:', res)
 
       if (res && res.status == 200) {
         dispatch({
