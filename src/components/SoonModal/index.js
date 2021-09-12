@@ -4,29 +4,20 @@ import comSoon from './coming_soon.gif';
 import globalConfig from '../../config'
 const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
   <div style={{
-    zIndex: 100000,
-    background: 'radial-gradient(rgba(0,0,0,0.9),transparent 70%,transparent 80%, transparent)',
-    position: 'fixed',
-    top: '64px',
-    bottom: '0',
-    left: '240px',
-    right: '0',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'rgba(0, 0, 0, 0.5)',
-    width: '100vw',
-    height: '100vh',
-    left: 0
+    zIndex: 3,
+    position: 'sticky',
+    top: '84px',
+    width: '100%',
   }}>
     <div style={{
-      position: 'relative',
+      position: 'absolute',
       width: '100%',
-      height: '100%',
+      height: '100vh',
       display: 'flex',
       flexFlow: 'column nowrap',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      background: 'rgba(0, 0, 0, 0.6)',
     }}>
       <img src={comHead} alt="DNFT" style={{
         width: '7%',

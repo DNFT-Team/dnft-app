@@ -9,35 +9,7 @@ import { MENU_MAP } from 'routers/config';
 import { MenuToggle } from './MenuToggle';
 import Logo from 'images/home/dnftLogo.png';
 import Head from 'images/asset/Head.svg';
-
-
-const connectIconArray = [
-  {
-    name: 'github',
-    url: 'https://github.com/DNFT-Team/',
-    icon: 'jam:github-circle',
-  },
-  {
-    name: 'telegram',
-    url: 'https://t.me/dnftprotocol',
-    icon: 'ri:telegram-line',
-  },
-  // {
-  //   name: 'discord',
-  //   url: 'https://discord.gg/pxEZB7ny',
-  //   icon: 'jam:discord',
-  // },
-  {
-    name: 'twitter',
-    url: 'https://twitter.com/DNFTProtocol',
-    icon: 'jam:twitter-circle',
-  },
-  {
-    name: 'medium',
-    url: 'https://medium.com/dnft-protocol',
-    icon: 'jam:medium-circle',
-  },
-];
+import {contactData} from 'config/helper'
 
 const variantsSidebar = {
   open: {
@@ -149,7 +121,7 @@ export const SideBar = ({address, location, skipTo}) => {
           ))}
         </motion.ul>
         <div className={styleContactUs}>
-          {connectIconArray.map((item, i) => (
+          {contactData.map((item, i) => (
             <a
               className="item"
               href={item.url} target='_blank'
