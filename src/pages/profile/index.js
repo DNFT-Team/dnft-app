@@ -188,7 +188,7 @@ const ProfileScreen = (props) => {
         </div>
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>
-        <div className={styleCardList}>
+        <div className={renderAction(selectedTab)?.length > 0 ? styleCardList : styleCardListEmpty}>
           {renderAction(selectedTab)?.length > 0
             ? renderAction(selectedTab)?.map((item, index) => (
               renderCard(item, index)
@@ -231,8 +231,14 @@ const styleCardList = css`
   display: grid;
   gap: 20px 19px;
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
-`;
 
+`;
+const styleCardListEmpty = css`
+  display: grid;
+  gap: 20px 19px;
+  grid-template-columns: repeat(auto-fill);
+
+`;
 const styleModalContainer = css`
   width: 340px;
   border-radius: 40px;
