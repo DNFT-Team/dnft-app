@@ -23,14 +23,12 @@ const ProfileEditScreen = (props) => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
   const datas = location?.state?.datas
-  console.log(datas,'datas,lkjljlj')
   const [form, setForm] = useState({
-    avatorUrl: null,
+    avatorUrl: datas?.avatorUrl,
     nickName: datas?.nickName,
     twitterAddress: datas?.twitterAddress,
     facebookAddress: datas?.facebookAddress,
   });
-  console.log(location,'location')
   const renderFormItem = (label, item) => {
     console.log(label, 'label');
     return (
@@ -40,39 +38,35 @@ const ProfileEditScreen = (props) => {
       </div>
     );
   };
-  const handleAvatarScucess = (file) => {
-    console.log(3132131, file);
-    // return;
-    setForm({
-      ...form,
-      avatorUrl: file,
-    });
-    setImageUrl(URL.createObjectURL(file));
-  };
-  const beforeAvatarUpload = (file) => {
-    console.log(file);
-    const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/gif';
-    if (!isJPG) {
-      toast.warn('上传图片格式!', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      return false;
-    }
-    setImageUrl(URL.createObjectURL(file));
 
-    return isJPG;
-  };
+  const uploadFile = async (file) => {
+    try {
+      const fileData = new FormData();
+      fileData.append('file', file);
+      const {data} = await post('/api/v1/file/uploadFile', fileData, token);
+      if (data.success) {
+        const url =  data?.data?.src
+        url && setForm({ ...form, avatorUrl: url });
+      } else {
+        toast.error(data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    } catch (e) {
+      console.log(e, 'e');
+    }
+  }
   const editProfile = async () => {
     console.log(form,'form')
     setLoading(true)
     const formData = new FormData();
     // formData.append('address', address);
-    formData.append('id', datas?.id)
-    form?.avatorUrl && formData.append('avator', form?.avatorUrl);
-    form?.nickName && formData.append('nickName', form?.nickName);
-    form?.twitterAddress && formData.append('twitterAddress', form?.twitterAddress);
-    form?.facebookAddress && formData.append('facebookAddress', form?.facebookAddress);
-    console.log(form,datas?.id,'form?.avatorUrl')
+    formData.append('address', datas?.address)
+    formData.append('avatorUrl', form?.avatorUrl);
+    formData.append('nickName', form?.nickName);
+    formData.append('twitterAddress', form?.twitterAddress);
+    formData.append('facebookAddress', form?.facebookAddress);
+
     const { data } = await post(
       '/api/v1/users/updateUser',
       formData,
@@ -103,11 +97,11 @@ const ProfileEditScreen = (props) => {
             showFileList={false}
             accept={'.png,.gif,.jpeg,jpg'}
             limit={1}
-            httpRequest={(e) => {
-              handleAvatarScucess(e.file);
-            }}
+            action=""
+            httpRequest={(e) => {uploadFile(e.file)}}
+
           >
-            {<img src={imageUrl || datas?.avatorUrl || camera} className={styles.avatarImg} />}
+            {<img src={imageUrl || form?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>
           {renderFormItem(
             'Name',
