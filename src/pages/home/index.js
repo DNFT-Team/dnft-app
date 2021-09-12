@@ -56,22 +56,10 @@ const HomeScreen = (props) => {
       setIsLoading(true);
       console.log(token, 'token')
 
-      if (token) {
-        const { data } = await post(
-          '/api/v1/trans/personal',
-          {
-            address: '0xf16d2789cf63edb255a5eb2805d8eda78b4ecbbc',
-            category: 'ALL',
-            page: 0,
-            size: 100,
-            sortOrder: 'ASC',
-            sortTag: 'price',
-            status: 'INWALLET'
-          },
-          token
-        )
-        setList(data?.data?.content || []);
-      }
+      const { data } = await post(
+        '/api/v1/info/hot',
+      )
+      setList(data?.data?.content || []);
     }finally{
       setIsLoading(false)
     }
@@ -193,7 +181,7 @@ const HomeScreen = (props) => {
 
   const clickDetail = (item) => {
     console.log(item,'item');
-    history.push('/market/detail',{item})
+    history.push('/market/detail',{item,category: item.category,sortTag: item.sortTag})
   }
   const renderCard = useCallback(
     (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
