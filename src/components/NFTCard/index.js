@@ -188,7 +188,7 @@ const NFTCard = (props) => {
           {renderFormItem(
             'Type',
             <Select
-              style={{ width: 300 }}
+              style={{ width: '100%' }}
               value={sellForm.type}
               placeholder="please choose"
               onChange={(value) => {
@@ -677,12 +677,9 @@ const styleCreateNFT = css`
 `;
 
 const styleModalContainer = css`
-  width: 564px;
+  max-width: 564px;
+  width: calc(100% - 40px);
   border-radius: 10px;
-  @media (max-width: 768px) {
-    left: 50%;
-    transform: translateX(-50%) scale(0.55);
-  }
 
   .el-dialog__headerbtn .el-dialog__close {
     color: #233a7d;
@@ -699,7 +696,7 @@ const styleModalContainer = css`
     padding: 0 32px 32px 32px;
   }
   .el-input-number {
-    width: 300px;
+    width: 100%;
   }
 `;
 
@@ -713,10 +710,6 @@ const styleFormItemContainer = css`
 `;
 
 const styleOffShelfModal = css`
-  @media (max-width: 768px) {
-      left: 50%;
-      transform: translateX(-50%) scale(calc(564/768));
-      width: 100%;
-  }
-
+  max-width: 564px;
+  width: calc(100% - 40px);
 `

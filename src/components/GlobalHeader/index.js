@@ -313,7 +313,7 @@ const GlobalHeader = (props) => {
       {/*  <i className='el-icon-search' />*/}
       {/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
       {/* </div>*/}
-      <Box className={styles.actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
+      <Box className={actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         {renderFaucet()}
         <span
           className={address ? styleHasAddress : styleAddress}
@@ -381,8 +381,11 @@ const GlobalHeader = (props) => {
         </div>
         <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>
       </Box>
-      <Box className={styles.actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
-        <strong>DNFT Protocol</strong>
+      <Box className={actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
+        <Box display="flex" alignItems="center">
+          <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem" />
+          <strong>DNFT Protocol</strong>
+        </Box>
         <Box display="flex" alignItems="center">
           <Avatar src={Head} mr="1.5rem" width="2rem" height="2rem"  onClick={() => {history.push('/asset')}}/>
           <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
@@ -442,8 +445,6 @@ const mapStateToProps = ({ profile }) => ({
 export default (connect(mapStateToProps)(GlobalHeader));
 const styleHeader = css`
   display: flex;
-  height: 64px;
-  padding: 10px 30px 10px 56px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -595,4 +596,14 @@ const styleAssetTarget = css`
     font-size: 14px;
     font-weight: bold;
   }
+`
+const actionContainer  = css`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  //margin-left: 20px;
+  height: 64px;
+  padding: 10px 30px 10px 56px;
+  align-items: center;
+  color: #233a7d;
 `

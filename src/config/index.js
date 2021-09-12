@@ -1,6 +1,7 @@
 const baseUrl = 'https://bkapi.dnft.world'
 export default {
   net_env: process.env.REACT_APP_NET_ENV,
+  // net_env: 'mainnet',
   baseUrl,
   /*java-core-api*/
   backendApi: baseUrl + `/api`,

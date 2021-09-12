@@ -8,10 +8,11 @@ import { connect } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom';
 import Logo from 'images/home/dnftLogo.png';
 import GlobalHeader from 'components/GlobalHeader';
-import { css } from 'emotion';
+import { css, cx } from 'emotion';
 import { Icon } from '@iconify/react';
 import {Box, Tag, TagLabel} from '@chakra-ui/react'
 import globalConf from 'config/index'
+import {contactData} from 'config/helper'
 
 const App = (props) => {
   const { t, i18n } = useTranslation();
@@ -33,36 +34,11 @@ const App = (props) => {
     setTab(value.path);
   };
 
-  const contectIconArray = [
-    {
-      name: 'github',
-      url: 'https://github.com/DNFT-Team/',
-      icon: 'jam:github-circle',
-    },
-    {
-      name: 'telegram',
-      url: 'https://t.me/dnftprotocol',
-      icon: 'ri:telegram-line',
-    },
-    // {
-    //   name: 'discord',
-    //   url: 'https://discord.gg/pxEZB7ny',
-    //   icon: 'jam:discord',
-    // },
-    {
-      name: 'twitter',
-      url: 'https://twitter.com/DNFTProtocol',
-      icon: 'jam:twitter-circle',
-    },
-    {
-      name: 'medium',
-      url: 'https://medium.com/dnft-protocol',
-      icon: 'jam:medium-circle',
-    },
-  ];
+  const [shrink, setShrink] = useState(false);
+
   return (
     <section className={styles.container}>
-      <Box className={styleLeftNav} display={['none', 'none', 'block', 'block', 'block']}>
+      <Box className={cx(styleLeftNav, shrink && styleLeftFull)} display={['none', 'none', 'block', 'block', 'block']}>
         <div className={'styleLogoContainer'}>
           <img className={styles.logo} src={Logo} alt='logo' />
           <span className='logoText'>DNFT Protocol</span>
@@ -78,7 +54,7 @@ const App = (props) => {
         >
           <TagLabel>{globalConf.net_env}</TagLabel>
         </Tag>
-        <section className={styles.menu}>
+        <section>
           {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;
 
@@ -110,9 +86,12 @@ const App = (props) => {
             );
           })}
         </section>
+        <Box textAlign="center" my="1rem">
+          <Icon className={cx(styleShrinkIco, shrink && styleShrinkRotate)} icon={'mdi-light:chevron-double-right'} onClick={() => {setShrink(!shrink)}}/>
+        </Box>
         <section className={'styleFootNoteContainer'}>
           <div className={styleContactUs}>
-            {contectIconArray.map((item, i) => (
+            {contactData.map((item, i) => (
               <a
                 className={styleContactItem}
                 href={item.url}
@@ -217,38 +196,38 @@ const styleLeftNav = css`
     bottom: 5vh;
     display: none;
   }
-  &:hover {
-    width: 216px;
-    z-index: 100000;
-    .logoText {
-      display: block;
-    }
-    .styleNavText {
-      visibility: visible;
-    }
+`;
+const styleLeftFull = css`
+  width: 216px;
+  z-index: 100000;
+  .logoText {
+    display: block;
+  }
+  .styleNavText {
+    visibility: visible;
+  }
 
-    .styleNavContainer {
-      padding: 14px 58px 14px 64px;
-      & > div {
-        margin-right: 20px;
-      }
-    }
-
-    .styleLogoContainer {
-      margin-left: 6px;
-      img {
-        position: relative;
-        left: 0;
-      }
-    }
-
-    .styleFootNoteContainer {
-      position: absolute;
-      bottom: 5vh;
-      display: block;
+  .styleNavContainer {
+    padding: 14px 58px 14px 64px;
+    & > div {
+      margin-right: 20px;
     }
   }
-`;
+
+  .styleLogoContainer {
+    margin-left: 6px;
+    img {
+      position: relative;
+      left: 0;
+    }
+  }
+
+  .styleFootNoteContainer {
+    position: absolute;
+    bottom: 5vh;
+    display: block;
+  }
+`
 
 const styleRightContainer = css`
   display: flex;
@@ -261,4 +240,16 @@ const styleRightContainer = css`
   @media (max-width: 768px) {
     background-color: white;
   }
+`
+const styleShrinkIco = css`
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 42px;
+  transition: all .2s ease-in-out;
+  &:hover{
+    font-size: 46px;
+  }
+`
+const styleShrinkRotate = css`
+ transform: rotate(180deg);
 `
