@@ -193,7 +193,7 @@ const HomeScreen = (props) => {
 
   const clickDetail = (item) => {
     console.log(item,'item');
-    history.push('/market/detail')
+    history.push('/market/detail',{item})
   }
   const renderCard = useCallback(
     (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
