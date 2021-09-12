@@ -15,7 +15,9 @@ import {
 import copy from 'copy-to-clipboard';
 import { css, cx } from 'emotion';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
-import NFTCard from './card';
+// import NFTCard from './card';
+import NFTCard from 'components/NFTCard';
+
 import { toast } from 'react-toastify';
 
 const ProfileScreen = (props) => {
@@ -134,7 +136,7 @@ const ProfileScreen = (props) => {
     },
     [selectedTab]
   );
-  console.log({datas})
+  // console.log({datas})
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -163,14 +165,11 @@ const ProfileScreen = (props) => {
                 />
               </div>
               <div className={styles.contactImg}>
-                <a>
-                  <Icon icon='ri:telegram-line' />
-                </a>
                 <a href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
-                  <Icon  icon='jam:twitter-circle' />
+                  <Icon width="25" color={'#0072ff'} icon='jam:twitter-circle' />
                 </a>
-                <a>
-                  <Icon icon='jam:medium-circle' />
+                <a href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
+                  <Icon width="25" color={'#0072ff'} icon='jam:facebook-circle' />
                 </a>
               </div>
             </div>
@@ -229,11 +228,9 @@ const styleActiveTabButton = css`
 `;
 
 const styleCardList = css`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  // height: 100%;
-  margin-top: 20px;
+  display: grid;
+  gap: 20px 19px;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
 `;
 
 const styleModalContainer = css`

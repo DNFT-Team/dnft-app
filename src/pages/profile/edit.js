@@ -68,8 +68,8 @@ const ProfileEditScreen = (props) => {
     const formData = new FormData();
     // formData.append('address', address);
     formData.append('id', datas?.id)
-    formData.append('avator', form?.avatorUrl);
-    formData.append('nickName', form?.nickName);
+    form?.avatorUrl && formData.append('avator', form?.avatorUrl);
+    form?.nickName && formData.append('nickName', form?.nickName);
     form?.twitterAddress && formData.append('twitterAddress', form?.twitterAddress);
     form?.facebookAddress && formData.append('facebookAddress', form?.facebookAddress);
     console.log(form,datas?.id,'form?.avatorUrl')
