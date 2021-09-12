@@ -38,6 +38,7 @@ const NFTCard = (props) => {
   const [isApproveLoading, setIsAprroveLoading] = useState(false);
   const [isOnLoading, setIsOnLoading] = useState(false);
   const [isOffLoading, setIsOffLoading] = useState(false);
+  const [showPhaseOut, setShowPhaseOut] = useState(false);
 
   const onShowSellModal = () => {
     setShowSellModal(true);
@@ -65,7 +66,7 @@ const NFTCard = (props) => {
       return (
         <div className={styleButtonContainer}>
           <div
-            className={cx(styleButton, styleBorderButton)}
+            className={cx(styleButton)}
             style={{
               opacity: isEmpty ? 0.5 : 1,
               cursor: isEmpty ? 'not-allowed' : 'pointer',
@@ -405,6 +406,7 @@ const NFTCard = (props) => {
       </Dialog>
     )
   },[isOffLoading])
+  const isEmpty = item.quantity === 0;
 
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
@@ -415,50 +417,97 @@ const NFTCard = (props) => {
         }}
         className="shortPic"
       />
+      <span className={styleChainType}><span className='dot'></span>{item.chainType}</span>
+      {currentStatus.value === 'ONSALE' &&  <div className={stylePhaseOutContainer} onClick={() => {
+        setShowPhaseOut(!showPhaseOut)
+      }}>
+        <span className='dot'></span>
+        <span className='dot'></span>
+        <span className='dot'></span>
+        <span style={{display: showPhaseOut ? 'flex' : 'none'}} className={stylePhaseOut}><span onClick={() => {
+          onShowOffShelfModal()
+        }}>Phase Out</span></span>
+      </div>}
       {/* <div className={styleCollectionIconContainer} onClick={handleSave}>
         <Icon icon='ant-design:inbox-outlined' style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
       </div> */}
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <span>
-              <span className={styleChainType}>{item.chainType}</span>
-              <span className={styleContactype}>{item.contractType}</span>
-            </span>
-            <span
-              style={{ color: '#FF6059', fontSize: '12px', fontWeight: 'bold' }}
+          <div className={styleInfo}>
+            <span className="title">{item.name}</span>
+            {
+              currentStatus.value === 'INWALLET' && <div
+                className={cx(styleButton)}
+                style={{
+                  opacity: isEmpty ? 0.5 : 1,
+                  cursor: isEmpty ? 'not-allowed' : 'pointer',
+                }}
+                onClick={() => {
+                  if (isEmpty) {
+                    return;
+                  }
+                  onShowSellModal();
+                }}
+              >
+                  Launch
+              </div>
+            }
+            {currentStatus.value !== 'INWALLET' && <span
+              style={{ color: '#45B36B', fontSize: '12px', padding:'2px 6px', fontWeight: '600', border: '2px solid #45B36B', borderRadius: '4px' }}
             >
               {item.price > 0 &&
                 ['ONSALE', 'SOLD'].includes(currentStatus.value) &&
                 `${Web3.utils.fromWei(String(item.price), 'ether')} ${
                   item.type || ''
                 }`}
+            </span>}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '8px'
+            }}
+          >
+            <span style={{
+              fontSize: '12px',
+              whiteSpace: 'nowrap',
+              display: 'flex'
+            }}>
+              <span style={{marginRight:'24px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                maxWidth: '120px',
+                textOverflow: 'ellipsis'}}>
+                Stock:{' '}
+                <span style={{color: 'rgba(17, 45, 242, 1)'}}>
+                  {currentStatus.value === 'SOLD'
+                    ? item.quantity * -1
+                    : item.quantity || 0}
+                </span>
+              </span>
+              <span>Contract type:{item.contractType}</span>
             </span>
+            <div
+              style={{
+                backgroundImage: `url(${item.userAvatorUrl})`,
+                width: '24px',
+                height: '24px',
+                borderRadius: '24px',
+              }}
+            />
             {/* <div className={styleStarInfo}> */}
             {/* <div className={styleStarIconContainer} onClick={handleLike}>
               <Icon icon='ant-design:heart-filled' style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
             </div> */}
             {/* </div> */}
           </div>
-          <div className={styleInfo}>
-            <span className="title">{item.name}</span>
-            <span>
-              Stock:{' '}
-              {currentStatus.value === 'SOLD'
-                ? item.quantity * -1
-                : item.quantity || 0}
-            </span>
-          </div>
+          {currentStatus.value === 'SOLD' && <div>Transaction Time: {dayjs(item.createTime).format('DD/MM/YYYY')}</div>}
         </div>
-        {needAction && (
+        {/* {needAction && (
           <div className={styleActionContainer}>{renderAction(item)}</div>
-        )}
+        )} */}
       </div>
       {showSellModal && renderSellModal}
       {showOffShelfModal && renderOffShelfModal}
@@ -502,13 +551,15 @@ const styleConfirmOff = css`
 
 const styleButton = css`
   display: flex;
-  flex: 1;
-  height: 40px;
-  display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   cursor: pointer;
+  background: rgba(17, 45, 242, 1);
+  color: white;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
 `;
 
 const stylePrice = css`
@@ -540,15 +591,15 @@ const styleSoldOutBanner = css`
 const styleCardContainer = css`
   background: #ffffff;
   border-radius: 20px;
-  max-width: 288px;
+  max-width: 270px;
   display: flex;
   flex-direction: column;
   /* cursor: pointer; */
   position: relative;
   flex: 1;
-  min-width: 288px;
-  margin: 20px;
-  padding: 8px 4px;
+  min-width: 270px;
+  margin: 10px;
+  padding: 7px;
   border-top: 2px solid rgba(0, 0, 0, 0.05);
   border: 1px solid #E6E8EC;
   &:hover {
@@ -612,14 +663,15 @@ const styleInfoContainer = css`
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
+  color: rgba(143, 155, 186, 1);
+  font-size: 12px;
 `;
 
 const styleCardHeader = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f5f7fa;
+  padding-bottom: 8px;
   position: relative;
 `;
 
@@ -628,8 +680,7 @@ const styleInfo = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
-  color: #11142d;
+  margin-bottom: 24px;
   .title {
     color: #11142d;
     flex: 1;
@@ -638,15 +689,32 @@ const styleInfo = css`
     text-overflow: ellipsis;
     display: block;
     margin-right: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #11142d;
   }
 `;
 
 const styleChainType = css`
-  background: #feddbd;
-  color: #a15f1e;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  position: absolute;
+  font-weight: 500;
+  background: rgba(255, 96, 89, 0.8);
+  display: flex;
+  align-items: center;
+  top: 18px;
+  left: 12px;
+  .dot {
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 6px;
+    background: white;
+    margin-right: 6px;
+    display: inline-block;
+  }
 `;
 
 const styleContactype = css`
@@ -712,4 +780,44 @@ const styleFormItemContainer = css`
 const styleOffShelfModal = css`
   max-width: 564px;
   width: calc(100% - 40px);
+`
+
+const stylePhaseOutContainer = css`
+  position: absolute;
+  top: 24px;
+  right: 18px;
+  display: flex;
+  cursor: pointer;
+  padding: 6px;
+  .dot {
+    background: #747474;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    margin: 0 1px;
+  }
+`
+
+const stylePhaseOut = css`
+  &:before {
+    display:block;
+    content:'';
+    border-width:6px 4px 6px 12px;
+    border-style:solid;
+    border-color:transparent transparent white transparent;
+    /* 定位 */
+    position:absolute;
+    right: 16px;
+    top:-12px;
+  }
+  position: absolute;
+  background: white;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  padding: 6px 10px;
+  white-space: nowrap;
+  right: -8px;
+  top: 20px;
 `
