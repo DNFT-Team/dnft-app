@@ -24,7 +24,7 @@ export const getMyProfileList = (params = {},token) => (dispatch) => {
 }
 export const getMyProfileBatch = (params = {},token) => (dispatch) => {
   dispatch({ type: GET_MY_PROFILE_BATCH.PENDING });
-  return post('/api/v1/nft/batch', params, token)
+  return post('/api/v1/collection/batch', params, token)
     .then((res) => {
       if (res && res.status == 200) {
         dispatch({

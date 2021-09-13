@@ -196,7 +196,7 @@ const MarketDetailScreen = (props) => {
               },
               token
             );
-            toast[data?.success ? 'success' : 'error'](data?.message, {
+            toast[data?.success ? 'success' : 'error']('Buy success', {
               position: toast.POSITION.TOP_CENTER,
             });
             historyBack();

@@ -64,8 +64,8 @@ const ProfileEditScreen = (props) => {
     formData.append('address', datas?.address)
     formData.append('avatorUrl', form?.avatorUrl);
     formData.append('nickName', form?.nickName);
-    formData.append('twitterAddress', form?.twitterAddress);
-    formData.append('facebookAddress', form?.facebookAddress);
+    formData.append('twitterAddress', form?.twitterAddress || '');
+    formData.append('facebookAddress', form?.facebookAddress || '');
 
     const { data } = await post(
       '/api/v1/users/updateUser',
