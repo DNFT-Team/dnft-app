@@ -9,11 +9,13 @@ import { withRouter } from 'react-router-dom';
 import Web3 from 'web3';
 import {
   bscTestTokenContact,
-  createNFTContract,
+  createNFTContract1155,
+  createNFTContract721,
   tokenContract,
   tradableNFTContract,
+  tradableNFTContract721,
 } from '../../utils/contract';
-import { createNFTAbi, tokenAbi, tradableNFTAbi } from '../../utils/abi';
+import { createNFTAbi1155, createNFTAbi721, tokenAbi, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
 import dayjs from 'dayjs';
 import './extra.css'
 
@@ -164,6 +166,7 @@ const NFTCard = (props) => {
         customClass={styleModalContainer}
         title="Launch"
         visible
+        closeOnClickModal={false}
         onCancel={() => {
           setShowSellModal(false);
           setIsAprroveLoading(false);
@@ -175,6 +178,7 @@ const NFTCard = (props) => {
           {renderFormItem(
             'Quantity',
             <InputNumber
+              disabled={item.contractType == 721}
               min={1}
               max={item.quantity}
               defaultValue={1}
@@ -236,36 +240,63 @@ const NFTCard = (props) => {
 
                   if (isApproved) {
                     try {
+                      const is721Contract = item.contractType == 721;
+
                       setIsOnLoading(true);
-                      const contractAddress = tradableNFTContract;
                       const myContract = new window.web3.eth.Contract(
-                        tradableNFTAbi,
-                        contractAddress
+                        is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
+                        is721Contract ? tradableNFTContract721 : tradableNFTContract
                       );
 
                       let putOnResult;
                       if (sellForm.type === 'DNFT') {
-                        putOnResult = await myContract.methods
-                          .putOnByDnft(
-                            item.tokenAddress,
-                            item.tokenId,
-                            Web3.utils.toWei(String(sellForm.price), 'ether'),
-                            sellForm.quantity
-                          )
-                          .send({
-                            from: address,
-                          });
+                        if (is721Contract) {
+                          putOnResult = await myContract.methods
+                            .putOnByDnft(
+                              item.tokenAddress,
+                              item.tokenId,
+                              Web3.utils.toWei(String(sellForm.price), 'ether'),
+                            )
+                            .send({
+                              from: address,
+                            });
+                        } else {
+                          putOnResult = await myContract.methods
+                            .putOnByDnft(
+                              item.tokenAddress,
+                              item.tokenId,
+                              Web3.utils.toWei(String(sellForm.price), 'ether'),
+                              sellForm.quantity
+                            )
+                            .send({
+                              from: address,
+                            });
+                        }
+
                       } else if (sellForm.type === 'BUSD') {
-                        putOnResult = await myContract.methods
-                          .putOnByBusd(
-                            item.tokenAddress,
-                            item.tokenId,
-                            Web3.utils.toWei(String(sellForm.price), 'ether'),
-                            sellForm.quantity
-                          )
-                          .send({
-                            from: address,
-                          });
+                        if (is721Contract) {
+                          putOnResult = await myContract.methods
+                            .putOnByBusd(
+                              item.tokenAddress,
+                              item.tokenId,
+                              Web3.utils.toWei(String(sellForm.price), 'ether'),
+                            )
+                            .send({
+                              from: address,
+                            });
+
+                        } else {
+                          putOnResult = await myContract.methods
+                            .putOnByBusd(
+                              item.tokenAddress,
+                              item.tokenId,
+                              Web3.utils.toWei(String(sellForm.price), 'ether'),
+                              sellForm.quantity
+                            )
+                            .send({
+                              from: address,
+                            });
+                        }
                       }
                       const orderId =
                         putOnResult?.events?.PutOn?.returnValues?.orderId;
@@ -295,19 +326,20 @@ const NFTCard = (props) => {
                     }
                   } else {
                     try {
+                      const is721Contract = item.contractType == 721;
                       setIsAprroveLoading(true);
                       const dnfTokenContract = new window.web3.eth.Contract(
-                        createNFTAbi,
-                        createNFTContract
+                        is721Contract ? createNFTAbi721 : createNFTAbi1155,
+                        is721Contract ? createNFTContract721 : createNFTContract1155
                       );
 
                       let isApproved = await dnfTokenContract.methods
-                        .isApprovedForAll(address, tradableNFTContract)
+                        .isApprovedForAll(address, is721Contract ? tradableNFTContract721 : tradableNFTContract)
                         .call();
 
                       if (!isApproved) {
                         let result = await dnfTokenContract.methods
-                          .setApprovalForAll(tradableNFTContract, true)
+                          .setApprovalForAll(is721Contract ? tradableNFTContract721 : tradableNFTContract, true)
                           .send({
                             from: address,
                           });
@@ -342,6 +374,7 @@ const NFTCard = (props) => {
         title="Tips"
         size="tiny"
         visible
+        closeOnClickModal={false}
         customClass={styleOffShelfModal}
         onCancel={() => {
           setShowOffShelfModal(false);
@@ -369,10 +402,11 @@ const NFTCard = (props) => {
                   let ethereum = window.ethereum;
                   window.web3 = new Web3(ethereum);
                   await ethereum.enable();
+                  const is721Contract = item.contractType == 721;
 
-                  const contractAddress = tradableNFTContract;
+                  const contractAddress = is721Contract ? tradableNFTContract721 : tradableNFTContract;
                   const myContract = new window.web3.eth.Contract(
-                    tradableNFTAbi,
+                    is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
                     contractAddress
                   );
 
@@ -405,7 +439,7 @@ const NFTCard = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  },[isOffLoading])
+  }, [isOffLoading])
   const isEmpty = item.quantity === 0;
 
   return (
@@ -453,7 +487,7 @@ const NFTCard = (props) => {
               </div>
             }
             {currentStatus.value !== 'INWALLET' && <span
-              style={{ color: '#45B36B', fontSize: '12px', padding:'2px 6px', fontWeight: '600', border: '2px solid #45B36B', borderRadius: '4px' }}
+              style={{ color: '#45B36B', fontSize: '12px', padding: '2px 6px', fontWeight: '600', border: '2px solid #45B36B', borderRadius: '4px' }}
             >
               {item.price > 0 &&
                 ['ONSALE', 'SOLD'].includes(currentStatus.value) &&
@@ -475,7 +509,7 @@ const NFTCard = (props) => {
               whiteSpace: 'nowrap',
               display: 'flex'
             }}>
-              <span style={{marginRight:'24px',
+              <span style={{marginRight: '24px',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 maxWidth: '120px',
@@ -492,6 +526,7 @@ const NFTCard = (props) => {
             <div
               style={{
                 backgroundImage: `url(${item.userAvatorUrl})`,
+                backgroundSize: 'contain',
                 width: '24px',
                 height: '24px',
                 borderRadius: '24px',

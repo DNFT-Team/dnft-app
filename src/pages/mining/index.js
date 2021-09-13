@@ -909,6 +909,7 @@ const Mining = (props) => {
         customClass={styleModalContainer}
         title={renderTab}
         visible={isVisible}
+        closeOnClickModal={false}
         onCancel={() => {
           setIsVisible(false);
           setStakeTab('stake');
