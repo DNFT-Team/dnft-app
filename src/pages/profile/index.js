@@ -129,6 +129,7 @@ const ProfileScreen = (props) => {
           item={item}
           index={index}
           needAction={true}
+          isProfile={true}
           currentStatus={selectedTab}
           newAddress={newAddress}
         />

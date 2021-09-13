@@ -30,6 +30,7 @@ const NFTCard = (props) => {
     onLike,
     onSave,
     onRefresh,
+    isProfile
   } = props;
   const [showSellModal, setShowSellModal] = useState(false);
   const [showOffShelfModal, setShowOffShelfModal] = useState(false);
@@ -486,7 +487,7 @@ const NFTCard = (props) => {
                   Launch
               </div>
             }
-            {currentStatus.value !== 'INWALLET' && <span
+            {currentStatus.value !== 'INWALLET' && !isProfile && <span
               style={{ color: '#45B36B', fontSize: '12px', padding: '2px 6px', fontWeight: '600', border: '2px solid #45B36B', borderRadius: '4px' }}
             >
               {item.price > 0 &&

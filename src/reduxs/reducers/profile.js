@@ -1,5 +1,6 @@
 import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED, GET_MY_PROFILE_SAVE, GET_MY_PROFILE_LIKE} from '../types/profile';
-
+import globalConf from 'config/index';
+const URL_CLOUD =  globalConf.staticApi;
 const initialState = {
   pending: false,
   datas: null,
@@ -40,9 +41,13 @@ const Profile = (state = initialState, action) => {
       token: action.payload.data
     }
   case GET_MY_PROFILE_BATCH.SUCCESS:
+    let _batch = Array.isArray(action.payload.data) && action.payload.data.slice() || [];
+    _batch.map((obj) => {
+      obj.avatorUrl = URL_CLOUD + obj.avatorUrl;
+    })
     return {
       ...state,
-      batch: action.payload.data
+      batch: _batch
     }
   case GET_MY_PROFILE_OWNED.SUCCESS:
     return {
