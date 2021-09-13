@@ -8,7 +8,7 @@ import {
   Loading
 } from 'element-react';
 import { css } from 'emotion';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import globalConf from 'config/index';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
 import { post } from 'utils/request';
@@ -18,9 +18,10 @@ import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react'
-import { createNFTContract } from '../../../utils/contract';
-import { createNFTAbi } from '../../../utils/abi';
+import { createNFTContract1155, createNFTContract721 } from '../../../utils/contract';
+import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi';
 import Web3 from 'web3';
+import globalConfig from '../../../config';
 
 const CreateNFT = (props) => {
   const { dispatch, datas, location, address, chainType, token } = props;
@@ -30,9 +31,19 @@ const CreateNFT = (props) => {
   const [form, setForm] = useState({
     supply: 1,
   });
+
+  const [nftUrl, setNftUrl] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
+
+  const paramsMap = {
+    name: 'name',
+    collectionId: 'collection',
+    category: 'category',
+    contractType: 'contact type',
+    supply: 'supply'
+  }
 
   const cateType = [
     // { label: 'Lasted', value: 'LASTED' },
@@ -44,17 +55,18 @@ const CreateNFT = (props) => {
     { label: 'Game', value: 'GAME' },
   ];
 
+  const contractType = [
+    { label: '1155', value: '1155' },
+    { label: '721', value: '721' },
+  ];
+
   const uploadFile = async (file) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
 
       const { data } = await ipfs_post('/v0/add', fileData);
-
-      setForm({
-        ...form,
-        avatorUrl: data.Hash,
-      });
+      return data;
     } catch (e) {
       console.log(e, 'e');
     }
@@ -86,9 +98,74 @@ const CreateNFT = (props) => {
     }
   };
 
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    if (history.location.pathname !== '/asset/create') {
+      return;
+    }
+    try {
+      if (globalConfig.net_env === 'testnet') {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x61',
+              chainName: 'Smart Chain Test',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+            },
+          ],
+        });
+      } else {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x38',
+              chainName: 'Smart Chain',
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'bnb',
+                decimals: 18,
+              },
+              rpcUrls: ['https://bsc-dataseed.binance.org/'],
+            },
+          ],
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error);
+      return false;
+    }
+  }, []);
+
   const createNFT = async () => {
     if (!['BSC'].includes(chainType)) {
-      toast.dark('Wrong network', {
+      goToRightNetwork(window.ethereum);
+      return;
+    }
+
+    let inValidParam = Object.entries(paramsMap).find((item) => {
+      if (item[0] === 'supply' && form.contractType == '721') {
+        return false
+      }
+      return form[item[0]] === undefined;
+    });
+
+    if (!nftUrl) {
+      toast.dark('please upload NFT', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+
+    if (inValidParam) {
+      toast.dark(`please input ${inValidParam[1]}`, {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
@@ -101,37 +178,75 @@ const CreateNFT = (props) => {
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
 
-        const contractAddress = createNFTContract;
-        const myContract = new window.web3.eth.Contract(
-          createNFTAbi,
-          contractAddress
-        );
-        const createNFTResult = await myContract.methods
-          .create(
-            address,
-            form.supply,
-            `${globalConf.ipfsDown}${form.avatorUrl}`,
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-          )
-          .send({
-            from: address,
-          });
-        if (createNFTResult.transactionHash) {
-          const result = await post(
-            '/api/v1/nft/',
-            {
-              ...form,
-              address: address,
-              chainType: chainType,
-              hash: createNFTResult.transactionHash,
-              tokenId: createNFTResult.events.TransferSingle.returnValues.id,
-              tokenAddress: contractAddress,
-              avatorUrl: `${globalConf.ipfsDown}${form.avatorUrl}`,
-            },
-            token
+        let createNFTResult;
+        let contractAddress = form.contractType == 1155 ?  createNFTContract1155 : createNFTContract721
+
+        if (form.contractType == 1155) {
+          const myContract = new window.web3.eth.Contract(
+            createNFTAbi1155,
+            contractAddress
           );
-          history.push('/asset')
+          createNFTResult = await myContract.methods
+            .create(
+              address,
+              form.supply,
+              `${globalConf.ipfsDown}${nftUrl}`,
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
+            )
+            .send({
+              from: address,
+            });
+          if (createNFTResult.transactionHash) {
+            const result = await post(
+              '/api/v1/nft/',
+              {
+                ...form,
+                address: address,
+                chainType: chainType,
+                hash: createNFTResult.transactionHash,
+                tokenId: createNFTResult.events.TransferSingle.returnValues.id,
+                tokenAddress: contractAddress,
+                avatorUrl: `${globalConf.ipfsDown}${nftUrl}`,
+              },
+              token
+            );
+            history.push('/asset')
+          }
+        } else {
+          const myContract = new window.web3.eth.Contract(
+            createNFTAbi721,
+            contractAddress
+          );
+          createNFTResult = await myContract.methods
+            .create(
+              address,
+              `${globalConf.ipfsDown}${nftUrl}`,
+            )
+            .send({
+              from: address,
+            });
+          console.log(createNFTResult, 'createNFTResult')
+
+          if (createNFTResult.transactionHash) {
+
+            const result = await post(
+              '/api/v1/nft/',
+              {
+                ...form,
+                address: address,
+                supply: 1,
+                chainType: chainType,
+                hash: createNFTResult.transactionHash,
+                tokenId: createNFTResult.events.Transfer.returnValues.tokenId,
+                tokenAddress: contractAddress,
+                avatorUrl: `${globalConf.ipfsDown}${nftUrl}`,
+              },
+              token
+            );
+            history.push('/asset')
+          }
         }
+
       }
     } finally {
       setIsLoading(false)
@@ -172,8 +287,9 @@ const CreateNFT = (props) => {
           withCredentials
           action='https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/'
           limit={1}
-          httpRequest={(e) => {
-            uploadFile(e.file);
+          httpRequest={async (e) => {
+            let result = await uploadFile(e.file);
+            setNftUrl(result.Hash)
           }}
           fileList={form?.file ? [form?.file] : undefined}
           tip={
@@ -182,7 +298,7 @@ const CreateNFT = (props) => {
             </div>
           }
         >
-          {form.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.ipfsDown + form.avatorUrl} alt="avatar"/> : ''}
+          {nftUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.ipfsDown + nftUrl} alt="avatar"/> : ''}
           <i className='el-icon-upload2'></i>
           <div className='el-upload__text'>
             PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
@@ -240,6 +356,25 @@ const CreateNFT = (props) => {
           </div>
         )}
         {renderFormItem(
+          'Contact Type',
+          <Select
+            placeholder='Please choose'
+            onChange={(value) => {
+              setForm({
+                ...form,
+                contractType: value,
+              });
+            }}
+          >
+            {contractType.map((el) => <Select.Option
+              key={el.value}
+              label={el.label}
+              value={el.value}
+            />
+            )}
+          </Select>
+        )}
+        {renderFormItem(
           'Category',
           <Select
             placeholder='Please choose'
@@ -258,7 +393,7 @@ const CreateNFT = (props) => {
             )}
           </Select>
         )}
-        {renderFormItem(
+        {form.contractType != '721' && renderFormItem(
           'Supply',
           <InputNumber
             defaultValue={1}
@@ -344,11 +479,12 @@ const styleUploadContainer = css`
       flex-direction: column;
       color: #777e90;
       background-color: #f4f5f6;
-      height: 182px;
+      min-height: 182px;
       width: 500px;
       justify-content: center;
       border-radius: 10px;
       border: none;
+      height: auto;
       @media (max-width: 900px) {
         width: inherit;
       }
