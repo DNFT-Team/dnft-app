@@ -22,9 +22,9 @@ import globalConf from '../../config'
 import {curveArrow, combineArrow} from '../../utils/svg';
 import styles from './index.less';
 import bgWindow from '../../images/bridge/bg_window.png';
-import IconEth from '../../images/networks/eth.png';
-import IconBsc from '../../images/networks/bsc.png';
-import IconHeco from '../../images/networks/heco.png';
+import IconEth from '../../images/networks/logo_select_eth.svg';
+import IconBsc from '../../images/networks/logo_select_bsc.svg';
+import IconHeco from '../../images/networks/logo_heco.svg';
 
 /* Available network*/
 const NetOptions = [
