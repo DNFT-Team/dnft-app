@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getHomeList } from 'reduxs/actions/home';
+// import { getHomeList } from 'reduxs/actions/home';
 import { _setLng } from 'reduxs/actions/lng';
 import { connect } from 'react-redux';
 import { useHistory, withRouter } from 'react-router-dom';
@@ -9,8 +9,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { css, cx } from 'emotion';
 import {Icon} from '@iconify/react';
-import syncBtc from '../../images/home/igo-syncbtc.jpg'
-import globalConfig from 'config/index'
 import { getMarketList } from 'reduxs/actions/market';
 import { noDataSvg } from 'utils/svg';
 import { post } from 'utils/request';
@@ -20,13 +18,16 @@ const HomeScreen = (props) => {
   const { dispatch, location, token, address } = props;
   let history = useHistory();
 
-  console.log(token, 'token')
-  useEffect(() => {
-    dispatch(getHomeList());
-  }, []);
+  // console.log(token, 'token')
+
+  // useEffect(() => {
+  //   dispatch(getHomeList());
+  // }, []);
+
   const changeEn = () => {
     dispatch(_setLng());
   };
+
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
 
