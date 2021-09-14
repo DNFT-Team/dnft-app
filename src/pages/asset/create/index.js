@@ -24,7 +24,7 @@ import Web3 from 'web3';
 import globalConfig from '../../../config';
 
 const CreateNFT = (props) => {
-  const { dispatch, datas, location, address, chainType, token } = props;
+  const { dispatch, datas, location, address, chainType, token, categoryList } = props;
 
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
@@ -385,12 +385,9 @@ const CreateNFT = (props) => {
               });
             }}
           >
-            {cateType.map((el) => <Select.Option
-              key={el.value}
-              label={el.label}
-              value={el.value}
-            />
-            )}
+            {categoryList?.map((el) => (
+              <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
+            ))}
           </Select>
         )}
         {form.contractType != '721' && renderFormItem(
@@ -433,9 +430,10 @@ const CreateNFT = (props) => {
   );
 };
 
-const mapStateToProps = ({ profile }) => ({
+const mapStateToProps = ({ profile, market }) => ({
   address: profile.address,
   chainType: profile.chainType,
+  categoryList: market.category,
   token: profile.token,
 });
 export default withRouter(connect(mapStateToProps)(CreateNFT));

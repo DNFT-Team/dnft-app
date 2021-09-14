@@ -33,13 +33,14 @@ import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 import Head from '../../images/asset/Head.svg';
 import Logo from '../../images/home/dnftLogo.png';
+import { getCategoryList } from 'reduxs/actions/market';
 
 const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
 
 const GlobalHeader = (props) => {
   let history = useHistory();
-  const { dispatch, chainType } = props;
+  const { dispatch, chainType, token } = props;
   const ref = useRef();
 
   const [isNetListVisible, setIsNetListVisible] = useState(false);
@@ -242,6 +243,13 @@ const GlobalHeader = (props) => {
       ]
     }
   ]
+  useEffect(() => {
+    if (token) {
+      dispatch(
+        getCategoryList(null, token)
+      );
+    }
+  }, [token])
   const renderFaucet = () => (
     globalConf.net_env === 'testnet' && address && (
       <Menu closeOnSelect>
@@ -440,7 +448,8 @@ const GlobalHeader = (props) => {
 // export default GlobalHeader;
 const mapStateToProps = ({ profile }) => ({
   myAddress: profile.address,
-  chainType: profile.chainType
+  chainType: profile.chainType,
+  token: profile.token
 });
 export default (connect(mapStateToProps)(GlobalHeader));
 const styleHeader = css`

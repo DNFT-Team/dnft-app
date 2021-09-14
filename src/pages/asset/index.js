@@ -20,9 +20,10 @@ import globalConfig from '../../config';
 import { stakingJson } from 'pages/mining';
 import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
+// import { getCategoryList } from 'reduxs/actions/market';
 
 const AssetScreen = (props) => {
-  const { dispatch, location, address, chainType, token } = props;
+  const { dispatch, location, address, chainType, token, categoryList } = props;
   const isTestNet = globalConfig.net_env === 'testnet';
 
   const tabArray = isTestNet
@@ -480,12 +481,8 @@ const AssetScreen = (props) => {
                   setCategory(value);
                 }}
               >
-                {cateType.map((el) => (
-                  <Select.Option
-                    key={el.value}
-                    label={el.label}
-                    value={el.value}
-                  />
+                {categoryList?.map((el) => (
+                  <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
                 ))}
               </Select>
               {isTestNet && (
@@ -527,9 +524,10 @@ const AssetScreen = (props) => {
   );
 };
 
-const mapStateToProps = ({ profile }) => ({
+const mapStateToProps = ({ profile, market }) => ({
   address: profile.address,
   chainType: profile.chainType,
+  categoryList: market.category,
   token: profile.token,
 });
 export default withRouter(connect(mapStateToProps)(AssetScreen));

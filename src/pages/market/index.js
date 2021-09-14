@@ -6,7 +6,7 @@ import { noDataSvg } from 'utils/svg';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
-import { getMarketList, getCategoryList } from 'reduxs/actions/market';
+import { getMarketList } from 'reduxs/actions/market';
 const Market = (props) => {
   let history = useHistory();
   const { dispatch, token, datas, categoryList, pending, location } = props;
@@ -32,14 +32,6 @@ const Market = (props) => {
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
-
-  useEffect(() => {
-    if (token) {
-      dispatch(
-        getCategoryList(null, token)
-      );
-    }
-  }, [token])
 
   useEffect(() => {
     if (token) {
