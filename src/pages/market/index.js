@@ -6,10 +6,10 @@ import { noDataSvg } from 'utils/svg';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
-import { getMarketList } from 'reduxs/actions/market';
+import { getMarketList, getCategoryList } from 'reduxs/actions/market';
 const Market = (props) => {
   let history = useHistory();
-  const { dispatch, token, datas, pending, location } = props;
+  const { dispatch, token, datas, categoryList, pending, location } = props;
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
 
@@ -32,6 +32,14 @@ const Market = (props) => {
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
+
+  useEffect(() => {
+    if (token) {
+      dispatch(
+        getCategoryList(null, token)
+      );
+    }
+  }, [token])
 
   useEffect(() => {
     if (token) {
@@ -85,8 +93,8 @@ const Market = (props) => {
               setCategory(value);
             }}
           >
-            {cateType.map((el) => (
-              <Select.Option key={el.value} label={el.label} value={el.value} />
+            {categoryList?.map((el) => (
+              <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
             ))}
           </Select>
           <Select
@@ -124,6 +132,7 @@ const Market = (props) => {
 const mapStateToProps = ({ profile, market }) => ({
   token: profile.token,
   datas: market.datas,
+  categoryList: market.category,
   pending: market.pending,
 });
 export default withRouter(connect(mapStateToProps)(Market));

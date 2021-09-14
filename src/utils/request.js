@@ -86,7 +86,7 @@ export default function request (url, options) {
 }
 
 export const get = (url, params, token) => request(
-  `${url}?${stringify({ ...params })}`,
+  params ? `${url}?${stringify({ ...params })}` : url,
   {
     method: 'GET',
     headers: {

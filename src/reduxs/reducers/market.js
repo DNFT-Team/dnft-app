@@ -1,9 +1,9 @@
-import { GET_MARKET_LIST } from '../types/market';
+import { GET_MARKET_LIST, GET_CATEGORY_LIST } from '../types/market';
 
 const initialState = {
   pending: false,
   datas: null,
-
+  category: null
 }
 const market = (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +22,11 @@ const market = (state = initialState, action) => {
     return {
       ...state,
       pending: false,
+    }
+  case GET_CATEGORY_LIST.SUCCESS:
+    return {
+      ...state,
+      category: action.payload.data
     }
   default:  return state
   }
