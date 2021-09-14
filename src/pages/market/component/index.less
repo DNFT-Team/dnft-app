@@ -12,11 +12,22 @@
   box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
 }
 .styleShortPicture {
+  position: relative;
   min-height: 220px;
   border-radius: 18px;
   background-size: cover;
   background-repeat: no-repeat;
   animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
+}
+.styleNoPicture::after{
+  content: attr(noDataText);
+  position: absolute;
+  color: #1B225C;
+  font-weight: bolder;
+  font-size: 2rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 @keyframes nftFlow {
   0%,100%{

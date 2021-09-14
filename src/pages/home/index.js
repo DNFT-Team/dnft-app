@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getHomeList } from 'reduxs/actions/home';
+// import { getHomeList } from 'reduxs/actions/home';
 import { _setLng } from 'reduxs/actions/lng';
 import { connect } from 'react-redux';
 import { useHistory, withRouter } from 'react-router-dom';
@@ -9,8 +9,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { css, cx } from 'emotion';
 import {Icon} from '@iconify/react';
-import syncBtc from '../../images/home/igo-syncbtc.jpg'
-import globalConfig from 'config/index'
 import { getMarketList } from 'reduxs/actions/market';
 import { noDataSvg } from 'utils/svg';
 import { post } from 'utils/request';
@@ -20,39 +18,42 @@ const HomeScreen = (props) => {
   const { dispatch, location, token, address } = props;
   let history = useHistory();
 
-  console.log(token, 'token')
-  useEffect(() => {
-    dispatch(getHomeList());
-  }, []);
+  // console.log(token, 'token')
+
+  // useEffect(() => {
+  //   dispatch(getHomeList());
+  // }, []);
+
   const changeEn = () => {
     dispatch(_setLng());
   };
-  const [list , setList] = useState()
+
+  const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
 
   const dataTop = [
     {
+      src: 'https://test.dnft.world/temp/top3.png',
+      title: 'DNFT MINING',
+      position: 'right',
+      route: '/mining'
+    },
+    {
       src: 'https://test.dnft.world/temp/top2.jpg',
-      title: 'NFT gallery of the week',
+      title: 'NFT MARKET',
+      route: '/market'
     },
     {
       src: 'https://test.dnft.world/temp/top1.png',
-      title: 'GameFi news early',
+      title: 'GAMEFI NEWS EARLY',
+      route: '/igo'
     },
-    {
-      src: 'https://test.dnft.world/temp/top3.png',
-      title: 'AI mixture thoughts',
-    },
-    {
-      src: `${globalConfig.ipfsDown}/QmapcMxp8vBJQPywMwfzr8WykuGXJkxDwFhMFquDEq8aFN`,
-      title: 'NFT metaData via IPFS',
-    }
   ]
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
 
   const getNFTList = useCallback(async () => {
-    try{
+    try {
       setIsLoading(true);
       console.log(token, 'token')
 
@@ -60,10 +61,10 @@ const HomeScreen = (props) => {
         '/api/v1/info/hot',
       )
       setList(data?.data?.content || []);
-    }finally{
+    } finally {
       setIsLoading(false)
     }
-  },[token]);
+  }, [token]);
 
   useEffect(() => {
     getNFTList()
@@ -180,11 +181,11 @@ const HomeScreen = (props) => {
   );
 
   const clickDetail = (item) => {
-    console.log(item,'item');
-    history.push('/market/detail',{item,category: item.category,sortTag: item.sortTag})
+    console.log(item, 'item');
+    history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => clickDetail(item)} />,
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => clickDetail(item)} />,
     []
   );
 
@@ -194,7 +195,7 @@ const HomeScreen = (props) => {
       <h1 className={styleTitle}>{title}</h1>
       <Loading
         loading={isLoading}
-        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex:10000 }}
+        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
       />
       <Slider {...settings}>
         {list?.length > 0
@@ -209,9 +210,11 @@ const HomeScreen = (props) => {
       <Carousel trigger='click' height={'24rem'}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
-            <div style={{
-              height: '100%',
-              background: "center / cover no-repeat url('" + item.src + "')",
+            <div className={styleBanner} style={{
+              backgroundImage: "url('" + item.src + "')",
+              backgroundPosition: item.position || 'center'
+            }} onClick={() => {
+              item.route && history.push(item.route)
             }}>
               <span className={styleCaroTitle}>{item.title}</span>
             </div>
@@ -229,6 +232,12 @@ const mapStateToProps = ({ home, profile }) => ({
 });
 export default withRouter(connect(mapStateToProps)(HomeScreen));
 
+const styleBanner = css`
+  height: 100%;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
+`
 const styleCaroTitle = css`
   position: absolute;
   bottom: 90px;
