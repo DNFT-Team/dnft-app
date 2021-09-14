@@ -4,8 +4,8 @@ import styles from './index.less'
 import close from 'images/market/close.png';
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { tradableNFTAbi, tokenAbi } from '../../../utils/abi';
-import { tradableNFTContract, tokenContract, busdMarketContract, bscTestTokenContact} from '../../../utils/contract';
+import { tradableNFTAbi, tradableNFTAbi721, tokenAbi } from '../../../utils/abi';
+import { tradableNFTContract,  tradableNFTContract721, busdMarketContract, bscTestTokenContact} from '../../../utils/contract';
 import Web3 from 'web3';
 import {Icon} from '@iconify/react';
 import { toast } from 'react-toastify';
@@ -112,13 +112,15 @@ const MarketDetailScreen = (props) => {
   }, []);
   const isApproved = async () => {
     setApproveLoading(true)
+    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract : tradableNFTContract721;
+
     if(datas?.type === 'DNFT') {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
-      const dnfAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
+      const dnfAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(dnfAuth > 0)) {
         await contract.methods
           .approve(
-            tradableNFTContract,
+            tradableNFTAddress,
             Web3.utils.toBN(
               '115792089237316195423570985008687907853269984665640564039457584007913129639935'
             )
@@ -131,11 +133,11 @@ const MarketDetailScreen = (props) => {
 
     if(datas?.type === 'BUSD') {
       const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract);
-      const busdAuth = await contract.methods['allowance'](address, tradableNFTContract).call();
+      const busdAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(busdAuth > 0)) {
         await contract.methods
           .approve(
-            tradableNFTContract,
+            tradableNFTAddress,
             Web3.utils.toBN(
               '115792089237316195423570985008687907853269984665640564039457584007913129639935'
             )
@@ -159,49 +161,83 @@ const MarketDetailScreen = (props) => {
 
         setApproveLoading(false)
         setIsOpen(false)
-        const tradableNFTAddress = tradableNFTContract;
+        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract : tradableNFTContract721;
+        const tradableNFTAbiType = datas?.contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721;
         const myContract = new window.web3.eth.Contract(
-          tradableNFTAbi,
+          tradableNFTAbiType,
           tradableNFTAddress
         );
         const gasNum = 210000, gasPrice = '20000000000';
-
-        const tradableNFTResult = await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
-          datas?.orderId,
-          form.quantity,
-        )
-          .send({
-            from: address,
-            gas: gasNum,
-            gasPrice: gasPrice,
-            // value: datas.price,
-            // value: window.web3.utils.toBN(datas.price),
-          }, function (error, transactionHash) {
-            if(!error) {
-              console.log('交易hash: ', transactionHash)
-            } else {
-              console.log('error' ,error)
-            }
-          }).then(async function (receipt) { // 监听后续的交易情况
-            // console.log(receipt)
-            setLoading(false)
-            const { data } = await post(
-              '/api/v1/trans/sell_out',
-              {
-                buyerAddress: address,
-                collectionId: form?.collectionId,
-                nftId: datas?.nftId,
-                orderId: datas?.orderId,
-                quantity: form.quantity,
-              },
-              token
-            );
-            toast[data?.success ? 'success' : 'error']('Buy success', {
-              position: toast.POSITION.TOP_CENTER,
+        let format = datas?.contractType == 1155 ? [datas?.orderId, form.quantity] : [datas?.orderId]
+        if(datas?.contractType == 721) {
+          await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
+            datas?.orderId
+          )
+            .send({
+              from: address,
+              gas: gasNum,
+              gasPrice: gasPrice,
+            }, function (error, transactionHash) {
+              if(!error) {
+                console.log('交易hash: ', transactionHash)
+              } else {
+                console.log('error' ,error)
+              }
+            }).then(async function (receipt) { // 监听后续的交易情况
+              // console.log(receipt)
+              setLoading(false)
+              const { data } = await post(
+                '/api/v1/trans/sell_out',
+                {
+                  buyerAddress: address,
+                  collectionId: form?.collectionId,
+                  nftId: datas?.nftId,
+                  orderId: datas?.orderId,
+                  quantity: form.quantity,
+                },
+                token
+              );
+              toast[data?.success ? 'success' : 'error']('Buy success', {
+                position: toast.POSITION.TOP_CENTER,
+              });
+              historyBack();
+              console.log('交易状态：', receipt.status)
             });
-            historyBack();
-            console.log('交易状态：', receipt.status)
-          });
+        }else {
+          await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
+            datas?.orderId, form.quantity
+          )
+            .send({
+              from: address,
+              gas: gasNum,
+              gasPrice: gasPrice,
+            }, function (error, transactionHash) {
+              if(!error) {
+                console.log('交易hash: ', transactionHash)
+              } else {
+                console.log('error' ,error)
+              }
+            }).then(async function (receipt) { // 监听后续的交易情况
+              // console.log(receipt)
+              setLoading(false)
+              const { data } = await post(
+                '/api/v1/trans/sell_out',
+                {
+                  buyerAddress: address,
+                  collectionId: form?.collectionId,
+                  nftId: datas?.nftId,
+                  orderId: datas?.orderId,
+                  quantity: form.quantity,
+                },
+                token
+              );
+              toast[data?.success ? 'success' : 'error']('Buy success', {
+                position: toast.POSITION.TOP_CENTER,
+              });
+              historyBack();
+              console.log('交易状态：', receipt.status)
+            });
+        }
       }
     } catch (e) {
       setLoading(false)
