@@ -1,12 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {ROUTER_MAP} from './config';
+import ScrollToTop from './scrollToTop';
 import SoonModal from '../components/SoonModal';
 
 
 export default function App () {
   return (
-    <Switch>{ROUTER_MAP.map(renderRoute)}</Switch>
+    <ScrollToTop>
+      <Switch>{ROUTER_MAP.map(renderRoute)}</Switch>
+    </ScrollToTop>
   )
 }
 function renderRoute ({ path, Component, exact, noAuth, children, reqComing }, index) {
