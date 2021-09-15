@@ -386,7 +386,7 @@ const CreateNFT = (props) => {
             }}
           >
             {categoryList?.map((el) => (
-              <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
+              <Select.Option key={el} label={el} value={el} />
             ))}
           </Select>
         )}

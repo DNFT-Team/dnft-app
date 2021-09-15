@@ -13,7 +13,7 @@ const Market = (props) => {
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
 
-  const [category, setCategory] = useState(categoryBack || 'ALL');
+  const [category, setCategory] = useState(categoryBack || 'All');
   const [sortTag, setSortTag] = useState(sortTagBack || 'likeCount');
   const [sortOrder, setSortOrder] = useState('ASC');
 
@@ -70,6 +70,7 @@ const Market = (props) => {
     }} />,
     [category, sortTag]
   );
+  console.log(categoryList,'categoryList')
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -86,7 +87,7 @@ const Market = (props) => {
             }}
           >
             {categoryList?.map((el) => (
-              <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
+              <Select.Option key={el} label={el} value={el} />
             ))}
           </Select>
           <Select

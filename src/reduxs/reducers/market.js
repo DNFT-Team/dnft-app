@@ -24,9 +24,11 @@ const market = (state = initialState, action) => {
       pending: false,
     }
   case GET_CATEGORY_LIST.SUCCESS:
+    let category = action.payload.data?.slice() || []
+    Array.isArray(category) && category?.unshift('All')
     return {
       ...state,
-      category: action.payload.data
+      category
     }
   default:  return state
   }

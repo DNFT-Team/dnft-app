@@ -68,7 +68,7 @@ const AssetScreen = (props) => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [category, setCategory] = useState('ALL');
+  const [category, setCategory] = useState('All');
   const [sortTag, setSortTag] = useState('ASC-price');
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
@@ -482,7 +482,7 @@ const AssetScreen = (props) => {
                 }}
               >
                 {categoryList?.map((el) => (
-                  <Select.Option key={el} label={el} value={el?.toUpperCase()?.replace(/\s/g, '_')} />
+                  <Select.Option key={el} label={el} value={el} />
                 ))}
               </Select>
               {isTestNet && (
