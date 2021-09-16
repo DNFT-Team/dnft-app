@@ -297,9 +297,6 @@ const MarketDetailScreen = (props) => {
       <div className={styles.main}>
         <div className={styles.mainL} style={{
           background: `center center / cover no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
-          height: 482,
-          padding: 10,
-          borderRadius: 10,
         }}>
         </div>
         <div className={styles.mainR}>

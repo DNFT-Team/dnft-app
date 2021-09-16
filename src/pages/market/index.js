@@ -79,7 +79,8 @@ const Market = (props) => {
         </span>
         <div className={styles.headerR}>
           <Select
-            style={{ marginRight: 20 }}
+            // style={{ marginRight: 20 }}
+            className={styles.selectType}
             value={category}
             placeholder='please choose'
             onChange={(value) => {
@@ -92,6 +93,7 @@ const Market = (props) => {
           </Select>
           <Select
             value={sortTag}
+            className={styles.selectType}
             placeholder='please choose'
             onChange={(value) => {
               if (value.includes('price')) {
