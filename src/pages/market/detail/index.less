@@ -1,5 +1,6 @@
 .marketDetail {
   margin: 10px;
+  position: relative;
 }
 .main {
   display: flex;
@@ -279,9 +280,22 @@
   color: #0066ed;
 }
 .close {
-  width: 38px;
+  position: absolute;
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  border-radius: 10px;
+  top: 10px;
+  right: 10px;
+  height: 24px;
+  width: 24px;
+  background: #ffffff;
+  color: #b3bac6;
   cursor: pointer;
-  filter: drop-shadow(2px 4px 6px #1d1d2b);
+  transition: all .3s ease-in-out;
+  opacity: .8;
+}
+.close:hover{
+  color: #0834e8;
 }
 .styleFormItemContainer {
   display: flex;
@@ -524,9 +538,6 @@ img {
     width: 100%;
     margin: 0;
   }
-  .close {
-    display: none;
-  }
   .product {
     padding: 10px;
     width: 100%;
@@ -534,5 +545,7 @@ img {
   .buyBtn {
     width: 100% !important;
     height: 48px !important;
+    position: sticky !important;
+    bottom: 5% !important;
   }
 }

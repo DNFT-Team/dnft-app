@@ -7,15 +7,15 @@ import { connect } from 'react-redux';
 import { tradableNFTAbi, tradableNFTAbi721, tokenAbi } from '../../../utils/abi';
 import { tradableNFTContract,  tradableNFTContract721, busdMarketContract, bscTestTokenContact} from '../../../utils/contract';
 import Web3 from 'web3';
-import {Icon} from '@iconify/react';
+import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import {
   Select, InputNumber
 } from 'element-react';
 import {
-  Button, Fade, Modal,
+  Button, Modal,
   IconButton,
-  Badge, ModalOverlay,
+  ModalOverlay,
   ModalHeader, ModalFooter,
   ModalBody, ModalContent,
 } from '@chakra-ui/react';
@@ -114,7 +114,7 @@ const MarketDetailScreen = (props) => {
     setApproveLoading(true)
     const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract : tradableNFTContract721;
 
-    if(datas?.type === 'DNFT') {
+    if (datas?.type === 'DNFT') {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
       const dnfAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(dnfAuth > 0)) {
@@ -131,7 +131,7 @@ const MarketDetailScreen = (props) => {
       }
     }
 
-    if(datas?.type === 'BUSD') {
+    if (datas?.type === 'BUSD') {
       const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract);
       const busdAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(busdAuth > 0)) {
@@ -169,7 +169,7 @@ const MarketDetailScreen = (props) => {
         );
         const gasNum = 210000, gasPrice = '20000000000';
         let format = datas?.contractType == 1155 ? [datas?.orderId, form.quantity] : [datas?.orderId]
-        if(datas?.contractType == 721) {
+        if (datas?.contractType == 721) {
           await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
             datas?.orderId
           )
@@ -178,12 +178,13 @@ const MarketDetailScreen = (props) => {
               gas: gasNum,
               gasPrice: gasPrice,
             }, function (error, transactionHash) {
-              if(!error) {
+              if (!error) {
                 console.log('交易hash: ', transactionHash)
               } else {
-                console.log('error' ,error)
+                console.log('error', error)
               }
-            }).then(async function (receipt) { // 监听后续的交易情况
+            })
+            .then(async function (receipt) { // 监听后续的交易情况
               // console.log(receipt)
               setLoading(false)
               const { data } = await post(
@@ -203,7 +204,7 @@ const MarketDetailScreen = (props) => {
               historyBack();
               console.log('交易状态：', receipt.status)
             });
-        }else {
+        } else {
           await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
             datas?.orderId, form.quantity
           )
@@ -212,12 +213,13 @@ const MarketDetailScreen = (props) => {
               gas: gasNum,
               gasPrice: gasPrice,
             }, function (error, transactionHash) {
-              if(!error) {
+              if (!error) {
                 console.log('交易hash: ', transactionHash)
               } else {
-                console.log('error' ,error)
+                console.log('error', error)
               }
-            }).then(async function (receipt) { // 监听后续的交易情况
+            })
+            .then(async function (receipt) { // 监听后续的交易情况
               // console.log(receipt)
               setLoading(false)
               const { data } = await post(
@@ -283,17 +285,18 @@ const MarketDetailScreen = (props) => {
     }
   };
   const transPrice = (amount) => {
-    if(isNaN(amount)) return amount;
+    if (isNaN(amount)) {return amount;}
     let _amount;
     try {
       _amount = Number(Number(amount).toFixed(4))
-    }catch(e) {}
+    } catch (e) {}
     return _amount;
   }
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
     <div className={styles.marketDetail}>
+      <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
       <div className={styles.main}>
         <div className={styles.mainL} style={{
           background: `center center / cover no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
@@ -367,9 +370,6 @@ const MarketDetailScreen = (props) => {
                 setIsOpen(true)
               }}>Buy Now</Button>
           </div>
-          <div>
-            <img onClick={historyBack} className={styles.close} src={close} />
-          </div>
         </div>
       </div>
       <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside"
@@ -386,7 +386,7 @@ const MarketDetailScreen = (props) => {
               icon={<Icon icon="mdi:close"/>}/>
           </ModalHeader>
           <ModalBody p="0 32px">
-            {renderFormItem('Quantity', <InputNumber style={{width: '100%', marginTop: 20,}} min={0} max={datas?.quantity} onChange={(value) => {
+            {renderFormItem('Quantity', <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
               setForm({
                 ...form,
                 quantity: value
@@ -430,13 +430,13 @@ const MarketDetailScreen = (props) => {
               disabled={!datas?.quantity || loading}
               colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
               onClick={() => {
-                if(!form.quantity) {
+                if (!form.quantity) {
                   toast.warn('Please enter the purchase quantity！', {
                     position: toast.POSITION.TOP_CENTER,
                   });
                   return;
                 }
-                if(!form.collectionId) {
+                if (!form.collectionId) {
                   toast.warn('Please select collection！', {
                     position: toast.POSITION.TOP_CENTER,
                   });

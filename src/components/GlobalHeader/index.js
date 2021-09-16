@@ -22,17 +22,17 @@ import axios from 'axios';
 
 import { NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
-import styles from './index.less';
+// import styles from './index.less';
 
-import { assetSvg } from '../../utils/svg';
+// import { assetSvg } from '../../utils/svg';
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
 import polkadotSvg from '../../images/networks/logo_pk.svg'
 import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
-import Head from '../../images/asset/Head.svg';
 import Logo from '../../images/home/dnftLogo.png';
+import assetSvg from 'images/asset/asset.svg';
 import { getCategoryList } from 'reduxs/actions/market';
 
 const mvpUrl = 'http://mvp.dnft.world';
@@ -362,7 +362,7 @@ const GlobalHeader = (props) => {
               history.push('/asset');
             }}
           >
-            <span>{assetSvg}</span>
+            <img src={assetSvg} alt="assetIcon"/>
             <span>Asset</span>
           </div>
         )}
@@ -374,7 +374,7 @@ const GlobalHeader = (props) => {
               setIsNetListVisible(true);
             }}
           >
-            <img src={netArray[currentNetIndex]?.shortIcon} />
+            <img src={netArray[currentNetIndex]?.shortIcon} alt="netIcon"/>
           </div>
           <div
             className={styleNetContainer}
@@ -391,11 +391,12 @@ const GlobalHeader = (props) => {
       </Box>
       <Box className={actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
         <Box display="flex" alignItems="center">
-          <Avatar src={Logo} mr="1.5rem" width="2rem" height="2rem" />
+          <Avatar src={Logo}  mr="1.5rem" width="2rem" height="2rem"/>
           <strong>DNFT Protocol</strong>
         </Box>
         <Box display="flex" alignItems="center">
-          <Avatar src={Head} mr="1.5rem" width="2rem" height="2rem"  onClick={() => {history.push('/asset')}}/>
+          <Avatar src={assetSvg} bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
+            borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}/>
           <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
         </Box>
       </Box>
@@ -458,6 +459,7 @@ const styleHeader = css`
   top: 0;
   z-index: 100;
   background: white;
+  box-shadow: 0 1px 10px 1px #d9dadf;
   input {
     &:focus {
       outline: none;
