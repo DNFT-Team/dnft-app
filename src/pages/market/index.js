@@ -61,7 +61,7 @@ const Market = (props) => {
   );
 
   const clickDetail = (item) => {
-    if(pending) return;
+    // if(pending) return;
     history.push('/market/detail',{item,category,sortTag})
   }
   const renderCard = useCallback(

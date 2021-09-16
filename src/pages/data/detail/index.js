@@ -116,8 +116,8 @@ const DataDetailScreen = (props) => {
             </p>
             <div className={styles.desc}>
               <img className={styles.descImg} src={d1} />
-              Radiological Society of North America · 2,086 teams · a month to
-              go (a month to go until merger deadline)
+              <span>Radiological Society of North America · 2,086 teams · a month to
+              go (a month to go until merger deadline)</span>
             </div>
           </div>
           <div className={styles.right}>
@@ -354,6 +354,13 @@ const DataDetailScreen = (props) => {
                 </div>
               </div>
             )}
+            <div className={styles.shareBottom}>
+              <div className={styles.shareBtn}>
+                <img src={share} className={styles.shareImg} />
+                share
+              </div>
+              <div className={styles.applyBtn}>APPLY GRANT</div>
+            </div>
           </div>
         </div>
       </div>

@@ -41,6 +41,7 @@ h3 {
   color: #000000;
   align-items: center;
   margin-bottom: 35px;
+  flex: 1;
 }
 .descImg {
   width: 30px;
@@ -90,15 +91,18 @@ h3 {
   font-size: 16px;
   line-height: 32px;
   color: #666666;
-  padding-right: 30px;
+  margin-right: 30px;
   cursor: pointer;
 }
 .tabActive {
   font-size: 20px;
   color: #112df2;
 }
-.share {
+.share,.shareBottom {
   display: flex;
+}
+.shareBottom {
+  display: none;
 }
 .shareBtn {
   width: 104px;
@@ -156,6 +160,7 @@ h3 {
 ul,
 li {
   margin: 0;
+  padding: 0;
 }
 .dataUl {
   max-width: 902px;
@@ -219,7 +224,7 @@ li {
   display: flex;
   align-items: center;
   height: 48px;
-  line-height: 48px;
+  //line-height: 48px;
 }
 .leaderUl li span:nth-child(1) {
   width: 10%;
@@ -244,4 +249,93 @@ li {
 .memberImg {
   width: 32px;
   margin-right: 10px;
+}
+@media (max-width: 900px) {
+  .box {
+    padding: 0;
+  }
+  .container {
+    padding: 10px;
+  }
+  .header {
+    padding: 8px 16px;
+    background: #f1f1f1;
+    border-radius: 14px;
+    flex-direction: column;
+  }
+  h3 {
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+  }
+  .leftP {
+    font-size: 14px;
+    line-height: 18px;
+    color: #949aa1;
+    margin-bottom: 12px;
+  }
+  .right {
+    width: auto;
+    height: auto;
+    width: 150px;
+    padding: 7px 20px;
+    align-self: flex-end;
+  }
+  .desc {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .prize {
+    font-size: 14px;
+    line-height: 20px;
+    color: #949aa1;
+    padding: 0;
+  }
+  .sum {
+    font-size: 18px;
+    line-height: 20px;
+    color: #000000;
+  }
+  .main {
+    padding: 0;
+  }
+  .detailMain {
+    padding: 0 18px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .shareBottom {
+    display: flex;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  .share {
+    display: none;
+  }
+  .tabSty:last-child {
+    margin-right: 0;
+  }
+  .dataUl li {
+    line-height: 20px;
+  }
+  .tabActive {
+    font-size: 16px;
+  }
+  .title {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+  .text {
+    font-size: 14px;
+  }
+  .leaderHeaderLi {
+    font-size: 14px;
+  }
+  .leaderUl span {
+    font-size: 14px;
+  }
+ 
+
 }
