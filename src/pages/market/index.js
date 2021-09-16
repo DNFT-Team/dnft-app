@@ -62,15 +62,15 @@ const Market = (props) => {
 
   const clickDetail = (item) => {
     // if(pending) return;
-    history.push('/market/detail',{item,category,sortTag})
+    history.push('/market/detail', {item, category, sortTag})
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction={true} clickDetail={() => {
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => {
       clickDetail(item);
     }} />,
     [category, sortTag]
   );
-  console.log(categoryList,'categoryList')
+  console.log(categoryList, 'categoryList')
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -113,7 +113,7 @@ const Market = (props) => {
       <div className={styles.ArtContainer}>
         <Loading
           loading={pending}
-          style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex:10000 }}
+          style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
         />
         <div className={styles.contentBox} style={{ opacity: pending ? 0.5 : 1 }}>
           {datas?.length > 0
@@ -140,6 +140,7 @@ const styleNoDataContainer = css`
   justify-content: center;
   flex: 1;
   flex-direction: column;
+  padding: 2rem 0;
   color: #233a7d;
   span {
     margin-top: 20px;

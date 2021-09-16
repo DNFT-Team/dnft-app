@@ -395,8 +395,10 @@ const GlobalHeader = (props) => {
           <strong>DNFT Protocol</strong>
         </Box>
         <Box display="flex" alignItems="center">
-          <Avatar src={assetSvg} bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
-            borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}/>
+          <Box bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
+            borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}>
+            <img src={assetSvg} alt="asset"/>
+          </Box>
           <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
         </Box>
       </Box>
