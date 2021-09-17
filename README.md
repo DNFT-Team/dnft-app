@@ -1,4 +1,4 @@
-# ![DNFT](/docs/brand.svg) APP
+# ![DNFT](/src/logo.svg) APP
 
 The Full NFT ecosystem DApp maintained by DNFT LABS.
 
