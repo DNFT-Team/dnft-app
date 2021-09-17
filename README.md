@@ -36,8 +36,8 @@ The Full NFT ecosystem DApp maintained by DNFT LABS.
     - [x] 721
     - [x] 1155
   - Trade
-    -[x] Market
-    -[ ] Auction
+    - [x] Market
+    - [ ] Auction
   - [x] Collection 
   - [ ] Social
 - Bridge
@@ -50,7 +50,7 @@ The Full NFT ecosystem DApp maintained by DNFT LABS.
   - [x] Sync BTC
   - [ ] Coming soon
 - AI
-  -[ ] AI & NFT combination
+  - [ ] AI & NFT combination
 - DAO 
  
 ### UI
