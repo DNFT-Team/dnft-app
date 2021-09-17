@@ -27,15 +27,15 @@ import globalConf from 'config/index'
 // import { assetSvg } from '../../utils/svg';
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
-import polkadotSvg from '../../images/networks/logo_pk.svg'
+// import polkadotSvg from '../../images/networks/logo_pk.svg'
 import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
-import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
+// import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 import Logo from '../../images/home/dnftLogo.png';
 import assetSvg from 'images/asset/asset.svg';
 import { getCategoryList } from 'reduxs/actions/market';
 
-const mvpUrl = 'http://mvp.dnft.world';
+// const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
 
 const GlobalHeader = (props) => {
@@ -55,12 +55,12 @@ const GlobalHeader = (props) => {
         shortIcon: ethSvg,
         netWorkId: 1,
       },
-      {
-        name: 'Polkadot Mainnet',
-        icon: selectPolkadotSvg,
-        shortName: ['DOT', 'Polkadot'],
-        shortIcon: polkadotSvg,
-      },
+      // {
+      //   name: 'Polkadot Mainnet',
+      //   icon: selectPolkadotSvg,
+      //   shortName: ['DOT', 'Polkadot'],
+      //   shortIcon: polkadotSvg,
+      // },
       globalConf.net_env === 'mainnet' ? {
         name: 'BSC Mainnet',
         icon: selectBscSvg,
@@ -241,14 +241,14 @@ const GlobalHeader = (props) => {
   }
   const menuData = [
     {
-      token: 'DNF',
+      token: 'TDNF',
       chainId: '97',
       assetId: 'TDNF',
       color: 'brand.600',
       giftModes: [
-        {value: '2024', label: '20 DNF / 24 H'},
-        {value: '1012', label: '10 DNF / 12 H'},
-        {value: '506', label: '5 DNF / 6 H'},
+        {value: '2024', label: '20 TDNF / 24 H'},
+        {value: '1012', label: '10 TDNF / 12 H'},
+        {value: '506', label: '5 TDNF / 6 H'},
       ]
     },
     {
@@ -390,7 +390,7 @@ const GlobalHeader = (props) => {
             </div>
           </div>
         </div>
-        <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>
+        {/* <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>*/}
       </Box>
       <Box className={actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
         <Box display="flex" alignItems="center">
