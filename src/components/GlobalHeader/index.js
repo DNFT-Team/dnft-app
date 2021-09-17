@@ -179,6 +179,26 @@ const GlobalHeader = (props) => {
     }
   };
 
+  const connectWallet = async () => {
+    try {
+      let ethereum = window.ethereum;
+      await ethereum.enable();
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      const account = accounts[0];
+      const currentIndex = netArray.findIndex(
+        (item) =>
+          Number(item.netWorkId) === Number(ethereum.networkVersion)
+      );
+
+      setCurrentNetIndex(currentIndex);
+      setAddress(account);
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  };
+
   const [giftLoading, setGiftLoading] = useState(false);
   const [isDrawer, setIsDrawer] = useState(false)
   const [healthData, setHealthData] = useState({tdnf: {...DEFAULT_STAT }, tbusd: {...DEFAULT_STAT}, list: []})
@@ -326,28 +346,11 @@ const GlobalHeader = (props) => {
         <span
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
-
             if (globalConf.net_env !== 'mainnet' && address) {
               history.push(`/profile/address/${address}`)
               return;
             }
-            try {
-              let ethereum = window.ethereum;
-              await ethereum.enable();
-              const accounts = await ethereum.request({
-                method: 'eth_requestAccounts',
-              });
-              const account = accounts[0];
-              const currentIndex = netArray.findIndex(
-                (item) =>
-                  Number(item.netWorkId) === Number(ethereum.networkVersion)
-              );
-
-              setCurrentNetIndex(currentIndex);
-              setAddress(account);
-            } catch (e) {
-              console.log(e, 'e')
-            }
+            await connectWallet()
           }}
         >
           {address
@@ -395,10 +398,21 @@ const GlobalHeader = (props) => {
           <strong>DNFT Protocol</strong>
         </Box>
         <Box display="flex" alignItems="center">
-          <Box bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
-            borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}>
-            <img src={assetSvg} alt="asset"/>
-          </Box>
+          {
+            address ? (
+              <Box bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
+                borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}>
+                <img src={assetSvg} alt="asset"/>
+              </Box>
+            ) : (
+              <Text bgColor="brand.600" color="white" cursor="pointer" mr="1.5rem" p=".4rem .6rem"
+                fontSize=".8rem" fontWeight="bolder" borderRadius="16px" onClick={async () => {
+                  await connectWallet()
+                }}>
+                Connect
+              </Text>
+            )
+          }
           <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
         </Box>
       </Box>
