@@ -52,7 +52,7 @@ const App = (props) => {
           top="70px"
           colorScheme="green"
         >
-          <TagLabel>{globalConf.net_env}</TagLabel>
+          <TagLabel>{globalConf.net_name}</TagLabel>
         </Tag>
         <section>
           {MENU_MAP.map((obj, index) => {
