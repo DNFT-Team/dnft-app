@@ -311,7 +311,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.userInfo}>
               <div className={styles.user}>
                 <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div className={styles.userInfoText}>
+                <div onClick={() => {history.push(`/profile/address/${datas?.address}`)}} className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
                 </div>
