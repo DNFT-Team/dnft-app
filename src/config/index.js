@@ -2,11 +2,13 @@
 const net_name = process.env.REACT_APP_ENV_NAME
 /*Vol decides the env*/
 const net_env = process.env.REACT_APP_NET_ENV
-/*runtime baseUrl*/
-const baseUrl = process.env.REACT_APP_BK_API
 /*Fixed Urls*/
 const baseUrl_main = "https://bkapi.dnft.world"
 const baseUrl_test = "https://testbkapi.dnft.world"
+
+/*runtime baseUrl*/
+const baseUrl = process.env.REACT_APP_BK_API
+// const baseUrl = baseUrl_main
 
 export default {
   net_name,
