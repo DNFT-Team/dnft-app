@@ -1,8 +1,7 @@
 import React from 'react';
 import comHead from './dnft_head.png';
 import comSoon from './coming_soon.gif';
-import globalConfig from '../../config'
-const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
+const SoonModal = () => (
   <div style={{
     zIndex: 3,
     position: 'sticky',
@@ -43,5 +42,5 @@ const SoonModal = () => (globalConfig.net_env === 'testnet' ? '' : (
       }}>Coming Soon</p>
     </div>
   </div>
-))
+)
 export default SoonModal

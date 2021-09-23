@@ -27,10 +27,10 @@ const nets = ['testnet', 'mainnet']
   reqComing - 是否需要显示coming-soon
  */
 const menuAll = [
-  { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: true},
+  { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
   { net_env: [nets[1]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
   { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
-  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: true},
+  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
   { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true }
 
