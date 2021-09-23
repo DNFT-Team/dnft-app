@@ -69,6 +69,12 @@ const CreateCollectionModal = (props) => {
       });
       return
     }
+    if (!colData.avatorUrl) {
+      toast.warning('Avatar is required', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return
+    }
     try {
       const url = `/api/v1/${isNew ? 'collection/' : 'collection/update'}`
       const {data} = await post(url, colData, token);
