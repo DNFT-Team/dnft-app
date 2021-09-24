@@ -30,6 +30,7 @@ const CreateNFT = (props) => {
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({
     supply: 1,
+    contractType: '721'
   });
 
   const [nftUrl, setNftUrl] = useState();
@@ -358,6 +359,7 @@ const CreateNFT = (props) => {
         {renderFormItem(
           'Contact Type',
           <Select
+            value={form.contractType}
             placeholder='Please choose'
             onChange={(value) => {
               setForm({
