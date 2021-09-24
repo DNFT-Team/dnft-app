@@ -18,6 +18,7 @@ import {
 import { createNFTAbi1155, createNFTAbi721, tokenAbi, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
 import dayjs from 'dayjs';
 import './extra.css'
+import { toast } from 'react-toastify';
 
 const NFTCard = (props) => {
   const {
@@ -321,6 +322,9 @@ const NFTCard = (props) => {
                         setIsOnLoading(false);
                         onRefresh(address, token);
                         setIsApproved(false);
+                        toast.info('Operation succeeded！', {
+                          position: toast.POSITION.TOP_CENTER,
+                        });
                       }
                     } finally {
                       setIsOnLoading(false);
@@ -428,6 +432,10 @@ const NFTCard = (props) => {
                     setShowOffShelfModal(false);
                     onRefresh(address, token);
                     setIsOffLoading(false);
+
+                    toast.info('Operation succeeded！', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                   }
                 }
               } finally {
