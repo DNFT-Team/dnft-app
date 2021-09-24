@@ -35,6 +35,7 @@ const CreateNFT = (props) => {
 
   const [nftUrl, setNftUrl] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadLoading, setIsUploadLoading] = useState(false);
 
   let history = useHistory();
 
@@ -63,6 +64,7 @@ const CreateNFT = (props) => {
 
   const uploadFile = async (file) => {
     try {
+      setIsUploadLoading(true)
       const fileData = new FormData();
       fileData.append('file', file);
 
@@ -70,6 +72,8 @@ const CreateNFT = (props) => {
       return data;
     } catch (e) {
       console.log(e, 'e');
+    } finally {
+      setIsUploadLoading(false)
     }
   };
 
@@ -299,11 +303,25 @@ const CreateNFT = (props) => {
             </div>
           }
         >
-          {nftUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.ipfsDown + nftUrl} alt="avatar"/> : ''}
-          <i className='el-icon-upload2'></i>
-          <div className='el-upload__text'>
-            PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-          </div>
+          {isUploadLoading ? (
+            <Loading />
+          ) : (
+            <React.Fragment>
+              {nftUrl ? (
+                <img
+                  style={{ marginBottom: '.6rem' }}
+                  src={globalConf.ipfsDown + nftUrl}
+                  alt="avatar"
+                />
+              ) : (
+                ''
+              )}
+              <i className='el-icon-upload2'></i>
+              <div className="el-upload__text">
+                PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
+              </div>
+            </React.Fragment>
+          )}
         </Upload>
         <h3>Item Details</h3>
         {renderFormItem(
