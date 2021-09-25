@@ -21,6 +21,7 @@ import igoIcon from '../images/nav/igo_selected.svg';
 import dataIcon from '../images/nav/data_selected.svg';
 
 import globalConf from 'config/index';
+import GalleryScreen from 'pages/gallery';
 const nets = ['testnet', 'mainnet']
 
 /*
@@ -45,5 +46,6 @@ const ROUTER_MAP = [
   { path: '/data/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
   { path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
+  // { path: '/gallery', exact: true, Component: GalleryScreen, navName: 'gallery' },
 ];
 export { MENU_MAP, ROUTER_MAP };
