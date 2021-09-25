@@ -314,6 +314,7 @@ const NFTCard = (props) => {
                             ),
                             nftId: item.nftId,
                             orderId: orderId,
+                            collectionId: item.collectionId
                           },
                           token
                         );
