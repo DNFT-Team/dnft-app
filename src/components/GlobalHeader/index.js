@@ -377,7 +377,7 @@ const GlobalHeader = (props) => {
               setIsNetListVisible(true);
             }}
           >
-            <img src={netArray[currentNetIndex]?.shortIcon} alt="netIcon"/>
+            <img src={netArray[currentNetIndex]?.shortIcon} alt=""/>
           </div>
           <div
             className={styleNetContainer}
