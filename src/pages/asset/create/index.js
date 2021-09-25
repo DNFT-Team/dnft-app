@@ -36,6 +36,7 @@ const CreateNFT = (props) => {
   const [nftUrl, setNftUrl] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
+  const currentNetEnv = globalConfig.net_env;
 
   let history = useHistory();
 
@@ -108,7 +109,7 @@ const CreateNFT = (props) => {
       return;
     }
     try {
-      if (globalConfig.net_env === 'testnet') {
+      if (currentNetEnv === 'testnet') {
         await ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [
@@ -184,7 +185,7 @@ const CreateNFT = (props) => {
         await ethereum.enable();
 
         let createNFTResult;
-        let contractAddress = form.contractType == 1155 ?  createNFTContract1155 : createNFTContract721
+        let contractAddress = form.contractType == 1155 ?  createNFTContract1155[currentNetEnv] : createNFTContract721[currentNetEnv]
 
         if (form.contractType == 1155) {
           const myContract = new window.web3.eth.Contract(
@@ -314,12 +315,13 @@ const CreateNFT = (props) => {
                   alt="avatar"
                 />
               ) : (
-                ''
+                <React.Fragment>
+                  <i className='el-icon-upload2'></i>
+                  <div className="el-upload__text">
+                    PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
+                  </div>
+                </React.Fragment>
               )}
-              <i className='el-icon-upload2'></i>
-              <div className="el-upload__text">
-                PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-              </div>
             </React.Fragment>
           )}
         </Upload>
@@ -405,7 +407,7 @@ const CreateNFT = (props) => {
               });
             }}
           >
-            {categoryList?.map((el) => (
+            {categoryList?.slice(1)?.map((el) => (
               <Select.Option key={el} label={el} value={el} />
             ))}
           </Select>

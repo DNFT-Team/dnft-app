@@ -2,16 +2,30 @@ import globalConfig from '../config';
 
 const isMainNet = globalConfig.net_env === 'mainnet';
 
-//  mining
-export const tokenContract = isMainNet ? '0x018f49822d593f88843777e0956af74c87012219' : '0xe7B6570553e04b865a95C2B93dE31693A1E5EF3a';
+export const tokenContract = {
+  mainnet: '0x018f49822d593f88843777e0956af74c87012219',
+  testnet: '0xe7B6570553e04b865a95C2B93dE31693A1E5EF3a',
+}
 
-export const nftContract = isMainNet ? '0x854714E65bBa4Ea0b990483e439Aa428DCb2Cad1' : '0x9CC6276baa2d8BD670114Cf14BafAd93BED393b8'
+export const nftContract = {
+  mainnet: '0x854714E65bBa4Ea0b990483e439Aa428DCb2Cad1',
+  testnet: '0x9CC6276baa2d8BD670114Cf14BafAd93BED393b8',
+}
 
-export const firstStakeContract = isMainNet ? '0x736b80804069eb7179762a76fb57acc135507ee5' : '0xE678e3CFaA3990258bB2F453252a6fC806A3e1b8'
+export const firstStakeContract = {
+  mainnet: '0x736b80804069eb7179762a76fb57acc135507ee5',
+  testnet: '0xE678e3CFaA3990258bB2F453252a6fC806A3e1b8',
+}
 
-export const secondStakeConTract = isMainNet ? '0x39e020713b8298e23b8dcdf7c94515ad8da1c388' : '0x79D03feC9840Db078A11d1D9935E0D082a500901'
+export const secondStakeConTract = {
+  mainnet: '0x39e020713b8298e23b8dcdf7c94515ad8da1c388',
+  testnet: '0x79D03feC9840Db078A11d1D9935E0D082a500901',
+}
 
-export const thirdStakeConTract = isMainNet ? '0xacd3cc608b64bec0ee515d69c6079d567a5665c1' : '0x0D739117730f543e960587F3109Ea16c96682b29'
+export const thirdStakeConTract = {
+  mainnet: '0xacd3cc608b64bec0ee515d69c6079d567a5665c1',
+  testnet: '0x0D739117730f543e960587F3109Ea16c96682b29',
+}
 
 // bridge
 export const NERVE_WALLET_ADDR = 'NERVEepb62r5fqkgdm5gbNZTkCZHrNFr9EVjeE'
@@ -28,19 +42,39 @@ export const NERVE_BRIDGE = {
 
 // igo
 
-export const igoContract = isMainNet ? '0x7c8911c69257c074593fD9EFDC431F200be27107' : '0x7689EbFFB41C5B12F749aA26283a1877685Fe439';
+export const igoContract = {
+  mainnet: '0x7c8911c69257c074593fD9EFDC431F200be27107',
+  testnet: '0x7689EbFFB41C5B12F749aA26283a1877685Fe439',
+}
 
-export const nft1155Contract = isMainNet ? '0x854714e65bba4ea0b990483e439aa428dcb2cad1' : '0xe5a2758146bea3422532eeB537bE230113bacDd7';
-export const busdContract = isMainNet ? '0xe9e7cea3dedca5984780bafc599bd69add087d56' : '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee';
+export const nft1155Contract = {
+  mainnet: '0x854714e65bba4ea0b990483e439aa428dcb2cad1',
+  testnet: '0xe5a2758146bea3422532eeB537bE230113bacDd7',
+}
+
+export const busdContract = {
+  mainnet: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+  testnet: '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
+}
 
 // asset
-export const bscTestTokenContact = '0x18d68a172b6662aa9ef2b3376980e941d964d942'
-export const createNFTContract1155 = '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955';
-export const createNFTContract721 = '0xC1608DB6DA29b14C5c36F0cF5B509c81a9c5F1A2';
-
-export const tradableNFTContract = '0xBcF25238F74C2e7B02eb44B70b74b5B2723C3FaA';
-export const tradableNFTContract721 = '0x30361e12e004148467D5F26FB14e1f5998bC8DCC';
-
+export const bscTestTokenContact = {
+  testnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942',
+}
+export const createNFTContract1155 = {
+  testnet: '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955',
+}
+export const createNFTContract721 = {
+  testnet: '0xC1608DB6DA29b14C5c36F0cF5B509c81a9c5F1A2',
+}
+export const tradableNFTContract = {
+  testnet: '0xBcF25238F74C2e7B02eb44B70b74b5B2723C3FaA',
+}
+export const tradableNFTContract721 = {
+  testnet: '0x30361e12e004148467D5F26FB14e1f5998bC8DCC',
+}
 
 // market
-export const busdMarketContract = '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD';
+export const busdMarketContract = {
+  testnet: '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD',
+}

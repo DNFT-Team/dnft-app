@@ -4,11 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi';
-import {
-  tradableNFTContract,
-  nftContract,
-  nft1155Contract,
-} from 'utils/contract';
 import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
@@ -24,7 +19,8 @@ import { bscTestTokenContact, busdContract } from '../../utils/contract';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
-  const isTestNet = globalConfig.net_env === 'testnet';
+  const currentNetEnv = globalConfig.net_env;
+  const isTestNet = currentNetEnv === 'testnet';
 
   const tabArray = isTestNet
     ? [
@@ -72,7 +68,7 @@ const AssetScreen = (props) => {
   const [sortTag, setSortTag] = useState('ASC-price');
   const [list, setList] = useState();
   const [sortOrder, setSortOrder] = useState('ASC');
-  const rightChainId = globalConfig.net_env === 'testnet' ? 97 : 56;
+  const rightChainId = currentNetEnv === 'testnet' ? 97 : 56;
   const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
@@ -88,132 +84,7 @@ const AssetScreen = (props) => {
   const getNFTList = async (currentAddress, currentToken) => {
     try {
       setIsLoading(true);
-      // if (selectedTab.value === 'INWALLET' && category === 'ART') {
-      //   const contractAddress = nftContract;
-      //   let nftDataList = [];
-      //   const myContract = new window.web3.eth.Contract(
-      //     nftAbi,
-      //     contractAddress
-      //   );
-      //   const nft1 = await myContract.methods.balanceOf(address, 1).call({
-      //     from: address,
-      //   });
-      //   const nft2 = await myContract.methods.balanceOf(address, 2).call({
-      //     from: address,
-      //   });
-      //   const nft3 = await myContract.methods.balanceOf(address, 3).call({
-      //     from: address,
-      //   });
 
-      //   if (nft1 > 0) {
-      //     nftDataList.push({
-      //       name: stakingJson[Number(1) - 1].name,
-      //       supply: 1,
-      //       avatorUrl: stakingJson[Number(1) - 1].image,
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'ART',
-      //       collectionId: -1,
-      //       description: stakingJson[Number(1) - 1].description,
-      //     });
-      //   }
-      //   if (nft2 > 0) {
-      //     nftDataList.push({
-      //       name: stakingJson[Number(2) - 1].name,
-      //       supply: 1,
-      //       avatorUrl: stakingJson[Number(2) - 1].image,
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'ART',
-      //       collectionId: -1,
-      //       description: stakingJson[Number(2) - 1].description,
-      //     });
-      //   }
-      //   if (nft3 > 0) {
-      //     nftDataList.push({
-      //       name: stakingJson[Number(3) - 1].name,
-      //       supply: 1,
-      //       avatorUrl: stakingJson[Number(3) - 1].image,
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'ART',
-      //       collectionId: -1,
-      //       description: stakingJson[Number(3) - 1].description,
-      //     });
-      //   }
-      //   setList(nftDataList)
-      // } else if (selectedTab.value === 'INWALLET' && category === 'GAME') {
-      //   let ethereum = window.ethereum;
-      //   window.web3 = new Web3(ethereum);
-      //   await ethereum.enable();
-
-      //   const accounts = await ethereum.request({
-      //     method: 'eth_requestAccounts',
-      //   });
-
-      //   const account = accounts[0];
-      //   let nftDataList = [];
-      //   const contractAddress = nft1155Contract;
-      //   const myContract = new window.web3.eth.Contract(
-      //     nft1155Abi,
-      //     contractAddress
-      //   );
-      //   const nft1 = await myContract.methods.balanceOf(account, 100).call({
-      //     from: account,
-      //   });
-      //   const nft2 = await myContract.methods.balanceOf(account, 200).call({
-      //     from: account,
-      //   });
-      //   const nft3 = await myContract.methods.balanceOf(account, 300).call({
-      //     from: account,
-      //   });
-      //   if (nft1 > 0) {
-      //     nftDataList.push({
-      //       name: 'Gold Medal NFT',
-      //       supply: 1,
-      //       avatorUrl: 'https://dnft.world/igo/100.png',
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'GAME',
-      //       collectionId: -1,
-      //     });
-      //   }
-      //   if (nft2 > 0) {
-      //     nftDataList.push({
-      //       name: 'Silver Medal NFT',
-      //       supply: 1,
-      //       avatorUrl: 'https://dnft.world/igo/200.png',
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'GAME',
-      //       collectionId: -1,
-      //     });
-      //   }
-      //   if (nft3 > 0) {
-      //     nftDataList.push({
-      //       name: 'Bronze Medal NFT',
-      //       supply: 1,
-      //       avatorUrl: 'https://dnft.world/igo/300.png',
-      //       address: address,
-      //       chainType: 'BSC',
-      //       tokenId: 1,
-      //       tokenAddr: contractAddress,
-      //       category: 'GAME',
-      //       collectionId: -1,
-      //     });
-      //   }
-      //   setList(nftDataList)
-      // } else {
       const { data } = await post(
         '/api/v1/trans/personal',
         {
@@ -239,7 +110,7 @@ const AssetScreen = (props) => {
       return;
     }
     try {
-      if (globalConfig.net_env === 'testnet') {
+      if (currentNetEnv === 'testnet') {
         await ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [
@@ -342,7 +213,7 @@ const AssetScreen = (props) => {
 
         const myContract = new window.web3.eth.Contract(
           tokenAbi,
-          bscTestTokenContact
+          bscTestTokenContact[currentNetEnv]
         );
         console.log(myContract, 'myContract');
         const dnftBalance = await myContract.methods.balanceOf(account).call({
@@ -534,13 +405,9 @@ export default withRouter(connect(mapStateToProps)(AssetScreen));
 
 const styleContainer = css`
   background: #f5f7fa;
-  @media (max-width: 900px) {
-    background: transparent;
-  }
   padding: 10px 16px;
   & > div {
     &:first-child {
-      background: white;
       border-radius: 10px;
       padding: 32px 0;
       display: flex;
@@ -623,9 +490,14 @@ const styleTabContainer = css`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 24px;
 
     @media (max-width: 900px) {
+      gap: 0px;
+      div {
+        border: none;
+        min-width: auto;
+      }
       &:first-child{
         width: 100%;
         display: flex;
@@ -660,14 +532,17 @@ const styleCoinName = css`
 
 const styleTabButton = css`
   height: 32px;
-  color: #8588a7;
+  color: rgba(119, 126, 144, 1);
   font-size: 14px;
   display: flex;
   align-items: center;
   padding: 6px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
+  border: 1px solid #E6E8EC;
+  min-width: 76px;
+  justify-content: center;
   @media (max-width: 900px) {
     flex: 1;
     justify-content: center;
@@ -676,7 +551,7 @@ const styleTabButton = css`
 `;
 
 const styleActiveTabButton = css`
-  background: #1b2559;
+  background: rgba(17, 45, 242, 1);
   color: white;
   @media (max-width: 900px) {
     flex: 1;

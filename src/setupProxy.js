@@ -22,7 +22,7 @@ module.exports = function (app) {
         target: 'http://92.205.29.153:3699/faucet',
         changeOrigin: true,
         pathRewrite: {
-          '/ipfsApi': ''
+          '/faucet': ''
         },
         secure: false
       },
@@ -48,7 +48,7 @@ module.exports = function (app) {
         target: 'http://92.205.29.78:4002/ipfs',
         changeOrigin: true,
         pathRewrite: {
-          '/ipfsApi': ''
+          '/ipfsGet': ''
         },
         secure: false
       },
@@ -61,7 +61,7 @@ module.exports = function (app) {
         target: 'http://92.205.29.78:8081/bridgeApi',
         changeOrigin: true,
         pathRewrite: {
-          '/ipfsApi': ''
+          '/bridgeApi': ''
         },
         secure: false
       },

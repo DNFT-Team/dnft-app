@@ -45,10 +45,11 @@ const SyncBtcScreen = (props) => {
   const [showStepGif, setShowStepGif] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
-  const rightChainId =  globalConfig.net_env === 'testnet' ? 97 : 56;
-  const right16ChainId =  globalConfig.net_env === 'testnet' ? '0x61' : '0x38';
-  const rightRpcUrl = globalConfig.net_env === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
-  const isTestnet = globalConfig.net_env === 'testnet';
+  const currentNetEnv = globalConfig.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
+  const right16ChainId =  currentNetEnv === 'testnet' ? '0x61' : '0x38';
+  const rightRpcUrl = currentNetEnv === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
+  const isTestnet = currentNetEnv === 'testnet';
 
   const injectWallet = async () => {
     let ethereum = window.ethereum;
@@ -85,7 +86,7 @@ const SyncBtcScreen = (props) => {
       window.web3 = new Web3(ethereum);
       await ethereum.enable();
 
-      const contractAddress = igoContract;
+      const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
 
       const myContract = new window.web3.eth.Contract(abi, contractAddress);
@@ -146,7 +147,7 @@ const SyncBtcScreen = (props) => {
       window.web3 = new Web3(ethereum);
       await ethereum.enable();
 
-      const contractAddress = igoContract;
+      const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
 
       const myContract = new window.web3.eth.Contract(abi, contractAddress);
@@ -176,7 +177,7 @@ const SyncBtcScreen = (props) => {
     try {
       const myIgoContract = new window.web3.eth.Contract(
         igoAbi,
-        igoContract
+        igoContract[currentNetEnv]
       );
 
       const raffle = await myIgoContract.methods.raffle().send({
@@ -198,7 +199,7 @@ const SyncBtcScreen = (props) => {
           supply: 1,
           hash: raffle.transactionHashraffle.transactionHash,
           avatorUrl: `https://dnft.world/igo/${nftId}.png`,
-          tokenAddress: nft1155Contract,
+          tokenAddress: nft1155Contract[currentNetEnv],
           tokenId: nftId,
           category: 'Game',
           collectionId: -1,
@@ -224,11 +225,11 @@ const SyncBtcScreen = (props) => {
       try {
         const myBusdContract = new window.web3.eth.Contract(
           busdAbi,
-          busdContract
+          busdContract[currentNetEnv]
         );
 
         let allowance = await myBusdContract.methods
-          .allowance(address, igoContract)
+          .allowance(address, igoContract[currentNetEnv])
           .call();
 
         setIsApproved(allowance > 0);
@@ -247,7 +248,7 @@ const SyncBtcScreen = (props) => {
       try {
         const myBusdContract = new window.web3.eth.Contract(
           busdAbi,
-          busdContract
+          busdContract[currentNetEnv]
         );
 
         let amount = await myBusdContract.methods.balanceOf(address).call();
@@ -470,11 +471,11 @@ const SyncBtcScreen = (props) => {
                 try {
                   const myBusdContract = new window.web3.eth.Contract(
                     busdAbi,
-                    busdContract
+                    busdContract[currentNetEnv]
                   );
 
                   await myBusdContract.methods
-                    .approve(igoContract, WEB3_MAX_NUM)
+                    .approve(igoContract[currentNetEnv], WEB3_MAX_NUM)
                     .send({ from: address });
 
                   setIsApproved(true);

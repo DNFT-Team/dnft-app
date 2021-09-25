@@ -90,7 +90,8 @@ const Mining = (props) => {
   const [isUnStakeLoading, setIsUnStakeLoading] = useState(false);
 
   const [stateData, setStateData] = useState(initState);
-  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
+  const currentNetEnv = globalConfig.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
   const getBalance = async () => {
     try {
@@ -107,7 +108,7 @@ const Mining = (props) => {
 
         const account = accounts[0];
 
-        const contractAddress = tokenContract;
+        const contractAddress = tokenContract[currentNetEnv];
         const myContract = new window.web3.eth.Contract(
           tokenAbi,
           contractAddress
@@ -210,17 +211,17 @@ const Mining = (props) => {
         const account = accounts[0];
         let firstStakeInfo = await getItemStakeInfoByContract(
           firstStakeAbi,
-          firstStakeContract,
+          firstStakeContract[currentNetEnv],
           account
         );
         let secondStakeInfo = await getItemStakeInfoByContract(
           secondStakeAbi,
-          secondStakeConTract,
+          secondStakeConTract[currentNetEnv],
           account
         );
         let thirdStakeInfo = await getItemStakeInfoByContract(
           thirdStakeAbi,
-          thirdStakeConTract,
+          thirdStakeConTract[currentNetEnv],
           account
         );
 
@@ -254,7 +255,7 @@ const Mining = (props) => {
     try {
       let result;
 
-      if (globalConfig.net_env === 'testnet') {
+      if (currentNetEnv === 'testnet') {
         result = await ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [
@@ -564,7 +565,7 @@ const Mining = (props) => {
 
                 const dnfTokenContract = new window.web3.eth.Contract(
                   tokenAbi,
-                  tokenContract
+                  tokenContract[currentNetEnv]
                 );
 
                 if (stateData[stakeIndex].isApprove) {

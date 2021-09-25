@@ -8,10 +8,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Web3 from 'web3';
 import {
-  bscTestTokenContact,
   createNFTContract1155,
   createNFTContract721,
-  tokenContract,
   tradableNFTContract,
   tradableNFTContract721,
 } from '../../utils/contract';
@@ -19,6 +17,7 @@ import { createNFTAbi1155, createNFTAbi721, tokenAbi, tradableNFTAbi, tradableNF
 import dayjs from 'dayjs';
 import './extra.css'
 import { toast } from 'react-toastify';
+import globalConfig from '../../config';
 
 const NFTCard = (props) => {
   const {
@@ -43,6 +42,7 @@ const NFTCard = (props) => {
   const [isOnLoading, setIsOnLoading] = useState(false);
   const [isOffLoading, setIsOffLoading] = useState(false);
   const [showPhaseOut, setShowPhaseOut] = useState(false);
+  const currentNetEnv = globalConfig.net_env;
 
   const onShowSellModal = () => {
     setShowSellModal(true);
@@ -247,7 +247,7 @@ const NFTCard = (props) => {
                       setIsOnLoading(true);
                       const myContract = new window.web3.eth.Contract(
                         is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
-                        is721Contract ? tradableNFTContract721 : tradableNFTContract
+                        is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv]
                       );
 
                       let putOnResult;
@@ -336,16 +336,16 @@ const NFTCard = (props) => {
                       setIsAprroveLoading(true);
                       const dnfTokenContract = new window.web3.eth.Contract(
                         is721Contract ? createNFTAbi721 : createNFTAbi1155,
-                        is721Contract ? createNFTContract721 : createNFTContract1155
+                        is721Contract ? createNFTContract721[currentNetEnv] : createNFTContract1155[currentNetEnv]
                       );
 
                       let isApproved = await dnfTokenContract.methods
-                        .isApprovedForAll(address, is721Contract ? tradableNFTContract721 : tradableNFTContract)
+                        .isApprovedForAll(address, is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv])
                         .call();
 
                       if (!isApproved) {
                         let result = await dnfTokenContract.methods
-                          .setApprovalForAll(is721Contract ? tradableNFTContract721 : tradableNFTContract, true)
+                          .setApprovalForAll(is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv], true)
                           .send({
                             from: address,
                           });
@@ -410,7 +410,7 @@ const NFTCard = (props) => {
                   await ethereum.enable();
                   const is721Contract = item.contractType == 721;
 
-                  const contractAddress = is721Contract ? tradableNFTContract721 : tradableNFTContract;
+                  const contractAddress = is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv];
                   const myContract = new window.web3.eth.Contract(
                     is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
                     contractAddress
@@ -451,6 +451,7 @@ const NFTCard = (props) => {
     )
   }, [isOffLoading])
   const isEmpty = item.quantity === 0;
+  console.log(item, 'item')
 
   return (
     <div key={`title-${index}`} className={styleCardContainer}>
@@ -461,43 +462,17 @@ const NFTCard = (props) => {
         }}
         className="shortPic"
       />
-      <span className={styleChainType}><span className='dot'></span>{item.chainType}</span>
-      {currentStatus.value === 'ONSALE' &&  <div className={stylePhaseOutContainer} onClick={() => {
-        setShowPhaseOut(!showPhaseOut)
-      }}>
-        <span className='dot'></span>
-        <span className='dot'></span>
-        <span className='dot'></span>
-        <span style={{display: showPhaseOut ? 'flex' : 'none'}} className={stylePhaseOut}><span onClick={() => {
-          onShowOffShelfModal()
-        }}>Phase Out</span></span>
-      </div>}
-      {/* <div className={styleCollectionIconContainer} onClick={handleSave}>
-        <Icon icon='ant-design:inbox-outlined' style={{ color: item.isLiked ? '#42E78E' : '#c4c4c4' }} />
-      </div> */}
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
-          <div className={styleInfo}>
-            <span className="title">{item.name}</span>
-            {
-              currentStatus.value === 'INWALLET' && <div
-                className={cx(styleButton)}
-                style={{
-                  opacity: isEmpty ? 0.5 : 1,
-                  cursor: isEmpty ? 'not-allowed' : 'pointer',
-                }}
-                onClick={() => {
-                  if (isEmpty) {
-                    return;
-                  }
-                  onShowSellModal();
-                }}
-              >
-                  Launch
-              </div>
-            }
-            {currentStatus.value !== 'INWALLET' && !isProfile && <span
-              style={{ color: '#45B36B', fontSize: '12px', padding: '2px 6px', fontWeight: '600', border: '2px solid #45B36B', borderRadius: '4px' }}
+          <div className={styleInfo} style={{
+            borderBottom: currentStatus.value !== 'SOLD' ? '1px solid #F3F7F9' : 'none'
+          }}>
+            <div>
+              <span className="title">{item.name}</span>
+              <span className={styleNickNameContainer}><span className='dot'></span>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
+            </div>
+            {currentStatus.value === 'ONSALE' && !isProfile && <span
+              style={{ color: '#000000', fontSize: '12px', padding: '2px 6px', fontWeight: '600', borderRadius: '4px' }}
             >
               {item.price > 0 &&
                 ['ONSALE', 'SOLD'].includes(currentStatus.value) &&
@@ -506,53 +481,39 @@ const NFTCard = (props) => {
                 }`}
             </span>}
           </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '8px'
-            }}
-          >
-            <span style={{
-              fontSize: '12px',
-              whiteSpace: 'nowrap',
-              display: 'flex'
-            }}>
-              <span style={{marginRight: '24px',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                maxWidth: '120px',
-                textOverflow: 'ellipsis'}}>
-                Stock:{' '}
-                <span style={{color: 'rgba(17, 45, 242, 1)'}}>
-                  {currentStatus.value === 'SOLD'
-                    ? item.quantity * -1
-                    : item.quantity || 0}
-                </span>
-              </span>
-              <span>Contract type:{item.contractType}</span>
-            </span>
-            <div
+          {
+            currentStatus.value === 'INWALLET' && <div
+              className={cx(styleButton)}
               style={{
-                backgroundImage: `url(${item.userAvatorUrl})`,
-                backgroundSize: 'contain',
-                width: '24px',
-                height: '24px',
-                borderRadius: '24px',
+                opacity: isEmpty ? 0.5 : 1,
+                cursor: isEmpty ? 'not-allowed' : 'pointer',
+                background: '#0834e8'
               }}
-            />
-            {/* <div className={styleStarInfo}> */}
-            {/* <div className={styleStarIconContainer} onClick={handleLike}>
-              <Icon icon='ant-design:heart-filled' style={{ color: item.isSaved ? '#F13030' : '#c4c4c4' }} />
-            </div> */}
-            {/* </div> */}
-          </div>
-          {currentStatus.value === 'SOLD' && <div>Transaction Time: {dayjs(item.createTime).format('DD/MM/YYYY')}</div>}
+              onClick={() => {
+                if (isEmpty) {
+                  return;
+                }
+                onShowSellModal();
+              }}
+            >
+                Sell
+            </div>
+          }
+          {
+            currentStatus.value === 'ONSALE' && <div
+              className={cx(styleButton)}
+              style={{
+                opacity: isEmpty ? 0.5 : 1,
+                cursor: isEmpty ? 'not-allowed' : 'pointer',
+              }}
+              onClick={() => {
+                onShowOffShelfModal()();
+              }}
+            >
+                Unsell
+            </div>
+          }
         </div>
-        {/* {needAction && (
-          <div className={styleActionContainer}>{renderAction(item)}</div>
-        )} */}
       </div>
       {showSellModal && renderSellModal}
       {showOffShelfModal && renderOffShelfModal}
@@ -600,11 +561,16 @@ const styleButton = css`
   align-items: center;
   font-size: 20px;
   cursor: pointer;
-  background: rgba(17, 45, 242, 1);
+  background: #ed6160;
   color: white;
-  font-size: 12px;
-  padding: 6px 8px;
-  border-radius: 4px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  margin-bottom: 12px;
 `;
 
 const stylePrice = css`
@@ -635,18 +601,15 @@ const styleSoldOutBanner = css`
 
 const styleCardContainer = css`
   background: #ffffff;
-  border-radius: 20px;
-  max-width: 270px;
+  border-radius: 10px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   /* cursor: pointer; */
   position: relative;
   flex: 1;
-  min-width: 270px;
-  margin: 10px;
-  padding: 7px;
-  border-top: 2px solid rgba(0, 0, 0, 0.05);
-  border: 1px solid #E6E8EC;
+  min-width: 300px;
+  margin: 30px 16px;
   &:hover {
     background: white;
     position: relative;
@@ -654,61 +617,13 @@ const styleCardContainer = css`
   }
 `;
 
-const styleStarInfo = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #8f9bba;
-  position: absolute;
-  top: -36px;
-  right: 0;
-`;
-
-const styleStarIconContainer = css`
-  background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
-  &:hover {
-    cursor: pointer;
-  }
-  svg {
-    font-size: 20px;
-  }
-`;
-
-const styleCollectionIconContainer = css`
-  background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 205px;
-  right: 76px;
-  &:hover {
-    cursor: pointer;
-  }
-  svg {
-    font-size: 20px;
-  }
-`;
-
 const styleInfoContainer = css`
-  padding: 14px 0 0 0 ;
+  padding: 18px 14px 0 14px;
   display: flex;
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
-  color: rgba(143, 155, 186, 1);
+  color: rgba(117, 129, 154, 1);
   font-size: 12px;
 `;
 
@@ -716,7 +631,6 @@ const styleCardHeader = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 8px;
   position: relative;
 `;
 
@@ -725,7 +639,8 @@ const styleInfo = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
   .title {
     color: #11142d;
     flex: 1;
@@ -735,41 +650,10 @@ const styleInfo = css`
     display: block;
     margin-right: 10px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     color: #11142d;
   }
 `;
-
-const styleChainType = css`
-  color: white;
-  font-size: 14px;
-  padding: 2px 6px;
-  border-radius: 6px;
-  position: absolute;
-  font-weight: 500;
-  background: rgba(255, 96, 89, 0.8);
-  display: flex;
-  align-items: center;
-  top: 18px;
-  left: 12px;
-  .dot {
-    min-width: 6px;
-    min-height: 6px;
-    border-radius: 6px;
-    background: white;
-    margin-right: 6px;
-    display: inline-block;
-  }
-`;
-
-const styleContactype = css`
-  background: #feddbd;
-  color: #a15f1e;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 8px;
-  margin-left: 10px;
-`
 
 const styleCreateNFT = css`
   background-color: #0049c6;
@@ -827,42 +711,18 @@ const styleOffShelfModal = css`
   width: calc(100% - 40px);
 `
 
-const stylePhaseOutContainer = css`
-  position: absolute;
-  top: 24px;
-  right: 18px;
+const styleNickNameContainer = css`
   display: flex;
-  cursor: pointer;
-  padding: 6px;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8px;
   .dot {
-    background: #747474;
-    width: 6px;
-    height: 6px;
-    border-radius: 6px;
-    margin: 0 1px;
+    background: #45B36B;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    margin-right: 6px;
   }
-`
+`;
 
-const stylePhaseOut = css`
-  &:before {
-    display:block;
-    content:'';
-    border-width:6px 4px 6px 12px;
-    border-style:solid;
-    border-color:transparent transparent white transparent;
-    /* 定位 */
-    position:absolute;
-    right: 16px;
-    top:-12px;
-  }
-  position: absolute;
-  background: white;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #000000;
-  padding: 6px 10px;
-  white-space: nowrap;
-  right: -8px;
-  top: 20px;
-`
+
