@@ -299,7 +299,7 @@ const MarketDetailScreen = (props) => {
       <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
       <div className={styles.main}>
         <div className={styles.mainL} style={{
-          background: `center center / cover no-repeat url(${!datas?.avatorUrl.includes('http') ? (globalConf.ipfsDown + datas?.avatorUrl) : datas?.avatorUrl})`,
+          background: `center center / cover no-repeat url(${datas?.avatorUrl})`
         }}>
         </div>
         <div className={styles.mainR}>
