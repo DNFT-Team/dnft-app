@@ -10,7 +10,8 @@ const NFTCard = (props) => {
   const { needAction, item, index, clickDetail, token, address, onLike, onSave } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
 
-  const url = !item.avatorUrl.includes('http') ? (globalConf.ipfsDown + item.avatorUrl) : item.avatorUrl
+  // const url = !item.avatorUrl.includes('http') ? (globalConf.ipfsDown + item.avatorUrl) : item.avatorUrl
+  const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
   const viewUrl = !flag ? url : noImg
   return (
