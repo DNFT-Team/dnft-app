@@ -236,14 +236,16 @@ const AssetScreen = (props) => {
           <span className={styleCoinName}>DNF</span>
           <span>{balance}</span>
         </div>
-        <div
-          className={styleCreateNFT}
-          onClick={() => {
-            history.push('/asset/create');
-          }}
-        >
-          Create NFT
-        </div>
+        {currentNetEnv !== 'mainnet' &&
+          <div
+            className={styleCreateNFT}
+            onClick={() => {
+              history.push('/asset/create');
+            }}
+          >
+            Create NFT
+          </div>
+        }
       </div>
     ),
     [balance]

@@ -482,7 +482,7 @@ const NFTCard = (props) => {
             </span>}
           </div>
           {
-            currentStatus.value === 'INWALLET' && <div
+            currentNetEnv !== 'mainnet' && currentStatus.value === 'INWALLET' && <div
               className={cx(styleButton)}
               style={{
                 opacity: isEmpty ? 0.5 : 1,
@@ -500,7 +500,7 @@ const NFTCard = (props) => {
             </div>
           }
           {
-            currentStatus.value === 'ONSALE' && <div
+            currentNetEnv !== 'mainnet' && currentStatus.value === 'ONSALE' && <div
               className={cx(styleButton)}
               style={{
                 opacity: isEmpty ? 0.5 : 1,
