@@ -17,20 +17,30 @@ import { css, cx } from 'emotion';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
 // import NFTCard from './card';
 import NFTCard from 'components/NFTCard';
-
+import edit_bg from 'images/profile/edit_bg.png';
+import edit_avatar from 'images/profile/edit_avatar.png';
+import ins from 'images/profile/ins.png';
+import twitter from 'images/profile/twitter.png';
+import {
+  Upload,
+} from 'element-react';
+import { post } from 'utils/request';
+import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
+import ProfileEditScreen from './edit';
+import globalConf from 'config/index';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
+  const [showEditScreen, setShowEditScreen] = useState(false);
   let newAddress = location?.pathname?.split('/') || [];
   newAddress = newAddress[newAddress.length - 1]
-  console.log(newAddress,'newAddress', address)
   let history = useHistory();
   useEffect(() => {
     if (token) {
-      dispatch(getMyProfileList({userId: newAddress}, token));
+      getProfileInfo();
       dispatch(
         getMyProfileBatch(
           {
@@ -49,6 +59,9 @@ const ProfileScreen = (props) => {
       dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token]);
+  const getProfileInfo = () => {
+    dispatch(getMyProfileList({userId: newAddress}, token));
+  }
   const handleCopyAddress = () => {
     copy(newAddress);
     toast.success('The address is copied successfully!', {
@@ -111,6 +124,7 @@ const ProfileScreen = (props) => {
       )),
     [selectedTab]
   );
+
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -137,55 +151,76 @@ const ProfileScreen = (props) => {
     },
     [selectedTab]
   );
-  // console.log({datas})
+  const uploadFile = async (file) => {
+    try {
+      const fileData = new FormData();
+      fileData.append('file', file);
+      const data  = await ipfs_post('/v0/add', fileData);
+      if (data?.data?.Hash) {
+        const data1 = await post(
+          '/api/v1/users/updateUserBanner',
+          {
+            address: newAddress,
+            bannerUrl: globalConf.ipfsDown + data?.data?.Hash,
+          },
+          token,
+        );
+        dispatch(getMyProfileList({userId: newAddress}, token));
+      } else {
+        toast.error(data.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    } catch (e) {
+      console.log(e, 'e');
+    }
+  }
   return (
     <div className={styles.box}>
       <div className={styles.container}>
+        <div
+          style={{
+            background: `center center / cover no-repeat url(${datas?.bannerUrl})`,
+          }}
+          className={styles.header}>
+          <Upload
+            className="upload-demo"
+            multiple={false}
+            showFileList={false}
+            accept={'.png,.gif,.jpeg,.jpg,.svg'}
+            action=""
+            httpRequest={(e) => {uploadFile(e.file)}}
+            listType="picture"
+          >
+            <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+          </Upload>
+        </div>
         <div className={styles.profile}>
-          <div className={styles.left}>
+          <div className={styles.profile_avatar}>
             <img className={styles.authorImg} src={datas?.avatorUrl} />
-            <div className={styles.authorInfo}>
-              <div className={styles.authorName}>
-                <span style={{wordBreak: 'break-word'}} className={styles.nickName}>{datas?.nickName}</span>
-                {
-                  newAddress === address &&
-                  <button onClick={() => history.push('/profile/edit',{datas: datas})} className={styles.editProfile}>
-                    <span>Edit Profile</span>
-                  </button>
-                }
+            {
+              newAddress === address &&
+              <div onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
+                <img className={styles.edit_avatar_img} src={edit_avatar} />
               </div>
-              <div className={styles.addressBox}>
-                <span  style={{wordBreak: 'break-word'}}  className={styles.address}>
-                  {/* {newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(28)}`} */}
-                  {newAddress}
-                </span>
-                <img
-                  className={styles.copyAddress}
-                  onClick={handleCopyAddress}
-                  src={copyImg}
-                />
-              </div>
-              <div className={styles.contactImg}>
-                <a href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
-                  <Icon width="25" color={'#0072ff'} icon='jam:twitter-circle' />
-                </a>
-                <a href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
-                  <Icon width="25" color={'#0072ff'} icon='jam:facebook-circle' />
-                </a>
-              </div>
-            </div>
+            }
           </div>
-          {/* {
-            newAddress === address &&
-            <div className={styles.profileEdit}>
-              <div
-                onClick={() => history.push('/profile/edit',{datas: datas})}
-                className={styles.edit}
-              >
-                Edit Profile
-              </div>
-            </div>
-          } */}
+          <div className={styles.authorName}>{datas?.nickName}</div>
+          <div className={styles.addressBox}>{newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(38)}`}
+            <img
+              className={styles.copyAddress}
+              onClick={handleCopyAddress}
+              src={copyImg}
+            />
+          </div>
+          <div className={styles.contact}>
+            <a href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
+              <img className={styles.contact_img} src={twitter} />
+            </a>
+            <a href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
+              <img className={styles.contact_img} src={ins} />
+            </a>
+          </div>
         </div>
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>
@@ -197,6 +232,18 @@ const ProfileScreen = (props) => {
             : renderNoData}
         </div>
       </div>
+      {showEditScreen && (
+        <ProfileEditScreen
+          datas={datas}
+          onSuccess={(res) => {
+            setShowEditScreen(false);
+            getProfileInfo();
+          }}
+          onClose={() => {
+            setShowEditScreen(false);
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -212,19 +259,23 @@ const mapStateToProps = ({ profile }) => ({
 export default withRouter(connect(mapStateToProps)(ProfileScreen));
 
 const styleTabButton = css`
-  height: 32px;
-  color: #8588a7;
+  height: 38px;
+  box-sizing: border-box;
+  color: #777E90;
   font-size: 14px;
   display: flex;
   align-items: center;
-  padding: 6px 16px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  border: 1px solid #E6E8EC;
+  margin-right: 20px;
 `;
 
 const styleActiveTabButton = css`
-  background: #1b2559;
+  background: #112DF2;
+  border: 1px solid #112DF2;
   color: white;
 `;
 

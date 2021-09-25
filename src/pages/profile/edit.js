@@ -6,8 +6,13 @@ import {
   InputNumber,
   Select,
   Upload,
-  Button
 } from 'element-react';
+import {
+  Badge, Text, Button, IconButton,
+  Modal, ModalOverlay,
+  ModalHeader, ModalFooter,
+  ModalBody, ModalContent
+} from '@chakra-ui/react'
 import styles from './index.less';
 import { css } from 'emotion';
 import camera from 'images/profile/camera.png';
@@ -16,13 +21,17 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
+import {Icon} from '@iconify/react'
+import { ipfs_post } from 'utils/ipfs-request';
+import globalConf from 'config/index';
 
 const ProfileEditScreen = (props) => {
   let history = useHistory();
-  const {address, token, location} = props;
+  const {address, token, location, datas,  onClose, onSuccess} = props;
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
-  const datas = location?.state?.datas
+  // const datas = location?.state?.datas
+  console.log(datas,'datas')
   const [form, setForm] = useState({
     avatorUrl: datas?.avatorUrl,
     nickName: datas?.nickName,
@@ -43,71 +52,94 @@ const ProfileEditScreen = (props) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
-      const {data} = await post('/api/v1/file/uploadFile', fileData, token);
-      if (data.success) {
-        const url =  data?.data?.src
-        url && setForm({ ...form, avatorUrl: url });
-      } else {
-        toast.error(data.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
+      const data = await ipfs_post('/v0/add', fileData);
+      if(data?.status === 200) {
+        setForm({ ...form, avatorUrl: globalConf.ipfsDown + data?.data?.Hash })
       }
     } catch (e) {
       console.log(e, 'e');
     }
   }
+  const beforeAvatarUpload = (file) => {
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      toast.warn('The size of the uploaded avatar image cannot exceed 2MB!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+    return isLt2M;
+  }
   const editProfile = async () => {
-    console.log(form,'form')
     setLoading(true)
+    if(!form?.nickName) {
+      toast.warn('nickName cannot be empty', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      setLoading(false)
+      return true;
+    }
     const formData = new FormData();
-    // formData.append('address', address);
     formData.append('address', datas?.address)
     formData.append('avatorUrl', form?.avatorUrl);
     formData.append('nickName', form?.nickName);
     formData.append('twitterAddress', form?.twitterAddress || '');
     formData.append('facebookAddress', form?.facebookAddress || '');
+    try {
+      const { data }  = await post(
+        '/api/v1/users/updateUser',
+        formData,
+        token,
+      );
+      if(data?.success === true) {
+        toast.success('Successfully modified', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        onSuccess()
+        setForm({})
+      }else {
+        toast.error(data?.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+      setLoading(false)
+    }catch(e) {
+      console.log(e)
+      setLoading(false)
 
-    const { data } = await post(
-      '/api/v1/users/updateUser',
-      formData,
-      token,
-      // {'Content-Type': 'application/json; charset=utf-8',}
-    );
-    console.log(data,'data')
-    if(data?.success === true) {
-      toast.success('Successfully modified', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      setForm({})
-      history.goBack()
     }
-    setLoading(false)
 
   }
-  console.log(imageUrl, 'imageUrl');
   return (
-    <div className={styles.box}>
-      <div className={styles.container}>
-        <div className={styles.editBox}>
-          <h3>Edit profile</h3>
-          <p className={styles.head}>Head portrait</p>
+    <Modal closeOnOverlayClick={true} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+      isCentered isOpen onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent width="calc(100% - 40px)" maxW="564px" >
+        <ModalHeader color="#11142d"
+          p="32px" fontSize="18px"
+          display="flex" justifyContent="space-between"
+          alignItems="center">
+          Edit profile
+          <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
+            icon={<Icon icon="mdi:close"/>}/>
+        </ModalHeader>
+        <ModalBody p="0 32px">
+          <div className={styles.profile_phone}>*Profile Photo<span>Maximum 2MB</span></div>
           <Upload
             className={styleUploadContainer1}
             multiple={false}
             showFileList={false}
-            accept={'.png,.gif,.jpeg,jpg'}
-            limit={1}
+            accept={'.png,.gif,.jpeg,.jpg,.svg'}
             action=""
+            beforeUpload={(file) => beforeAvatarUpload(file)}
             httpRequest={(e) => {uploadFile(e.file)}}
-
           >
             {<img src={imageUrl || form?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>
           {renderFormItem(
             'Name',
             <Input
+              placeholder='Name'
               value={form?.nickName}
-              placeholder='e. g. David'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -120,7 +152,7 @@ const ProfileEditScreen = (props) => {
             'Twitter',
             <Input
               value={form?.twitterAddress}
-              placeholder='Please input'
+              placeholder='https://twitter.com/'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -130,10 +162,10 @@ const ProfileEditScreen = (props) => {
             />
           )}
           {renderFormItem(
-            'Facebook',
+            'Instagram',
             <Input
               value={form?.facebookAddress}
-              placeholder='Please input'
+              placeholder='https://www.instagram.com/'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -142,11 +174,13 @@ const ProfileEditScreen = (props) => {
               }}
             />
           )}
-          <Button loading={loading} className={styles.saveProfile} onClick={editProfile} type="text">Save profile</Button>
-          {/* <span onClick={editProfile} className={styles.saveProfile}>Save profile</span> */}
-        </div>
-      </div>
-    </div>
+        </ModalBody>
+        <ModalFooter  p="10 32px" justifyContent="flex-start">
+          <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom" p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
+            onClick={editProfile}>Save</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
