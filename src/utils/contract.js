@@ -60,21 +60,27 @@ export const busdContract = {
 // asset
 export const bscTestTokenContact = {
   testnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942',
+  devnet:'0x18d68a172b6662aa9ef2b3376980e941d964d942'
 }
 export const createNFTContract1155 = {
-  testnet: '0x32C7835610A6e7CdC3bB72Db096DeC2b70ccc955',
+  testnet: '0xcf50211b2A67De83472dE6DcDd99ecD901Bf0dC1',
+  devnet:'0x93E954c6baEDea0953d1442c2c56321b22960449'
 }
 export const createNFTContract721 = {
-  testnet: '0xC1608DB6DA29b14C5c36F0cF5B509c81a9c5F1A2',
+  testnet: '0x3A0fE86f5550fc5055aFe95FC0d1d35D288A9F6D',
+  devnet:'0x2A432C334D6d495A30f42517e6AfAb0cCb5C06b4'
 }
 export const tradableNFTContract = {
-  testnet: '0xBcF25238F74C2e7B02eb44B70b74b5B2723C3FaA',
+  testnet: '0xE2D09c4b9A90ecff875D1e7178CD7752cf89bA36',
+  devnet:'0x05246Bc580EBa77e31e14bB60f97bAcFb705287b'
 }
 export const tradableNFTContract721 = {
-  testnet: '0x30361e12e004148467D5F26FB14e1f5998bC8DCC',
+  testnet: '0x4EcEacF738fe8De28249707aaf6d0E182Bc1915E',
+  devnet:'0xC75a7A776f2adaC07E04F0a68A01848f40769E3b'
 }
 
 // market
 export const busdMarketContract = {
   testnet: '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD',
+  devnet:'0xd4e4267fBf3D62d643e808067885ac10f5EB60bD'
 }
