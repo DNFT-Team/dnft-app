@@ -11,7 +11,7 @@ export function setTokenForReq (token) {
 }
 
 export default function request (url, options) {
-  if (BASE_URL.length == 0) {return;}
+  // if (BASE_URL.length == 0) {return;}
   const defaultOptions = { headers: {} }
   const newOptions = { ...defaultOptions, ...options }
   if (
