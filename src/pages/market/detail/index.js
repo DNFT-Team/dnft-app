@@ -40,7 +40,8 @@ const MarketDetailScreen = (props) => {
   const [options, setOptions] = useState([]);
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
-  const rightChainId =  globalConfig.net_env === 'testnet' ? 4 : 56;
+  const currentNetEnv = globalConfig.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
   useEffect(() => {
     if (token) {
@@ -65,7 +66,7 @@ const MarketDetailScreen = (props) => {
     }
     try {
       let result;
-      if (globalConfig.net_env === 'testnet') {
+      if (currentNetEnv === 'testnet') {
         result = await ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [
@@ -112,7 +113,7 @@ const MarketDetailScreen = (props) => {
   }, []);
   const isApproved = async () => {
     setApproveLoading(true)
-    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract : tradableNFTContract721;
+    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetEnv] : tradableNFTContract721[currentNetEnv];
 
     if (datas?.type === 'DNFT') {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
@@ -132,7 +133,7 @@ const MarketDetailScreen = (props) => {
     }
 
     if (datas?.type === 'BUSD') {
-      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract);
+      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract[currentNetEnv]);
       const busdAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(busdAuth > 0)) {
         await contract.methods
@@ -161,7 +162,7 @@ const MarketDetailScreen = (props) => {
 
         setApproveLoading(false)
         setIsOpen(false)
-        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract : tradableNFTContract721;
+        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetEnv] : tradableNFTContract721[currentNetEnv];
         const tradableNFTAbiType = datas?.contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721;
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbiType,
