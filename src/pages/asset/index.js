@@ -534,13 +534,9 @@ export default withRouter(connect(mapStateToProps)(AssetScreen));
 
 const styleContainer = css`
   background: #f5f7fa;
-  @media (max-width: 900px) {
-    background: transparent;
-  }
   padding: 10px 16px;
   & > div {
     &:first-child {
-      background: white;
       border-radius: 10px;
       padding: 32px 0;
       display: flex;
@@ -623,9 +619,14 @@ const styleTabContainer = css`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 24px;
 
     @media (max-width: 900px) {
+      gap: 0px;
+      div {
+        border: none;
+        min-width: auto;
+      }
       &:first-child{
         width: 100%;
         display: flex;
@@ -660,14 +661,17 @@ const styleCoinName = css`
 
 const styleTabButton = css`
   height: 32px;
-  color: #8588a7;
+  color: rgba(119, 126, 144, 1);
   font-size: 14px;
   display: flex;
   align-items: center;
   padding: 6px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
+  border: 1px solid #E6E8EC;
+  min-width: 76px;
+  justify-content: center;
   @media (max-width: 900px) {
     flex: 1;
     justify-content: center;
@@ -676,7 +680,7 @@ const styleTabButton = css`
 `;
 
 const styleActiveTabButton = css`
-  background: #1b2559;
+  background: rgba(17, 45, 242, 1);
   color: white;
   @media (max-width: 900px) {
     flex: 1;

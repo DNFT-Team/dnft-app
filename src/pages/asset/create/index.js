@@ -314,12 +314,13 @@ const CreateNFT = (props) => {
                   alt="avatar"
                 />
               ) : (
-                ''
+                <React.Fragment>
+                  <i className='el-icon-upload2'></i>
+                  <div className="el-upload__text">
+                    PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
+                  </div>
+                </React.Fragment>
               )}
-              <i className='el-icon-upload2'></i>
-              <div className="el-upload__text">
-                PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-              </div>
             </React.Fragment>
           )}
         </Upload>
@@ -405,7 +406,7 @@ const CreateNFT = (props) => {
               });
             }}
           >
-            {categoryList?.map((el) => (
+            {categoryList?.slice(1)?.map((el) => (
               <Select.Option key={el} label={el} value={el} />
             ))}
           </Select>
