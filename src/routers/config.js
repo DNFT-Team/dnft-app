@@ -34,9 +34,7 @@ const menuAll = [
   { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
   { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
-  { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true  }
-  // { net_env: nets, path: '/data', Component: CompetitionScreen, navName: 'Data', icon: dataIcon, exact: true,  }
-
+  { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true,  }
 
 ];
 const MENU_MAP = menuAll.filter((e) => e.net_env.includes(globalConf.net_env))
@@ -46,7 +44,8 @@ const ROUTER_MAP = [
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
   { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
-  { path: '/data/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
+  { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: true  },
+  { path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
   { path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
   // { path: '/gallery', exact: true, Component: GalleryScreen, navName: 'gallery' },
