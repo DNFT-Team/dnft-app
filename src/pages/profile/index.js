@@ -29,9 +29,13 @@ import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
+import camera from 'images/profile/camera.png';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
+  const readUrl = datas?.avatorUrl
+  const nullFlag = !readUrl || readUrl.indexOf('undefined') > -1 || readUrl.indexOf('null') > -1
+  const avatarShow = nullFlag ? camera : readUrl;
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
   const [showEditScreen, setShowEditScreen] = useState(false);
@@ -142,8 +146,8 @@ const ProfileScreen = (props) => {
           key={`${item.id}_${selectedTab}`}
           item={item}
           index={index}
-          needAction={true}
-          isProfile={true}
+          needAction
+          isProfile
           currentStatus={selectedTab}
           newAddress={newAddress}
         />
@@ -180,7 +184,7 @@ const ProfileScreen = (props) => {
       <div className={styles.container}>
         <div
           style={{
-            background: `center center / cover no-repeat url(${datas?.bannerUrl})`,
+            background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
           }}
           className={styles.header}>
           <Upload
@@ -197,11 +201,11 @@ const ProfileScreen = (props) => {
         </div>
         <div className={styles.profile}>
           <div className={styles.profile_avatar}>
-            <img className={styles.authorImg} src={datas?.avatorUrl} />
+            <img className={styles.authorImg} src={avatarShow} alt=""/>
             {
               newAddress === address &&
               <div onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
-                <img className={styles.edit_avatar_img} src={edit_avatar} />
+                <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
               </div>
             }
           </div>

@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import './extra.css'
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
+import noImg from 'images/common/noImg.svg'
 
 const NFTCard = (props) => {
   const {
@@ -32,6 +33,9 @@ const NFTCard = (props) => {
     onRefresh,
     isProfile
   } = props;
+  const url = item.avatorUrl
+  const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
+  const viewUrl = !flag ? url : noImg
   const [showSellModal, setShowSellModal] = useState(false);
   const [showOffShelfModal, setShowOffShelfModal] = useState(false);
   const [sellForm, setSellForm] = useState({
@@ -458,7 +462,7 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          backgroundImage: `url(${item.avatorUrl})`,
+          backgroundImage: `url(${viewUrl})`,
         }}
         className="shortPic"
       />
@@ -613,7 +617,7 @@ const styleCardContainer = css`
   &:hover {
     background: white;
     position: relative;
-    top: -20px;
+    top: -10px;
   }
 `;
 
