@@ -13,6 +13,7 @@ import { getMarketList } from 'reduxs/actions/market';
 import { noDataSvg } from 'utils/svg';
 import { post } from 'utils/request';
 import NFTCard from '../market/component/item';
+import globalConf from 'config/index'
 
 const HomeScreen = (props) => {
   const { dispatch, location, token, address } = props;
@@ -31,12 +32,13 @@ const HomeScreen = (props) => {
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
 
-  const dataTop = [
+  const dataTopAll = [
     {
       src: 'https://test.dnft.world/temp/top3.png',
       title: 'DNFT MINING',
       position: 'right',
-      route: '/mining'
+      route: '/mining',
+      isHide: globalConf.net_env !== 'mainnet'
     },
     {
       src: 'https://test.dnft.world/temp/top2.jpg',
@@ -48,7 +50,8 @@ const HomeScreen = (props) => {
       title: 'GAMEFI NEWS EARLY',
       route: '/igo'
     },
-  ]
+  ];
+  const dataTop = dataTopAll.filter((e) => !e.isHide)
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
 
