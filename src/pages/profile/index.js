@@ -61,7 +61,7 @@ const ProfileScreen = (props) => {
       dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
       dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
-  }, [token]);
+  }, [token, newAddress]);
   const getProfileInfo = () => {
     dispatch(getMyProfileList({userId: newAddress}, token));
   }
