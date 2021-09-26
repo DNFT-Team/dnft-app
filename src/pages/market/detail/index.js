@@ -146,7 +146,7 @@ const MarketDetailScreen = (props) => {
   const getNFTList = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { data } = await post('/api/v1/info/hot')
+      const { data } = await post('/api/v1/info/recommend')
       setList(data?.data?.content || []);
     } finally {
       setIsLoading(false)
