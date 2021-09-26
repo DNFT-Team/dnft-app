@@ -41,9 +41,9 @@ const Profile = (state = initialState, action) => {
     }
   case GET_MY_PROFILE_BATCH.SUCCESS:
     let _batch = Array.isArray(action.payload.data) && action.payload.data.slice() || [];
-    _batch.map((obj) => {
-      obj.avatorUrl = URL_CLOUD + obj.avatorUrl;
-    })
+    // _batch.map((obj) => {
+    //   obj.avatorUrl = URL_CLOUD + obj.avatorUrl;
+    // })
     return {
       ...state,
       batch: _batch
