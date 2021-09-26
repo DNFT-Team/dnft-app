@@ -4,11 +4,6 @@
 .logo {
   width: 34px;
 }
-
-.navActive {
-  background: #112df2;
-  border-radius: 12px;
-}
 .nav {
   display: flex;
   align-items: center;
@@ -17,6 +12,34 @@
   user-select: none;
   padding: 14px 58px 14px 64px;
   font-weight: normal;
+}
+.navActive {
+  background: #29346D;
+  border-radius: 8px;
+}
+.navBot,
+.navRt{
+  position: relative;
+}
+.navActive.navBot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  height: 3px;
+  width: 60%;
+  transform: translateX(-50%);
+  background: #fff;
+}
+.navActive.navRt::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  height: 60%;
+  width: 4px;
+  transform: translateY(-50%);
+  background: #fff;
 }
 
 .navImg {

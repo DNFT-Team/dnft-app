@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import './extra.css'
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
+import noImg from 'images/common/noImg.svg'
 
 const NFTCard = (props) => {
   const {
@@ -32,6 +33,9 @@ const NFTCard = (props) => {
     onRefresh,
     isProfile
   } = props;
+  const url = item.avatorUrl
+  const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
+  const viewUrl = !flag ? url : noImg
   const [showSellModal, setShowSellModal] = useState(false);
   const [showOffShelfModal, setShowOffShelfModal] = useState(false);
   const [sellForm, setSellForm] = useState({
@@ -43,6 +47,7 @@ const NFTCard = (props) => {
   const [isOffLoading, setIsOffLoading] = useState(false);
   const [showPhaseOut, setShowPhaseOut] = useState(false);
   const currentNetEnv = globalConfig.net_env;
+  const currentNetName = globalConfig.net_name;
 
   const onShowSellModal = () => {
     setShowSellModal(true);
@@ -247,7 +252,7 @@ const NFTCard = (props) => {
                       setIsOnLoading(true);
                       const myContract = new window.web3.eth.Contract(
                         is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
-                        is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv]
+                        is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName]
                       );
 
                       let putOnResult;
@@ -336,16 +341,16 @@ const NFTCard = (props) => {
                       setIsAprroveLoading(true);
                       const dnfTokenContract = new window.web3.eth.Contract(
                         is721Contract ? createNFTAbi721 : createNFTAbi1155,
-                        is721Contract ? createNFTContract721[currentNetEnv] : createNFTContract1155[currentNetEnv]
+                        is721Contract ? createNFTContract721[currentNetName] : createNFTContract1155[currentNetName]
                       );
 
                       let isApproved = await dnfTokenContract.methods
-                        .isApprovedForAll(address, is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv])
+                        .isApprovedForAll(address, is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName])
                         .call();
 
                       if (!isApproved) {
                         let result = await dnfTokenContract.methods
-                          .setApprovalForAll(is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv], true)
+                          .setApprovalForAll(is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName], true)
                           .send({
                             from: address,
                           });
@@ -410,7 +415,7 @@ const NFTCard = (props) => {
                   await ethereum.enable();
                   const is721Contract = item.contractType == 721;
 
-                  const contractAddress = is721Contract ? tradableNFTContract721[currentNetEnv] : tradableNFTContract[currentNetEnv];
+                  const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
                   const myContract = new window.web3.eth.Contract(
                     is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
                     contractAddress
@@ -458,7 +463,7 @@ const NFTCard = (props) => {
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
-          backgroundImage: `url(${item.avatorUrl})`,
+          backgroundImage: `url(${viewUrl})`,
         }}
         className="shortPic"
       />
@@ -613,7 +618,7 @@ const styleCardContainer = css`
   &:hover {
     background: white;
     position: relative;
-    top: -20px;
+    top: -10px;
   }
 `;
 

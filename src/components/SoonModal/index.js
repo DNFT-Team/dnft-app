@@ -1,5 +1,5 @@
 import React from 'react';
-import comHead from './dnft_head.png';
+import comHead from './dnft_head.svg';
 import comSoon from './coming_soon.gif';
 const SoonModal = () => (
   <div style={{

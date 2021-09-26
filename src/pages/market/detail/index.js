@@ -41,6 +41,7 @@ const MarketDetailScreen = (props) => {
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const currentNetEnv = globalConfig.net_env;
+  const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
   useEffect(() => {
@@ -113,7 +114,7 @@ const MarketDetailScreen = (props) => {
   }, []);
   const isApproved = async () => {
     setApproveLoading(true)
-    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetEnv] : tradableNFTContract721[currentNetEnv];
+    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
 
     if (datas?.type === 'DNFT') {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
@@ -133,7 +134,7 @@ const MarketDetailScreen = (props) => {
     }
 
     if (datas?.type === 'BUSD') {
-      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract[currentNetEnv]);
+      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract[currentNetName]);
       const busdAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(busdAuth > 0)) {
         await contract.methods
@@ -162,7 +163,7 @@ const MarketDetailScreen = (props) => {
 
         setApproveLoading(false)
         setIsOpen(false)
-        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetEnv] : tradableNFTContract721[currentNetEnv];
+        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
         const tradableNFTAbiType = datas?.contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721;
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbiType,

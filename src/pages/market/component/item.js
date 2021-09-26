@@ -39,7 +39,7 @@ const NFTCard = (props) => {
           <div className={styles.styleInfo}>
             <span className={styles.creator}>Creator</span>
             <div className={styles.styleInfoProfile}>
-              <img className={styles.styleInfoProfileImg} src={item.userAvatorUrl} alt="author"/>
+              <img className={styles.styleInfoProfileImg} src={item.userAvatorUrl} alt=""/>
               <span className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
             </div>
           </div>
