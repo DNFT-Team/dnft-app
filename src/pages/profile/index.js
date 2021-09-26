@@ -21,9 +21,8 @@ import edit_bg from 'images/profile/edit_bg.png';
 import edit_avatar from 'images/profile/edit_avatar.png';
 import ins from 'images/profile/ins.png';
 import twitter from 'images/profile/twitter.png';
-import {
-  Upload,
-} from 'element-react';
+import { Upload } from 'element-react';
+import { Tooltip } from '@chakra-ui/react';
 import { post } from 'utils/request';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
@@ -198,7 +197,9 @@ const ProfileScreen = (props) => {
               httpRequest={(e) => {uploadFile(e.file)}}
               listType="picture"
             >
-              <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+              <Tooltip label="1657*236" hasArrow bg="red.600">
+                <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+              </Tooltip>
             </Upload>
           }
         </div>
