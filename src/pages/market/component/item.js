@@ -6,6 +6,8 @@ import globalConf from 'config/index';
 import Web3 from 'web3';
 import styles from './index.less';
 import noImg from 'images/common/noImg.svg'
+import dnft_unit from 'images/market/dnft_unit.png'
+
 const NFTCard = (props) => {
   const { needAction, item, index, clickDetail, token, address, onLike, onSave } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
@@ -25,22 +27,25 @@ const NFTCard = (props) => {
         <div className={styles.styleCardHeader}>
           <div className={styles.styleCardHeaderBox}>
             <span className={styles.styleName}>{item.name}</span>
-            <button className={styles.chainType}>{item.chainType}</button>
-            {/* <div className={styleStarInfo}>{item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')}{item.type}</div> */}
           </div>
-          <div className={`${styles.styleInfo} ${styles.styleInfoLine}`}>
+          {/* <div className={`${styles.styleInfo} ${styles.styleInfoLine}`}>
             <span className={styles.creator}>Price</span>
             <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} {item.type}</span>
-          </div>
-          <div className={`${styles.styleInfo} ${styles.styleInfoLine}`}>
+          </div> */}
+          {/* <div className={`${styles.styleInfo} ${styles.styleInfoLine}`}>
             <span className={styles.creator}>Quantity</span>
             <span className={styles.price}>{item.quantity}</span>
-          </div>
+          </div> */}
           <div className={styles.styleInfo}>
-            <span className={styles.creator}>Creator</span>
             <div className={styles.styleInfoProfile}>
               <img className={styles.styleInfoProfileImg} src={item.userAvatorUrl} alt=""/>
               <span className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
+            </div>
+            <div className={styles.price_box}>
+              {item.type === 'DNF' && <img src={dnft_unit} />}
+              <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
+              <span className={styles.price_unit}>{item.type}</span>
+
             </div>
           </div>
         </div>

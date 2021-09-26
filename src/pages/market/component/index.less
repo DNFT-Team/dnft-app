@@ -1,29 +1,29 @@
 .styleCardContainer {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
-  padding: 8px;
+  //padding: 8px;
   box-sizing: border-box;
-  margin: 0 .6rem;
+  margin: 0 0.6rem;
 }
 .styleCardContainer:hover {
   box-shadow: 0px 16.1719px 22.3919px rgba(0, 0, 0, 0.05);
 }
 .styleShortPicture {
   position: relative;
-  min-height: 220px;
-  border-radius: 18px;
+  min-height: 300px;
+  border-radius: 10px;
   background-size: cover;
   background-repeat: no-repeat;
   animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
 }
-.styleNoPicture::after{
+.styleNoPicture::after {
   content: attr(noDataText);
   position: absolute;
-  color: #1B225C;
+  color: #1b225c;
   font-weight: bolder;
   font-size: 2rem;
   left: 50%;
@@ -31,10 +31,11 @@
   transform: translate(-50%, -50%);
 }
 @keyframes nftFlow {
-  0%,100%{
+  0%,
+  100% {
     background-position: 0 0;
   }
-  50%{
+  50% {
     background-position: 100% 100%;
   }
 }
@@ -43,12 +44,13 @@
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
+  padding: 0 13px;
+  padding-bottom: 18px;
 }
 .styleCardHeader {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 12px;
   position: relative;
 }
 .styleCardHeaderBox {
@@ -59,15 +61,18 @@
 }
 .styleName {
   box-sizing: border-box;
-  margin: 16px 0px 12px;
+  margin: 18px 0px 8px;
   min-width: 0px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1 1 0%;
   font-size: 16px;
-  font-weight: 500;
-  color: rgb(30, 35, 41);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+  color: #000000;
 }
 .chainType {
   margin: 0px 0px 0px 8px;
@@ -123,9 +128,9 @@
   justify-content: space-between;
 }
 .styleInfoProfileImg {
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
   border-radius: 50%;
 }
 .styleInfoProfileImg[src=""],
@@ -136,21 +141,44 @@
   box-sizing: border-box;
   margin: 0px;
   min-width: 0px;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
   color: rgb(71, 77, 87);
   box-sizing: border-box;
   min-width: 0px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  /* or 133% */
+
+  letter-spacing: -0.01em;
+
+  color: #75819a;
 }
 .price {
   box-sizing: border-box;
   margin: 0px;
   min-width: 0px;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+.price_box {
+  display: flex;
+  //align-items: center;
+}
+.price_unit {
   font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 12px;
+  line-height: 21px;
+  letter-spacing: -0.01em;
+  color: #C3C9DB;
+  padding-left: 4px;
+}
+.price_box img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
