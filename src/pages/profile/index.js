@@ -187,17 +187,20 @@ const ProfileScreen = (props) => {
             background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
           }}
           className={styles.header}>
-          <Upload
-            className="upload-demo"
-            multiple={false}
-            showFileList={false}
-            accept={'.png,.gif,.jpeg,.jpg,.svg'}
-            action=""
-            httpRequest={(e) => {uploadFile(e.file)}}
-            listType="picture"
-          >
-            <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
-          </Upload>
+          {
+            newAddress === address &&
+            <Upload
+              className="upload-demo"
+              multiple={false}
+              showFileList={false}
+              accept={'.png,.gif,.jpeg,.jpg,.svg'}
+              action=""
+              httpRequest={(e) => {uploadFile(e.file)}}
+              listType="picture"
+            >
+              <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+            </Upload>
+          }
         </div>
         <div className={styles.profile}>
           <div className={styles.profile_avatar}>
