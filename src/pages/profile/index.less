@@ -4,7 +4,7 @@
   height: 100%;
 }
 .container {
-  background-color: white;
+  //background-color: white;
 }
 .header {
   height: 236px;
@@ -16,7 +16,7 @@
   align-items: center;
   height: 40px;
   justify-content: center;
-  border: 2px solid #777E91;
+  border: 2px solid #777e91;
   box-sizing: border-box;
   border-radius: 6px;
   width: 197px;
@@ -24,14 +24,14 @@
   right: 36px;
   bottom: 22px;
   cursor: pointer;
-  background: linear-gradient(60deg, rgba(0,0,0,.6), rgba(0,0,0,.2));
+  background: linear-gradient(60deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
   backdrop-filter: blur(4px);
 }
 .edit_bg_span {
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
-  color: #FCFCFD;
+  color: #fcfcfd;
 }
 .edit_bg_img {
   width: 18px;
@@ -54,7 +54,6 @@
   background-color: white;
   border-radius: 50%;
   margin-top: -67px;
-
 }
 .authorImg {
   width: 130px;
@@ -64,7 +63,6 @@
   display: block;
   border: 0;
   border-color: #fff;
-
 }
 .edit_avatar {
   position: absolute;
@@ -102,7 +100,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  color: #777E91;
+  color: #777e91;
 }
 .contact {
   display: flex;
@@ -123,26 +121,9 @@
   margin-top: 55px;
   justify-content: center;
   padding-bottom: 40px;
-  border-bottom: 1px solid #E6E8EC;
+  border-bottom: 1px solid #e6e8ec;
   margin-bottom: 17px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .tabs span {
   font-weight: 600;
@@ -162,22 +143,15 @@
   color: #000;
 }
 
-
-
-
-
-
-
-
-
 .styleFormItemContainer {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
 }
 .styleFormItemContainer .label {
-  color: #75819A;
+  color: #75819a;
   margin-bottom: 10px;
+  display: flex;
 }
 
 .avatarImg {
@@ -188,22 +162,22 @@
 }
 .profile_phone {
   font-weight: 500;
-font-size: 14px;
-line-height: 16px;
-color: #030303;
-margin-bottom: 20px;
-display: flex;
+  font-size: 14px;
+  line-height: 16px;
+  color: #030303;
+  margin-bottom: 20px;
+  display: flex;
 }
 .profile_phone span {
   padding-left: 24px;
   font-size: 12px;
-line-height: 20px;
-/* identical to box height, or 167% */
-
-display: flex;
-align-items: center;
-
-/* Neutrals/4 */
-
-color: #777E91;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  color: #777e91;
+}
+.name_before::before {
+  content: "*";
+  font-size: 16px;
+  color: red;
 }

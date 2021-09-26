@@ -104,7 +104,6 @@ const DataScreen = (props) => {
                   <div style={{
                     background: `center center / cover no-repeat url(${obj.image})`,
                   }} className={styles.dataImg}>
-                    {/* <img className={styles.dataImage} src={obj.image} /> */}
                   </div>
                   <div className={styles.avatarBox}>
                     <div className={styles.avatarContent}>

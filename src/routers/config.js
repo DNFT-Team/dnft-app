@@ -4,6 +4,7 @@ import MarketScreen from 'pages/market';
 import BridgeScreen from 'pages/bridge';
 import MiningScreen from 'pages/mining';
 import DataScreen from 'pages/data';
+import CompetitionScreen from 'pages/data/competition';
 import MarketDetailScreen from 'pages/market/detail';
 import AssetScreen from 'pages/asset';
 import IGOScreen from 'pages/igo';
@@ -33,7 +34,9 @@ const menuAll = [
   { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
   { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
-  { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true }
+  { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true, reqComing: true  }
+  // { net_env: nets, path: '/data', Component: CompetitionScreen, navName: 'Data', icon: dataIcon, exact: true,  }
+
 
 ];
 const MENU_MAP = menuAll.filter((e) => e.net_env.includes(globalConf.net_env))

@@ -68,7 +68,7 @@ export const createNFTContract1155 = {
 }
 export const createNFTContract721 = {
   testnet: '0x3A0fE86f5550fc5055aFe95FC0d1d35D288A9F6D',
-  devnet:'0x2A432C334D6d495A30f42517e6AfAb0cCb5C06b4'
+  devnet:'0xAB679fCC15B9089E36af84d0cC91e154fdd0480d'
 }
 export const tradableNFTContract = {
   testnet: '0xE2D09c4b9A90ecff875D1e7178CD7752cf89bA36',

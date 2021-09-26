@@ -42,7 +42,7 @@ const ProfileEditScreen = (props) => {
     console.log(label, 'label');
     return (
       <div className={styles.styleFormItemContainer}>
-        <div className={styles.label}>{label}</div>
+        <div className={`${styles.label} ${label === 'Name' && styles.name_before}`}>{label}</div>
         {item}
       </div>
     );
