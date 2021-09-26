@@ -233,7 +233,7 @@ const AssetScreen = (props) => {
           <div className={styleIcon}>
             <img src={defaultHeadSvg} />
           </div>
-          <span className={styleCoinName}>DNF</span>
+          <span className={styleCoinName}>DNFT</span>
           <span>{balance}</span>
         </div>
         {currentNetEnv !== 'mainnet' &&
