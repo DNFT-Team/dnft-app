@@ -319,10 +319,41 @@ const MarketDetailScreen = (props) => {
                 </div>
               </div>
             </div>
-            <div className={styles.desc}>{datas?.description}</div>
+            <div className={styles.content_box}>
+              <p className={styles.description}>Description</p>
+              <p className={styles.description_text}>{datas?.description}</p>
+              <div className={styles.desc_line} />
+              <p className={styles.description}>Contract Details</p>
+              <div className={styles.contract_details}>
+                <div className={styles.contract_details_item}>
+                  <div>Blockchain:</div>
+                  <div>{datas?.chainType}</div>
+                </div>
+                <div className={styles.contract_details_item}>
+                  <div>Token Standard:</div>
+                  <div>ERC-{datas?.contractType}</div>
+                </div>
+                <div className={styles.contract_details_item}>
+                  <div>Contract address:</div>
+                  <div>
+                    <a
+                      href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
+                      className={styles.tokenAddress}
+                      target='_blank'
+                      rel="noopener noreferrer"
+                    >
+                      {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
+                    </a>
+                  </div>
+                </div>
+                <div className={styles.contract_details_item}>
+                  <div>Token Id:</div>
+                  <div>{datas?.tokenId}</div>
+                </div>
+              </div>
+            </div>
             <div className={styles.priceBox}>
               <div className={styles.currentPrice}>
-                <div className={styles.currentPriceTitle}>Current Price</div>
                 <div className={styles.priceAll}>
                   <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
                   <div className={styles.worth}>≈ $
@@ -330,26 +361,8 @@ const MarketDetailScreen = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.stock}>
-              {datas?.quantity} in stock
-            </div>
-            <div className={styles.chainInfo}>
-              <div className={styles.chain}>
-                <span className={styles.contract}>Contract address:</span>
-                <a
-                  href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
-                  className={styles.tokenAddress}
-                  target='_blank'
-                  rel="noopener noreferrer"
-                >
-                  {/* {datas?.tokenAddress} */}
-                  {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
-                </a>
-              </div>
-              <div>
-                <span className={styles.contract}>Token Id:</span>
-                <span className={styles.tokenId}>{datas?.tokenId}</span>
+              <div className={styles.stock}>
+                {datas?.quantity} in stock
               </div>
             </div>
             <div className={`${styles.chain} ${styles.ipfsAddress}`}>

@@ -35,12 +35,16 @@ const Market = (props) => {
 
   useEffect(() => {
     if (token) {
+      let _sortTag = sortTag
+      if(sortTag?.includes('price')) {
+        _sortTag = 'price'
+      }
       dispatch(
         getMarketList(
           {
             category: category,
             sortOrder: sortOrder,
-            sortTag: sortTag,
+            sortTag: _sortTag,
             page: 0,
             size: 100,
           },
@@ -70,7 +74,6 @@ const Market = (props) => {
     }} />,
     [category, sortTag]
   );
-  console.log(categoryList, 'categoryList')
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -96,8 +99,9 @@ const Market = (props) => {
             className={styles.selectType}
             placeholder='please choose'
             onChange={(value) => {
+              setSortTag(value);
               if (value.includes('price')) {
-                setSortTag('price');
+                // setSortTag('price');
                 setSortOrder(value.split('-')[0]);
               } else {
                 setSortTag(value);
