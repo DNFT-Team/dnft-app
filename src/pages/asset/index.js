@@ -567,6 +567,7 @@ const styleCardList = css`
   flex-wrap: wrap;
   flex-direction: row;
   height: 100%;
+  gap: 30px 16px;
   margin-top: 20px;
   @media (max-width: 900px) {
     justify-content: center;
