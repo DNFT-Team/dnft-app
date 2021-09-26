@@ -6,7 +6,7 @@ import { MENU_MAP } from 'routers/config';
 import styles from './app.less';
 import { connect } from 'react-redux';
 import { withRouter, useHistory } from 'react-router-dom';
-import Logo from 'images/home/dnftLogo.png';
+import Logo from 'images/common/dnf.svg';
 import GlobalHeader from 'components/GlobalHeader';
 import { css, cx } from 'emotion';
 import { Icon } from '@iconify/react';
@@ -39,21 +39,21 @@ const App = (props) => {
   return (
     <section className={styles.container}>
       <Box className={cx(styleLeftNav, shrink && styleLeftFull)} display={['none', 'none', 'block', 'block', 'block']}>
-        <div className={'styleLogoContainer'}>
-          <img className={styles.logo} src={Logo} alt='logo' />
-          <span className='logoText'>DNFT Protocol</span>
+        <div className={styleTop}>
+          <div className={'styleLogoContainer'}>
+            <img className={styles.logo} src={Logo} alt='logo' />
+            <span className='logoText'>DNFT Protocol</span>
+          </div>
+          <Tag
+            borderRadius="full"
+            variant="solid"
+            color="#5FFFB1"
+            textTransform="capitalize"
+            bg="transparent"
+          >
+            <TagLabel>{globalConf.net_name}</TagLabel>
+          </Tag>
         </div>
-        <Tag
-          borderRadius="full"
-          variant="solid"
-          transform="translateX(-50%)"
-          left="50%"
-          position="absolute"
-          top="70px"
-          colorScheme="green"
-        >
-          <TagLabel>{globalConf.net_name}</TagLabel>
-        </Tag>
         <section>
           {MENU_MAP.map((obj, index) => {
             const isActive = tab === obj.path;
@@ -64,7 +64,7 @@ const App = (props) => {
                 key={'Nav_' + index}
                 className={`${styles.nav} ${
                   isActive && styles.navActive
-                } styleNavContainer`}
+                } ${shrink ? styles.navRt : styles.navBot} styleNavContainer`}
               >
                 <div
                   className={`${styles.navImg} ${
@@ -149,7 +149,7 @@ const styleFootNote = css`
 
 const styleLeftNav = css`
   width: 56px;
-  background-color: rgb(20, 23, 74);
+  background-color: #1B2559;
   height: 100vh;
   position: sticky;
   top: 0;
@@ -158,24 +158,22 @@ const styleLeftNav = css`
   transition: width 0.5s;
 
   .styleLogoContainer {
-    margin-left: 0;
     display: flex;
-
-    margin-top: 16px;
-    margin-bottom: 100px;
+    margin-left: 0;
     flex-direction: row;
     align-items: center;
-    img {
-      position: relative;
-      left: 10px;
-    }
+    justify-content: center;
+    width: 100%;
 
     span {
-      color: white;
+      color: #D2D3F6;
       font-size: 23px;
       font-weight: bolder;
       margin-left: 14px;
     }
+  }
+  section{
+    margin-top: 10rem;
   }
 
   .styleNavText {
@@ -197,6 +195,19 @@ const styleLeftNav = css`
     display: none;
   }
 `;
+const styleTop = css`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  height: 64px;
+  background: #101A4E;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+`;
 const styleLeftFull = css`
   width: 216px;
   z-index: 100000;
@@ -215,7 +226,6 @@ const styleLeftFull = css`
   }
 
   .styleLogoContainer {
-    margin-left: 6px;
     img {
       position: relative;
       left: 0;
