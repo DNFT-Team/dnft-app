@@ -117,7 +117,7 @@ const MarketDetailScreen = (props) => {
     const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
 
     if (datas?.type === 'DNFT') {
-      const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact);
+      const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact[currentNetName]);
       const dnfAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(dnfAuth > 0)) {
         await contract.methods

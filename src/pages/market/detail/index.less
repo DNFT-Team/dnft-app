@@ -21,10 +21,11 @@
   animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
 }
 @keyframes nftFlow {
-  0%,100%{
+  0%,
+  100% {
     background-position: 0 0;
   }
-  50%{
+  50% {
     background-position: 100% 100%;
   }
 }
@@ -35,7 +36,6 @@
 .mainR {
   flex: 1;
   margin-left: 20px;
-  //height: 702px;
   box-sizing: border-box;
   background: #fff;
   border-radius: 10px;
@@ -66,15 +66,16 @@
   margin: 0px 0px 24px;
   min-width: 0px;
   display: flex;
+  align-items: center;
   width: 100%;
 }
 .proNameText {
   box-sizing: border-box;
-  margin: 0px 10px 0px 0px;
+  margin: 0px 38px 0px 0px;
   min-width: 0px;
   font-weight: 600;
-  font-size: 28px;
-  line-height: 36px;
+  font-size: 30px;
+  line-height: 30px;
   overflow: hidden;
   word-break: keep-all;
   text-overflow: ellipsis;
@@ -83,19 +84,18 @@
   -webkit-box-orient: vertical;
 }
 .proNameType {
-  margin-top: 6px;
   box-sizing: border-box;
-  margin: 10px 0px 0px;
   display: inline-block;
-  border-radius: 4px;
-  font-size: 14px;
   height: 24px;
   line-height: 24px;
-  background-color: rgb(245, 245, 245);
-  color: rgb(24, 26, 32);
-  padding-left: 12px;
-  padding-right: 12px;
+  background: rgba(0, 75, 255, 0.1);
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
   font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: #112df2;
 }
 .userInfo {
   box-sizing: border-box;
@@ -300,10 +300,10 @@
   background: #ffffff;
   color: #b3bac6;
   cursor: pointer;
-  transition: all .3s ease-in-out;
-  opacity: .8;
+  transition: all 0.3s ease-in-out;
+  opacity: 0.8;
 }
-.close:hover{
+.close:hover {
   color: #0834e8;
 }
 .styleFormItemContainer {
@@ -556,7 +556,7 @@ img {
     height: 48px !important;
     position: sticky !important;
     bottom: 10px !important;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     animation: btnShade 5s infinite ease-in-out;
   }
   .buyBtn:hover {
@@ -564,11 +564,12 @@ img {
   }
 }
 @keyframes btnShade {
-  0%,100%{
+  0%,
+  100% {
     opacity: 1;
     filter: hue-rotate(0deg);
   }
-  50%{
-    opacity: .8;
+  50% {
+    opacity: 0.8;
   }
 }
