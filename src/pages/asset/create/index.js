@@ -468,6 +468,9 @@ const styleContainer = css`
   background: #FFFFFF;
   padding: .8rem;
   border-radius: 12px;
+  .el-textarea__inner {
+    font-family: Arial;
+  }
   @media (max-width: 900px) {
     margin: 16px 0;
   }
