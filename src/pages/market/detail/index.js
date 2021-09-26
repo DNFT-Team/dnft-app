@@ -638,7 +638,7 @@ const styleTitle = css`
 `;
 
 const styleArtContainer = css`
-  background: white;
+  //background: white;
   padding: 40px 0 56px 32px;
   height: 470px;
   border-radius: 0 0 10px 10px;
