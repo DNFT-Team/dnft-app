@@ -1,6 +1,5 @@
 import { GET_MY_PROFILE_LIST, SET_PROFILE_ADDRESS, GET_MY_PROFILE_TOKEN, GET_MY_PROFILE_BATCH, GET_MY_PROFILE_OWNED, GET_MY_PROFILE_CREATED, GET_MY_PROFILE_SAVE, GET_MY_PROFILE_LIKE} from '../types/profile';
-import globalConf from 'config/index';
-const URL_CLOUD =  globalConf.staticApi;
+const URL_CLOUD =  '';
 const initialState = {
   pending: false,
   datas: null,
@@ -42,9 +41,9 @@ const Profile = (state = initialState, action) => {
     }
   case GET_MY_PROFILE_BATCH.SUCCESS:
     let _batch = Array.isArray(action.payload.data) && action.payload.data.slice() || [];
-    _batch.map((obj) => {
-      obj.avatorUrl = URL_CLOUD + obj.avatorUrl;
-    })
+    // _batch.map((obj) => {
+    //   obj.avatorUrl = URL_CLOUD + obj.avatorUrl;
+    // })
     return {
       ...state,
       batch: _batch
@@ -62,8 +61,7 @@ const Profile = (state = initialState, action) => {
   case GET_MY_PROFILE_SAVE.SUCCESS:
     let dataAll = state?.[action.payload.data.type]?.slice() || [];
     dataAll.map((obj) => {
-      if(obj.id === action.payload.data.nftId)
-        obj.isSaved = !!action.payload.data.saved
+      if (obj.id === action.payload.data.nftId) {obj.isSaved = !!action.payload.data.saved}
     })
     return {
       ...state,
@@ -72,7 +70,7 @@ const Profile = (state = initialState, action) => {
   case GET_MY_PROFILE_LIKE.SUCCESS:
     let _dataAll = state?.[action.payload.data.type]?.slice();
     _dataAll.map((obj) => {
-      if(obj.id === action.payload.data.nftId) {
+      if (obj.id === action.payload.data.nftId) {
         obj.isLiked = !!action.payload.data.like;
         obj.likeCount = obj.likeCount + (obj.isLiked ? 1 : -1)
       }

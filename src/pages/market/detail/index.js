@@ -1,16 +1,15 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import globalConf from 'config/index';
 import styles from './index.less'
 import close from 'images/market/close.png';
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { tradableNFTAbi, tradableNFTAbi721, tokenAbi } from '../../../utils/abi';
-import { tradableNFTContract,  tradableNFTContract721, busdMarketContract, bscTestTokenContact} from '../../../utils/contract';
+import { tradableNFTAbi, tradableNFTAbi721, tokenAbi } from 'utils/abi';
+import { tradableNFTContract,  tradableNFTContract721, busdMarketContract, bscTestTokenContact} from 'utils/contract';
 import Web3 from 'web3';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import {
-  Select, InputNumber
+  Select, InputNumber, Loading
 } from 'element-react';
 import {
   Button, Modal,
@@ -21,7 +20,11 @@ import {
 } from '@chakra-ui/react';
 import { post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
-import globalConfig from '../../../config'
+import globalConfig from 'config/index'
+import Slider from 'react-slick';
+import {css, cx} from 'emotion';
+import {noDataSvg} from 'utils/svg';
+import NFTCard from '../component/item';
 
 
 const MarketDetailScreen = (props) => {
@@ -31,6 +34,8 @@ const MarketDetailScreen = (props) => {
   const sortTag = location?.state?.sortTag;
   let history = useHistory();
 
+  const [list, setList] = useState()
+  const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
 
@@ -44,9 +49,114 @@ const MarketDetailScreen = (props) => {
   const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
+  const currentWindowWidth = useMemo(() => window.innerWidth, []);
+
+  const SampleNextArrow = useCallback(
+    (props) => {
+      const { className, style, onClick, currentSlide, slideCount } = props;
+
+      let slidesToShow;
+      if (currentWindowWidth > 1560) {
+        slidesToShow = 5;
+      } else if (currentWindowWidth > 1280) {
+        slidesToShow = 4;
+      } else if (currentWindowWidth > 1024) {
+        slidesToShow = 3;
+      } else {
+        slidesToShow = 2;
+      }
+      const isLastShow = slidesToShow + currentSlide >= slideCount;
+
+      return (
+        <Icon
+          icon='ant-design:right-circle-outlined'
+          className={cx(className, styleNextArrow)}
+          style={{
+            ...style,
+            opacity: isLastShow ? 0.25 : 1,
+          }}
+          onClick={onClick}
+        />
+      );
+    },
+    [currentWindowWidth]
+  );
+
+  function SamplePrevArrow (props) {
+    const { className, style, onClick, currentSlide, slideCount } = props;
+
+    const isFirstShow = currentSlide === 0;
+
+    return (
+      <Icon
+        icon='ant-design:left-circle-outlined'
+        className={cx(className, stylePrevArrow)}
+        style={{
+          ...style,
+          opacity: isFirstShow ? 0.25 : 1,
+        }}
+        onClick={onClick}
+      />
+    );
+  }
+  const settings = {
+    infinite: false,
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 1560,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4,
+          infinite: false,
+        },
+      },
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: false,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          infinite: false,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: false,
+        },
+      },
+    ],
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    className: styleSliderContainer,
+  };
+
+  const getNFTList = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await post('/api/v1/info/hot')
+      setList(data?.data?.content || []);
+    } finally {
+      setIsLoading(false)
+    }
+  }, [token]);
+
   useEffect(() => {
     if (token) {
       getCollectionList();
+      getNFTList()
     }
   }, [token]);
   useEffect(() => {
@@ -112,11 +222,42 @@ const MarketDetailScreen = (props) => {
       return false
     }
   }, []);
+  const renderNoData = useMemo(
+    () => (
+      <div className={styleNoDataContainer}>
+        <div>{noDataSvg}</div>
+        <span>No content</span>
+      </div>
+    ),
+    []
+  );
+  const clickDetail = (item) => {
+    console.log(item, 'item');
+    history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
+  }
+  const renderCard = useCallback(
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => clickDetail(item)} />,
+    []
+  );
+  const renderHotList = useCallback((title) => (
+    <div className={styleArtContainer}>
+      <h1 className={styleTitle}>{title}</h1>
+      <Loading
+        loading={isLoading}
+        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
+      />
+      <Slider {...settings}>
+        {list?.length > 0
+          ? list.map((item, index) =>  renderCard(item, index))
+          : renderNoData}
+      </Slider>
+    </div>
+  ), [list, isLoading]);
   const isApproved = async () => {
     setApproveLoading(true)
     const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
 
-    if (datas?.type === 'DNFT') {
+    if (datas?.type === 'DNF') {
       const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact[currentNetName]);
       const dnfAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
       if (!(dnfAuth > 0)) {
@@ -387,6 +528,7 @@ const MarketDetailScreen = (props) => {
           </div>
         </div>
       </div>
+      {renderHotList('Hot NFTs')}
       <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside"
         borderRadius="10px"
         isCentered isOpen={isOpen} onClose={onClose}>
@@ -487,4 +629,86 @@ const mapStateToProps = ({ profile, market }) => ({
   address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
+const styleTitle = css`
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 20px;
+  color: #000000;
+  margin: 0;
+`;
 
+const styleArtContainer = css`
+  background: white;
+  padding: 40px 0 56px 32px;
+  height: 470px;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 20px;
+  .circular {
+    position: relative;
+    top: 120px;
+    width: 100px;
+    height: 100px;
+  }
+  @media (max-width: 768px) {
+    padding: 40px 0;
+  }
+`;
+
+const styleNoDataContainer = css`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  flex-direction: column;
+  color: #233a7d;
+  span {
+    margin-top: 20px;
+  }
+`;
+const styleSliderContainer = css`
+  width: 100%;
+`;
+const styleNextArrow = css`
+  display: block;
+  position: absolute;
+  top: -34px !important;
+  right: 50px !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #000000 !important;
+  @media (max-width: 768px) {
+    right: 6px !important;
+  }
+  &:hover{
+    color: #1b2559;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+    color: #000000;
+  }
+`;
+
+const stylePrevArrow = css`
+  display: block;
+  position: absolute;
+  top: -34px !important;
+  left: calc(100% - 120px) !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #000000 !important;
+  @media (max-width: 768px) {
+    left: calc(100% - 70px) !important;
+  }
+  &:hover{
+    color: #1b2559;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+    color: #000000;
+  }
+`;

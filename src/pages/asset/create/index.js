@@ -193,15 +193,17 @@ const CreateNFT = (props) => {
             createNFTAbi1155,
             contractAddress
           );
+          const fee = await myContract.methods.bnbFee().call()
+
           createNFTResult = await myContract.methods
             .create(
               address,
               form.supply,
-              `${globalConf.ipfsDown}${nftUrl}`,
               '0x0000000000000000000000000000000000000000000000000000000000000000',
             )
             .send({
               from: address,
+              value: fee
             });
           if (createNFTResult.transactionHash) {
             const result = await post(
@@ -224,6 +226,8 @@ const CreateNFT = (props) => {
             createNFTAbi721,
             contractAddress
           );
+          const fee = await myContract.methods.bnbFee().call()
+
           createNFTResult = await myContract.methods
             .create(
               address,
@@ -231,6 +235,7 @@ const CreateNFT = (props) => {
             )
             .send({
               from: address,
+              value: fee
             });
           console.log(createNFTResult, 'createNFTResult')
 
@@ -285,7 +290,7 @@ const CreateNFT = (props) => {
       <div className={styleContainer}>
         <h1>
           <Icon className={styleBackArrow} icon="ic:round-arrow-back-ios-new" onClick={() => {history.push('/asset')}}/>
-          Create new NFT
+          Create New NFT
         </h1>
         <Upload
           className={styleUploadContainer}
@@ -468,6 +473,9 @@ const styleContainer = css`
   background: #FFFFFF;
   padding: .8rem;
   border-radius: 12px;
+  .el-textarea__inner {
+    font-family: Arial;
+  }
   @media (max-width: 900px) {
     margin: 16px 0;
   }

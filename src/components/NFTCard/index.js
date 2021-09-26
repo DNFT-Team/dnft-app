@@ -210,7 +210,7 @@ const NFTCard = (props) => {
                 });
               }}
             >
-              <Select.Option key={'DNFT'} label={'DNFT'} value={'DNFT'} />
+              <Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
               <Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
             </Select>
           )}
@@ -256,7 +256,7 @@ const NFTCard = (props) => {
                       );
 
                       let putOnResult;
-                      if (sellForm.type === 'DNFT') {
+                      if (sellForm.type === 'DNF') {
                         if (is721Contract) {
                           putOnResult = await myContract.methods
                             .putOnByDnft(
@@ -614,7 +614,6 @@ const styleCardContainer = css`
   position: relative;
   flex: 1;
   min-width: 300px;
-  margin: 30px 16px;
   &:hover {
     background: white;
     position: relative;

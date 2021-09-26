@@ -13,6 +13,7 @@ import { getMarketList } from 'reduxs/actions/market';
 import { noDataSvg } from 'utils/svg';
 import { post } from 'utils/request';
 import NFTCard from '../market/component/item';
+import globalConf from 'config/index'
 
 const HomeScreen = (props) => {
   const { dispatch, location, token, address } = props;
@@ -31,12 +32,13 @@ const HomeScreen = (props) => {
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
 
-  const dataTop = [
+  const dataTopAll = [
     {
       src: 'https://test.dnft.world/temp/top3.png',
       title: 'DNFT MINING',
       position: 'right',
-      route: '/mining'
+      route: '/mining',
+      isHide: globalConf.net_env !== 'mainnet'
     },
     {
       src: 'https://test.dnft.world/temp/top2.jpg',
@@ -48,7 +50,8 @@ const HomeScreen = (props) => {
       title: 'GAMEFI NEWS EARLY',
       route: '/igo'
     },
-  ]
+  ];
+  const dataTop = dataTopAll.filter((e) => !e.isHide)
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
 
@@ -291,12 +294,12 @@ const styleNextArrow = css`
   display: block;
   position: absolute;
   top: -34px !important;
-  right: 50px !important;
+  right: 16px !important;
   width: 24px !important;
   height: 24px !important;
   color: #000000 !important;
   @media (max-width: 768px) {
-    right: 6px !important;
+    right: 14px !important;
   }
   &:hover{
     color: #1b2559;
@@ -312,12 +315,12 @@ const stylePrevArrow = css`
   display: block;
   position: absolute;
   top: -34px !important;
-  left: calc(100% - 120px) !important;
+  left: calc(100% - 88px) !important;
   width: 24px !important;
   height: 24px !important;
   color: #000000 !important;
   @media (max-width: 768px) {
-    left: calc(100% - 70px) !important;
+    left: calc(100% - 76px) !important;
   }
   &:hover{
     color: #1b2559;
@@ -340,7 +343,7 @@ const styleTitle = css`
   font-weight: bold;
   padding-bottom: 20px;
   color: #000000;
-  margin: 0;
+  margin: 0 0 0 18px;
 `;
 
 const styleArtContainer = css`

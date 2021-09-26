@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { css } from 'emotion';
 import { post } from 'utils/request';
 import globalConf from 'config/index';
+import {ipfs_post} from '../../utils/ipfs-request';
 
 const COLL_SCHEMA = {chainType: '',  address: '',  avatorUrl: '', name: '', description: '', }
 
@@ -31,13 +32,16 @@ const CreateCollectionModal = (props) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
-      const {data} = await post('/api/v1/file/uploadFile', fileData, token);
+      const data = await ipfs_post('/v0/add', fileData);
       // console.log('uploadFile', data);
-      if (data.success) {
-        const url =  data?.data?.fileUrl
-        url && setColData({ ...colData, avatorUrl: url });
+      if (data?.status === 200) {
+        const url = data?.data?.Hash
+        url && setColData({
+          ...colData,
+          avatorUrl: globalConf.ipfsDown + url
+        });
       } else {
-        toast.error(data.message, {
+        toast.error('Upload Failed', {
           position: toast.POSITION.TOP_CENTER,
         });
       }
@@ -121,7 +125,7 @@ const CreateCollectionModal = (props) => {
             httpRequest={(e) => {uploadFile(e.file)}}
             tip={<div className='el-upload__tip'> Drag or choose your file to upload </div>}
           >
-            {colData.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={globalConf.staticApi + colData.avatorUrl} alt="avatar"/> : ''}
+            {colData.avatorUrl ? <img style={{marginBottom: '.6rem'}} src={colData.avatorUrl} alt="avatar"/> : ''}
             <i className='el-icon-upload2' />
             <div className='el-upload__text'>PNG, GIF, WEBP. Max 1Gb.</div>
           </Upload>
