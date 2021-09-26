@@ -37,6 +37,7 @@ const CreateNFT = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
   const currentNetEnv = globalConfig.net_env;
+  const currentNetName = globalConfig.net_name;
 
   let history = useHistory();
 
@@ -185,7 +186,7 @@ const CreateNFT = (props) => {
         await ethereum.enable();
 
         let createNFTResult;
-        let contractAddress = form.contractType == 1155 ?  createNFTContract1155[currentNetEnv] : createNFTContract721[currentNetEnv]
+        let contractAddress = form.contractType == 1155 ?  createNFTContract1155[currentNetName] : createNFTContract721[currentNetName]
 
         if (form.contractType == 1155) {
           const myContract = new window.web3.eth.Contract(
