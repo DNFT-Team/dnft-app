@@ -298,13 +298,15 @@ const CreateNFT = (props) => {
           drag
           multiple={false}
           withCredentials
+          showFileList={false}
           action='https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/'
-          limit={1}
           httpRequest={async (e) => {
             let result = await uploadFile(e.file);
             setNftUrl(result.Hash)
           }}
-          fileList={form?.file ? [form?.file] : undefined}
+          onRemove={() => {
+            setNftUrl(undefined)
+          }}
           tip={
             <div className='el-upload__tip'>
               Drag or choose your file to upload
@@ -425,6 +427,7 @@ const CreateNFT = (props) => {
           <InputNumber
             defaultValue={1}
             min={1}
+            max={10000}
             onChange={(value) => {
               setForm({
                 ...form,
