@@ -15,7 +15,7 @@ import {
 import copy from 'copy-to-clipboard';
 import { css, cx } from 'emotion';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
-// import NFTCard from './card';
+import NFTCollectionsCard from './card';
 import NFTCard from 'components/NFTCard';
 import edit_bg from 'images/profile/edit_bg.png';
 import edit_avatar from 'images/profile/edit_avatar.png';
@@ -50,10 +50,10 @@ const ProfileScreen = (props) => {
             address: newAddress,
             page: 0,
             size: 100,
-            category: 'GAME',
+            // category: 'All',
             sortOrder: 'ASC',
             sortTag: 'createTime',
-            status: 'INWALLET',
+            // status: 'INWALLET',
           },
           token
         )
@@ -125,7 +125,7 @@ const ProfileScreen = (props) => {
           {item}
         </div>
       )),
-    [selectedTab]
+    [selectedTab, newAddress]
   );
 
   const renderNoData = useMemo(
@@ -139,20 +139,28 @@ const ProfileScreen = (props) => {
   );
   const renderCard = useCallback(
     (item, index) => {
-      console.log(item, 'item');
-      return (
-        <NFTCard
-          key={`${item.id}_${selectedTab}`}
-          item={item}
-          index={index}
-          needAction
-          isProfile
-          currentStatus={selectedTab}
-          newAddress={newAddress}
-        />
-      );
+      if(selectedTab === 'Collections')
+        return (
+          <NFTCollectionsCard
+            key={`${item.id}_${selectedTab}`}
+            item={item}
+            index={index}
+          />
+        );
+      else
+        return (
+          <NFTCard
+            key={`${item.id}_${selectedTab}`}
+            item={item}
+            index={index}
+            needAction
+            isProfile
+            currentStatus={selectedTab}
+            newAddress={newAddress}
+          />
+        );
     },
-    [selectedTab]
+    [selectedTab, newAddress]
   );
   const uploadFile = async (file) => {
     try {

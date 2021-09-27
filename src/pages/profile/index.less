@@ -5,6 +5,7 @@
 }
 .container {
   //background-color: white;
+  padding-bottom: 20px;
 }
 .header {
   height: 236px;
@@ -183,4 +184,19 @@
   content: "*";
   font-size: 16px;
   color: red;
+}
+.shortPic{
+  height: 203px;
+  border-radius: 6px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
+}
+@keyframes nftFlow {
+  0%,100%{
+      background-position: 0 0;
+  }
+  50%{
+      background-position: 100% 100%;
+  }
 }
