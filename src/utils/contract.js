@@ -63,12 +63,12 @@ export const bscTestTokenContact = {
   devnet:'0x18d68a172b6662aa9ef2b3376980e941d964d942'
 }
 export const createNFTContract1155 = {
-  testnet: '0xdE36209acee4F244776CaEe914bC84132372B104',
-  devnet:'0x93E954c6baEDea0953d1442c2c56321b22960449'
+  testnet: '0x512D2346F2a418baf587a3160DFeab0421D765Ba',
+  devnet:'0x8636C6208bC28BEed85FA9B3dBbfdAE93837f5dE'
 }
 export const createNFTContract721 = {
   testnet: '0x47cd52E61e3210FF86d797162ba03474dD304E00',
-  devnet:'0xAB679fCC15B9089E36af84d0cC91e154fdd0480d'
+  devnet:'0xf5269E47914926D61623dE7a18dA20eaf1bf9A0a'
 }
 export const tradableNFTContract = {
   testnet: '0xE2D09c4b9A90ecff875D1e7178CD7752cf89bA36',
