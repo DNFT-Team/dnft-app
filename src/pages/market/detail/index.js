@@ -536,6 +536,12 @@ const MarketDetailScreen = (props) => {
               disabled={!datas?.quantity || loading}
               loadingText="Buy Now"
               className={styles.buyBtn} onClick={() => {
+                if(!address) {
+                  toast.warn('Please link wallet', {
+                    position: toast.POSITION.TOP_CENTER,
+                  });
+                  return;
+                }
                 setIsOpen(true)
               }}>Buy Now</Button>
           </div>
