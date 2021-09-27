@@ -55,6 +55,7 @@ const styleInfoAvatarUrl = css`
   img {
     height: 88px;
     margin-right: 6px;
+    border-radius: 6px;
     width: calc((100% - 12px)/3);
     object-fit: cover;
     &:last-child {

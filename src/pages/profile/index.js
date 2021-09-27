@@ -50,10 +50,8 @@ const ProfileScreen = (props) => {
             address: newAddress,
             page: 0,
             size: 100,
-            // category: 'All',
             sortOrder: 'ASC',
             sortTag: 'createTime',
-            // status: 'INWALLET',
           },
           token
         )
@@ -80,10 +78,8 @@ const ProfileScreen = (props) => {
             address: newAddress,
             page: 0,
             size: 100,
-            category: 'GAME',
             sortOrder: 'ASC',
             sortTag: 'createTime',
-            status: 'INWALLET',
           },
           token
         )
