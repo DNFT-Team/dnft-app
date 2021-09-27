@@ -101,7 +101,7 @@ const CreateCollectionModal = (props) => {
   }
 
   return (
-    <Modal closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+    <Modal className={styleModalContainer} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
       isCentered isOpen onClose={onClose}>
       <ModalOverlay />
       <ModalContent width="calc(100% - 40px)" maxW="564px" >
@@ -153,7 +153,7 @@ const CreateCollectionModal = (props) => {
             'Description',
             <Input
               type='textarea'
-              placeholder='e. g. David'
+              placeholder='Description'
               autosize={{ minRows: 4, maxRows: 4 }}
               onChange={(value) => {
                 setColData({
@@ -208,3 +208,9 @@ const styleFormItemContainer = css`
     margin-bottom: 10px;
   }
 `;
+
+const styleModalContainer = css`
+  .el-textarea__inner {
+    font-family: Arial;
+  }
+`

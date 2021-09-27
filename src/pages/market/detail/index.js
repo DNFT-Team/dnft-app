@@ -336,7 +336,7 @@ const MarketDetailScreen = (props) => {
                 {
                   buyerAddress: address,
                   collectionId: form?.collectionId,
-                  tokenAddress: datas?.tokenAddress,
+                  tokenAddress:datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
                   quantity: form.quantity,
@@ -372,7 +372,7 @@ const MarketDetailScreen = (props) => {
                 {
                   buyerAddress: address,
                   collectionId: form?.collectionId,
-                  tokenAddress: datas?.tokenAddress,
+                  tokenAddress:datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
                   quantity: form.quantity,

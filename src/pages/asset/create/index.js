@@ -349,7 +349,7 @@ const CreateNFT = (props) => {
           'Description',
           <Input
             type='textarea'
-            placeholder='description'
+            placeholder='Description'
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {
               setForm({
@@ -366,6 +366,7 @@ const CreateNFT = (props) => {
               placeholder='Please choose'
               defaultValue={form.collectionId}
               value={form.collectionId}
+              className={styleCollection}
               style={{flex: 1, marginRight: '8px'}}
               onChange={(value) => {
                 setForm({
@@ -580,3 +581,20 @@ const styleBackArrow = css`
     padding:0 10px 0 0 ; 
   }
 `;
+
+const styleCollection = css`  
+  .el-select-dropdown__empty {
+    width: 0;
+    overflow: hidden;
+    &:before {
+      content: "No Data";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+`

@@ -15,6 +15,11 @@ import { post } from 'utils/request';
 import NFTCard from '../market/component/item';
 import globalConf from 'config/index'
 
+import banner1 from 'images/home/banner/marketplace.png'
+import banner2 from 'images/home/banner/mintNft.png'
+import banner3 from 'images/home/banner/mining.png'
+import banner4 from 'images/home/banner/gamefi.png'
+
 const HomeScreen = (props) => {
   const { dispatch, location, token, address } = props;
   let history = useHistory();
@@ -34,19 +39,24 @@ const HomeScreen = (props) => {
 
   const dataTopAll = [
     {
-      src: 'https://test.dnft.world/temp/top3.png',
+      src: banner1,
+      title: 'NFT MARKET',
+      route: '/market'
+    },
+    {
+      src: banner2,
+      title: 'NFT Mint',
+      route: ''
+    },
+    {
+      src: banner3,
       title: 'DNFT MINING',
       position: 'right',
       route: '/mining',
       isHide: globalConf.net_env !== 'mainnet'
     },
     {
-      src: 'https://test.dnft.world/temp/top2.jpg',
-      title: 'NFT MARKET',
-      route: '/market'
-    },
-    {
-      src: 'https://test.dnft.world/temp/top1.png',
+      src: banner4,
       title: 'GAMEFI NEWS EARLY',
       route: '/igo'
     },
@@ -210,7 +220,7 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger='click' height={'24rem'}>
+      <Carousel trigger='click' height={'382px'}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div className={styleBanner} style={{
@@ -219,7 +229,7 @@ const HomeScreen = (props) => {
             }} onClick={() => {
               item.route && history.push(item.route)
             }}>
-              <span className={styleCaroTitle}>{item.title}</span>
+              {/* <span className={styleCaroTitle}>{item.title}</span>*/}
             </div>
           </Carousel.Item>
         ))}
@@ -347,7 +357,7 @@ const styleTitle = css`
 `;
 
 const styleArtContainer = css`
-  background: white;
+  //background: white;
   padding: 40px 0 56px 32px;
   height: 470px;
   border-radius: 0 0 10px 10px;
