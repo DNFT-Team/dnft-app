@@ -87,7 +87,7 @@ const NFTCard = (props) => {
       >
         <Dialog.Body>
           {renderFormItem(
-            'Quantity',
+            `Quantity/${item.quantity || 0}`,
             <InputNumber
               disabled={item.contractType == 721}
               min={1}
@@ -96,7 +96,7 @@ const NFTCard = (props) => {
               onChange={(value) => {
                 setSellForm({
                   ...sellForm,
-                  quantity: value,
+                  quantity: value > item.quantity ? item.quantity : value,
                 });
               }}
             />
