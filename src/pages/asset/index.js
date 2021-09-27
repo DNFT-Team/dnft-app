@@ -251,7 +251,7 @@ const AssetScreen = (props) => {
           height: '236px',
           borderRadius: '10px',
           position: 'relative',
-          marginBottom: '110px'
+          marginBottom: '90px'
         }}>
         <div className={styleHeader}>
           <div className={styleAssetAccountContainer}>
@@ -458,7 +458,7 @@ const styleHeader = css`
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  width: calc(100% - 160px);
+  width: calc(100% - 146px);
   left: 50%;
   top: 180px;
   transform: translate(-50%, 0);
@@ -489,7 +489,7 @@ const styleCreateNFT = css`
     align-items: center;
     justify-content: center;
     display: flex;
-    margin-top: 16px;
+    margin-top: 20px;
   }
 `;
 
