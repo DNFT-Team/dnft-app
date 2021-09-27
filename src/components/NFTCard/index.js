@@ -521,7 +521,6 @@ const styleCardContainer = css`
   position: relative;
   flex: 1;
   min-width: 300px;
-  margin: auto;
   &:hover {
     background: white;
     position: relative;
