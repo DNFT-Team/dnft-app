@@ -401,7 +401,7 @@ const MarketDetailScreen = (props) => {
   }
   const handleLinkProfile = () => {
     if(!token) {
-      toast.warn('The current account has not been linked to the wallet', {
+      toast.warn('Please link wallet', {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
