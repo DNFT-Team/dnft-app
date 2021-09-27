@@ -290,6 +290,12 @@ const GlobalHeader = (props) => {
             ))
           }
           <MenuDivider />
+          <MenuGroup title="BNB">
+            <MenuItem fontWeight="bolder" boxSizing="border-box">
+              <a href="https://testnet.binance.org/faucet-smart" target="_blank" rel="noreferrer">Get BNB</a>
+            </MenuItem>
+          </MenuGroup>
+          <MenuDivider />
           <MenuGroup title="More+">
             <MenuItem fontWeight="bolder" boxSizing="border-box" onClick={getFaucetMore}>History</MenuItem>
           </MenuGroup>

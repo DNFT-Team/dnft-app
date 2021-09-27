@@ -95,7 +95,6 @@ const styleIgo = css`
   border-radius: 1.429rem;
   //min-height: 50vh;
   text-align: center;
-  background: #FFFFFF;
   padding: 6.42rem 0;
   position: relative;
   z-index: 0;
@@ -134,6 +133,7 @@ const styleIgo = css`
         border-radius: 20px;
         width: 100%;
         border: 2px solid #E6E8EC;
+        background: #FFFFFF;
         .avatar{
           border-radius: 1.429rem;
           width: 100%;

@@ -22,6 +22,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../../config/index';
 
+const iframeUrl = `https://fun.dnft.world/${globalConfig.net_env === 'mainnet' ? 'syncbtc' : 'test_syncbtc'}/`
+
 const SyncBtcScreen = (props) => {
   let history = useHistory();
   const { token } = props;
@@ -301,7 +303,7 @@ const SyncBtcScreen = (props) => {
 
   useEffect(() => {
     window.addEventListener('message', (ev) => {
-      if (ev.origin === 'http://fun.dnft.world') {
+      if (ev.origin === 'https://fun.dnft.world') {
         setShowConfirmSuccess(true);
       }
     });
@@ -419,7 +421,7 @@ const SyncBtcScreen = (props) => {
       <iframe
         style={{ visibility: playing ? 'visible' : 'hidden' }}
         className={styleIframeContainer}
-        src='http://fun.dnft.world/test_syncbtc/'
+        src={iframeUrl}
       />
       <div className={styleBottomContainer}>
         <div>
