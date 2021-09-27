@@ -283,7 +283,7 @@ const CreateNFT = (props) => {
       <Alert
         className={styleAlert}
         title={
-          'You have not created the collection yet. DNFT will include a link to this URL on this item\'s detail page'
+          'DNFT strongly recommends that you better manage and display your NFTs by creating the collection！We will support the share-url to the collection in the next release.'
         }
         type='warning'
       />

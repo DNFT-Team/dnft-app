@@ -1,0 +1,112 @@
+.gallery {
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+}
+.nft-gallery {
+    position: relative;
+    margin-top: 148px;
+    max-width: 80%;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre;
+    color: #22262e;
+    font-size: 3.4285rem;
+    font-weight: 700;
+}
+.article {
+    webkit-box-orient: vertical;
+    display: -webkit-inline-box;
+    webkit-line-clamp: 2;
+    position: relative;
+    margin-top: 8px;
+    width: 48%;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    line-height: 2.857rem;
+    white-space: normal;
+    color: #777e90;
+    font-size: 1rem;
+    font-weight: 400;
+}
+.wrapper-inner-4 {
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 2.214rem;
+    width: 65%;
+    height: 530px;
+}
+.group-7 {
+    position: relative;
+    margin-top: 11px;
+    border-radius: 1rem;
+    min-height: 347px;
+    width: 100%;
+    background-color: #c4c4c4;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.nft-gallery-1 {
+    position: relative;
+    margin-top: 1.857rem;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre;
+    color: #1b2559;
+    font-size: 1.4285rem;
+    font-weight: 500;
+}
+.info {
+    position: relative;
+    margin-top: 9px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre;
+    color: #777e90;
+    font-size: 1rem;
+    font-weight: 400;
+}
+.enter-wrapper {
+    box-sizing: border-box;
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 2rem;
+    border-radius: .57rem;
+    background-color: #112df2;
+    padding-right: 3.214rem;
+    padding-left: 3.214rem;
+    height: 3.214rem;
+    font-weight: 700;
+    line-height: 1.14rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.enter {
+    margin-top: -1px;
+    text-align: center;
+    color: #fbfcfc;
+    font-size: 16px;
+}
+.summary {
+    position: relative;
+    width: 80%;
+    margin-top: 5.6428rem;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: pre;
+    color: #777e90;
+    font-size: 0.857rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
