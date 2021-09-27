@@ -47,7 +47,7 @@ const ROUTER_MAP = [
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
   { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
-  { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: true  },
+  { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: 'devnet' !== globalConf.net_name  },
   { path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
   { path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
