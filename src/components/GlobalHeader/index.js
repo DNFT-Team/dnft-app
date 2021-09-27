@@ -264,11 +264,9 @@ const GlobalHeader = (props) => {
     }
   ]
   useEffect(() => {
-    if (token) {
-      dispatch(
-        getCategoryList(null, token)
-      );
-    }
+    dispatch(
+      getCategoryList(null, token)
+    );
   }, [token])
   const renderFaucet = () => (
     globalConf.net_env === 'testnet' && address && (
