@@ -15,7 +15,6 @@ import {
 } from '../../utils/contract';
 import { createNFTAbi1155, createNFTAbi721, tokenAbi, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
 import dayjs from 'dayjs';
-import './extra.css'
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
@@ -379,7 +378,7 @@ const NFTCard = (props) => {
           <div className={styleInfo} style={{
             borderBottom: currentStatus.value !== 'SOLD' ? '1px solid #F3F7F9' : 'none'
           }}>
-            <div>
+            <div className="headLine">
               <span className="title">{item.name}</span>
               <span className={styleNickNameContainer}><span className='dot'></span>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
             </div>
@@ -522,9 +521,23 @@ const styleCardContainer = css`
   flex: 1;
   min-width: 300px;
   &:hover {
-    background: white;
     position: relative;
-    top: -10px;
+    box-shadow: rgb(218 218 218) 5px 5px 20px 0px inset, rgb(255 255 255) -5px -5px 20px 0px inset;
+    //top: -10px;
+  }
+  .shortPic{
+    min-height: 300px;
+    border-radius: 10px 10px 0 0 ;
+    background-repeat: no-repeat;
+    animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
+  }
+  @keyframes nftFlow {
+    0%,100%{
+      background-position: 0 0;
+    }
+    50%{
+      background-position: 100% 100%;
+    }
   }
 `;
 
@@ -552,17 +565,18 @@ const styleInfo = css`
   align-items: center;
   padding-bottom: 12px;
   margin-bottom: 12px;
-  .title {
-    color: #11142d;
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    margin-right: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #11142d;
+  .headLine{
+    width: 80%;
+    .title {
+      color: #11142d;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      margin-right: 10px;
+      font-size: 16px;
+      font-weight: 600;
+    }
   }
 `;
 
