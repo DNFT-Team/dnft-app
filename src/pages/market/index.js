@@ -26,12 +26,12 @@ const Market = (props) => {
   ];
 
   useEffect(() => {
-    if(!address) {
-      toast.warn('Please link wallet', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      return;
-    }
+    // if(!address) {
+    //   toast.warn('Please link wallet', {
+    //     position: toast.POSITION.TOP_CENTER,
+    //   });
+    //   return;
+    // }
     if (token) {
       let _sortTag = sortTag
       if(sortTag?.includes('price')) {

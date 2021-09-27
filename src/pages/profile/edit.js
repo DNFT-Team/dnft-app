@@ -138,6 +138,7 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Name',
             <Input
+              maxLength={30}
               placeholder='Name'
               value={form?.nickName}
               onChange={(value) => {
