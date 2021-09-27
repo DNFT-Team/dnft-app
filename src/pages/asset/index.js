@@ -7,7 +7,7 @@ import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi';
 import { noDataSvg } from 'utils/svg';
 import Web3 from 'web3';
 import NFTCard from '../../components/NFTCard';
-import { post } from 'utils/request';
+import { get, post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import defaultHeadSvg from '../../images/asset/Head.svg';
@@ -70,12 +70,29 @@ const AssetScreen = (props) => {
   const [sortOrder, setSortOrder] = useState('ASC');
   const rightChainId = currentNetEnv === 'testnet' ? 97 : 56;
   const [isLoading, setIsLoading] = useState(false);
+  const [bannerUrl, setBannerUrl] = useState();
+  const [avatorUrl, setAvatorUrl] = useState();
+  console.log(avatorUrl, 'avatorUrl')
 
   let history = useHistory();
+
+  const getBannerUrl = async () => {
+    const { data } = await post(
+      `/api/v1/users/address/${address}`,
+      {},
+      token
+    );
+    setBannerUrl(data?.data?.bannerUrl)
+    setAvatorUrl(data?.data?.avatorUrl)
+  }
 
   useEffect(() => {
     injectWallet();
   }, []);
+
+  useEffect(() => {
+    getBannerUrl()
+  },[address, token])
 
   const init = () => {
     getBalance();
@@ -228,27 +245,37 @@ const AssetScreen = (props) => {
 
   const renderAssetHeader = useMemo(
     () => (
-      <div className={styleHeader}>
-        <div className={styleAssetAccountContainer}>
-          <div className={styleIcon}>
-            <img src={defaultHeadSvg} />
+      <div
+        style={{
+          background: `#b7b7b7 center center / cover no-repeat url(${bannerUrl})`,
+          height: '236px',
+          borderRadius: '10px',
+          position: 'relative',
+          marginBottom: '110px'
+        }}>
+        <div className={styleHeader}>
+          <div className={styleAssetAccountContainer}>
+            <div className={styleIcon} style={{
+              background: `center center / cover no-repeat url(${avatorUrl})`
+            }}>
+            </div>
+            <span className={styleCoinName}>DNF</span>
+            <span>{balance}</span>
           </div>
-          <span className={styleCoinName}>DNF</span>
-          <span>{balance}</span>
+          {currentNetEnv !== 'mainnet' &&
+            <div
+              className={styleCreateNFT}
+              onClick={() => {
+                history.push('/asset/create');
+              }}
+            >
+              Create NFT
+            </div>
+          }
         </div>
-        {currentNetEnv !== 'mainnet' &&
-          <div
-            className={styleCreateNFT}
-            onClick={() => {
-              history.push('/asset/create');
-            }}
-          >
-            Create NFT
-          </div>
-        }
       </div>
     ),
-    [balance]
+    [balance, bannerUrl, avatorUrl]
   );
 
   const renderTabList = useMemo(
@@ -425,24 +452,38 @@ const styleContainer = css`
 
 const styleHeader = css`
   border-bottom: 1px solid #efefef;
-  padding: 28px 36px;
+  padding: 0 36px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  position: absolute;
+  width: calc(100% - 160px);
+  left: 50%;
+  top: 180px;
+  transform: translate(-50%, 0);
+  background: linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%);
+  border: 1.5px solid #FFFFFF;
+  box-shadow: 0px 2px 5.5px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(21px);
+  height: 110px;
+  border-radius: 15px;
   @media (max-width: 900px) {
     padding: 24px 12px;
     flex-wrap: wrap;
+    top: 60%;
+    width: 80%;
   }
 `;
 
 const styleCreateNFT = css`
   background-color: #112df2;
   color: white;
-  padding: 16px 36px;
-  font-size: 16px;
+  padding: 14px 18px;
+  font-size: 14px;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: bold;
   @media (max-width: 900px) {
     width: 100%;
     align-items: center;
@@ -520,9 +561,9 @@ const styleTabContainer = css`
 `;
 
 const styleIcon = css`
-  width: 70px;
-  height: 70px;
-  border-radius: 70px;
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
