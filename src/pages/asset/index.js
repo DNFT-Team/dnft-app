@@ -70,8 +70,8 @@ const AssetScreen = (props) => {
   const [sortOrder, setSortOrder] = useState('ASC');
   const rightChainId = currentNetEnv === 'testnet' ? 97 : 56;
   const [isLoading, setIsLoading] = useState(false);
-  const [bannerUrl, setBannerUrl] = useState();
-  const [avatorUrl, setAvatorUrl] = useState();
+  const [bannerUrl, setBannerUrl] = useState('');
+  const [avatorUrl, setAvatorUrl] = useState('');
   console.log(avatorUrl, 'avatorUrl')
 
   let history = useHistory();
@@ -92,7 +92,7 @@ const AssetScreen = (props) => {
 
   useEffect(() => {
     getBannerUrl()
-  },[address, token])
+  }, [address, token])
 
   const init = () => {
     getBalance();
@@ -371,7 +371,7 @@ const AssetScreen = (props) => {
             <div>{renderTabList}</div>
             <Loading
               loading={isLoading}
-              style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex:10000 }}
+              style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
             />
             <div>
               <Select
