@@ -36,6 +36,7 @@ const HomeScreen = (props) => {
 
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
+  const [cardType, setCardType] = useState(window.innerWidth < 1200 ? '' : 'card');
 
   const dataTopAll = [
     {
@@ -46,7 +47,7 @@ const HomeScreen = (props) => {
     {
       src: banner2,
       title: 'NFT Mint',
-      route: ''
+      route: '/asset'
     },
     {
       src: banner3,
@@ -84,7 +85,11 @@ const HomeScreen = (props) => {
   }, [token]);
 
   useEffect(() => {
-    window.addEventListener('resize', () => currentWindowWidth);
+    window.addEventListener('resize', (e) => {
+      const type = e.currentTarget.innerWidth < 1200 ? '' : 'card'
+      setCardType(type)
+      return currentWindowWidth
+    });
 
     return () => {
       window.removeEventListener('resize', () => currentWindowWidth);
@@ -220,7 +225,7 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger='click' height={'382px'}>
+      <Carousel trigger='click' height="382px" type={cardType}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div className={styleBanner} style={{
@@ -280,7 +285,7 @@ const styleContainer = css`
   margin: 10px 16px 0 16px;
   .el-carousel {
     border-radius: 10px;
-    background: white;
+    background: transparent;
     .el-carousel__button {
       width: 10px;
       height: 10px;
