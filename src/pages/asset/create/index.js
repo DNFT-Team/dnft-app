@@ -199,6 +199,7 @@ const CreateNFT = (props) => {
             .create(
               address,
               form.supply,
+              `${globalConf.ipfsDown}${nftUrl}`,
               '0x0000000000000000000000000000000000000000000000000000000000000000',
             )
             .send({

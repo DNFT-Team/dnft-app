@@ -3374,6 +3374,11 @@ export const createNFTAbi1155 = [
         'type': 'uint256'
       },
       {
+        'internalType': 'string',
+        'name': '_uri',
+        'type': 'string'
+      },
+      {
         'internalType': 'bytes',
         'name': '_data',
         'type': 'bytes'
@@ -3636,7 +3641,7 @@ export const createNFTAbi1155 = [
     'inputs': [
       {
         'internalType': 'uint256',
-        'name': '',
+        'name': '_id',
         'type': 'uint256'
       }
     ],
@@ -3663,6 +3668,7 @@ export const createNFTAbi1155 = [
     'type': 'receive'
   }
 ]
+
 ;
 
 export const createNFTAbi721 = [

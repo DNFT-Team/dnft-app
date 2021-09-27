@@ -67,101 +67,6 @@ const NFTCard = (props) => {
     );
   };
 
-  const renderAction = (item) => {
-    const isEmpty = item.quantity === 0;
-    switch (currentStatus.value) {
-    case 'INWALLET':
-      const isEmpty = item.quantity === 0;
-      return (
-        <div className={styleButtonContainer}>
-          <div
-            className={cx(styleButton)}
-            style={{
-              opacity: isEmpty ? 0.5 : 1,
-              cursor: isEmpty ? 'not-allowed' : 'pointer',
-            }}
-            onClick={() => {
-              if (isEmpty) {
-                return;
-              }
-              onShowSellModal();
-            }}
-          >
-              Launch
-          </div>
-        </div>
-      );
-    case 'ONSALE':
-      return (
-        <div className={styleButtonContainer}>
-          <div
-            className={cx(styleButton, styleBorderButton)}
-            onClick={() => {
-              onShowOffShelfModal();
-            }}
-          >
-              Phase Out
-          </div>
-        </div>
-      );
-    case 'MYFAVORITE':
-      return item.sold ? (
-        <div className={styleButtonContainer}>
-          <span>
-            <span className={styleText}>Sold for </span>
-            <span className={stylePrice}>{item.price}</span>
-          </span>
-          <div className={styleText}>14/06/2021</div>
-        </div>
-      ) : (
-        <div className={styleButtonContainer}>
-          <span className={stylePrice}>{item.price}ETH</span>
-        </div>
-      );
-    case 'SOLD':
-      return (
-        <div className={styleButtonContainer}>
-          <div className={styleText}>
-            Transaction Time: {dayjs(item.createTime).format('DD/MM/YYYY')}
-          </div>
-        </div>
-      );
-
-    default:
-      return null;
-    }
-  };
-
-  const handleLike = async () => {
-    if (token && address) {
-      await post(
-        '/api/v1/nft/like',
-        {
-          address: address,
-          like: item.isLiked ? 0 : 1,
-          id: item.id,
-        },
-        token
-      );
-      onLike();
-    }
-  };
-
-  const handleSave = async () => {
-    if (token && address) {
-      await post(
-        '/api/v1/nft/save',
-        {
-          address: address,
-          saved: item.isSaved ? 0 : 1,
-          id: item.id,
-        },
-        token
-      );
-      onSave();
-    }
-  };
-
   const renderSellModal = useMemo(() => {
     const isPriceInvalid =
       typeof sellForm.price !== 'number' ||
@@ -319,7 +224,8 @@ const NFTCard = (props) => {
                             ),
                             nftId: item.nftId,
                             orderId: orderId,
-                            collectionId: item.collectionId
+                            collectionId: item.collectionId,
+                            tokenAddress: item.tokenAddress
                           },
                           token
                         );
@@ -432,6 +338,7 @@ const NFTCard = (props) => {
                       '/api/v1/trans/sell_back',
                       {
                         orderId: item.orderId,
+                        tokenAddress: item.tokenAddress
                       },
                       token
                     );
