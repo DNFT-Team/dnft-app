@@ -75,7 +75,7 @@ const NFTCard = (props) => {
     return (
       <Dialog
         customClass={styleModalContainer}
-        title="List"
+        title="Put for sale"
         visible
         closeOnClickModal={false}
         onCancel={() => {
@@ -421,7 +421,7 @@ const NFTCard = (props) => {
                 onShowOffShelfModal()();
               }}
             >
-                Unsell
+              Cancel sale
             </div>
           }
         </div>
