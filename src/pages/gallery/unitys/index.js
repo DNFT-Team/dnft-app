@@ -2,7 +2,7 @@ import React from 'react';
 import { Kbd } from '@chakra-ui/react';
 import styles from './style.less';
 
-const unityUrl = 'http://fun.dnft.world/unityv8/index.html';
+const unityUrl = 'https://fun.dnft.world/unityv8/index.html';
 
 const UnityScreen = (props) => (
   <div className={styles.unityWrapper}>
