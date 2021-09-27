@@ -509,7 +509,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.priceBox}>
               <div className={styles.currentPrice}>
                 <div className={styles.priceAll}>
-                  {datas.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
+                  {datas?.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
                   <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
                   <div className={styles.worth}>≈ $
                     {transPrice(datas?.amount * price)}
@@ -653,7 +653,7 @@ const styleTitle = css`
 
 const styleArtContainer = css`
   //background: white;
-  padding: 40px 0 56px 32px;
+  padding: 30px;
   height: 470px;
   border-radius: 0 0 10px 10px;
   margin-bottom: 20px;
