@@ -75,7 +75,7 @@ const NFTCard = (props) => {
     return (
       <Dialog
         customClass={styleModalContainer}
-        title="Launch"
+        title="List"
         visible
         closeOnClickModal={false}
         onCancel={() => {
