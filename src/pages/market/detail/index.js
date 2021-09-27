@@ -336,6 +336,7 @@ const MarketDetailScreen = (props) => {
                 {
                   buyerAddress: address,
                   collectionId: form?.collectionId,
+                  tokenAddress: datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
                   quantity: form.quantity,
@@ -582,6 +583,7 @@ const MarketDetailScreen = (props) => {
                   defaultValue={form.collectionId}
                   value={form.collectionId}
                   style={{flex: 1, marginRight: '28px'}}
+                  className={styleCollection}
                   onChange={(value) => {
                     setForm({
                       ...form,
@@ -733,3 +735,19 @@ const stylePrevArrow = css`
     color: #000000;
   }
 `;
+const styleCollection = css`  
+  .el-select-dropdown__empty {
+    width: 0;
+    overflow: hidden;
+    &:before {
+      content: "No Data";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+`
