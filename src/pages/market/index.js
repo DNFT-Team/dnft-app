@@ -7,9 +7,11 @@ import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
 import { getMarketList } from 'reduxs/actions/market';
+import { toast } from 'react-toastify';
+
 const Market = (props) => {
   let history = useHistory();
-  const { dispatch, token, datas, categoryList, pending, location } = props;
+  const { dispatch, token, datas, categoryList, pending, location, address } = props;
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
 
@@ -24,25 +26,31 @@ const Market = (props) => {
   ];
 
   useEffect(() => {
-    // if (token) {
-    let _sortTag = sortTag
-    if(sortTag?.includes('price')) {
-      _sortTag = 'price'
+    if(!address) {
+      toast.warn('Please link wallet', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
     }
-    dispatch(
-      getMarketList(
-        {
-          category: category,
-          sortOrder: sortOrder,
-          sortTag: _sortTag,
-          page: 0,
-          size: 100,
-        },
-        token
-      )
-    );
-    // }
-  }, [token, category, sortTag]);
+    if (token) {
+      let _sortTag = sortTag
+      if(sortTag?.includes('price')) {
+        _sortTag = 'price'
+      }
+      dispatch(
+        getMarketList(
+          {
+            category: category,
+            sortOrder: sortOrder,
+            sortTag: _sortTag,
+            page: 0,
+            size: 100,
+          },
+          token
+        )
+      );
+    }
+  }, [token, category, sortTag, address]);
 
   const renderNoData = useMemo(
     () => (
@@ -123,6 +131,7 @@ const mapStateToProps = ({ profile, market }) => ({
   datas: market.datas,
   categoryList: market.category,
   pending: market.pending,
+  address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(Market));
 const styleNoDataContainer = css`
