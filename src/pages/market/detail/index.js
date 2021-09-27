@@ -411,7 +411,7 @@ const MarketDetailScreen = (props) => {
   }
   const renderFormItem = (label, item) => (
     <div className={styles.styleFormItemContainer}>
-      <div className='label'>{label}</div>
+      <div className={styles.label}>{label}</div>
       {item}
     </div>
   );
@@ -549,10 +549,10 @@ const MarketDetailScreen = (props) => {
         <ModalOverlay />
         <ModalContent width="564px" maxW="initial">
           <ModalHeader color="#11142d"
-            p="32px" fontSize="18px"
+            p="32px" fontSize="24px"
             display="flex" justifyContent="space-between"
             alignItems="center">
-            Buy
+            Buy NFT
             <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
               icon={<Icon icon="mdi:close"/>}/>
           </ModalHeader>
