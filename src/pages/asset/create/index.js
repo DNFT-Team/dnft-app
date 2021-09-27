@@ -557,7 +557,7 @@ const styleAlert = css`
   display: flex;
   align-items: center;
   position: sticky;
-  top: 64px;
+  top: 84px;
   z-index: 2;
 `;
 const styleBackArrow = css`
