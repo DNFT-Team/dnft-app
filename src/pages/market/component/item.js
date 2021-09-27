@@ -7,6 +7,7 @@ import Web3 from 'web3';
 import styles from './index.less';
 import noImg from 'images/common/noImg.svg'
 import dnft_unit from 'images/market/dnft_unit.png'
+import busd_unit from 'images/market/busd.svg'
 
 const NFTCard = (props) => {
   const { needAction, item, index, clickDetail, token, address, onLike, onSave } = props;
@@ -42,7 +43,7 @@ const NFTCard = (props) => {
               <span className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
             </div>
             <div className={styles.price_box}>
-              {item.type === 'DNF' && <img src={dnft_unit} />}
+              {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
               <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
               <span className={styles.price_unit}>{item.type}</span>
 

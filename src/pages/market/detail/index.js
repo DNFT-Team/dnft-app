@@ -25,7 +25,8 @@ import Slider from 'react-slick';
 import {css, cx} from 'emotion';
 import {noDataSvg} from 'utils/svg';
 import NFTCard from '../component/item';
-
+import dnft_unit from 'images/market/dnft_unit.png'
+import busd_unit from 'images/market/busd.svg'
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -292,6 +293,7 @@ const MarketDetailScreen = (props) => {
     }
 
   }
+
   const clickBuyItem = async () => {
     try {
       if (window.ethereum) {
@@ -398,6 +400,15 @@ const MarketDetailScreen = (props) => {
   const historyBack = () => {
     history.push('/market', {category, sortTag})
   }
+  const handleLinkProfile = () => {
+    if(!token) {
+      toast.warn('The current account has not been linked to the wallet', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    history.push(`/profile/address/${datas?.address}`)
+  }
   const renderFormItem = (label, item) => (
     <div className={styles.styleFormItemContainer}>
       <div className='label'>{label}</div>
@@ -435,8 +446,10 @@ const MarketDetailScreen = (props) => {
     } catch (e) {}
     return _amount;
   }
+
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
+
   return (
     <div className={styles.marketDetail}>
       <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
@@ -453,8 +466,8 @@ const MarketDetailScreen = (props) => {
             </div>
             <div className={styles.userInfo}>
               <div className={styles.user}>
-                <img onClick={() => {history.push(`/profile/address/${datas?.address}`)}} src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div onClick={() => {history.push(`/profile/address/${datas?.address}`)}} className={styles.userInfoText}>
+                <img onClick={handleLinkProfile} src={datas?.userAvatorUrl} className={styles.avatar}/>
+                <div onClick={handleLinkProfile} className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
                 </div>
@@ -496,6 +509,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.priceBox}>
               <div className={styles.currentPrice}>
                 <div className={styles.priceAll}>
+                  {datas.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
                   <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
                   <div className={styles.worth}>≈ $
                     {transPrice(datas?.amount * price)}
