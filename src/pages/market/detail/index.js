@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from './index.less'
-import close from 'images/market/close.png';
 import { withRouter,  useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { tradableNFTAbi, tradableNFTAbi721, tokenAbi } from 'utils/abi';
@@ -157,8 +156,8 @@ const MarketDetailScreen = (props) => {
   useEffect(() => {
     if (token) {
       getCollectionList();
-      getNFTList()
     }
+    getNFTList()
   }, [token]);
   useEffect(() => {
     let ethereum = window.ethereum;
@@ -647,13 +646,14 @@ const styleTitle = css`
   font-size: 20px;
   font-weight: bold;
   padding-bottom: 20px;
+  padding-left: 10px;
   color: #000000;
   margin: 0;
 `;
 
 const styleArtContainer = css`
   //background: white;
-  padding: 30px;
+  padding: 20px;
   height: 470px;
   border-radius: 0 0 10px 10px;
   margin-bottom: 20px;

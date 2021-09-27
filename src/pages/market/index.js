@@ -17,16 +17,6 @@ const Market = (props) => {
   const [sortTag, setSortTag] = useState(sortTagBack || 'likeCount');
   const [sortOrder, setSortOrder] = useState('ASC');
 
-  const cateType = [
-    { label: 'All', value: 'ALL' },
-    { label: 'Latest', value: 'LASTED' },
-    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
-    { label: 'Domain', value: 'DOMAIN' },
-    { label: 'Art', value: 'ART' },
-    { label: 'Cooection', value: 'COOECTION' },
-    { label: 'Sports', value: 'SPORTS' },
-    { label: 'Game', value: 'GAME' },
-  ];
   const sortTagType = [
     { label: 'Most popular', value: 'likeCount' },
     { label: 'Price:high to low', value: 'ASC-price' },
@@ -34,24 +24,24 @@ const Market = (props) => {
   ];
 
   useEffect(() => {
-    if (token) {
-      let _sortTag = sortTag
-      if(sortTag?.includes('price')) {
-        _sortTag = 'price'
-      }
-      dispatch(
-        getMarketList(
-          {
-            category: category,
-            sortOrder: sortOrder,
-            sortTag: _sortTag,
-            page: 0,
-            size: 100,
-          },
-          token
-        )
-      );
+    // if (token) {
+    let _sortTag = sortTag
+    if(sortTag?.includes('price')) {
+      _sortTag = 'price'
     }
+    dispatch(
+      getMarketList(
+        {
+          category: category,
+          sortOrder: sortOrder,
+          sortTag: _sortTag,
+          page: 0,
+          size: 100,
+        },
+        token
+      )
+    );
+    // }
   }, [token, category, sortTag]);
 
   const renderNoData = useMemo(
