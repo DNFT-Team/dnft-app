@@ -470,7 +470,6 @@ const styleButton = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
   cursor: pointer;
   background: #ed6160;
   color: white;
@@ -480,7 +479,8 @@ const styleButton = css`
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  width: 64px;
+  width: max-content;
+  min-width: 64px;
   margin-bottom: 12px;
 `;
 
