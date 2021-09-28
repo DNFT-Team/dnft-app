@@ -11,8 +11,8 @@ export default {
     },
     nftMagic:{
         title:'NFT Magic via DNFT',
-        book:'https://dnft.gitbook.io/dnft/user-manual/publish-nft',
-        youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
+        book:'https://dnft.gitbook.io/dnft/user-manual/create-sell-buy-nft',
+        youtube:'https://www.youtube.com/watch?v=uGwQNCxuheo'
     }
 }
 export const  contactData =[
