@@ -68,7 +68,7 @@ const CompetitionScreen = (props) => {
     setTabIndex(obj.value);
   };
   const handleDetail = (obj) => {
-    history.push('data/competition/detail');
+    history.push('/data/competition/detail');
   };
   return (
     <div className={styles.box}>

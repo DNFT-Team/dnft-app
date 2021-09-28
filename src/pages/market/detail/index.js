@@ -492,7 +492,7 @@ const MarketDetailScreen = (props) => {
                   <div>Contract address:</div>
                   <div>
                     <a
-                      href={`https://testnet.bscscan.com/address/${datas?.tokenAddress}`}
+                      href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
                       className={styles.tokenAddress}
                       target='_blank'
                       rel="noopener noreferrer"
