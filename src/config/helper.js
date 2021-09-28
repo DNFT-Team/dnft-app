@@ -8,6 +8,11 @@ export default {
         title:'DNFT Mining User Manual',
         book:'https://dnft.gitbook.io/dnft/user-manual/staking-dnf-to-earn-dnf',
         youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
+    },
+    nftMagic:{
+        title:'NFT Magic via DNFT',
+        book:'https://dnft.gitbook.io/dnft/user-manual/nft-releases-operation-manual',
+        youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
     }
 }
 export const  contactData =[

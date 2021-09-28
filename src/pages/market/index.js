@@ -3,11 +3,14 @@ import styles from './index.less';
 import { css, cx } from 'emotion';
 import NFTCard from './component/item';
 import { noDataSvg } from 'utils/svg';
-import { withRouter, Link, useHistory } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
 import { getMarketList } from 'reduxs/actions/market';
 import { toast } from 'react-toastify';
+import helper from '../../config/helper';
+import { Icon } from '@iconify/react';
+import { Link } from '@chakra-ui/react';
 
 const Market = (props) => {
   let history = useHistory();
@@ -34,7 +37,7 @@ const Market = (props) => {
     // }
     if (token) {
       let _sortTag = sortTag
-      if(sortTag?.includes('price')) {
+      if (sortTag?.includes('price')) {
         _sortTag = 'price'
       }
       dispatch(
@@ -78,6 +81,16 @@ const Market = (props) => {
         <span className={styles.headerT}>
           Market
         </span>
+        <div>
+          <Link href={helper.nftMagic.book} isExternal color="brand.600" fontWeight="bold"
+            display="inline-block" mr="1rem">
+            <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1e4ace'}} /> Learn NFT Magic
+          </Link>
+          <Link href={helper.nftMagic.youtube} isExternal color="brand.600" fontWeight="bold"
+            display="inline-block">
+            <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
+          </Link>
+        </div>
         <div className={styles.headerR}>
           <Select
             // style={{ marginRight: 20 }}

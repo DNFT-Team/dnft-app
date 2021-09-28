@@ -336,7 +336,7 @@ const MarketDetailScreen = (props) => {
                 {
                   buyerAddress: address,
                   collectionId: form?.collectionId,
-                  tokenAddress:datas?.tokenAddress,
+                  tokenAddress: datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
                   quantity: form.quantity,
@@ -372,7 +372,7 @@ const MarketDetailScreen = (props) => {
                 {
                   buyerAddress: address,
                   collectionId: form?.collectionId,
-                  tokenAddress:datas?.tokenAddress,
+                  tokenAddress: datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
                   quantity: form.quantity,
@@ -402,7 +402,7 @@ const MarketDetailScreen = (props) => {
     history.push('/market', {category, sortTag})
   }
   const handleLinkProfile = () => {
-    if(!token) {
+    if (!token) {
       toast.warn('Please link wallet', {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -538,7 +538,7 @@ const MarketDetailScreen = (props) => {
               disabled={!datas?.quantity || loading}
               loadingText="Buy Now"
               className={styles.buyBtn} onClick={() => {
-                if(!address) {
+                if (!address) {
                   toast.warn('Please link wallet', {
                     position: toast.POSITION.TOP_CENTER,
                   });
@@ -564,10 +564,10 @@ const MarketDetailScreen = (props) => {
               icon={<Icon icon="mdi:close"/>}/>
           </ModalHeader>
           <ModalBody p="0 32px">
-            {renderFormItem('Quantity', <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
+            {renderFormItem(`Quantity/${datas?.quantity || 0}`, <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
               setForm({
                 ...form,
-                quantity: value
+                quantity: value > datas?.quantity ? datas?.quantity : value
               })
             }}
             />)}
