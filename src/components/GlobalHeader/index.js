@@ -351,7 +351,7 @@ const GlobalHeader = (props) => {
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
             if (globalConf.net_env !== 'mainnet' && address) {
-              history.push(`/profile/address/${address}`)
+              history.push(`/profile/address/${address}`,true)
               return;
             }
             await connectWallet()

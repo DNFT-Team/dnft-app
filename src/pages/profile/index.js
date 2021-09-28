@@ -32,15 +32,30 @@ import camera from 'images/profile/camera.png';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
+  const state = location?.state;
   const readUrl = datas?.avatorUrl
   const nullFlag = !readUrl || readUrl.indexOf('undefined') > -1 || readUrl.indexOf('null') > -1
   const avatarShow = nullFlag ? camera : readUrl;
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
   const [showEditScreen, setShowEditScreen] = useState(false);
-  let newAddress = location?.pathname?.split('/') || [];
-  newAddress = newAddress[newAddress.length - 1]
+  const [isOwner, setIsOwner] = useState(false);
+  let _newAddress = location?.pathname?.split('/') || [];
+  _newAddress = _newAddress[_newAddress.length - 1]
+  const [newAddress, setNewAddress] = useState(_newAddress);
+
   let history = useHistory();
+  useEffect(() => {
+    if(address === newAddress || state) {
+      setIsOwner(true)
+    }
+  }, [address, state])
+  useEffect(() => {
+    if(isOwner) {
+      setNewAddress(address)
+      history.push(address);
+    }
+  },[address,_newAddress,isOwner])
   useEffect(() => {
     if (token) {
       getProfileInfo();
@@ -60,6 +75,7 @@ const ProfileScreen = (props) => {
       dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token, newAddress]);
+
   const getProfileInfo = () => {
     dispatch(getMyProfileList({userId: newAddress}, token));
   }
