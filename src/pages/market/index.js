@@ -78,18 +78,18 @@ const Market = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <span className={styles.headerT}>
-          Market
-        </span>
-        <div>
-          <Link href={helper.nftMagic.book} isExternal color="brand.600" fontWeight="bold"
-            display="inline-block" mr="1rem">
-            <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1e4ace'}} /> Learn NFT Magic
-          </Link>
-          <Link href={helper.nftMagic.youtube} isExternal color="brand.600" fontWeight="bold"
-            display="inline-block">
-            <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
-          </Link>
+        <div className={styles.headerT}>
+          <span>Market</span>
+          <div style={{fontSize: '.8rem', marginTop: '.6rem'}}>
+            <Link href={helper.nftMagic.youtube} isExternal color="brand.100"
+              display="inline-block">
+              <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
+            </Link>
+            <Link href={helper.nftMagic.book} isExternal color="brand.100"
+              display="inline-block" ml="1rem">
+              <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
+            </Link>
+          </div>
         </div>
         <div className={styles.headerR}>
           <Select
