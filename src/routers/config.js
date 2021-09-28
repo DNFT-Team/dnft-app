@@ -25,29 +25,30 @@ import dataIcon from '../images/nav/data_selected.svg';
 import galleryIcon from '../images/nav/gallery.svg';
 
 import globalConf from 'config/index';
-const nets = ['testnet', 'mainnet']
+const NetName = globalConf.net_name
+const nets = ['devnet', 'testnet', 'mainnet']
 
 /*
   reqComing - 是否需要显示coming-soon
  */
 const menuAll = [
-  { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
-  { net_env: [nets[1]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
-  { net_env: [nets[1]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
-  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: 'mainnet' === globalConf.net_env},
+  { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true, reqComing: 'mainnet' === NetName},
+  { net_env: [nets[2]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
+  { net_env: [nets[2]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
+  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true, reqComing: 'mainnet' === NetName},
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
   { net_env: nets, path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true,  },
   { net_env: [nets[0]], path: '/gallery', Component: GalleryScreen, navName: 'Gallery', icon: galleryIcon, exact: true },
 
 ];
-const MENU_MAP = menuAll.filter((e) => e.net_env.includes(globalConf.net_env))
+const MENU_MAP = menuAll.filter((e) => e.net_env.includes(NetName))
 const ROUTER_MAP = [
   ...MENU_MAP,
   { path: '/market/detail', exact: true, Component: MarketDetailScreen, navName: 'market' },
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
   { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
-  { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: 'devnet' !== globalConf.net_name  },
+  { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: 'devnet' !== NetName  },
   { path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
   { path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },

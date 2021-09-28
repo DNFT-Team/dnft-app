@@ -48,13 +48,13 @@ const GlobalHeader = (props) => {
   const [address, setAddress] = useState();
   const netArray = useMemo(
     () => [
-      {
-        name: 'Ethereum Mainnet',
-        icon: selectEthSvg,
-        shortName: ['ETH', 'Ethereum'],
-        shortIcon: ethSvg,
-        netWorkId: 1,
-      },
+      // {
+      //   name: 'Ethereum Mainnet',
+      //   icon: selectEthSvg,
+      //   shortName: ['ETH', 'Ethereum'],
+      //   shortIcon: ethSvg,
+      //   netWorkId: 1,
+      // },
       // {
       //   name: 'Polkadot Mainnet',
       //   icon: selectPolkadotSvg,
@@ -351,7 +351,7 @@ const GlobalHeader = (props) => {
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
             if (globalConf.net_env !== 'mainnet' && address) {
-              history.push(`/profile/address/${address}`,true)
+              history.push(`/profile/address/${address}`, true)
               return;
             }
             await connectWallet()
