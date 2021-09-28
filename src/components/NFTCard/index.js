@@ -529,6 +529,7 @@ const styleCardContainer = css`
     min-height: 300px;
     border-radius: 10px 10px 0 0 ;
     background-repeat: no-repeat;
+    background-size: cover;
     animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
   }
   @keyframes nftFlow {
