@@ -11,7 +11,7 @@ export default {
     },
     nftMagic:{
         title:'NFT Magic via DNFT',
-        book:'https://dnft.gitbook.io/dnft/user-manual/nft-releases-operation-manual',
+        book:'https://dnft.gitbook.io/dnft/user-manual/publish-nft',
         youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
     }
 }
