@@ -25,8 +25,8 @@ const NFTCard = (props) => {
       />
       <div className={styleInfoAvatarUrl}>
         {
-          item?.nftAvatorUrls?.map((obj,index) => {
-            if(index > 2) return;
+          item?.nftAvatorUrls?.map((obj, index) => {
+            if (index > 2) {return;}
             return <img key={index} src={obj} />
           })
         }
@@ -105,7 +105,6 @@ const styleInfo = css`
     color: #000;
     display: block;
     font-size: 14px;
-    line-height: 14px;
     font-weight: bold;
     margin-bottom: 19px;
     overflow: hidden;

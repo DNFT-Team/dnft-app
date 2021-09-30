@@ -79,8 +79,8 @@ const Market = (props) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerT}>
-          <span>Market</span>
-          <div style={{fontSize: '.8rem', marginTop: '.6rem'}}>
+          <span style={{marginRight: '1rem'}}>Market</span>
+          <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
             <Link href={helper.nftMagic.youtube} isExternal color="brand.100"
               display="inline-block">
               <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}

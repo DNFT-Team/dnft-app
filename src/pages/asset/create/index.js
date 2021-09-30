@@ -336,9 +336,9 @@ const CreateNFT = (props) => {
         </Upload>
         <h3>Item Details</h3>
         {renderFormItem(
-          'Name - Max 30 char',
+          'Name',
           <Input
-            placeholder='e. g. David'
+            placeholder='e. g. David (Maximum 30 char)'
             maxLength={30}
             onChange={(value) => {
               setForm({
@@ -349,10 +349,10 @@ const CreateNFT = (props) => {
           />
         )}
         {renderFormItem(
-          'Description - Max 500 char',
+          'Description',
           <Input
             type='textarea'
-            placeholder='Description'
+            placeholder='Description (Maximum 500 char)'
             maxLength={500}
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {

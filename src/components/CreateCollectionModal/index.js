@@ -101,7 +101,7 @@ const CreateCollectionModal = (props) => {
   }
 
   return (
-    <Modal className={styleModalContainer} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+    <Modal className={styleModalContainer} blockScrollOnMount={false} closeOnOverlayClick={false} borderRadius="10px"
       isCentered isOpen onClose={onClose}>
       <ModalOverlay />
       <ModalContent width="calc(100% - 40px)" maxW="564px" >

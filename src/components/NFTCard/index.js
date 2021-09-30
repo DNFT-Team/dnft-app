@@ -522,8 +522,7 @@ const styleCardContainer = css`
   min-width: 300px;
   &:hover {
     position: relative;
-    box-shadow: rgb(218 218 218) 5px 5px 20px 0px inset, rgb(255 255 255) -5px -5px 20px 0px inset;
-    //top: -10px;
+    top: -10px;
   }
   .shortPic{
     min-height: 300px;
