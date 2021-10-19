@@ -12,7 +12,8 @@
   border-radius: 10px;
   position: relative;
 }
-.edit_bg_header {
+.edit_bg_header,
+.share_bg_header{
   display: flex;
   align-items: center;
   height: 40px;
@@ -20,13 +21,19 @@
   border: 2px solid #777e91;
   box-sizing: border-box;
   border-radius: 6px;
-  width: 197px;
   position: absolute;
-  right: 36px;
   bottom: 22px;
   cursor: pointer;
-  background: linear-gradient(60deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
+  background: linear-gradient(60deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
   backdrop-filter: blur(4px);
+}
+.edit_bg_header{
+  right: 36px;
+  width: 197px;
+}
+.share_bg_header{
+  padding: 0 14px;
+  right: 256px;
 }
 .edit_bg_span {
   font-weight: bold;
@@ -42,6 +49,34 @@
 }
 .edit_bg_img[src=""],.edit_bg_img:not([src]) {
   opacity: 0;
+}
+.shareBox{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+}
+.shareItem{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  margin: .3rem .3rem;
+}
+.shareIcon{
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  padding: 15px;
+  cursor: pointer;
+}
+.shareItem label{
+  font-family: Roboto,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #4E5C7E;
 }
 .profile {
   box-sizing: border-box;

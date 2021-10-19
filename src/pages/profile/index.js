@@ -18,10 +18,11 @@ import { nfIconSvg, noDataSvg } from 'utils/svg';
 import NFTCollectionsCard from './card';
 import NFTCard from 'components/NFTCard';
 import edit_bg from 'images/profile/edit_bg.png';
+import share_bg from 'images/profile/share.svg';
 import edit_avatar from 'images/profile/edit_avatar.png';
 import ins from 'images/profile/ins.png';
 import twitter from 'images/profile/twitter.png';
-import { Upload } from 'element-react';
+import { Upload, Popover } from 'element-react';
 import { Tooltip } from '@chakra-ui/react';
 import { post } from 'utils/request';
 import { ipfs_post } from 'utils/ipfs-request';
@@ -30,6 +31,11 @@ import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
 import youtube from 'images/profile/youtube.svg';
+
+import {
+  TelegramShareButton,
+  TwitterShareButton
+} from 'react-share';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
@@ -47,16 +53,16 @@ const ProfileScreen = (props) => {
 
   let history = useHistory();
   useEffect(() => {
-    if(address === newAddress || state) {
+    if (address === newAddress || state) {
       setIsOwner(true)
     }
   }, [address, state])
   useEffect(() => {
-    if(isOwner) {
+    if (isOwner) {
       setNewAddress(address)
       history.push(address);
     }
-  },[address,_newAddress,isOwner])
+  }, [address, _newAddress, isOwner])
   useEffect(() => {
     if (token) {
       getProfileInfo();
@@ -152,7 +158,7 @@ const ProfileScreen = (props) => {
   );
   const renderCard = useCallback(
     (item, index) => {
-      if(selectedTab === 'Collections')
+      if (selectedTab === 'Collections') {
         return (
           <NFTCollectionsCard
             key={`${item.id}_${selectedTab}`}
@@ -160,7 +166,7 @@ const ProfileScreen = (props) => {
             index={index}
           />
         );
-      else
+      } else {
         return (
           <NFTCard
             key={`${item.id}_${selectedTab}`}
@@ -172,6 +178,7 @@ const ProfileScreen = (props) => {
             newAddress={newAddress}
           />
         );
+      }
     },
     [selectedTab, newAddress]
   );
@@ -199,6 +206,7 @@ const ProfileScreen = (props) => {
       console.log(e, 'e');
     }
   }
+  const shareUrl = window.location.href
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -209,19 +217,45 @@ const ProfileScreen = (props) => {
           className={styles.header}>
           {
             newAddress === address &&
-            <Upload
-              className="upload-demo"
-              multiple={false}
-              showFileList={false}
-              accept={'.png,.gif,.jpeg,.jpg,.svg'}
-              action=""
-              httpRequest={(e) => {uploadFile(e.file)}}
-              listType="picture"
-            >
-              <Tooltip label="1657*236" hasArrow bg="red.600">
-                <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
-              </Tooltip>
-            </Upload>
+            <React.Fragment>
+              <Upload
+                className="upload-demo"
+                multiple={false}
+                showFileList={false}
+                accept={'.png,.gif,.jpeg,.jpg,.svg'}
+                action=""
+                httpRequest={(e) => {uploadFile(e.file)}}
+                listType="picture"
+              >
+                <Tooltip label="1657*236" hasArrow bg="red.600">
+                  <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+                </Tooltip>
+              </Upload>
+              <Popover placement="bottom" width="220" trigger="click" content={(
+                <div className={styles.shareBox}>
+                  <div className={styles.shareItem}>
+                    <Icon className={styles.shareIcon} icon="uil:link" style={{background: '#E6E8EC'}} onClick={() => {
+                      copy(shareUrl);
+                      toast.success('The link is copied successfully!', {
+                        position: toast.POSITION.TOP_CENTER,
+                      });
+                    }
+                    }/>
+                    <label>Link</label>
+                  </div>
+                  <TelegramShareButton url={shareUrl} className={styles.shareItem}>
+                    <Icon className={styles.shareIcon} icon="uil:telegram" style={{background: '#e8eeff', color: '#233a7d'}}/>
+                    <label>Telegram</label>
+                  </TelegramShareButton>
+                  <TwitterShareButton url={shareUrl} className={styles.shareItem}>
+                    <Icon className={styles.shareIcon} icon="uil:twitter" style={{background: 'rgba(29, 155, 240, 0.1)', color: '#1D9BF0'}}/>
+                    <label>Twitter</label>
+                  </TwitterShareButton>
+                </div>
+              )}>
+                <div className={styles.share_bg_header}><span className={styles.edit_bg_span}>Share</span><img className={styles.edit_bg_img} src={share_bg} /></div>
+              </Popover>
+            </React.Fragment>
           }
         </div>
         <div className={styles.profile}>
