@@ -77,7 +77,7 @@ const CreateCollectionModal = (props) => {
   return (
     <Dialog
       customClass={styleCollectionModalContainer}
-      title={`${!isNew ? 'Edit' : 'Create'} collection`}
+      title={`${!isNew ? 'Edit' : 'Create'} Collection`}
       visible
       closeOnClickModal={false}
       onCancel={onClose}

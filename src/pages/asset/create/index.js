@@ -288,7 +288,9 @@ const CreateNFTModal = (props) => {
         title='Create NFT'
         visible
         closeOnClickModal={false}
-        onCancel={onClose}
+        onCancel={() => {
+          onClose();
+        }}
       >
         <Dialog.Body>
           <div className={styleContainer}>
