@@ -2,7 +2,8 @@ import { GET_MARKET_LIST, GET_CATEGORY_LIST } from '../types/market';
 
 const initialState = {
   pending: false,
-  datas: null,
+  datas: [],
+  pageAble: true,
   category: null
 }
 const market = (state = initialState, action) => {
@@ -16,7 +17,8 @@ const market = (state = initialState, action) => {
     return {
       ...state,
       pending: false,
-      datas: action.payload.data
+      datas: (action.payload.page == 1 ? [] : state.datas).concat(action.payload.data?.content || []),
+      pageAble: action.payload.data?.pageAble
     }
   case GET_MARKET_LIST.ERROR:
     return {

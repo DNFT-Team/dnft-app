@@ -1,3 +1,4 @@
+import InfiniteScroll from 'react-infinite-scroll-component';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import styles from './index.less';
 import { css, cx } from 'emotion';
@@ -11,30 +12,29 @@ import { toast } from 'react-toastify';
 import helper from '../../config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
+import { get, post } from 'utils/request';
 
 const Market = (props) => {
   let history = useHistory();
-  const { dispatch, token, datas, categoryList, pending, location, address } = props;
+  const { dispatch, token, datas, pageAble, categoryList, pending, location, address } = props;
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
-
   const [category, setCategory] = useState(categoryBack || 'All');
-  const [sortTag, setSortTag] = useState(sortTagBack || 'likeCount');
+  const [sortTag, setSortTag] = useState(sortTagBack || 'like_count');
   const [sortOrder, setSortOrder] = useState('ASC');
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(40);
+  const [loading, setLoading] = useState(false);
+  const [list, setList] = useState([])
+  const [isHasMore, setIsHasMore] = useState(true)
 
   const sortTagType = [
-    { label: 'Most popular', value: 'likeCount' },
+    { label: 'Most popular', value: 'like_count' },
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
 
   useEffect(() => {
-    // if(!address) {
-    //   toast.warn('Please link wallet', {
-    //     position: toast.POSITION.TOP_CENTER,
-    //   });
-    //   return;
-    // }
     if (token) {
       let _sortTag = sortTag
       if (sortTag?.includes('price')) {
@@ -46,8 +46,8 @@ const Market = (props) => {
             category: category,
             sortOrder: sortOrder,
             sortTag: _sortTag,
-            page: 0,
-            size: 100,
+            page: 1,
+            size,
           },
           token
         )
@@ -55,6 +55,29 @@ const Market = (props) => {
     }
   }, [token, category, sortTag, address]);
 
+  const fetchData =  () => {
+    console.log(121212, page,'page')
+    // let _sortTag = sortTag
+    // if (sortTag?.includes('price')) {
+    //   _sortTag = 'price'
+    // }
+    // dispatch(
+    //   getMarketList(
+    //     {
+    //       category: category,
+    //       sortOrder: sortOrder,
+    //       sortTag: _sortTag,
+    //       page: page + 1,
+    //       size,
+    //     },
+    //     token
+    //   )
+    // );
+    // setPage(page + 1)
+  }
+  const refresh = () => {
+    console.log('rejal;fjasljflksajfklj')
+  }
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -64,13 +87,13 @@ const Market = (props) => {
     ),
     []
   );
-
+  console.log(datas,'datas',datas?.length,pageAble)
   const clickDetail = (item) => {
     // if(pending) return;
     history.push('/market/detail', {item, category, sortTag})
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => {
+    (item, index) => <NFTCard key={item.id} item={item} index={index} needAction clickDetail={() => {
       clickDetail(item);
     }} />,
     [category, sortTag]
@@ -127,14 +150,31 @@ const Market = (props) => {
       </div>
       <div className={styles.ArtContainer}>
         <Loading
-          loading={pending}
+          loading={pending && page === 1}
           style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
         />
-        <div className={styles.contentBox} style={{ opacity: pending ? 0.5 : 1 }}>
-          {datas?.length > 0
-            ? datas.map((item, index) =>  renderCard(item, index))
+        <InfiniteScroll
+          dataLength={40}
+          next={fetchData}
+          hasMore={pageAble}
+          loader={<h4 style={{ textAlign: 'center' }}>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: 'center' }}>
+              <b>Yay! You have seen it all</b>
+            </p >
+          }
+        >
+          <div className={styles.contentBox}>
+            {datas?.length > 0
+              ? datas?.map((item, index) =>  renderCard(item, index))
+              : renderNoData}
+          </div>
+        </InfiniteScroll>
+        {/* <div className={styles.contentBox} style={{ opacity: pending ? 0.5 : 1 }}>
+          {list?.length > 0
+            ? list.map((item, index) =>  renderCard(item, index))
             : renderNoData}
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -142,6 +182,7 @@ const Market = (props) => {
 const mapStateToProps = ({ profile, market }) => ({
   token: profile.token,
   datas: market.datas,
+  pageAble: market.pageAble,
   categoryList: market.category,
   pending: market.pending,
   address: profile.address

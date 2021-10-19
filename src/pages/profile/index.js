@@ -29,6 +29,7 @@ import { toast } from 'react-toastify';
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
+import youtube from 'images/profile/youtube.svg';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
@@ -63,7 +64,7 @@ const ProfileScreen = (props) => {
         getMyProfileBatch(
           {
             address: newAddress,
-            page: 0,
+            page: 1,
             size: 100,
             sortOrder: 'ASC',
             sortTag: 'createTime',
@@ -247,6 +248,9 @@ const ProfileScreen = (props) => {
             </a>
             <a href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
               <img className={styles.contact_img} src={ins} />
+            </a>
+            <a href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
+              <img style={{width: 22, height: 22}} className={styles.contact_img} src={youtube} />
             </a>
           </div>
         </div>
