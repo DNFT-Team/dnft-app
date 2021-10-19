@@ -455,9 +455,7 @@ const MarketDetailScreen = (props) => {
     <div className={styles.marketDetail}>
       <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
       <div className={styles.main}>
-        <div className={styles.mainL} style={{
-          background: `center center / cover no-repeat url(${datas?.avatorUrl})`
-        }}>
+        <div className={styles.mainL} style={{ backgroundImage: `url(${datas?.avatorUrl})`}}>
         </div>
         <div className={styles.mainR}>
           <div className={styles.product}>

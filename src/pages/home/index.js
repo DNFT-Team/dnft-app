@@ -36,7 +36,6 @@ const HomeScreen = (props) => {
 
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
-  const [cardType, setCardType] = useState(window.innerWidth < 1200 ? '' : 'card');
 
   const dataTopAll = [
     {
@@ -85,12 +84,7 @@ const HomeScreen = (props) => {
   }, [token]);
 
   useEffect(() => {
-    window.addEventListener('resize', (e) => {
-      const type = e.currentTarget.innerWidth < 1200 ? '' : 'card'
-      setCardType(type)
-      return currentWindowWidth
-    });
-
+    window.addEventListener('resize', (e) => currentWindowWidth);
     return () => {
       window.removeEventListener('resize', () => currentWindowWidth);
     };
@@ -203,7 +197,8 @@ const HomeScreen = (props) => {
     history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => clickDetail(item)} />,
+    (item, index) => <NFTCard key={index} item={item} index={index} needAction
+      clickDetail={() => clickDetail(item)} />,
     []
   );
 
@@ -225,7 +220,7 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger='click' height="382px" type={cardType}>
+      <Carousel trigger='click' height="382px" interval={6000}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div className={styleBanner} style={{
