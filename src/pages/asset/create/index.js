@@ -25,7 +25,7 @@ import {
 import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi';
 import Web3 from 'web3';
 import globalConfig from '../../../config';
-
+import LoadingIcon from '../../../images/asset/loading.gif'
 const CreateNFTModal = (props) => {
   const { dispatch, datas, location, address, chainType, token, categoryList, onClose } =
     props;
@@ -473,6 +473,9 @@ const CreateNFTModal = (props) => {
           }}
         />
       )}
+      {isLoading && <div className={styleLoadingIconContainer}>
+        <img src={LoadingIcon}/>
+      </div>}
     </React.Fragment>
   );
 };
@@ -485,6 +488,23 @@ const mapStateToProps = ({ profile, market }) => ({
 });
 export default withRouter(connect(mapStateToProps)(CreateNFTModal));
 
+
+const styleLoadingIconContainer = css`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  z-index: 1000000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 158px;
+    height: 145px;
+  }
+`
 const styleModalContainer = css`
   max-width: 564px;
   width: calc(100% - 40px);

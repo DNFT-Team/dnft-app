@@ -17,6 +17,7 @@ import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
 // import { getCategoryList } from 'reduxs/actions/market';
 import CreateNFTModal from './create/index';
+import LoadingIcon from '../../images/asset/loading.gif'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -371,10 +372,13 @@ const AssetScreen = (props) => {
         <div className={styleBody}>
           <div className={styleTabContainer}>
             <div>{renderTabList}</div>
-            <Loading
+            {isLoading && <div className={styleLoadingIconContainer}>
+              <img src={LoadingIcon}/>
+            </div>}
+            {/* <Loading
               loading={isLoading}
               style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
-            />
+            /> */}
             <div>
               <Select
                 value={category}
@@ -440,6 +444,22 @@ const mapStateToProps = ({ profile, market }) => ({
 });
 export default withRouter(connect(mapStateToProps)(AssetScreen));
 
+const styleLoadingIconContainer = css`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  z-index: 1000000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 158px;
+    height: 145px;
+  }
+`
 const styleContainer = css`
   background: #f5f7fa;
   padding: 10px 16px;
