@@ -86,7 +86,8 @@ const CreateCollectionModal = (props) => {
         {renderFormItem(
           'Collection Name',
           <Input
-            placeholder='e. g. David'
+            placeholder='e. g. David (Maximum 20 char)'
+            maxLength={20}
             onChange={(value) => {
               setColData({
                 ...colData,
@@ -99,7 +100,8 @@ const CreateCollectionModal = (props) => {
           'Description',
           <Input
             type='textarea'
-            placeholder='Description'
+            placeholder='Description (Maximum 500 char)'
+            maxLength={500}
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {
               setColData({

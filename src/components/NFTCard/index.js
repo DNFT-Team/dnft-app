@@ -477,10 +477,7 @@ const styleButton = css`
   padding: 8px 12px;
   border-radius: 6px;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  min-width: 64px;
+  width: 90%;
   margin-bottom: 12px;
 `;
 

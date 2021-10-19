@@ -458,6 +458,7 @@ const styleLoadingIconContainer = css`
   img {
     width: 158px;
     height: 145px;
+    border-radius: 26px;
   }
 `
 const styleContainer = css`
