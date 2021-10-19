@@ -16,6 +16,7 @@ import { stakingJson } from 'pages/mining';
 import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
 // import { getCategoryList } from 'reduxs/actions/market';
+import CreateNFTModal from './create/index';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -72,6 +73,7 @@ const AssetScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [bannerUrl, setBannerUrl] = useState('');
   const [avatorUrl, setAvatorUrl] = useState('');
+  const [showCreateNft, setShowCreateNft] = useState(false);
   console.log(avatorUrl, 'avatorUrl')
 
   let history = useHistory();
@@ -266,7 +268,7 @@ const AssetScreen = (props) => {
             <div
               className={styleCreateNFT}
               onClick={() => {
-                history.push('/asset/create');
+                setShowCreateNft(true)
               }}
             >
               Create NFT
@@ -420,6 +422,12 @@ const AssetScreen = (props) => {
         </div>
       </div>
       {renderModal}
+      {showCreateNft && <CreateNFTModal onClose={(isCreate) => {
+        if (isCreate) {
+          getNFTList();
+        }
+        setShowCreateNft(false);
+      }}/>}
     </div>
   );
 };
