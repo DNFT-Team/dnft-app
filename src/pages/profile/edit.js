@@ -37,6 +37,7 @@ const ProfileEditScreen = (props) => {
     nickName: datas?.nickName,
     twitterAddress: datas?.twitterAddress,
     facebookAddress: datas?.facebookAddress,
+    youtubeAddress: datas?.youtubeAddress,
   });
   const renderFormItem = (label, item) => {
     console.log(label, 'label');
@@ -84,6 +85,8 @@ const ProfileEditScreen = (props) => {
     formData.append('nickName', form?.nickName);
     formData.append('twitterAddress', form?.twitterAddress || '');
     formData.append('facebookAddress', form?.facebookAddress || '');
+    formData.append('youtubeAddress', form?.youtubeAddress || '');
+
     try {
       const { data }  = await post(
         '/api/v1/users/updateUser',
@@ -171,6 +174,19 @@ const ProfileEditScreen = (props) => {
                 setForm({
                   ...form,
                   facebookAddress: value,
+                });
+              }}
+            />
+          )}
+          {renderFormItem(
+            'Youtube',
+            <Input
+              value={form?.youtubeAddress}
+              placeholder='https://www.youtube.com/'
+              onChange={(value) => {
+                setForm({
+                  ...form,
+                  youtubeAddress: value,
                 });
               }}
             />
