@@ -18,6 +18,7 @@ import { bscTestTokenContact, busdContract } from '../../utils/contract';
 // import { getCategoryList } from 'reduxs/actions/market';
 import CreateNFTModal from './create/index';
 import LoadingIcon from '../../images/asset/loading.gif'
+import {Tooltip} from '@chakra-ui/react';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -258,10 +259,16 @@ const AssetScreen = (props) => {
         }}>
         <div className={styleHeader}>
           <div className={styleAssetAccountContainer}>
-            <div className={styleIcon} style={{
-              background: `center center / cover no-repeat url(${avatorUrl})`
-            }}>
-            </div>
+            <Tooltip label="Go Profile" hasArrow bg="red.600">
+              <div className={styleIcon} style={{
+                background: `center center / cover no-repeat url(${avatorUrl})`
+              }} onClick={() => {
+                if (globalConfig.net_env !== 'mainnet' && address) {
+                  history.push(`/profile/address/${address}`, true)
+                }
+              }}>
+              </div>
+            </Tooltip>
             <span className={styleCoinName}>DNF</span>
             <span>{balance}</span>
           </div>
@@ -596,6 +603,7 @@ const styleIcon = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const styleCoinName = css`

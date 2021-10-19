@@ -225,13 +225,10 @@
   border-radius: 6px;
   background-size: cover;
   background-repeat: no-repeat;
-  animation: nftFlow 6s infinite cubic-bezier(0.42, 0.13, 0, 1.04);
 }
-@keyframes nftFlow {
-  0%,100%{
-      background-position: 0 0;
-  }
-  50%{
-      background-position: 100% 100%;
+@media (max-width: 900px) {
+  .edit_bg_header,
+  .share_bg_header{
+    top: 22px !important;
   }
 }
