@@ -31,7 +31,7 @@ const ProfileEditScreen = (props) => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
   // const datas = location?.state?.datas
-  console.log(datas,'datas')
+  console.log(datas, 'datas')
   const [form, setForm] = useState({
     avatorUrl: datas?.avatorUrl,
     nickName: datas?.nickName,
@@ -51,10 +51,14 @@ const ProfileEditScreen = (props) => {
 
   const uploadFile = async (file) => {
     try {
+      setForm({ ...form, avatorUrl: '' })
       const fileData = new FormData();
       fileData.append('file', file);
       const data = await ipfs_post('/v0/add', fileData);
-      if(data?.status === 200) {
+      data &&   toast.success('IPFS Upload Success! Please wait for reDownload', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      if (data?.status === 200) {
         setForm({ ...form, avatorUrl: globalConf.ipfsDown + data?.data?.Hash })
       }
     } catch (e) {
@@ -72,7 +76,7 @@ const ProfileEditScreen = (props) => {
   }
   const editProfile = async () => {
     setLoading(true)
-    if(!form?.nickName) {
+    if (!form?.nickName) {
       toast.warn('nickName cannot be empty', {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -93,19 +97,19 @@ const ProfileEditScreen = (props) => {
         formData,
         token,
       );
-      if(data?.success === true) {
+      if (data?.success === true) {
         toast.success('Successfully modified', {
           position: toast.POSITION.TOP_CENTER,
         });
         onSuccess()
         setForm({})
-      }else {
+      } else {
         toast.error(data?.message, {
           position: toast.POSITION.TOP_CENTER,
         });
       }
       setLoading(false)
-    }catch(e) {
+    } catch (e) {
       console.log(e)
       setLoading(false)
 
@@ -113,7 +117,7 @@ const ProfileEditScreen = (props) => {
 
   }
   return (
-    <Modal closeOnOverlayClick={true} blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
+    <Modal closeOnOverlayClick blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
       isCentered isOpen onClose={onClose}>
       <ModalOverlay />
       <ModalContent width="calc(100% - 40px)" maxW="564px" >
@@ -193,7 +197,8 @@ const ProfileEditScreen = (props) => {
           )}
         </ModalBody>
         <ModalFooter  p="10 32px" justifyContent="flex-start">
-          <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom" p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
+          <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom"
+            p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
             onClick={editProfile}>Save</Button>
         </ModalFooter>
       </ModalContent>

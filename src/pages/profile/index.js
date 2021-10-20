@@ -152,7 +152,6 @@ const ProfileScreen = (props) => {
     () => (
       <div className={styleNoDataContainer}>
         <div>{noDataSvg}</div>
-        <span>No content</span>
       </div>
     ),
     []
@@ -188,6 +187,9 @@ const ProfileScreen = (props) => {
       const fileData = new FormData();
       fileData.append('file', file);
       const data  = await ipfs_post('/v0/add', fileData);
+      data &&   toast.success('IPFS Upload Success', {
+        position: toast.POSITION.TOP_CENTER,
+      });
       if (data?.data?.Hash) {
         const data1 = await post(
           '/api/v1/users/updateUserBanner',
@@ -197,6 +199,9 @@ const ProfileScreen = (props) => {
           },
           token,
         );
+        data1 &&  toast.success('User Banner Update Success', {
+          position: toast.POSITION.TOP_CENTER,
+        });
         dispatch(getMyProfileList({userId: newAddress}, token));
       } else {
         toast.error(data.message, {
