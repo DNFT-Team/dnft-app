@@ -34,7 +34,8 @@ import youtube from 'images/profile/youtube.svg';
 
 import {
   TelegramShareButton,
-  TwitterShareButton
+  TwitterShareButton,
+  FacebookShareButton
 } from 'react-share';
 
 const ProfileScreen = (props) => {
@@ -231,11 +232,11 @@ const ProfileScreen = (props) => {
                   <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
                 </Tooltip>
               </Upload>
-              <Popover placement="bottom" width="220" trigger="click" content={(
+              <Popover placement="bottom" width="220" trigger="hover" content={(
                 <div className={styles.shareBox}>
                   <div className={styles.shareItem}>
                     <Icon className={styles.shareIcon} icon="uil:link" style={{background: '#E6E8EC'}} onClick={() => {
-                      copy(shareUrl);
+                      copy(`DNFT_Share | ${shareUrl}`);
                       toast.success('The link is copied successfully!', {
                         position: toast.POSITION.TOP_CENTER,
                       });
@@ -243,14 +244,20 @@ const ProfileScreen = (props) => {
                     }/>
                     <label>Link</label>
                   </div>
-                  <TelegramShareButton url={shareUrl} className={styles.shareItem}>
+                  <TelegramShareButton className={styles.shareItem} title='DNFT_Share' url={shareUrl}>
                     <Icon className={styles.shareIcon} icon="uil:telegram" style={{background: '#e8eeff', color: '#233a7d'}}/>
                     <label>Telegram</label>
                   </TelegramShareButton>
-                  <TwitterShareButton url={shareUrl} className={styles.shareItem}>
+                  <TwitterShareButton className={styles.shareItem}
+                    title={`Share@User(${datas?.nickName || '*'})`} url={shareUrl}
+                    via="DNFTProtocol" hashtags={['NFT']}>
                     <Icon className={styles.shareIcon} icon="uil:twitter" style={{background: 'rgba(29, 155, 240, 0.1)', color: '#1D9BF0'}}/>
                     <label>Twitter</label>
                   </TwitterShareButton>
+                  <FacebookShareButton className={styles.shareItem} hashtag="#NFT" quote={`DNFT_Share@User(${datas?.nickName || '*'})`} url={shareUrl}>
+                    <Icon className={styles.shareIcon} icon="uil:facebook" style={{background: '#e8eeff', color: '#233a7d'}}/>
+                    <label>Facebook</label>
+                  </FacebookShareButton>
                 </div>
               )}>
                 <div className={styles.share_bg_header}><span className={styles.edit_bg_span}>Share</span><img className={styles.edit_bg_img} src={share_bg} /></div>
