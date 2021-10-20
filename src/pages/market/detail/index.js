@@ -226,7 +226,6 @@ const MarketDetailScreen = (props) => {
     () => (
       <div className={styleNoDataContainer}>
         <div>{noDataSvg}</div>
-        <span>No content</span>
       </div>
     ),
     []

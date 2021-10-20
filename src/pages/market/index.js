@@ -23,7 +23,7 @@ const Market = (props) => {
   const [sortTag, setSortTag] = useState(sortTagBack || 'like_count');
   const [sortOrder, setSortOrder] = useState('ASC');
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(40);
+  const [size, setSize] = useState(10);
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([])
   const [isHasMore, setIsHasMore] = useState(true)
@@ -56,7 +56,7 @@ const Market = (props) => {
   }, [token, category, sortTag, address]);
 
   const fetchData =  () => {
-    console.log(121212, page,'page')
+    console.log(121212, page, 'page')
     let _sortTag = sortTag
     if (sortTag?.includes('price')) {
       _sortTag = 'price'
@@ -80,12 +80,11 @@ const Market = (props) => {
     () => (
       <div className={styleNoDataContainer}>
         <div>{noDataSvg}</div>
-        <span>No content</span>
       </div>
     ),
     []
   );
-  console.log(datas,'datas',datas?.length,pageAble)
+  console.log(datas, 'datas', datas?.length, pageAble)
   const clickDetail = (item) => {
     // if(pending) return;
     history.push('/market/detail', {item, category, sortTag})
@@ -155,6 +154,7 @@ const Market = (props) => {
           dataLength={list?.length}
           next={fetchData}
           hasMore={pageAble}
+          height={600}
           loader={<h4 style={{ textAlign: 'center' }}>Loading...</h4>}
           endMessage={
             <p style={{ textAlign: 'center' }}>
