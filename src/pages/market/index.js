@@ -151,7 +151,7 @@ const Market = (props) => {
           style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
         />
         <InfiniteScroll
-          dataLength={list?.length}
+          dataLength={datas?.length}
           next={fetchData}
           hasMore={pageAble}
           height={600}
