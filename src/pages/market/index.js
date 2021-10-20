@@ -57,27 +57,25 @@ const Market = (props) => {
 
   const fetchData =  () => {
     console.log(121212, page,'page')
-    // let _sortTag = sortTag
-    // if (sortTag?.includes('price')) {
-    //   _sortTag = 'price'
-    // }
-    // dispatch(
-    //   getMarketList(
-    //     {
-    //       category: category,
-    //       sortOrder: sortOrder,
-    //       sortTag: _sortTag,
-    //       page: page + 1,
-    //       size,
-    //     },
-    //     token
-    //   )
-    // );
-    // setPage(page + 1)
+    let _sortTag = sortTag
+    if (sortTag?.includes('price')) {
+      _sortTag = 'price'
+    }
+    dispatch(
+      getMarketList(
+        {
+          category: category,
+          sortOrder: sortOrder,
+          sortTag: _sortTag,
+          page: page + 1,
+          size,
+        },
+        token
+      )
+    );
+    setPage(page + 1)
   }
-  const refresh = () => {
-    console.log('rejal;fjasljflksajfklj')
-  }
+
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -154,7 +152,7 @@ const Market = (props) => {
           style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
         />
         <InfiniteScroll
-          dataLength={40}
+          dataLength={list?.length}
           next={fetchData}
           hasMore={pageAble}
           loader={<h4 style={{ textAlign: 'center' }}>Loading...</h4>}
