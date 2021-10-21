@@ -3,6 +3,8 @@ import { css, cx } from 'emotion';
 import React, { useState, useMemo } from 'react';
 
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router';
+
 import { withRouter } from 'react-router-dom';
 import styles from  './index.less';
 import noImg from 'images/common/noImg.svg'
@@ -14,9 +16,11 @@ const NFTCard = (props) => {
   } = props;
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
-  const viewUrl = !flag ? url : noImg
+  const viewUrl = !flag ? url : noImg;
+  let history = useHistory();
+  console.log(item,'item')
   return (
-    <div key={`title-${index}`} className={styleCardContainer}>
+    <div key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item})}>
       <div
         style={{
           backgroundImage: `url(${viewUrl})`,

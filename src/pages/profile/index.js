@@ -71,7 +71,7 @@ const ProfileScreen = (props) => {
         getMyProfileBatch(
           {
             address: newAddress,
-            page: 1,
+            page: 0,
             size: 100,
             sortOrder: 'ASC',
             sortTag: 'createTime',

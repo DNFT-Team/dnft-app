@@ -10,6 +10,8 @@ import AssetScreen from 'pages/asset';
 import IGOScreen from 'pages/igo';
 import SyncBtcScreen from 'pages/igo/syncbtc';
 import ProfileScreen from 'pages/profile';
+import collectionScreen from 'pages/profile/collection';
+
 import DataDetailScreen from 'pages/data/detail';
 import ProfileEditScreen from 'pages/profile/edit';
 import CreateNFT from 'pages/asset/create';
@@ -48,6 +50,7 @@ const ROUTER_MAP = [
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
   { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
+  { path: '/profile/collection', exact: true, Component: collectionScreen, navName: 'profile' },
   { path: '/data/competition', exact: true, Component: CompetitionScreen, navName: 'Data', reqComing: 'devnet' !== NetName  },
   { path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
