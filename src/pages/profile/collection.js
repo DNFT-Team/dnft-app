@@ -9,6 +9,7 @@ import noImg from 'images/common/noImg.svg'
 import LoadingIcon from 'images/asset/loading.gif'
 import NFTCard from '../../components/NFTCard';
 import { noDataSvg } from 'utils/svg';
+import CreateCollectionModal from 'components/CreateCollectionModal';
 
 import { get, post } from 'utils/request';
 
@@ -22,6 +23,7 @@ const CollectionScreen = (props) => {
   } = props;
   const [list, setList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCreateCollection, setShowCreateCollection] = useState(false);
 
   console.log(state,'state')
   useEffect(async () => {
@@ -49,13 +51,7 @@ const CollectionScreen = (props) => {
       <NFTCard
         item={item}
         index={index}
-        // needAction={isTestNet}
-        currentStatus={'11'}
-        // onLike={getNFTList}
-        // onSave={getNFTList}
-        // onRefresh={(currentAddress, currentToken) =>
-        //   getNFTList(currentAddress, currentToken)
-        // }
+        currentStatus={''}
       />
     ),
     []
@@ -71,12 +67,19 @@ const CollectionScreen = (props) => {
   );
   return (
     <div className={styleCardContainer}>
-      <header>
+      <header className={styleCardHeaderBox}>
         <div className={styleCardHeader}>
           <h4>{state?.item.name}</h4>
           <div>{state?.item.description}</div>
         </div>
-        {/* <div></div> */}
+        <div
+          className={styleEditCollection}
+          onClick={() => {
+            setShowCreateCollection(true)
+          }}
+        >
+          Edit Collection
+        </div>
       </header>
       <div className={styleInfoContainer}>
         {!isLoading && list?.length > 0
@@ -86,6 +89,21 @@ const CollectionScreen = (props) => {
       {isLoading && <div className={styleLoadingIconContainer}>
         <img src={LoadingIcon}/>
       </div>}
+      {showCreateCollection && (
+        <CreateCollectionModal
+          formDs={{ name: state?.item.name, description: state?.item.description }}
+          token={token}
+          isNew={false}
+          isProfile
+          onSuccess={(res) => {
+            setShowCreateCollection(false);
+            // getCollectionList();
+          }}
+          onClose={() => {
+            setShowCreateCollection(false);
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -122,6 +140,11 @@ const styleCardContainer = css`
   padding: 30px;
 
 `;
+const styleCardHeaderBox = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 const styleCardHeader = css`
   display: flex;
   flex-direction: column;
@@ -143,7 +166,6 @@ const styleInfoContainer = css`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  height: 100%;
   gap: 30px 16px;
   margin-top: 20px;
   @media (max-width: 900px) {
@@ -151,44 +173,20 @@ const styleInfoContainer = css`
   }
 `;
 
-const styleInfo = css`
-  align-items: center;
-  .title {
-    color: #000;
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 19px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .desc {
-    color: #23262F;
-    height: 32px;
-    font-size: 12px;
-    line-height: 16px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    overflow:hidden;
-    /*! autoprefixer: off */
-    -webkit-box-orient: vertical;
-  }
-`;
-
-const styleNickNameContainer = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 8px;
-  .dot {
-    background: #45B36B;
-    width: 8px;
-    height: 8px;
-    border-radius: 8px;
-    margin-right: 6px;
+const styleEditCollection = css`
+  background-color: #112df2;
+  color: white;
+  padding: 14px 18px;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  @media (max-width: 900px) {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 20px;
   }
 `;
 const styleNoDataContainer = css`

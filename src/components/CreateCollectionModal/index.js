@@ -21,6 +21,7 @@ const CreateCollectionModal = (props) => {
     token, //  req-token
     isNew = false, // editStatus
     formDs = COLL_SCHEMA, //  form Data
+    isProfile
   } = props;
   const [colData, setColData] = useState({
     ...COLL_SCHEMA,
@@ -36,6 +37,7 @@ const CreateCollectionModal = (props) => {
 
   const submitColl = async () => {
     const { address, chainType } = colData;
+    console.log(colData, 'colData')
     if (!token || !address) {
       return;
     }
@@ -77,6 +79,7 @@ const CreateCollectionModal = (props) => {
   return (
     <Dialog
       customClass={styleCollectionModalContainer}
+      style={isProfile && {height: 'auto'}}
       title={`${!isNew ? 'Edit' : 'Create'} Collection`}
       visible
       closeOnClickModal={false}
@@ -88,6 +91,7 @@ const CreateCollectionModal = (props) => {
           <Input
             placeholder='e. g. David (Maximum 20 char)'
             maxLength={20}
+            value={colData.name}
             onChange={(value) => {
               setColData({
                 ...colData,
@@ -102,6 +106,7 @@ const CreateCollectionModal = (props) => {
             type='textarea'
             placeholder='Description (Maximum 500 char)'
             maxLength={500}
+            value={colData.description}
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {
               setColData({

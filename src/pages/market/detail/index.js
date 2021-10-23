@@ -17,7 +17,7 @@ import {
   ModalHeader, ModalFooter,
   ModalBody, ModalContent,
 } from '@chakra-ui/react';
-import { post } from 'utils/request';
+import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
 import globalConfig from 'config/index'
 import Slider from 'react-slick';
@@ -29,11 +29,11 @@ import busd_unit from 'images/market/busd.svg'
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
-  const datas = location?.state?.item;
+  const item = location?.state?.item;
   const category = location?.state?.category;
   const sortTag = location?.state?.sortTag;
   let history = useHistory();
-
+  const [datas, setDatas] = useState(item || {})
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,18 @@ const MarketDetailScreen = (props) => {
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
-
+  const getMarketInfo = async () => {
+    try {
+      const { data } = await get(
+        `/api/v1/trans/market/${item?.orderId}`,
+        '',
+        token
+      )
+      setDatas(data?.data?.content?.[0])
+    } catch (e) {
+      console.log(e, 'e');
+    }
+  }
   const SampleNextArrow = useCallback(
     (props) => {
       const { className, style, onClick, currentSlide, slideCount } = props;
@@ -231,7 +242,6 @@ const MarketDetailScreen = (props) => {
     []
   );
   const clickDetail = (item) => {
-    console.log(item, 'item');
     history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
   }
   const renderCard = useCallback(
@@ -400,6 +410,21 @@ const MarketDetailScreen = (props) => {
   const historyBack = () => {
     history.push('/market', {category, sortTag})
   }
+  const handleStar = async () => {
+    const { data } = await post(
+      '/api/v1/nft/save',
+      {
+        saved: datas?.isSaved ? 0 : 1,
+        nftId: datas?.nftId,
+      },
+      token
+    );
+    toast[data?.success ? 'success' : 'error'](data?.message, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    getMarketInfo();
+
+  }
   const handleLinkProfile = () => {
     if (!token) {
       toast.warn('Please link wallet', {
@@ -461,6 +486,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.proName}>
               <div className={styles.proNameText}>{datas?.name}</div>
               <div className={styles.proNameType}>{datas?.category}</div>
+              <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
             </div>
             <div className={styles.userInfo}>
               <div className={styles.user}>
