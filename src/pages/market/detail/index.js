@@ -50,6 +50,9 @@ const MarketDetailScreen = (props) => {
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
 
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
+  useEffect(() => {
+    getMarketInfo();
+  }, [token])
   const getMarketInfo = async () => {
     try {
       const { data } = await get(
