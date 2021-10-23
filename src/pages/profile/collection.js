@@ -25,7 +25,6 @@ const CollectionScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
 
-  console.log(state,'state')
   useEffect(() => {
     getCollectionNftList()
   },[token])
@@ -83,7 +82,7 @@ const CollectionScreen = (props) => {
         </div>
       </header>
       <div className={styleInfoContainer}>
-        {!isLoading && list?.length > 0
+        {list?.length > 0
           ? list.map((item, index) => renderCard(item, index))
           : renderNoData}
       </div>
