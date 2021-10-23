@@ -37,22 +37,23 @@ const CreateCollectionModal = (props) => {
 
   const submitColl = async () => {
     const { address, chainType } = colData;
-    console.log(colData, 'colData')
-    if (!token || !address) {
-      return;
-    }
-    if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
-      toast.warning('Wrong network', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      return;
-    }
-    colData.name = colData.name.trim();
-    if (!colData.name) {
-      toast.warning('Name is required', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      return;
+    if(!isProfile) {
+      if (!token || !address) {
+        return;
+      }
+      if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
+        toast.warning('Wrong network', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        return;
+      }
+      colData.name = colData.name.trim();
+      if (!colData.name) {
+        toast.warning('Name is required', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        return;
+      }
     }
 
     try {

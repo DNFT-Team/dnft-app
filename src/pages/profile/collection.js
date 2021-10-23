@@ -26,7 +26,10 @@ const CollectionScreen = (props) => {
   const [showCreateCollection, setShowCreateCollection] = useState(false);
 
   console.log(state,'state')
-  useEffect(async () => {
+  useEffect(() => {
+    getCollectionNftList()
+  },[token])
+  const getCollectionNftList = async () => {
     if(token) {
       try {
         setIsLoading(true)
@@ -38,13 +41,11 @@ const CollectionScreen = (props) => {
         setList(data?.data?.content || [])
         setIsLoading(false)
 
-        console.log(data,'data')
       }catch(e) {
         setIsLoading(true)
       }
     }
-  },[token])
-  console.log(list,'list')
+  }
 
   const renderCard = useCallback(
     (item, index) => (
@@ -60,7 +61,7 @@ const CollectionScreen = (props) => {
     () => (
       <div className={styleNoDataContainer}>
         <div>{noDataSvg}</div>
-        <span>No content</span>
+        {/* <span>No content</span> */}
       </div>
     ),
     []
@@ -69,8 +70,8 @@ const CollectionScreen = (props) => {
     <div className={styleCardContainer}>
       <header className={styleCardHeaderBox}>
         <div className={styleCardHeader}>
-          <h4>{state?.item.name}</h4>
-          <div>{state?.item.description}</div>
+          <h4>{list?.[0]?.collectionName}</h4>
+          <div>{list?.[0]?.collectionDesc}</div>
         </div>
         <div
           className={styleEditCollection}
@@ -91,13 +92,13 @@ const CollectionScreen = (props) => {
       </div>}
       {showCreateCollection && (
         <CreateCollectionModal
-          formDs={{ name: state?.item.name, description: state?.item.description }}
+          formDs={{ name: list?.[0]?.collectionName, description: list?.[0]?.collectionDesc, id: state?.item.id, chainType: state?.item.chainType }}
           token={token}
           isNew={false}
           isProfile
           onSuccess={(res) => {
             setShowCreateCollection(false);
-            // getCollectionList();
+            getCollectionNftList();
           }}
           onClose={() => {
             setShowCreateCollection(false);
