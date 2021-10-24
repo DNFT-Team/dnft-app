@@ -42,8 +42,16 @@ const AssetScreen = (props) => {
     ]
     : [
       {
+        label: 'On Sale',
+        value: 'ONSALE',
+      },
+      {
         label: 'In Wallet',
         value: 'INWALLET',
+      },
+      {
+        label: 'Sold',
+        value: 'SOLD',
       },
     ];
 
@@ -263,7 +271,7 @@ const AssetScreen = (props) => {
               <div className={styleIcon} style={{
                 background: `center center / cover no-repeat url(${avatorUrl})`
               }} onClick={() => {
-                if (globalConfig.net_env !== 'mainnet' && address) {
+                if (address) {
                   history.push(`/profile/address/${address}`, true)
                 }
               }}>
@@ -272,7 +280,7 @@ const AssetScreen = (props) => {
             <span className={styleCoinName}>DNF</span>
             <span>{balance}</span>
           </div>
-          {currentNetEnv !== 'mainnet' &&
+          {currentNetEnv !== 'otherNet' &&
             <div
               className={styleCreateNFT}
               onClick={() => {
