@@ -1,5 +1,5 @@
 import InfiniteScroll from 'react-infinite-scroll-component';
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import styles from './index.less';
 import { css, cx } from 'emotion';
 import NFTCard from './component/item';
@@ -22,12 +22,9 @@ const Market = (props) => {
   const [category, setCategory] = useState(categoryBack || 'All');
   const [sortTag, setSortTag] = useState(sortTagBack || 'like_count');
   const [sortOrder, setSortOrder] = useState('ASC');
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [list, setList] = useState([])
-  const [isHasMore, setIsHasMore] = useState(true)
-
+  const domRef = useRef(null);
   const sortTagType = [
     { label: 'Most popular', value: 'like_count' },
     { label: 'Price:high to low', value: 'ASC-price' },
@@ -40,23 +37,24 @@ const Market = (props) => {
       if (sortTag?.includes('price')) {
         _sortTag = 'price'
       }
-      dispatch(
-        getMarketList(
-          {
-            category: category,
-            sortOrder: sortOrder,
-            sortTag: _sortTag,
-            page: 1,
-            size,
-          },
-          token
-        )
-      );
+      // dispatch(
+      //   getMarketList(
+      //     {
+      //       category: category,
+      //       sortOrder: sortOrder,
+      //       sortTag: _sortTag,
+      //       page: 1,
+      //       size,
+      //     },
+      //     token
+      //   )
+      // );
+      fetchData(true);
     }
   }, [token, category, sortTag, address]);
+  let reachBottom = domRef?.current?.getBoundingClientRect()?.bottom;
 
-  const fetchData =  () => {
-    console.log(121212, page, 'page')
+  const fetchData =  (tag) => {
     let _sortTag = sortTag
     if (sortTag?.includes('price')) {
       _sortTag = 'price'
@@ -67,14 +65,20 @@ const Market = (props) => {
           category: category,
           sortOrder: sortOrder,
           sortTag: _sortTag,
-          page: page + 1,
+          page: tag ? 1 :  page + 1,
           size,
         },
         token
       )
     );
-    setPage(page + 1)
+    setPage(tag ? 1 : page + 1);
+
   }
+  useEffect(() => {
+    if (reachBottom <= window.innerHeight && pageAble && datas?.length > 0) {
+      fetchData()
+    }
+  }, [reachBottom,pageAble, datas?.length,category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -84,7 +88,6 @@ const Market = (props) => {
     ),
     []
   );
-  console.log(datas, 'datas', datas?.length, pageAble)
   const clickDetail = (item) => {
     // if(pending) return;
     history.push('/market/detail', {item, category, sortTag})
@@ -147,7 +150,7 @@ const Market = (props) => {
       </div>
       <div className={styles.ArtContainer}>
         <Loading
-          loading={pending && page === 1}
+          loading={pending && page === 0}
           style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
         />
         <InfiniteScroll
@@ -162,7 +165,7 @@ const Market = (props) => {
             </p >
           }
         >
-          <div className={styles.contentBox}>
+          <div className={styles.contentBox} ref={domRef}>
             {datas?.length > 0
               ? datas?.map((item, index) =>  renderCard(item, index))
               : renderNoData}

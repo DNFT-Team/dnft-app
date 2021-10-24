@@ -147,7 +147,9 @@ const ProfileScreen = (props) => {
       )),
     [selectedTab, newAddress]
   );
-
+  function isUrl (url) {
+    return /^https?:\/\/.+/.test(url)
+  }
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
@@ -212,7 +214,8 @@ const ProfileScreen = (props) => {
       console.log(e, 'e');
     }
   }
-  const shareUrl = window.location.href
+  const shareUrl = window.location.href;
+
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -289,13 +292,19 @@ const ProfileScreen = (props) => {
             />
           </div>
           <div className={styles.contact}>
-            <a href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
+            <a style={{
+              pointerEvents: !isUrl(datas?.twitterAddress) && 'none'
+            }} href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
               <img className={styles.contact_img} src={twitter} />
             </a>
-            <a href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
+            <a style={{
+              pointerEvents: !isUrl(datas?.facebookAddress) && 'none'
+            }} href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
               <img className={styles.contact_img} src={ins} />
             </a>
-            <a href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
+            <a style={{
+              pointerEvents: !isUrl(datas?.youtubeAddress) && 'none'
+            }}  href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
               <img style={{width: 22, height: 22}} className={styles.contact_img} src={youtube} />
             </a>
           </div>
