@@ -9,7 +9,7 @@ import {
   Button, Text,
   Menu, MenuButton,
   MenuList, MenuGroup,
-  MenuItem, MenuDivider,
+  MenuItem, MenuDivider, Tooltip,
   Drawer, DrawerOverlay, DrawerContent,
   DrawerHeader, IconButton, DrawerBody,
   Stat, StatLabel, StatNumber, StatHelpText
@@ -89,6 +89,11 @@ const GlobalHeader = (props) => {
       );
       setCurrentNetIndex(currentIndex)
 
+      //  监听节点切换
+      ethereum.on('chainChanged', (chainId) => {
+        console.log(chainId);
+        window.location.reload()
+      })
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
         console.log(networkIDstring, 'networkIDstring')
@@ -358,7 +363,12 @@ const GlobalHeader = (props) => {
           }}
         >
           {address
-            ? <span><span className='styleDot'></span><span>{address?.slice(0, 8)}...{address?.slice(38)}</span></span>
+            ? <Tooltip label="Go Profile" hasArrow bg="red.600">
+              <span>
+                <span className='styleDot'/>
+                <span>{address?.slice(0, 8)}...{address?.slice(38)}</span>
+              </span>
+            </Tooltip>
             : 'connect wallet'}
         </span>
         {address && (
