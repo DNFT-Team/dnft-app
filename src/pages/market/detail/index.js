@@ -422,9 +422,9 @@ const MarketDetailScreen = (props) => {
       },
       token
     );
-    toast[data?.success ? 'success' : 'error'](data?.message, {
-      position: toast.POSITION.TOP_CENTER,
-    });
+    const flag = data?.success;
+    const msg = flag ? `${datas?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message;
+    toast[flag ? 'success' : 'error'](msg, { position: toast.POSITION.TOP_CENTER});
     getMarketInfo();
 
   }
