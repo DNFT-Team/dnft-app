@@ -57,11 +57,6 @@ export const busdContract = {
   testnet: '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
 }
 
-// asset|bsc-token(TDNF)
-export const bscTestTokenContact = {
-  testnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942',
-  devnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942'
-}
 export const createNFTContract1155 = {
   testnet: '0x512D2346F2a418baf587a3160DFeab0421D765Ba',
   // devnet: '0x8636C6208bC28BEed85FA9B3dBbfdAE93837f5dE'
@@ -83,8 +78,15 @@ export const tradableNFTContract721 = {
   devnet: '0x3dB3638F94bb8731789e8Ec2082Ee08f95581929'
 }
 
-// market|bsc-token(TBUSD)
+// bsc-token(DNF)
+export const bscTestTokenContact = {
+  testnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942',
+  // devnet: '0x18d68a172b6662aa9ef2b3376980e941d964d942',
+  devnet: '0x018f49822d593f88843777e0956af74c87012219'
+}
+// bsc-token(BUSD)
 export const busdMarketContract = {
   testnet: '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD',
-  devnet: '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD'
+  // devnet: '0xd4e4267fBf3D62d643e808067885ac10f5EB60bD'
+  devnet: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
 }
