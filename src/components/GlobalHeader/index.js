@@ -352,25 +352,6 @@ const GlobalHeader = (props) => {
       {/* </div>*/}
       <Box className={actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         {renderFaucet()}
-        <span
-          className={address ? styleHasAddress : styleAddress}
-          onClick={async () => {
-            if (address) {
-              history.push(`/profile/address/${address}`, true)
-              return;
-            }
-            await connectWallet()
-          }}
-        >
-          {address
-            ? <Tooltip label="Go Profile" hasArrow bg="red.600">
-              <span>
-                <span className='styleDot'/>
-                <span>{address?.slice(0, 8)}...{address?.slice(38)}</span>
-              </span>
-            </Tooltip>
-            : 'connect wallet'}
-        </span>
         {address && (
           <div
             className={styleAssetTarget}
@@ -383,26 +364,28 @@ const GlobalHeader = (props) => {
             <span>Asset</span>
           </div>
         )}
-        <div className={styleActionContainer}>
-          <div
-            style={{background: 'transparent'}}
-            className={actionItem}
-            onClick={() => {
-              setIsNetListVisible(true);
-            }}
-          >
-            <img src={netArray[currentNetIndex]?.shortIcon} alt=""/>
-          </div>
-          <div
-            className={styleNetContainer}
-            onClick={() => {
-              setIsNetListVisible(true);
-            }}
-          >
-            <div style={{ color: '#23262F', fontWeight: 'bold', marginRight: '10px', textAlign: 'right' }}>
-              {netArray[currentNetIndex]?.shortName[1] || 'Network'}
-            </div>
-          </div>
+        <span
+          className={address ? styleHasAddress : styleAddress}
+          onClick={async () => {
+            if (address) {
+              history.push(`/profile/address/${address}`, true)
+              return;
+            }
+            await connectWallet()
+          }}
+        >
+          {address
+            ? <Tooltip label="Go Profile" hasArrow bg="red.600">
+              <span>{address?.slice(0, 8)}...{address?.slice(38)}</span>
+            </Tooltip>
+            : 'connect wallet'}
+        </span>
+        <div className={styleActionContainer}
+          onClick={() => {
+            setIsNetListVisible(true);
+          }}>
+          <img src={netArray[currentNetIndex]?.shortIcon} alt=""/>
+          <span> {netArray[currentNetIndex]?.shortName[1] || 'Network'}</span>
         </div>
         {/* <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>*/}
       </Box>
@@ -497,39 +480,29 @@ const styleHeader = css`
   }
 `;
 
-const actionItem = css`
-  display: flex;
-  background: #1c2656;
-  border-radius: 42px;
-  height: 42px;
-  width: 42px;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  margin-right: 10px;
-  img {
-    width: 16px;
-  }
-`;
-
-const styleNetContainer = css`
-  position: relative;
-  /* cursor: pointer; */
-  width: 90px;
-  svg {
-    position: relative;
-    top: -4px;
-  }
-`;
 const styleActionContainer = css`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  margin-left: 30px;
-  border: 1px solid #E1E6FF;
-  border-radius: 8px;
+  box-sizing: border-box;
   cursor: pointer;
+  height: 40px;
+  padding: 11px 10px;
+  border-radius: 10px;
+  border: 1px solid #E1E6FF;
+  img {
+    height: 20px;
+    width: 20px;
+  }
+  span{
+    display: inline-block;
+    margin-left: 10px;
+    font-family: Helvetica,sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 12px;
+    color: #23262F;
+  }
 `;
 const styleModalContainer = css`
   width: 400px;
@@ -592,13 +565,18 @@ const styleSearchContainer = css`
 const styleHasAddress = css`
   cursor: pointer;
   height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
+  box-sizing: border-box;
+  padding: 13px 10px;
+  margin-right: 30px;
+  border-radius: 10px;
   border: 1px solid #E1E6FF;
-  color: #23262F;
+  font-family: Helvetica sans-serif;
+  font-style: normal;
   font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  color: #23262F;
   &>span{
     display: flex;
     align-items: center;
@@ -623,19 +601,30 @@ const styleAddress = css`
 `;
 
 const styleAssetTarget = css`
-  background: #0834e8;
+  background: #0057D9;
   height: 40px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  border-radius: 8px;
-  margin-left: 30px;
+  font-size: 12px;
+  padding: 10px 8px;
+  margin-right: 30px;
+  width: 100px;
+  border-radius: 10px;
+  img{
+    height: 20px;
+    width: 20px;
+  }
   span{
-    color: white;
-    display: flex;
-    padding: 0 4px;
+    display: inline-block;
+    width: 66px;
+    text-align: center;
+    font-family: Archivo Black,sans-serif;
+    font-style: normal;
+    font-weight: normal;
     font-size: 14px;
-    font-weight: bold;
+    line-height: 14px;
+    color: #fcfcfd;
   }
 `
 const actionContainer  = css`
@@ -644,6 +633,7 @@ const actionContainer  = css`
   justify-content: flex-end;
   //margin-left: 20px;
   height: 64px;
+  box-sizing: border-box;
   padding: 10px 30px 10px 56px;
   align-items: center;
   color: #233a7d;

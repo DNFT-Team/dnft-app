@@ -10,8 +10,7 @@ import Logo from 'images/common/dnf.svg';
 import GlobalHeader from 'components/GlobalHeader';
 import { css, cx } from 'emotion';
 import { Icon } from '@iconify/react';
-import {Box, Tag, TagLabel} from '@chakra-ui/react'
-import globalConf from 'config/index'
+import {Box} from '@chakra-ui/react';
 import {contactData} from 'config/helper'
 import botBg from 'images/common/botBg.png';
 
@@ -35,25 +34,14 @@ const App = (props) => {
     setTab(value.path);
   };
 
-  const [shrink, setShrink] = useState(false);
+  const [shrink, setShrink] = useState(true);
 
   return (
     <section className={styles.container}>
-      <Box className={cx(styleLeftNav, shrink && styleLeftFull)} display={['none', 'none', 'block', 'block', 'block']}>
+      <Box className={cx(styleLeftNav, shrink && styleLeftFull)} display={['none', 'none', 'flex', 'flex', 'flex']}>
         <div className={styleTop}>
-          <div className={'styleLogoContainer'}>
-            <img className={styles.logo} src={Logo} alt='logo' />
-            <span className='logoText'>DNFT Protocol</span>
-          </div>
-          <Tag
-            borderRadius="full"
-            variant="solid"
-            color="#5FFFB1"
-            textTransform="capitalize"
-            bg="transparent"
-          >
-            <TagLabel>{globalConf.net_name}</TagLabel>
-          </Tag>
+          <img src={Logo} alt='' />
+          <span>DNFT PROTOCOL</span>
         </div>
         <section>
           {MENU_MAP.map((obj, index) => {
@@ -67,30 +55,21 @@ const App = (props) => {
                   isActive && styles.navActive
                 } ${shrink ? styles.navRt : styles.navBot} styleNavContainer`}
               >
-                <div
-                  className={`${styles.navImg} ${
-                    isActive && styles.navActive
-                  } `}
-                >
-                  {<img src={obj.icon} style={{ width: 30 }} alt={obj.navName}/>}
+                <div className={styles.navImg}>
+                  {<img src={obj.icon} style={{ width: 25 }} alt={obj.navName}/>}
                 </div>
-                {
-                  <span
-                    className={`${styles.navDeText} ${
-                      isActive && styles.navDeActive
-                    } styleNavText`}
-                  >
-                    {obj.navName}
-                  </span>
-                }
+                <span
+                  className={`${styles.navDeText} ${
+                    isActive && styles.navDeActive
+                  } styleNavText`}
+                >
+                  {obj.navName}
+                </span>
               </nav>
             );
           })}
         </section>
-        <Box textAlign="center" my="1rem">
-          <Icon className={cx(styleShrinkIco, shrink && styleShrinkRotate)} icon={'mdi-light:chevron-double-right'} onClick={() => {setShrink(!shrink)}}/>
-        </Box>
-        <section className={'styleFootNoteContainer'} style={{backgroundImage: `url("${botBg}")`}}>
+        <section className={'styleFootNoteContainer'}>
           <div className={styleContactUs}>
             {contactData.map((item, i) => (
               <a
@@ -104,11 +83,10 @@ const App = (props) => {
               </a>
             ))}
           </div>
-          <div className={styleFootNote}>
-            <p>Powered by <b>D LABS</b></p>
-            <label>2021 DNFT All rights reserved</label>
-          </div>
           <a className={styleFootDoc} target="_blank" href="https://dnft.gitbook.io" rel="noreferrer">DOCUMENTATION</a>
+          <div className={styleFootNote}>
+            <label>© 2021 DNFT Protocol</label>
+          </div>
         </section>
       </Box>
       <section id="mainContainer" className={styleRightContainer}>
@@ -144,17 +122,15 @@ const styleFootNote = css`
   white-space: nowrap;
   font-family: SF Pro Display,sans-serif;
   font-style: normal;
-  p{
-    font-weight: bold;
-    font-size: 12.0493px;
-    line-height: 140%;
-    color: #FFFFFF;
-  }
   label{
-    font-weight: normal;
+    font-family: Helvetica,sans-serif;
+    font-style: normal;
+    font-weight: bold;
     font-size: 10.328px;
     line-height: 150%;
-    color: #A6B3F7;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
   }
 `;
 const styleFootDoc = css`
@@ -162,7 +138,7 @@ const styleFootDoc = css`
   cursor: pointer;
   font-style: normal;
   font-weight: bold;
-  font-size: 8.60664px;
+  font-size: 12px;
   line-height: 150%;
   display: flex;
   align-items: center;
@@ -171,19 +147,22 @@ const styleFootDoc = css`
   background: #FFFFFF;
   border-radius: 6px;
   padding: 6px 0;
-  margin-top: 7px;
+  margin: 14px 0;
   text-decoration: none;
 `;
 
 const styleLeftNav = css`
   width: 56px;
-  background-color: #1B2559;
+  background-color: #00398D;
   height: 100vh;
   position: sticky;
   top: 0;
   padding: 0 20px;
-  overflow: hidden;
+  overflow: auto;
   transition: width 0.5s;
+  &::-webkit-scrollbar{
+    display: none;
+  }
 
   .styleLogoContainer {
     display: flex;
@@ -201,7 +180,7 @@ const styleLeftNav = css`
     }
   }
   section{
-    margin-top: 10rem;
+    padding-top: 50px;
   }
 
   .styleNavText {
@@ -211,52 +190,55 @@ const styleLeftNav = css`
     display: none;
     white-space: nowrap;
   }
-  .styleNavContainer {
-    padding: 14px 14px;
-    & > div {
-      margin: 0;
-    }
-  }
   .styleFootNoteContainer {
-    position: absolute;
-    bottom: 5vh;
     display: none;
+    margin-bottom: 40px;
     padding: .6rem .8rem;
     border-radius: 8px;
-    left: 50%;
-    transform: translateX(-50%);
+    flex-grow: 0;
+    box-sizing: border-box;
     background-repeat: no-repeat;
     background-size: cover;
+    background-image: url("${botBg}");
   }
 `;
 const styleTop = css`
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  padding: 10px 0;
-  height: 64px;
-  background: #101A4E;
-  position: absolute;
+  padding: 50px 0;
+  height: 30px;
   width: 100%;
-  left: 0;
-  top: 0;
+  color: #EDF3FF;
+  img{
+    width: 30px;
+  }
+  span{
+    display: inline-block;
+    margin-left: 10px;
+    width: 90px;
+    font-family: Archivo Black,sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: #FFFFFF;
+  }
 `;
 const styleLeftFull = css`
-  width: 216px;
+  width: 200px;
   z-index: 100000;
+  display: flex;
+  flex-flow: column nowrap;
+  section{
+    flex-grow: 1;
+  }
   .logoText {
     display: block;
   }
   .styleNavText {
     visibility: visible;
-  }
-
-  .styleNavContainer {
-    padding: 14px 58px 14px 64px;
-    & > div {
-      margin-right: 20px;
-    }
   }
 
   .styleLogoContainer {
@@ -267,9 +249,7 @@ const styleLeftFull = css`
   }
 
   .styleFootNoteContainer {
-    position: absolute;
-    bottom: 5vh;
-    display: block;
+    display: inline-block;
   }
 `
 
@@ -284,16 +264,4 @@ const styleRightContainer = css`
   @media (max-width: 768px) {
     background-color: white;
   }
-`
-const styleShrinkIco = css`
-  cursor: pointer;
-  color: #FFFFFF;
-  font-size: 42px;
-  transition: all .2s ease-in-out;
-  &:hover{
-    font-size: 46px;
-  }
-`
-const styleShrinkRotate = css`
- transform: rotate(180deg);
 `
