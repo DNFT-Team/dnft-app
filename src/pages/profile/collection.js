@@ -27,9 +27,9 @@ const CollectionScreen = (props) => {
 
   useEffect(() => {
     getCollectionNftList()
-  },[token])
+  }, [token])
   const getCollectionNftList = async () => {
-    if(token) {
+    if (token) {
       try {
         setIsLoading(true)
         const { data } = await get(
@@ -40,7 +40,7 @@ const CollectionScreen = (props) => {
         setList(data?.data?.content || [])
         setIsLoading(false)
 
-      }catch(e) {
+      } catch (e) {
         setIsLoading(true)
       }
     }
@@ -87,7 +87,7 @@ const CollectionScreen = (props) => {
           : renderNoData}
       </div>
       {isLoading && <div className={styleLoadingIconContainer}>
-        <img src={LoadingIcon}/>
+        <img src={LoadingIcon} alt=""/>
       </div>}
       {showCreateCollection && (
         <CreateCollectionModal
@@ -115,8 +115,8 @@ export default withRouter(connect(mapStateToProps)(CollectionScreen));
 
 const styleLoadingIconContainer = css`
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   top: 0;
   left: 0;
