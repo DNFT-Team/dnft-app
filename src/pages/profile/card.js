@@ -7,7 +7,7 @@ import { useHistory } from 'react-router';
 
 import { withRouter } from 'react-router-dom';
 import styles from  './index.less';
-import noImg from 'images/common/noImg.svg'
+import noImg from 'images/common/collection_noImg.svg'
 
 const NFTCard = (props) => {
   const {
@@ -15,10 +15,11 @@ const NFTCard = (props) => {
     index,
   } = props;
   const url = item.avatorUrl
-  const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
-  const viewUrl = !flag ? url : noImg;
+  const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1;
+  let randomLen = Math.floor(Math.random() * (item?.nftAvatorUrls?.length || 0));
+  const viewUrl = !flag ? url : item?.nftAvatorUrls?.[randomLen];
   let history = useHistory();
-  console.log(item,'item')
+
   return (
     <div key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item})}>
       <div
@@ -33,6 +34,11 @@ const NFTCard = (props) => {
             if (index > 2) {return;}
             return <img key={index} src={obj} />
           })
+        }
+        {
+          new Array(3 - (item?.nftAvatorUrls?.length || 0)).fill().map((obj, index) =>
+            <img key={index} src={noImg} />
+          )
         }
       </div>
       <div className={styleInfoContainer}>
