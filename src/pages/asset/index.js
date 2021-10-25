@@ -374,7 +374,6 @@ const AssetScreen = (props) => {
     () => (
       <div className={styleNoDataContainer}>
         <div>{noDataSvg}</div>
-        <span>No content</span>
       </div>
     ),
     []
