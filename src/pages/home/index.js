@@ -197,10 +197,7 @@ const HomeScreen = (props) => {
   const renderHotList = useCallback((title) => (
     <div className={styleArtContainer}>
       <h1 className={styleTitle}>{title}</h1>
-      <Loading
-        loading={isLoading}
-        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
-      />
+      <Loading loading={isLoading} />
       <Slider {...settings}>
         {list?.length > 0
           ? list.map((item, index) =>  renderCard(item, index))
@@ -268,6 +265,11 @@ const styleContainer = css`
 const styleArtContainer = css`
   border-radius: 0 0 10px 10px;
   margin: 70px 0 44px 0;
+  .circular {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+  }
   @media (max-width: 768px) {
     padding: 40px 0;
   }
