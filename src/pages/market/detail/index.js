@@ -168,9 +168,9 @@ const MarketDetailScreen = (props) => {
   }, [token]);
 
   useEffect(() => {
-    if (token) {
-      getCollectionList();
-    }
+    // if (token) {
+    //   getCollectionList();
+    // }
     getNFTList()
   }, [token]);
   useEffect(() => {
@@ -347,7 +347,8 @@ const MarketDetailScreen = (props) => {
                 '/api/v1/trans/sell_out',
                 {
                   buyerAddress: address,
-                  collectionId: form?.collectionId,
+                  // collectionId: form?.collectionId,
+                  collectionId: -1,
                   tokenAddress: datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
@@ -383,7 +384,8 @@ const MarketDetailScreen = (props) => {
                 '/api/v1/trans/sell_out',
                 {
                   buyerAddress: address,
-                  collectionId: form?.collectionId,
+                  // collectionId: form?.collectionId,
+                  collectionId: -1,
                   tokenAddress: datas?.tokenAddress,
                   nftId: datas?.nftId,
                   orderId: datas?.orderId,
@@ -597,36 +599,40 @@ const MarketDetailScreen = (props) => {
               })
             }}
             />)}
-            {renderFormItem(
-              'Collection',
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginTop: 20,
-              }}>
-                <Select
-                  placeholder='Please choose'
-                  defaultValue={form.collectionId}
-                  value={form.collectionId}
-                  style={{flex: 1, marginRight: '28px'}}
-                  className={styleCollection}
-                  onChange={(value) => {
-                    setForm({
-                      ...form,
-                      collectionId: value,
-                    });
-                  }}
-                >
-                  {options.map((el) => (
-                    <Select.Option key={el.value} label={el.label} value={el.value} />
-                  ))}
-                </Select>
-                <Button
-                  onClick={() => {
-                    setShowCreateCollection(true);
-                  }}>+ Add</Button>
-              </div>
-            )}
+
+            {
+              1 === 0 &&
+              renderFormItem(
+                'Collection',
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: 20,
+                }}>
+                  <Select
+                    placeholder='Please choose'
+                    defaultValue={form.collectionId}
+                    value={form.collectionId}
+                    style={{flex: 1, marginRight: '28px'}}
+                    className={styleCollection}
+                    onChange={(value) => {
+                      setForm({
+                        ...form,
+                        collectionId: value,
+                      });
+                    }}
+                  >
+                    {options.map((el) => (
+                      <Select.Option key={el.value} label={el.label} value={el.value} />
+                    ))}
+                  </Select>
+                  <Button
+                    onClick={() => {
+                      setShowCreateCollection(true);
+                    }}>+ Add</Button>
+                </div>
+              )
+            }
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
             <Button
@@ -641,12 +647,12 @@ const MarketDetailScreen = (props) => {
                   });
                   return;
                 }
-                if (!form.collectionId) {
-                  toast.warn('Please select collection！', {
-                    position: toast.POSITION.TOP_CENTER,
-                  });
-                  return;
-                }
+                // if (!form.collectionId) {
+                //   toast.warn('Please select collection！', {
+                //     position: toast.POSITION.TOP_CENTER,
+                //   });
+                //   return;
+                // }
                 clickBuyItem()
               }}>Submit</Button>
           </ModalFooter>

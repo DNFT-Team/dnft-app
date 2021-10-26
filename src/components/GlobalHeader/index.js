@@ -591,13 +591,18 @@ const styleHasAddress = css`
 
 `
 const styleAddress = css`
+  font-family: Archivo Black,sans-serif;
   cursor: pointer;
-  background: #112DF2;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  background: #0057D9;
+  color: #FFFFFF;
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 10px 8px;
+  margin-right: 30px;
+  border-radius: 10px;
 `;
 
 const styleAssetTarget = css`
