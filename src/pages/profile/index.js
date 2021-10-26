@@ -30,7 +30,7 @@ import { toast } from 'react-toastify';
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
-import youtube from 'images/profile/youtube.svg';
+import youtube from 'images/profile/youtube.png';
 
 import {
   TelegramShareButton,
@@ -305,7 +305,7 @@ const ProfileScreen = (props) => {
             <a style={{
               pointerEvents: !isUrl(datas?.youtubeAddress) && 'none'
             }}  href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
-              <img style={{width: 22, height: 22}} className={styles.contact_img} src={youtube} />
+              <img style={{width: 28}} className={styles.contact_img} src={youtube} />
             </a>
           </div>
         </div>
@@ -348,22 +348,21 @@ export default withRouter(connect(mapStateToProps)(ProfileScreen));
 const styleTabButton = css`
   height: 38px;
   box-sizing: border-box;
-  color: #777E90;
   font-size: 14px;
   display: flex;
   align-items: center;
   padding: 6px 12px;
   border-radius: 5px;
-  font-weight: bold;
   cursor: pointer;
   border: 1px solid #E6E8EC;
   margin-right: 20px;
+  color: #BBBBBB;
+  font-family: Archivo Black;
 `;
 
 const styleActiveTabButton = css`
-  background: #112DF2;
-  border: 1px solid #112DF2;
-  color: white;
+  border: 1px solid #000000;
+  color: #000000;
 `;
 
 const styleCardList = css`
@@ -376,71 +375,6 @@ const styleCardListEmpty = css`
   display: grid;
   gap: 20px 19px;
   grid-template-columns: repeat(auto-fill);
-
-`;
-const styleModalContainer = css`
-  width: 340px;
-  border-radius: 40px;
-  padding: 36px 32px;
-  .el-dialog__headerbtn {
-    color: #112df2;
-    background: #f4f7fe;
-    width: 24px;
-    height: 24px;
-    border-radius: 24px;
-    .el-dialog__close {
-      transform: scale(0.6);
-      color: #112df2;
-    }
-  }
-
-  .el-dialog__header {
-    padding: 0;
-  }
-  .el-dialog__title {
-    color: #233a7d;
-    font-size: 24px;
-  }
-  .el-dialog__body {
-    padding: 0;
-    position: relative;
-    top: -10px;
-    color: #8f9bba;
-    h1 {
-      font-weight: bold;
-      font-size: 28px;
-      line-height: 36px;
-      color: #000000;
-      text-align: center;
-      margin: 0;
-      margin-bottom: 24px;
-    }
-    span {
-      text-align: center;
-      display: flex;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-  }
-`;
-
-const styleModalActionContainer = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 30px;
-`;
-const styleModalConfirm = css`
-  background: #112df2;
-  border-radius: 70px;
-  color: white;
-  font-size: 14px;
-  width: 180px;
-  height: 46px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
 `;
 
 const styleNoDataContainer = css`

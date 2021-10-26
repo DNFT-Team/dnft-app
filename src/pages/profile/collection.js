@@ -144,40 +144,43 @@ const styleCardHeaderBox = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 `;
 const styleCardHeader = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 30px;
   h4 {
     font-size: 32px;
     line-height: 30px;
     margin: 15px 0;
+    font-family: DM Sans;
   }
   div {
     font-size: 14px;
     line-height: 16px;
     color: #75819A;
+    font-family: SF Pro Display;
   }
 `;
 
 const styleInfoContainer = css`
+  margin-top: 46px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   gap: 30px 16px;
-  margin-top: 20px;
   @media (max-width: 900px) {
     justify-content: center;
   }
 `;
 
 const styleEditCollection = css`
-  background-color: #112df2;
-  color: white;
-  padding: 14px 18px;
+  background-color: #00398D;
+  color: #FCFCFD;
+  padding: 16px 24px;
   font-size: 14px;
+  line-height: 14px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;

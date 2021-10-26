@@ -2,16 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   Dialog,
   Input,
-  InputNumber,
-  Select,
   Upload,
+  Button,
 } from 'element-react';
-import {
-  Badge, Text, Button, IconButton,
-  Modal, ModalOverlay,
-  ModalHeader, ModalFooter,
-  ModalBody, ModalContent
-} from '@chakra-ui/react'
 import styles from './index.less';
 import { css } from 'emotion';
 import camera from 'images/profile/camera.png';
@@ -20,12 +13,9 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
-import {Icon} from '@iconify/react'
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-
+import CropperBox from './cropperBox';
 const ProfileEditScreen = (props) => {
   let history = useHistory();
   const {address, token, location, datas,  onClose, onSuccess} = props;
@@ -33,8 +23,6 @@ const ProfileEditScreen = (props) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [srcCropper, setSrcCropper] = useState('');
   const [visible, setVisible] = useState(false)
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  const cropperRef = useRef(null);
 
   // const datas = location?.state?.datas
   console.log(datas, 'datas')
@@ -55,7 +43,7 @@ const ProfileEditScreen = (props) => {
     );
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (dataUrl,file) => {
     try {
       setForm({ ...form, avatorUrl: '' })
       const fileData = new FormData();
@@ -65,6 +53,7 @@ const ProfileEditScreen = (props) => {
         position: toast.POSITION.TOP_CENTER,
       });
       if (data?.status === 200) {
+        setImageUrl(dataUrl);
         setForm({ ...form, avatorUrl: globalConf.ipfsDown + data?.data?.Hash })
       }
     } catch (e) {
@@ -82,7 +71,6 @@ const ProfileEditScreen = (props) => {
     const reader = new FileReader();
     reader.readAsDataURL(file); // 开始读取文件
     reader.onload = (e) => {
-      console.log(e.target.result,'eeeeee')
       setSrcCropper(e.target.result);
       setVisible(true)
     };
@@ -131,51 +119,20 @@ const ProfileEditScreen = (props) => {
     }
 
   }
-  const dataURLtoFile = (dataurl, filename) => {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
-  }
-
-  const saveImg = () => {
-    const cropper = cropperRef?.current?.cropper;
-    let dataUrl = cropper.getCroppedCanvas().toDataURL();
-    setImageUrl(dataUrl);
-
+  const cropperBtn = (dataUrl, file) => {
     setVisible(false)
-    let file = dataURLtoFile(dataUrl, 'file')
-    // console.log(dataURLtoFile(dataUrl, 'file'))
-    uploadFile(file)
-    // console.log(cropper, cropperRef?.current,  '----------')
+    uploadFile(dataUrl, file)
+
   }
-  const onCloseModal = () => {
-    setVisible(false);
-    // setConfirmLoading(false);
-  }
+
   return (
     <React.Fragment>
       <Dialog
-        // borderRadius="10px"
-        // isCentered isOpen
         title='Edit profile'
         visible
         customClass={styleModalContainer}
-
-        // width={570}
         onCancel={onClose}>
-        {/* <ModalOverlay /> */}
-        {/* <ModalContent width="calc(100% - 40px)" maxW="564px" > */}
-        {/* <ModalHeader color="#11142d"
-          p="32px" fontSize="18px"
-          display="flex" justifyContent="space-between"
-          alignItems="center">
-          Edit profile
-          <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
-            icon={<Icon icon="mdi:close"/>}/>
-        </ModalHeader> */}
-        <Dialog.Body>
+        <Dialog.Body style={{paddingBottom: 0}}>
           <div className={styles.profile_phone}>*Profile Photo<span>Maximum 2MB</span></div>
           <Upload
             className={styleUploadContainer1}
@@ -242,45 +199,22 @@ const ProfileEditScreen = (props) => {
             />
           )}
         </Dialog.Body>
-        <Dialog.Footer  p="10 32px" justifyContent="flex-start">
-          <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom"
-            p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
+        <Dialog.Footer p="10px 32px" justifyContent="flex-start">
+          <Button
+            loading={loading}
+            className={styleModalContainerBtn}
             onClick={editProfile}>Save</Button>
         </Dialog.Footer>
-        {/* </ModalContent> */}
       </Dialog>
       {
         visible &&
-        <Dialog
-          title='Crop the picture'
-          visible
-          // style={{width: '600px'}}
-          customClass={styleModalContainer}
-
-          closeOnClickModal={false}
-          onCancel={onCloseModal}
-        >
-          <Dialog.Body>
-            <Cropper
-              ref={cropperRef}
-
-              // ref="cropper"
-              style={{ width: '600', height: '400px' }}
-              // 预览图的容器
-              preview=".previewContainer"
-              guides={false}
-              // 固定图片裁剪比例（正方形）
-              aspectRatio={1}
-              // 要裁剪的图片的路径
-              src={srcCropper}
-            />
-          </Dialog.Body>
-          <Dialog.Footer  p="10 32px" justifyContent="flex-start">
-            <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom"
-              p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
-              onClick={saveImg}>Save</Button>
-          </Dialog.Footer>
-        </Dialog>
+        <CropperBox
+          srcCropper={srcCropper}
+          onCloseModal={() => {
+            setVisible(false);
+          }}
+          cropperBtn={cropperBtn}
+        />
       }
     </React.Fragment>
   );
@@ -313,9 +247,6 @@ const styleUploadContainer1 = css`
   .avatar {
     background: #fbfdff
   }
-  .avatar-uploader-icon {
-    // background: blue
-  }
 `;
 const styleModalContainer = css`
   max-width: 564px;
@@ -323,4 +254,42 @@ const styleModalContainer = css`
   border-radius: 10px;
   height: 80vh;
   overflow: auto;
+  .el-dialog__title {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .el-dialog__header {
+    padding: 20px 32px 0px 32px;
+  }
+  .el-dialog__body {
+    padding: 49px 32px 32px 32px;
+  }
+  .el-dialog__headerbtn .el-dialog__close {
+    color: #1B1D21;
+    font-size: 16px;
+  }
+  .el-dialog__footer {
+    padding: 0px 32px;
+
+  }
+`
+const styleModalContainerBtn = css`
+  width: 100%;
+  background: #0057D9;
+  margin-bottom: 20px;
+  font-size: 16px;
+  height: 48px;
+  font-family: DM Sans;
+  font-weight: bold;
+  border-radius: 5px;
+  outline: none;
+  color: #fff;
+  border: 0;
+  &:hover {
+    color: #fff;
+    background: #0057D9;
+  }
 `

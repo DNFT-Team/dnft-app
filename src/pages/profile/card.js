@@ -116,6 +116,7 @@ const styleInfo = css`
     display: block;
     font-size: 14px;
     font-weight: bold;
+    font-family: DM Sans;
     margin-bottom: 19px;
     overflow: hidden;
     white-space: nowrap;
@@ -123,6 +124,7 @@ const styleInfo = css`
   }
   .desc {
     color: #23262F;
+    font-family: DM Sans;
     height: 32px;
     font-size: 12px;
     line-height: 16px;
