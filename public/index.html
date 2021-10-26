@@ -15,7 +15,6 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="stylesheet" href="init_loading.css" />
     <link href="https://fonts.googleapis.com/css?family=Archivo+Black|Judson:400,700" rel="stylesheet">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -27,21 +26,31 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>DNFT</title>
+    <style>
+      .init-loading{
+        position: absolute;
+        background: #010104;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .init-loading> img {
+        width: 10rem;
+        height: 10rem;
+        border-radius: 26px;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="init-loading">
-        <p style="color: #FFFFFF;font-size: 3rem;margin-bottom: 2rem;">Loading...</p>
-        <div class="container">
-          <span class="girl"></span>
-          <div class="boys">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
+        <img src="/app_loading.gif" alt="">
       </div>
     </div>
     <!--
