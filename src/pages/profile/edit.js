@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  Alert,
   Dialog,
   Input,
   InputNumber,
@@ -24,12 +23,19 @@ import { useHistory } from 'react-router';
 import {Icon} from '@iconify/react'
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 
 const ProfileEditScreen = (props) => {
   let history = useHistory();
   const {address, token, location, datas,  onClose, onSuccess} = props;
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
+  const [srcCropper, setSrcCropper] = useState('');
+  const [visible, setVisible] = useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const cropperRef = useRef(null);
+
   // const datas = location?.state?.datas
   console.log(datas, 'datas')
   const [form, setForm] = useState({
@@ -71,8 +77,17 @@ const ProfileEditScreen = (props) => {
       toast.warn('The size of the uploaded avatar image cannot exceed 2MB!', {
         position: toast.POSITION.TOP_CENTER,
       });
+      return false;
     }
-    return isLt2M;
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // 开始读取文件
+    reader.onload = (e) => {
+      console.log(e.target.result,'eeeeee')
+      setSrcCropper(e.target.result);
+      setVisible(true)
+    };
+
+    return false;
   }
   const editProfile = async () => {
     setLoading(true)
@@ -116,20 +131,51 @@ const ProfileEditScreen = (props) => {
     }
 
   }
+  const dataURLtoFile = (dataurl, filename) => {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+  }
+
+  const saveImg = () => {
+    const cropper = cropperRef?.current?.cropper;
+    let dataUrl = cropper.getCroppedCanvas().toDataURL();
+    setImageUrl(dataUrl);
+
+    setVisible(false)
+    let file = dataURLtoFile(dataUrl, 'file')
+    // console.log(dataURLtoFile(dataUrl, 'file'))
+    uploadFile(file)
+    // console.log(cropper, cropperRef?.current,  '----------')
+  }
+  const onCloseModal = () => {
+    setVisible(false);
+    // setConfirmLoading(false);
+  }
   return (
-    <Modal closeOnOverlayClick blockScrollOnMount scrollBehavior="inside" borderRadius="10px"
-      isCentered isOpen onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent width="calc(100% - 40px)" maxW="564px" >
-        <ModalHeader color="#11142d"
+    <React.Fragment>
+      <Dialog
+        // borderRadius="10px"
+        // isCentered isOpen
+        title='Edit profile'
+        visible
+        customClass={styleModalContainer}
+
+        // width={570}
+        onCancel={onClose}>
+        {/* <ModalOverlay /> */}
+        {/* <ModalContent width="calc(100% - 40px)" maxW="564px" > */}
+        {/* <ModalHeader color="#11142d"
           p="32px" fontSize="18px"
           display="flex" justifyContent="space-between"
           alignItems="center">
           Edit profile
           <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
             icon={<Icon icon="mdi:close"/>}/>
-        </ModalHeader>
-        <ModalBody p="0 32px">
+        </ModalHeader> */}
+        <Dialog.Body>
           <div className={styles.profile_phone}>*Profile Photo<span>Maximum 2MB</span></div>
           <Upload
             className={styleUploadContainer1}
@@ -138,7 +184,7 @@ const ProfileEditScreen = (props) => {
             accept={'.png,.gif,.jpeg,.jpg,.svg'}
             action=""
             beforeUpload={(file) => beforeAvatarUpload(file)}
-            httpRequest={(e) => {uploadFile(e.file)}}
+            // httpRequest={(e) => {uploadFile(e.file)}}
           >
             {<img src={imageUrl || form?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>
@@ -195,14 +241,48 @@ const ProfileEditScreen = (props) => {
               }}
             />
           )}
-        </ModalBody>
-        <ModalFooter  p="10 32px" justifyContent="flex-start">
+        </Dialog.Body>
+        <Dialog.Footer  p="10 32px" justifyContent="flex-start">
           <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom"
             p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
             onClick={editProfile}>Save</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Dialog.Footer>
+        {/* </ModalContent> */}
+      </Dialog>
+      {
+        visible &&
+        <Dialog
+          title='Crop the picture'
+          visible
+          // style={{width: '600px'}}
+          customClass={styleModalContainer}
+
+          closeOnClickModal={false}
+          onCancel={onCloseModal}
+        >
+          <Dialog.Body>
+            <Cropper
+              ref={cropperRef}
+
+              // ref="cropper"
+              style={{ width: '600', height: '400px' }}
+              // 预览图的容器
+              preview=".previewContainer"
+              guides={false}
+              // 固定图片裁剪比例（正方形）
+              aspectRatio={1}
+              // 要裁剪的图片的路径
+              src={srcCropper}
+            />
+          </Dialog.Body>
+          <Dialog.Footer  p="10 32px" justifyContent="flex-start">
+            <Button loadingText='Save' isLoading={loading} width='100%' background='#112DF2' colorScheme="custom"
+              p="12px 42px" fontSize="16px" width="100%" borderRadius="10px"
+              onClick={saveImg}>Save</Button>
+          </Dialog.Footer>
+        </Dialog>
+      }
+    </React.Fragment>
   );
 };
 
@@ -237,3 +317,10 @@ const styleUploadContainer1 = css`
     // background: blue
   }
 `;
+const styleModalContainer = css`
+  max-width: 564px;
+  width: calc(100% - 40px);
+  border-radius: 10px;
+  height: 80vh;
+  overflow: auto;
+`
