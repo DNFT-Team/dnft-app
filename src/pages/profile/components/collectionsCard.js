@@ -1,12 +1,9 @@
-import { Dialog, InputNumber, Select, Button, Loading } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useState, useMemo } from 'react';
-
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
-
 import { withRouter } from 'react-router-dom';
-import styles from  './index.less';
+import styles from  '../index.less';
 import noImg from 'images/common/collection_noImg.svg'
 
 const NFTCard = (props) => {
@@ -137,19 +134,4 @@ const styleInfo = css`
     -webkit-box-orient: vertical;
   }
 `;
-
-const styleNickNameContainer = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 8px;
-  .dot {
-    background: #45B36B;
-    width: 8px;
-    height: 8px;
-    border-radius: 8px;
-    margin-right: 6px;
-  }
-`;
-
 

@@ -1,13 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  Dialog,
-  Input,
-  Upload,
-  Button,
-} from 'element-react';
+import React, { useRef } from 'react';
+import { Dialog, Button } from 'element-react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { css } from 'emotion';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -15,7 +9,7 @@ import 'cropperjs/dist/cropper.css';
 const CropperBox = (props) => {
   const cropperRef = useRef(null);
 
-  const { title = 'Crop the picture', srcCropper, onCloseModal, cropperBtn } = props;
+  const { title = 'Crop the picture', aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--) {
@@ -46,7 +40,7 @@ const CropperBox = (props) => {
           preview=".previewContainer"
           guides={false}
           // 固定图片裁剪比例（正方形）
-          aspectRatio={1}
+          aspectRatio={aspectRatio}
           // 要裁剪的图片的路径
           src={srcCropper}
         />

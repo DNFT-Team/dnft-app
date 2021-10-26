@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
-import CropperBox from './cropperBox';
+import CropperBox from './components/cropperBox';
 const ProfileEditScreen = (props) => {
   let history = useHistory();
   const {address, token, location, datas,  onClose, onSuccess} = props;
@@ -122,7 +122,6 @@ const ProfileEditScreen = (props) => {
   const cropperBtn = (dataUrl, file) => {
     setVisible(false)
     uploadFile(dataUrl, file)
-
   }
 
   return (

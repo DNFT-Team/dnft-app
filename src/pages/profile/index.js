@@ -15,7 +15,7 @@ import {
 import copy from 'copy-to-clipboard';
 import { css, cx } from 'emotion';
 import { nfIconSvg, noDataSvg } from 'utils/svg';
-import NFTCollectionsCard from './card';
+import NFTCollectionsCard from './components/collectionsCard';
 import NFTCard from 'components/NFTCard';
 import edit_bg from 'images/profile/edit_bg.png';
 import share_bg from 'images/profile/share.svg';
@@ -31,6 +31,7 @@ import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
 import youtube from 'images/profile/youtube.png';
+import CropperBox from './components/cropperBox';
 
 import {
   TelegramShareButton,
@@ -51,6 +52,8 @@ const ProfileScreen = (props) => {
   let _newAddress = location?.pathname?.split('/') || [];
   _newAddress = _newAddress[_newAddress.length - 1]
   const [newAddress, setNewAddress] = useState(_newAddress);
+  const [srcCropper, setSrcCropper] = useState('');
+  const [visible, setVisible] = useState(false)
 
   let history = useHistory();
   useEffect(() => {
@@ -184,7 +187,7 @@ const ProfileScreen = (props) => {
     },
     [selectedTab, newAddress]
   );
-  const uploadFile = async (file) => {
+  const uploadFile = async (dataUrl, file) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
@@ -214,6 +217,20 @@ const ProfileScreen = (props) => {
       console.log(e, 'e');
     }
   }
+  const beforeAvatarUpload = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // 开始读取文件
+    reader.onload = (e) => {
+      setSrcCropper(e.target.result);
+      setVisible(true)
+    };
+
+    return false;
+  }
+  const cropperBtn = (dataUrl, file) => {
+    setVisible(false)
+    uploadFile(dataUrl, file)
+  }
   const shareUrl = window.location.href;
 
   return (
@@ -233,7 +250,8 @@ const ProfileScreen = (props) => {
                 showFileList={false}
                 accept={'.png,.gif,.jpeg,.jpg,.svg'}
                 action=""
-                httpRequest={(e) => {uploadFile(e.file)}}
+                // httpRequest={(e) => {uploadFile(e.file)}}
+                beforeUpload={(file) => beforeAvatarUpload(file)}
                 listType="picture"
               >
                 <Tooltip label="1657*236" hasArrow bg="red.600">
@@ -331,6 +349,17 @@ const ProfileScreen = (props) => {
           }}
         />
       )}
+      {
+        visible &&
+        <CropperBox
+          srcCropper={srcCropper}
+          onCloseModal={() => {
+            setVisible(false);
+          }}
+          aspectRatio={1657 / 236}
+          cropperBtn={cropperBtn}
+        />
+      }
     </div>
   );
 };
