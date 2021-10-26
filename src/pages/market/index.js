@@ -8,11 +8,9 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Select, Loading } from 'element-react';
 import { getMarketList } from 'reduxs/actions/market';
-import { toast } from 'react-toastify';
 import helper from '../../config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
-import { get, post } from 'utils/request';
 
 const Market = (props) => {
   let history = useHistory();
@@ -37,18 +35,6 @@ const Market = (props) => {
       if (sortTag?.includes('price')) {
         _sortTag = 'price'
       }
-      // dispatch(
-      //   getMarketList(
-      //     {
-      //       category: category,
-      //       sortOrder: sortOrder,
-      //       sortTag: _sortTag,
-      //       page: 1,
-      //       size,
-      //     },
-      //     token
-      //   )
-      // );
       fetchData(true);
     }
   }, [token, category, sortTag, address]);
@@ -102,13 +88,13 @@ const Market = (props) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerT}>
-          <span style={{marginRight: '1rem'}}>Market</span>
+          <span className={styles.headerTitle} style={{marginRight: '1.8rem'}}>Market</span>
           <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
-            <Link href={helper.nftMagic.youtube} isExternal color="brand.100"
+            <Link href={helper.nftMagic.youtube} isExternal color="#75819A"
               display="inline-block">
               <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
             </Link>
-            <Link href={helper.nftMagic.book} isExternal color="brand.100"
+            <Link href={helper.nftMagic.book} isExternal color="#75819A"
               display="inline-block" ml="1rem">
               <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
             </Link>
@@ -116,7 +102,6 @@ const Market = (props) => {
         </div>
         <div className={styles.headerR}>
           <Select
-            // style={{ marginRight: 20 }}
             className={styles.selectType}
             value={category}
             placeholder='please choose'
@@ -158,9 +143,9 @@ const Market = (props) => {
           next={fetchData}
           hasMore={pageAble}
           height={600}
-          loader={<h4 style={{ textAlign: 'center' }}>Loading...</h4>}
+          loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
           endMessage={
-            <p style={{ textAlign: 'center' }}>
+            <p className={styles.noData} >
               <b>Yay! You have seen it all</b>
             </p >
           }
@@ -171,11 +156,6 @@ const Market = (props) => {
               : renderNoData}
           </div>
         </InfiniteScroll>
-        {/* <div className={styles.contentBox} style={{ opacity: pending ? 0.5 : 1 }}>
-          {list?.length > 0
-            ? list.map((item, index) =>  renderCard(item, index))
-            : renderNoData}
-        </div> */}
       </div>
     </div>
   );

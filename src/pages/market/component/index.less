@@ -14,7 +14,7 @@
 .styleShortPicture {
   position: relative;
   min-height: 300px;
-  border-radius: 10px;
+  border-radius: 10px 10px 0px 0px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -61,51 +61,25 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin: 18px 0px 8px;
 }
 .styleName {
   box-sizing: border-box;
-  margin: 18px 0px 8px;
   min-width: 0px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1 1 0%;
-  font-weight: 600;
+
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
   font-size: 16px;
-  letter-spacing: -0.01em;
+  line-height: 16px;
+  letter-spacing: -0.03em;
   color: #000000;
 }
-.chainType {
-  margin: 0px 0px 0px 8px;
-  appearance: none;
-  user-select: none;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  box-sizing: border-box;
-  font-family: inherit;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  font-weight: 500;
-  line-height: 20px;
-  word-break: keep-all;
-  color: rgb(30, 35, 41);
-  border-radius: 4px;
-  min-height: 24px;
-  border: none;
-  background-color: rgb(234, 236, 239);
-  min-width: 39px;
-  height: 24px;
-  padding: 4px 8px;
-  font-size: 12px;
-}
+
 .styleInfo {
   display: flex;
   justify-content: space-between;
@@ -139,16 +113,17 @@
   box-sizing: border-box;
   margin: 0px;
   min-width: 0px;
-  color: rgb(71, 77, 87);
-  box-sizing: border-box;
-  min-width: 0px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  font-family: Judson;
+  font-style: normal;
+  font-weight: bold;
   font-size: 12px;
   line-height: 16px;
   letter-spacing: -0.01em;
-  color: #75819a;
+  color: #333333;
 }
 .price {
   box-sizing: border-box;
@@ -156,7 +131,7 @@
   min-width: 0px;
   font-weight: bold;
   font-size: 18px;
-  line-height: 18px;
+  line-height: 20px;
   letter-spacing: -0.01em;
   color: #000000;
 }
