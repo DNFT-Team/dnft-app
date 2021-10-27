@@ -14,7 +14,7 @@ const NFTCard = (props) => {
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1;
   let randomLen = Math.floor(Math.random() * (item?.nftAvatorUrls?.length || 0));
-  const viewUrl = !flag ? url : item?.nftAvatorUrls?.[randomLen];
+  const viewUrl = !flag ? url : item?.nftAvatorUrls?.[randomLen] || noImg;
   let history = useHistory();
 
   return (
@@ -34,7 +34,8 @@ const NFTCard = (props) => {
         }
         {
           new Array(3 - (item?.nftAvatorUrls?.length || 0)).fill().map((obj, index) =>
-            <img key={index} src={noImg} />
+            <div />
+            // <img key={index} src={noImg} />
           )
         }
       </div>
@@ -69,6 +70,16 @@ const styleInfoAvatarUrl = css`
       margin-right: 0
     }
   }
+  div {
+    height: 88px;
+    margin-right: 6px;
+    border-radius: 6px;
+    width: calc((100% - 12px)/3);
+    background: #E5E5E5;
+    &:last-child {
+      margin-right: 0
+    }
+  }
 `;
 
 const styleCardContainer = css`
@@ -88,7 +99,6 @@ const styleCardContainer = css`
     top: -10px;
   }
 `;
-
 const styleInfoContainer = css`
   padding: 20px 0px 0 0px;
   display: flex;
