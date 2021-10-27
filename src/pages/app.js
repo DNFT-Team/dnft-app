@@ -101,7 +101,7 @@ export default withRouter(connect()(App));
 const styleContactUs = css`
   display: flex;
   flex-direction: row;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
 `;
 const styleContactItem = css`
@@ -228,6 +228,7 @@ const styleTop = css`
 `;
 const styleLeftFull = css`
   width: 200px;
+  box-sizing: border-box;
   z-index: 100000;
   display: flex;
   flex-flow: column nowrap;
