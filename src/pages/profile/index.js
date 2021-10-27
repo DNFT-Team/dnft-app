@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import styles from './index.less';
 import copyImg from 'images/profile/copy.png';
-import like from 'images/profile/like.png';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -14,7 +13,7 @@ import {
 } from 'reduxs/actions/profile';
 import copy from 'copy-to-clipboard';
 import { css, cx } from 'emotion';
-import { nfIconSvg, noDataSvg } from 'utils/svg';
+import { noDataSvg } from 'utils/svg';
 import NFTCollectionsCard from './components/collectionsCard';
 import NFTCard from 'components/NFTCard';
 import edit_bg from 'images/profile/edit_bg.png';

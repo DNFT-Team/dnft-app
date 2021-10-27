@@ -17,15 +17,12 @@ import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
 import CropperBox from './components/cropperBox';
 const ProfileEditScreen = (props) => {
-  let history = useHistory();
-  const {address, token, location, datas,  onClose, onSuccess} = props;
+  const { token, datas,  onClose, onSuccess} = props;
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
   const [srcCropper, setSrcCropper] = useState('');
   const [visible, setVisible] = useState(false)
 
-  // const datas = location?.state?.datas
-  console.log(datas, 'datas')
   const [form, setForm] = useState({
     avatorUrl: datas?.avatorUrl,
     nickName: datas?.nickName,
