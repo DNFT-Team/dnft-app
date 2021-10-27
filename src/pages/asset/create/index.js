@@ -1,11 +1,7 @@
 import {
-  Dialog,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Loading,
+  Dialog, Button,
+  Input, InputNumber,
+  Select, Upload, Loading,
 } from 'element-react';
 import { css } from 'emotion';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -16,8 +12,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
+import { getObjectURL } from 'utils/tools';
 import { toast } from 'react-toastify';
-import { Icon } from '@iconify/react';
 import {
   createNFTContract1155,
   createNFTContract721,
@@ -29,7 +25,6 @@ import LoadingIcon from '../../../images/asset/loading.gif'
 const CreateNFTModal = (props) => {
   const { dispatch, datas, location, address, chainType, token, categoryList, onClose } =
     props;
-
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({
@@ -38,6 +33,7 @@ const CreateNFTModal = (props) => {
   });
 
   const [nftUrl, setNftUrl] = useState();
+  const [nftFile, setNftFile] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
   const currentNetEnv = globalConfig.net_env;
@@ -53,29 +49,18 @@ const CreateNFTModal = (props) => {
     supply: 'supply',
   };
 
-  const cateType = [
-    // { label: 'Lasted', value: 'LASTED' },
-    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
-    { label: 'Domain', value: 'DOMAIN' },
-    { label: 'Art', value: 'ART' },
-    { label: 'Cooection', value: 'COOECTION' },
-    { label: 'Sports', value: 'SPORTS' },
-    { label: 'Game', value: 'GAME' },
-  ];
-
   const contractType = [
     { label: '1155', value: '1155' },
     { label: '721', value: '721' },
   ];
-
   const uploadFile = async (file) => {
+    setNftUrl('')
+    setNftFile(null)
+    setIsUploadLoading(true);
     try {
-      setIsUploadLoading(true);
-      const fileData = new FormData();
-      fileData.append('file', file);
-
-      const { data } = await ipfs_post('/v0/add', fileData);
-      return data;
+      const imgUrl = getObjectURL(file)
+      imgUrl && setNftFile(file)
+      return imgUrl
     } catch (e) {
       console.log(e, 'e');
     } finally {
@@ -168,7 +153,7 @@ const CreateNFTModal = (props) => {
       return form[item[0]] === undefined;
     });
 
-    if (!nftUrl) {
+    if (!nftFile) {
       toast.dark('please upload NFT', {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -184,6 +169,20 @@ const CreateNFTModal = (props) => {
 
     try {
       setIsLoading(true);
+      //  upload ipfs
+      toast.info('Step 1. Upload NFT To IPFS...');
+      const fileData = new FormData();
+      fileData.append('file', nftFile);
+      const { data } = await ipfs_post('/v0/add', fileData);
+      const ipfsHash = data?.['Hash']
+      console.log('ipfsHash', ipfsHash);
+      if (!ipfsHash) {
+        toast.error('NFT upload failed!');
+        return
+      }
+      toast.success('NFT upload success!');
+      toast.info('Step 2. Mint NFT via contract...');
+      //  mint nft
       if (window.ethereum) {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
@@ -206,7 +205,7 @@ const CreateNFTModal = (props) => {
             .create(
               address,
               form.supply,
-              `${globalConf.ipfsDown}${nftUrl}`,
+              `${globalConf.ipfsDown}${ipfsHash}`,
               '0x0000000000000000000000000000000000000000000000000000000000000000'
             )
             .send({
@@ -223,7 +222,7 @@ const CreateNFTModal = (props) => {
                 hash: createNFTResult.transactionHash,
                 tokenId: createNFTResult.events.TransferSingle.returnValues.id,
                 tokenAddress: contractAddress,
-                avatorUrl: `${globalConf.ipfsDown}${nftUrl}`,
+                avatorUrl: `${globalConf.ipfsDown}${ipfsHash}`,
               },
               token
             );
@@ -237,7 +236,7 @@ const CreateNFTModal = (props) => {
           const fee = await myContract.methods.bnbFee().call();
 
           createNFTResult = await myContract.methods
-            .create(address, `${globalConf.ipfsDown}${nftUrl}`)
+            .create(address, `${globalConf.ipfsDown}${ipfsHash}`)
             .send({
               from: address,
               value: fee,
@@ -255,7 +254,7 @@ const CreateNFTModal = (props) => {
                 hash: createNFTResult.transactionHash,
                 tokenId: createNFTResult.events.Transfer.returnValues.tokenId,
                 tokenAddress: contractAddress,
-                avatorUrl: `${globalConf.ipfsDown}${nftUrl}`,
+                avatorUrl: `${globalConf.ipfsDown}${ipfsHash}`,
               },
               token
             );
@@ -300,10 +299,10 @@ const CreateNFTModal = (props) => {
               multiple={false}
               withCredentials
               showFileList={false}
-              action='https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/'
+              action=''
               httpRequest={async (e) => {
                 let result = await uploadFile(e.file);
-                setNftUrl(result.Hash);
+                setNftUrl(result);
               }}
               onRemove={() => {
                 setNftUrl(undefined);
@@ -314,14 +313,10 @@ const CreateNFTModal = (props) => {
               ) : (
                 <React.Fragment>
                   {nftUrl ? (
-                    <img
-                      style={{ marginBottom: '.6rem' }}
-                      src={globalConf.ipfsDown + nftUrl}
-                      alt='avatar'
-                    />
+                    <img style={{ marginBottom: '.6rem' }} src={nftUrl} alt='' />
                   ) : (
                     <React.Fragment>
-                      <i className='el-icon-upload2'></i>
+                      <i className='el-icon-upload2' />
                       <div className='el-upload__text'>
                         PNG, GIF
                       </div>
@@ -344,7 +339,7 @@ const CreateNFTModal = (props) => {
                     name: value,
                   });
                 }}
-              />,true
+              />, true
             )}
             {renderFormItem(
               'Description',
@@ -410,7 +405,7 @@ const CreateNFTModal = (props) => {
                 ))}
               </Select>, true
             )}
-            <div style={{display:'flex', gap: '20px'}}>
+            <div style={{display: 'flex', gap: '20px'}}>
               {renderFormItem(
                 'Contact Type',
                 <Select
@@ -503,6 +498,8 @@ const styleLoadingIconContainer = css`
   img {
     width: 158px;
     height: 145px;
+    overflow: hidden;
+    border-radius: 20px;
   }
 `
 const styleModalContainer = css`

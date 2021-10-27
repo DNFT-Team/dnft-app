@@ -72,7 +72,7 @@ setTimeout(() => {
           <ChakraProvider resetCSS={false} theme={theme}>
             <App />
           </ChakraProvider>
-          <ToastContainer pauseOnFocusLoss={false}/>
+          <ToastContainer pauseOnFocusLoss={false} position="top-center" style={{zIndex: 1000000001}} />
         </BrowserRouter>
       </PersistGate>
     </Provider>
