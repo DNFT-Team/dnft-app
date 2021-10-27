@@ -112,10 +112,7 @@ const NftSlider = (props) => {
 
   const renderNoData = useMemo(
     () => (
-      <div className={styleNoDataContainer}>
-        <div>{noDataSvg}</div>
-        <span>No content</span>
-      </div>
+      <div className={styleNoDataContainer}>{noDataSvg}</div>
     ),
     []
   );
@@ -223,7 +220,4 @@ const styleNoDataContainer = css`
   flex: 1;
   flex-direction: column;
   color: #233a7d;
-  span {
-    margin-top: 20px;
-  }
 `;
