@@ -7,7 +7,6 @@
   flex-wrap: wrap;
   width: 100%;
   padding: 30px;
-  //background-color: #fff;
   box-sizing: border-box;
 }
 .mainL {
@@ -78,7 +77,7 @@
 }
 .proName {
   box-sizing: border-box;
-  margin: 0px 0px 24px;
+  //margin: 0px 0px 24px;
   min-width: 0px;
   display: flex;
   align-items: center;
@@ -88,28 +87,36 @@
   box-sizing: border-box;
   margin: 0px 38px 0px 0px;
   min-width: 0px;
-  font-weight: 600;
-  font-size: 30px;
   overflow: hidden;
   word-break: keep-all;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  letter-spacing: -0.01em;
+  color: #000000;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 30px;
 }
 .proNameType {
   box-sizing: border-box;
   display: inline-block;
-  line-height: 16px;
   background: rgba(0, 75, 255, 0.1);
   border-radius: 4px;
   padding-left: 10px;
   padding-right: 10px;
   padding: 6px 10px;
-  font-weight: 500;
   font-size: 16px;
+  line-height: 16px;
   letter-spacing: -0.01em;
   color: #112df2;
+  font-family: SF Pro Display;
+  font-style: normal;
+  font-weight: 500;
+  
 }
 .content_box {
   background: #FFFFFF;
@@ -122,22 +129,29 @@
 }
 .description {
   margin: 0;
+  color: #000000;
+  margin-bottom: 6px;
+  font-family: Helvetica;
+  font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 24px;
   letter-spacing: -0.01em;
   color: #000000;
-  margin-bottom: 4px;
+
 }
 .description_text {
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  color: #75819A;
   word-break: break-word;
   white-space: pre-line;
   max-height: 77px;
   overflow: auto;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: #75819A;
 }
 .desc_line {
   width: 100%;
@@ -148,26 +162,21 @@
 }
 .contract_details {
   display: grid;
-  //align-items: center;
-  //justify-content: center;
   padding-top: 12px;
-  //flex-wrap: wrap;
-  //grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
 .contract_details_item {
   text-align: center;
   margin-bottom: 20px;
 }
 .contract_details_item div:first-child {
-  font-weight: 500;
   font-size: 12px;
   line-height: 24px;
   color: #777E91;
+  font-family: Helvetica;
 }
 .contract_details_item div:last-child, .contract_details_item  a {
-  font-weight: 500;
+  font-family: Helvetica;
   font-size: 18px;
   line-height: 24px;
   color: #23262F;
@@ -179,11 +188,12 @@
 
 .userInfo {
   box-sizing: border-box;
-  margin: 0px 0px 25px;
+  margin: 24px 0px 25px;
   min-width: 0px;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 .proPriceBox {
   display: flex;
@@ -207,7 +217,7 @@
   min-width: 0;
 }
 .stock {
-  font-weight: 500;
+  font-family: Helvetica;
   font-size: 16px;
   line-height: 16px;
   letter-spacing: -0.01em;
@@ -233,7 +243,6 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  align-items: center;
 }
 .priceAll img {
   width: 40px;
@@ -244,26 +253,34 @@
   box-sizing: border-box;
   margin: 0px;
   min-width: 0px;
-  font-weight: 500;
+  font-size: 30px;
+  line-height: 30px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
   font-size: 30px;
   line-height: 30px;
   letter-spacing: -0.01em;
   color: #101A4E;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  
 }
 .worth {
   box-sizing: border-box;
   margin: 0px 0px 0px 4px;
   min-width: 0px;
-  font-weight: 400;
-  font-size: 14px;
-  color: #B8BECC;
   align-self: flex-end;
   margin-bottom: 4px;
-  
+
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  letter-spacing: -0.01em;
+  color: #B8BECC;
 }
 .price {
   padding: 6px 8px;
@@ -279,7 +296,6 @@
 }
 .desc {
   box-sizing: border-box;
-  margin: 0px 0px 24px;
   min-width: 0px;
   font-weight: 400;
   font-size: 14px;
@@ -294,6 +310,7 @@
   box-sizing: border-box;
   cursor: pointer;
   margin: 0;
+  margin-top: 24px;
   min-width: 0;
   display: -webkit-box;
   display: -webkit-flex;
@@ -303,6 +320,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  margin-right: 60px;
 }
 .head {
   width: 50px;
@@ -335,10 +353,12 @@
   box-sizing: border-box;
   margin: 0px;
   min-width: 0px;
-  font-weight: 500;
   font-size: 14px;
   line-height: 24px;
   color: #777E91;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
 }
 .userName {
   box-sizing: border-box;
@@ -348,6 +368,7 @@
   font-size: 14px;
   line-height: 24px;
   color: #23262F;
+  font-family: Helvetica;
 }
 .userLine {
   box-sizing: border-box;
@@ -371,23 +392,23 @@
   border-radius: 10px;
 }
 .chain {
-  margin-bottom: 8px;
+
 }
 .ipfsAddress {
-  margin-bottom: 20px;
+  margin-left: 11px;
 }
 .contract {
   font-weight: 500;
   font-size: 12px;
-  line-height: 24px;
+  line-height: 12px;
   color: #777E91;
   padding-right: 16px;
   min-width: 80px;
 }
 .tokenAddress {
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
+  //font-weight: 500;
+  //font-size: 18px;
+  //line-height: 24px;
   color: #112DF2;
   text-decoration: none;
 }
@@ -534,20 +555,28 @@
   line-height: 29px;
   color: #68769f;
 }
+.btnBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+
+}
 .buyBtn {
-  width: 188px !important;
+  width: 153px !important;
   height: 48px;
-  font-family: DM Sans;
   padding: 0;
-  background: #3772ff !important;
-  border-radius: 10px;
+  border-radius: 5px;
   font-weight: bold;
   font-size: 16px;
-  color: #fff !important;
   text-align: center;
   line-height: 50px;
   cursor: pointer;
   outline: none;
+
+  font-family: DM Sans;
+  background: #00398D!important;
+  color: #FCFCFD!important;
+  border-radius: 5px;
 }
 .buyBtn:hover {
   color: #fff;
@@ -641,6 +670,12 @@ img {
 .starAccount {
   margin-left: 8px;
   font-weight: normal;
+}
+.submitBtn {
+  background: #0057D9;
+  border-radius: 5px;
+  width: 100%!important;
+  //margin: 0px 8px;
 }
 @media (max-width: 900px) {
   .main {

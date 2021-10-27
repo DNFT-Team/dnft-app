@@ -83,7 +83,6 @@ const styleModalContainer = css`
   }
   .el-dialog__footer {
     padding: 0px 32px;
-
   }
 `
 const styleModalContainerBtn = css`

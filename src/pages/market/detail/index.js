@@ -8,14 +8,10 @@ import Web3 from 'web3';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import {
-  Select, InputNumber, Loading
+  Select, InputNumber, Loading, Dialog
 } from 'element-react';
 import {
-  Button, Modal,
-  IconButton,
-  ModalOverlay,
-  ModalHeader, ModalFooter,
-  ModalBody, ModalContent,
+  Button
 } from '@chakra-ui/react';
 import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
@@ -38,7 +34,6 @@ const MarketDetailScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false)
   const onClose = () => setIsOpen(false)
   const [form, setForm] = useState({});
@@ -48,8 +43,12 @@ const MarketDetailScreen = (props) => {
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
-
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
+  useEffect(() => {
+    if(item) {
+      setDatas(item || {})
+    }
+  },[item])
   useEffect(() => {
     getMarketInfo();
   }, [token])
@@ -479,7 +478,6 @@ const MarketDetailScreen = (props) => {
 
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
-
   return (
     <div className={styles.marketDetail}>
       <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
@@ -494,11 +492,24 @@ const MarketDetailScreen = (props) => {
               <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
             </div>
             <div className={styles.userInfo}>
+              {/* <div className={styles.user}>
+                <img onClick={handleLinkProfile} src={datas?.userAvatorUrl} className={styles.avatar}/>
+                <div onClick={handleLinkProfile} className={styles.userInfoText}>
+                  <p className={styles.owner}>Creater</p>
+                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                </div>
+              </div> */}
               <div className={styles.user}>
                 <img onClick={handleLinkProfile} src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div onClick={handleLinkProfile} className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                </div>
+              </div>
+              <div className={styles.user}>
+                <div className={styles.userInfoText}>
+                  <p className={styles.owner}>Collection</p>
+                  <p className={styles.userName}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
                 </div>
               </div>
             </div>
@@ -540,7 +551,7 @@ const MarketDetailScreen = (props) => {
                 <div className={styles.priceAll}>
                   {datas?.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
                   <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
-                  <div className={styles.worth}>≈ $
+                  <div className={styles.worth}>≈$
                     {transPrice(datas?.amount * price)}
                   </div>
                 </div>
@@ -549,49 +560,48 @@ const MarketDetailScreen = (props) => {
                 {datas?.quantity} in stock
               </div>
             </div>
-            <div className={`${styles.chain} ${styles.ipfsAddress}`}>
-              <span className={styles.contract}>ipfs address:</span>
-              <a
-                href={datas?.avatorUrl}
-                className={styles.tokenAddress}
-                target='_blank'
-                rel="noopener noreferrer"
-              >
-                {ipfs_address?.slice(0, 8)}...{ipfs_address?.slice(38)}
-                {/* {datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1]} */}
-              </a>
+            <div className={styles.btnBox}>
+              <Button
+                isLoading={loading}
+                disabled={!datas?.quantity || loading}
+                loadingText="Buy Now"
+                className={styles.buyBtn} onClick={() => {
+                  if (!address) {
+                    toast.warn('Please link wallet', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                    return;
+                  }
+                  setIsOpen(true)
+                }}>Buy Now</Button>
+              <div className={styles.ipfsAddress}>
+                <span className={styles.contract}>IPFS address:
+                  <a
+                    href={datas?.avatorUrl}
+                    className={styles.tokenAddress}
+                    target='_blank'
+                    rel="noopener noreferrer"
+                  >
+                    {ipfs_address?.slice(0, 8)}...{ipfs_address?.slice(38)}
+                    {/* {datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1]} */}
+                  </a>
+                </span>
+              </div>
             </div>
-            <Button
-              isLoading={loading}
-              disabled={!datas?.quantity || loading}
-              loadingText="Buy Now"
-              className={styles.buyBtn} onClick={() => {
-                if (!address) {
-                  toast.warn('Please link wallet', {
-                    position: toast.POSITION.TOP_CENTER,
-                  });
-                  return;
-                }
-                setIsOpen(true)
-              }}>Buy Now</Button>
+
           </div>
         </div>
       </div>
       {renderHotList('Hot NFTs')}
-      <Modal style={{minHeight: 509}} visible={false} closeOnOverlayClick={false} blockScrollOnMount scrollBehavior="inside"
-        borderRadius="10px"
-        isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent width="564px" maxW="initial">
-          <ModalHeader color="#11142d"
-            p="32px" fontSize="24px"
-            display="flex" justifyContent="space-between"
-            alignItems="center">
-            Buy NFT
-            <IconButton onClick={onClose} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
-              icon={<Icon icon="mdi:close"/>}/>
-          </ModalHeader>
-          <ModalBody p="0 32px">
+      {
+        isOpen &&
+        <Dialog
+          title={'Buy NFT'}
+          visible
+          customClass={styleModalContainer}
+
+          onCancel={onClose}>
+          <Dialog.Body p="0 32px">
             {renderFormItem(`Quantity/${datas?.quantity || 0}`, <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
               setForm({
                 ...form,
@@ -599,47 +609,47 @@ const MarketDetailScreen = (props) => {
               })
             }}
             />)}
-
             {
               1 === 0 &&
-              renderFormItem(
-                'Collection',
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginTop: 20,
-                }}>
-                  <Select
-                    placeholder='Please choose'
-                    defaultValue={form.collectionId}
-                    value={form.collectionId}
-                    style={{flex: 1, marginRight: '28px'}}
-                    className={styleCollection}
-                    onChange={(value) => {
-                      setForm({
-                        ...form,
-                        collectionId: value,
-                      });
-                    }}
-                  >
-                    {options.map((el) => (
-                      <Select.Option key={el.value} label={el.label} value={el.value} />
-                    ))}
-                  </Select>
-                  <Button
-                    onClick={() => {
-                      setShowCreateCollection(true);
-                    }}>+ Add</Button>
-                </div>
-              )
+                renderFormItem(
+                  'Collection',
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: 20,
+                  }}>
+                    <Select
+                      placeholder='Please choose'
+                      defaultValue={form.collectionId}
+                      value={form.collectionId}
+                      style={{flex: 1, marginRight: '28px'}}
+                      className={styleCollection}
+                      onChange={(value) => {
+                        setForm({
+                          ...form,
+                          collectionId: value,
+                        });
+                      }}
+                    >
+                      {options.map((el) => (
+                        <Select.Option key={el.value} label={el.label} value={el.value} />
+                      ))}
+                    </Select>
+                    <Button
+                      onClick={() => {
+                        setShowCreateCollection(true);
+                      }}>+ Add</Button>
+                  </div>
+                )
             }
-          </ModalBody>
-          <ModalFooter justifyContent="flex-start">
+          </Dialog.Body>
+          <Dialog.Footer justifyContent="flex-start">
             <Button
               isLoading={approveLoading}
               loadingText="Submit"
               disabled={!datas?.quantity || loading}
-              colorScheme="custom" p="12px 42px" fontSize="16px" width="fit-content" borderRadius="10px"
+              colorScheme="custom"
+              className={styles.submitBtn}
               onClick={() => {
                 if (!form.quantity) {
                   toast.warn('Please enter the purchase quantity！', {
@@ -655,9 +665,9 @@ const MarketDetailScreen = (props) => {
                 // }
                 clickBuyItem()
               }}>Submit</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </Dialog.Footer>
+        </Dialog>
+      }
       {showCreateCollection && (
         <CreateCollectionModal
           formDs={{ address, chainType }}
@@ -684,12 +694,14 @@ const mapStateToProps = ({ profile, market }) => ({
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
 const styleTitle = css`
-  font-size: 20px;
-  font-weight: bold;
-  padding-bottom: 20px;
   padding-left: 10px;
   color: #000000;
   margin: 0;
+  font-family: Archivo Black,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 36px;
+  line-height: 36px;
 `;
 
 const styleArtContainer = css`
@@ -725,6 +737,10 @@ const styleNoDataContainer = css`
 `;
 const styleSliderContainer = css`
   width: 100%;
+  margin-top: 48px;
+  .slick-track{
+    margin: 0;
+  }
 `;
 const styleNextArrow = css`
   display: block;
@@ -781,5 +797,34 @@ const styleCollection = css`
       width: 100%;
       overflow: hidden;
     }
+  }
+`
+
+const styleModalContainer = css`
+  max-width: 484px;
+  width: calc(100% - 40px);
+  border-radius: 10px;
+  // height: 50vh;
+  overflow: auto;
+  .el-dialog__title {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .el-dialog__header {
+    padding: 20px 22px 0px 22px;
+  }
+  .el-dialog__body {
+    padding: 49px 22px 26px 22px;
+  }
+  .el-dialog__headerbtn .el-dialog__close {
+    color: #1B1D21;
+    font-size: 16px;
+  }
+  .el-dialog__footer {
+    padding: 0px 22px;
+    margin-bottom: 50px;
   }
 `
