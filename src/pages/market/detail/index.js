@@ -16,10 +16,8 @@ import {
 import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
 import globalConfig from 'config/index'
-import Slider from 'react-slick';
 import {css, cx} from 'emotion';
-import {noDataSvg} from 'utils/svg';
-import NFTCard from '../component/item';
+import NftSlider from 'components/NftSlider';
 import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg'
 
@@ -45,10 +43,10 @@ const MarketDetailScreen = (props) => {
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
   useEffect(() => {
-    if(item) {
+    if (item) {
       setDatas(item || {})
     }
-  },[item])
+  }, [item])
   useEffect(() => {
     getMarketInfo();
   }, [token])
@@ -64,98 +62,6 @@ const MarketDetailScreen = (props) => {
       console.log(e, 'e');
     }
   }
-  const SampleNextArrow = useCallback(
-    (props) => {
-      const { className, style, onClick, currentSlide, slideCount } = props;
-
-      let slidesToShow;
-      if (currentWindowWidth > 1560) {
-        slidesToShow = 5;
-      } else if (currentWindowWidth > 1280) {
-        slidesToShow = 4;
-      } else if (currentWindowWidth > 1024) {
-        slidesToShow = 3;
-      } else {
-        slidesToShow = 2;
-      }
-      const isLastShow = slidesToShow + currentSlide >= slideCount;
-
-      return (
-        <Icon
-          icon='ant-design:right-circle-outlined'
-          className={cx(className, styleNextArrow)}
-          style={{
-            ...style,
-            opacity: isLastShow ? 0.25 : 1,
-          }}
-          onClick={onClick}
-        />
-      );
-    },
-    [currentWindowWidth]
-  );
-
-  function SamplePrevArrow (props) {
-    const { className, style, onClick, currentSlide, slideCount } = props;
-
-    const isFirstShow = currentSlide === 0;
-
-    return (
-      <Icon
-        icon='ant-design:left-circle-outlined'
-        className={cx(className, stylePrevArrow)}
-        style={{
-          ...style,
-          opacity: isFirstShow ? 0.25 : 1,
-        }}
-        onClick={onClick}
-      />
-    );
-  }
-  const settings = {
-    infinite: false,
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1560,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-          infinite: false,
-        },
-      },
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: false,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          infinite: false,
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          infinite: false,
-        },
-      },
-    ],
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-    className: styleSliderContainer,
-  };
-
   const getNFTList = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -235,34 +141,9 @@ const MarketDetailScreen = (props) => {
       return false
     }
   }, []);
-  const renderNoData = useMemo(
-    () => (
-      <div className={styleNoDataContainer}>
-        <div>{noDataSvg}</div>
-      </div>
-    ),
-    []
-  );
-  const clickDetail = (item) => {
-    history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
-  }
-  const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction clickDetail={() => clickDetail(item)} />,
-    []
-  );
+
   const renderHotList = useCallback((title) => (
-    <div className={styleArtContainer}>
-      <h1 className={styleTitle}>{title}</h1>
-      <Loading
-        loading={isLoading}
-        style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
-      />
-      <Slider {...settings}>
-        {list?.length > 0
-          ? list.map((item, index) =>  renderCard(item, index))
-          : renderNoData}
-      </Slider>
-    </div>
+    <NftSlider title={title} list={list} loading={isLoading} cww={currentWindowWidth} />
   ), [list, isLoading]);
   const isApproved = async () => {
     setApproveLoading(true)
@@ -693,96 +574,6 @@ const mapStateToProps = ({ profile, market }) => ({
   address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
-const styleTitle = css`
-  padding-left: 10px;
-  color: #000000;
-  margin: 0;
-  font-family: Archivo Black,sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 36px;
-  line-height: 36px;
-`;
-
-const styleArtContainer = css`
-  //background: white;
-  padding: 20px;
-  height: 470px;
-  border-radius: 0 0 10px 10px;
-  margin-bottom: 20px;
-  .circular {
-    position: relative;
-    top: 120px;
-    width: 100px;
-    height: 100px;
-  }
-  @media (max-width: 768px) {
-    padding: 40px 0;
-  }
-`;
-
-const styleNoDataContainer = css`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  flex-direction: column;
-  color: #233a7d;
-  span {
-    margin-top: 20px;
-  }
-`;
-const styleSliderContainer = css`
-  width: 100%;
-  margin-top: 48px;
-  .slick-track{
-    margin: 0;
-  }
-`;
-const styleNextArrow = css`
-  display: block;
-  position: absolute;
-  top: -34px !important;
-  right: 50px !important;
-  width: 24px !important;
-  height: 24px !important;
-  color: #000000 !important;
-  @media (max-width: 768px) {
-    right: 6px !important;
-  }
-  &:hover{
-    color: #1b2559;
-  }
-  svg {
-    width: 24px;
-    height: 24px;
-    color: #000000;
-  }
-`;
-
-const stylePrevArrow = css`
-  display: block;
-  position: absolute;
-  top: -34px !important;
-  left: calc(100% - 120px) !important;
-  width: 24px !important;
-  height: 24px !important;
-  color: #000000 !important;
-  @media (max-width: 768px) {
-    left: calc(100% - 70px) !important;
-  }
-  &:hover{
-    color: #1b2559;
-  }
-  svg {
-    width: 24px;
-    height: 24px;
-    color: #000000;
-  }
-`;
 const styleCollection = css`  
   .el-select-dropdown__empty {
     width: 0;
@@ -799,7 +590,6 @@ const styleCollection = css`
     }
   }
 `
-
 const styleModalContainer = css`
   max-width: 484px;
   width: calc(100% - 40px);
