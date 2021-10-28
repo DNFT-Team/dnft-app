@@ -310,7 +310,7 @@ const MarketDetailScreen = (props) => {
     getMarketInfo();
 
   }
-  const handleLinkProfile = () => {
+  const handleLinkProfile = (address) => {
     if (!token) {
       toast.warn('Please link wallet', {
         position: toast.POSITION.TOP_CENTER,
@@ -373,16 +373,16 @@ const MarketDetailScreen = (props) => {
               <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
             </div>
             <div className={styles.userInfo}>
-              {/* <div className={styles.user}>
-                <img onClick={handleLinkProfile} src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div onClick={handleLinkProfile} className={styles.userInfoText}>
+              <div className={styles.user} onClick={() => handleLinkProfile(datas?.createrAddress)}>
+                <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
+                <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                  <p className={styles.userName}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName}</p>
                 </div>
-              </div> */}
-              <div className={styles.user}>
-                <img onClick={handleLinkProfile} src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div onClick={handleLinkProfile} className={styles.userInfoText}>
+              </div>
+              <div className={styles.user} onClick={() => handleLinkProfile(datas?.address)}>
+                <img src={datas?.userAvatorUrl} className={styles.avatar}/>
+                <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
                   <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
                 </div>
