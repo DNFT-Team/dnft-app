@@ -273,7 +273,7 @@ const MarketDetailScreen = (props) => {
                 },
                 token
               );
-              toast[data?.success ? 'success' : 'error']('Buy success', {
+              toast[data?.success ? 'success' : 'error'](data?.success ? 'Buy success' : 'Buy failed', {
                 position: toast.POSITION.TOP_CENTER,
               });
               historyBack();

@@ -191,15 +191,21 @@ const ProfileScreen = (props) => {
       const fileData = new FormData();
       fileData.append('file', file);
       const data  = await ipfs_post('/v0/add', fileData);
-      data &&   toast.success('IPFS Upload Success', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      if (data?.data?.Hash) {
+      const ipfsHash = data?.data?.['Hash']
+
+      if (!ipfsHash) {
+        toast.error('IPFS upload failed!');
+        return
+      }
+      if (ipfsHash) {
+        toast.success('IPFS Upload Success', {
+          position: toast.POSITION.TOP_CENTER,
+        });
         const data1 = await post(
           '/api/v1/users/updateUserBanner',
           {
             address: newAddress,
-            bannerUrl: globalConf.ipfsDown + data?.data?.Hash,
+            bannerUrl: globalConf.ipfsDown + ipfsHash,
           },
           token,
         );
@@ -207,10 +213,6 @@ const ProfileScreen = (props) => {
           position: toast.POSITION.TOP_CENTER,
         });
         dispatch(getMyProfileList({userId: newAddress}, token));
-      } else {
-        toast.error(data.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
       }
     } catch (e) {
       console.log(e, 'e');

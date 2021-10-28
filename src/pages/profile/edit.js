@@ -18,8 +18,7 @@ import CropperBox from './components/cropperBox';
 const ProfileEditScreen = (props) => {
   const { token, datas,  onClose, onSuccess, visible, onOpen} = props;
   const [loading, setLoading] = useState(false)
-  const [imageUrl, setImageUrl] = useState(null);
-  const [profileFile, setProfileFile] = useState();
+  const [profileFile, setProfileFile] = useState(null);
 
   const [srcCropper, setSrcCropper] = useState('');
   const [cropperVisible, setCropperVisible] = useState(false)
@@ -70,9 +69,6 @@ const ProfileEditScreen = (props) => {
       setLoading(false)
       return true;
     }
-    if(profileFile) {
-
-    }
     if (!profileFile && !datas?.avatorUrl) {
       toast.dark('please upload Profile Photo', {
         position: toast.POSITION.TOP_CENTER,
@@ -90,10 +86,10 @@ const ProfileEditScreen = (props) => {
         const ipfsData = await ipfs_post('/v0/add', fileData);
         ipfsHash = ipfsData?.data?.['Hash']
         if (!ipfsHash) {
-          toast.error('Profile Photo upload failed!');
+          toast.error('IPFS upload failed!');
           return
         }
-        toast.success('Profile Photo upload success!');
+        toast.success('IPFS upload success!');
       }
 
       let avatorUrl = ipfsHash ?  (globalConf.ipfsDown + ipfsHash) : datas?.avatorUrl;
@@ -116,6 +112,7 @@ const ProfileEditScreen = (props) => {
           position: toast.POSITION.TOP_CENTER,
         });
         onSuccess()
+        setProfileFile(null)
         setForm({})
       } else {
         toast.error(data?.message, {
@@ -155,7 +152,7 @@ const ProfileEditScreen = (props) => {
             beforeUpload={(file) => beforeAvatarUpload(file)}
             // httpRequest={(e) => {uploadFile(e.file)}}
           >
-            {<img src={imageUrl || form?.avatorUrl || camera} className={styles.avatarImg} />}
+            {<img src={form?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>
           {renderFormItem(
             'Name',
