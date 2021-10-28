@@ -9,7 +9,7 @@ import 'cropperjs/dist/cropper.css';
 const CropperBox = (props) => {
   const cropperRef = useRef(null);
 
-  const { title = 'Crop the picture', aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
+  const { title = 'Crop the picture', visible, aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--) {
@@ -27,7 +27,7 @@ const CropperBox = (props) => {
   return (
     <Dialog
       title={title}
-      visible
+      visible={visible}
       customClass={styleModalContainer}
       closeOnClickModal={false}
       onCancel={onCloseModal}
@@ -62,7 +62,7 @@ const styleModalContainer = css`
   max-width: 564px;
   width: calc(100% - 40px);
   border-radius: 10px;
-  height: 80vh;
+  // height: 80vh;
   overflow: auto;
   .el-dialog__title {
     font-family: Poppins;

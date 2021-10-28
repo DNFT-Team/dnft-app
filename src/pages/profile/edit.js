@@ -12,24 +12,28 @@ import { toast } from 'react-toastify';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router';
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
 import CropperBox from './components/cropperBox';
 const ProfileEditScreen = (props) => {
-  const { token, datas,  onClose, onSuccess} = props;
+  const { token, datas,  onClose, onSuccess, visible, onOpen} = props;
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
-  const [srcCropper, setSrcCropper] = useState('');
-  const [visible, setVisible] = useState(false)
+  const [profileFile, setProfileFile] = useState();
 
-  const [form, setForm] = useState({
-    avatorUrl: datas?.avatorUrl,
-    nickName: datas?.nickName,
-    twitterAddress: datas?.twitterAddress,
-    facebookAddress: datas?.facebookAddress,
-    youtubeAddress: datas?.youtubeAddress,
-  });
+  const [srcCropper, setSrcCropper] = useState('');
+  const [cropperVisible, setCropperVisible] = useState(false)
+
+  const [form, setForm] = useState({});
+  useEffect(() => {
+    setForm({
+      avatorUrl: datas?.avatorUrl,
+      nickName: datas?.nickName,
+      twitterAddress: datas?.twitterAddress,
+      facebookAddress: datas?.facebookAddress,
+      youtubeAddress: datas?.youtubeAddress,
+    })
+  }, [datas])
   const renderFormItem = (label, item) => {
     console.log(label, 'label');
     return (
@@ -40,23 +44,6 @@ const ProfileEditScreen = (props) => {
     );
   };
 
-  const uploadFile = async (dataUrl,file) => {
-    try {
-      setForm({ ...form, avatorUrl: '' })
-      const fileData = new FormData();
-      fileData.append('file', file);
-      const data = await ipfs_post('/v0/add', fileData);
-      data &&   toast.success('IPFS Upload Success! Please wait for reDownload', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      if (data?.status === 200) {
-        setImageUrl(dataUrl);
-        setForm({ ...form, avatorUrl: globalConf.ipfsDown + data?.data?.Hash })
-      }
-    } catch (e) {
-      console.log(e, 'e');
-    }
-  }
   const beforeAvatarUpload = (file) => {
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
@@ -69,13 +56,13 @@ const ProfileEditScreen = (props) => {
     reader.readAsDataURL(file); // 开始读取文件
     reader.onload = (e) => {
       setSrcCropper(e.target.result);
-      setVisible(true)
+      setCropperVisible(true);
+      onClose();
     };
 
     return false;
   }
   const editProfile = async () => {
-    setLoading(true)
     if (!form?.nickName) {
       toast.warn('nickName cannot be empty', {
         position: toast.POSITION.TOP_CENTER,
@@ -83,15 +70,42 @@ const ProfileEditScreen = (props) => {
       setLoading(false)
       return true;
     }
-    const formData = new FormData();
-    formData.append('address', datas?.address)
-    formData.append('avatorUrl', form?.avatorUrl);
-    formData.append('nickName', form?.nickName);
-    formData.append('twitterAddress', form?.twitterAddress || '');
-    formData.append('facebookAddress', form?.facebookAddress || '');
-    formData.append('youtubeAddress', form?.youtubeAddress || '');
+    if(profileFile) {
+
+    }
+    if (!profileFile && !datas?.avatorUrl) {
+      toast.dark('please upload Profile Photo', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    setLoading(true)
+
 
     try {
+      let ipfsHash = '';
+      if(profileFile) {
+        const fileData = new FormData();
+        fileData.append('file', profileFile)
+        const ipfsData = await ipfs_post('/v0/add', fileData);
+        ipfsHash = ipfsData?.data?.['Hash']
+        if (!ipfsHash) {
+          toast.error('Profile Photo upload failed!');
+          return
+        }
+        toast.success('Profile Photo upload success!');
+      }
+
+      let avatorUrl = ipfsHash ?  (globalConf.ipfsDown + ipfsHash) : datas?.avatorUrl;
+
+      const formData = new FormData();
+      formData.append('address', datas?.address)
+      formData.append('avatorUrl', avatorUrl);
+      formData.append('nickName', form?.nickName);
+      formData.append('twitterAddress', form?.twitterAddress || '');
+      formData.append('facebookAddress', form?.facebookAddress || '');
+      formData.append('youtubeAddress', form?.youtubeAddress || '');
+
       const { data }  = await post(
         '/api/v1/users/updateUser',
         formData,
@@ -117,15 +131,17 @@ const ProfileEditScreen = (props) => {
 
   }
   const cropperBtn = (dataUrl, file) => {
-    setVisible(false)
-    uploadFile(dataUrl, file)
+    setCropperVisible(false);
+    onOpen();
+    setProfileFile(file);
+    setForm({ ...form, avatorUrl: dataUrl });
   }
 
   return (
     <React.Fragment>
       <Dialog
         title='Edit profile'
-        visible
+        visible={visible}
         customClass={styleModalContainer}
         onCancel={onClose}>
         <Dialog.Body style={{paddingBottom: 0}}>
@@ -202,16 +218,15 @@ const ProfileEditScreen = (props) => {
             onClick={editProfile}>Save</Button>
         </Dialog.Footer>
       </Dialog>
-      {
-        visible &&
-        <CropperBox
-          srcCropper={srcCropper}
-          onCloseModal={() => {
-            setVisible(false);
-          }}
-          cropperBtn={cropperBtn}
-        />
-      }
+      <CropperBox
+        visible={cropperVisible}
+        srcCropper={srcCropper}
+        onCloseModal={() => {
+          onOpen();
+          setCropperVisible(false);
+        }}
+        cropperBtn={cropperBtn}
+      />
     </React.Fragment>
   );
 };
@@ -248,7 +263,7 @@ const styleModalContainer = css`
   max-width: 564px;
   width: calc(100% - 40px);
   border-radius: 10px;
-  height: 80vh;
+  // height: 80vh;
   overflow: auto;
   .el-dialog__title {
     font-family: Poppins;

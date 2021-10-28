@@ -336,29 +336,29 @@ const ProfileScreen = (props) => {
             : renderNoData}
         </div>
       </div>
-      {showEditScreen && (
-        <ProfileEditScreen
-          datas={datas}
-          onSuccess={(res) => {
-            setShowEditScreen(false);
-            getProfileInfo();
-          }}
-          onClose={() => {
-            setShowEditScreen(false);
-          }}
-        />
-      )}
-      {
-        visible &&
-        <CropperBox
-          srcCropper={srcCropper}
-          onCloseModal={() => {
-            setVisible(false);
-          }}
-          aspectRatio={1657 / 236}
-          cropperBtn={cropperBtn}
-        />
-      }
+      <ProfileEditScreen
+        datas={datas}
+        visible={showEditScreen}
+        onSuccess={(res) => {
+          setShowEditScreen(false);
+          getProfileInfo();
+        }}
+        onOpen={() => {
+          setShowEditScreen(true);
+        }}
+        onClose={() => {
+          setShowEditScreen(false);
+        }}
+      />
+      <CropperBox
+        srcCropper={srcCropper}
+        onCloseModal={() => {
+          setVisible(false);
+        }}
+        visible={visible}
+        aspectRatio={1657 / 236}
+        cropperBtn={cropperBtn}
+      />
     </div>
   );
 };
