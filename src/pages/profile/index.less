@@ -50,11 +50,23 @@
 .edit_bg_img[src=""],.edit_bg_img:not([src]) {
   opacity: 0;
 }
+.shareBoxAll {
+
+}
 .shareBox{
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+}
+.shareTitle {
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+  color: #000000;
+  padding: 15px .3rem;
 }
 .shareItem{
   display: flex;
@@ -64,14 +76,14 @@
   margin: .3rem .3rem;
 }
 .shareIcon{
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 100%;
-  padding: 15px;
+  padding: 10px;
   cursor: pointer;
 }
 .shareItem label{
-  font-family: Roboto,sans-serif;
+  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   margin-top: 12px;
