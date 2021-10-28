@@ -1113,9 +1113,6 @@ const styleCardList = css`
   display: flex;
   flex-direction: row;
   gap: 56px;
-  background: url(${bg}) no-repeat 100% 100%;
-  background-size: cover;
-  min-height: calc(100vh - 360px);
   flex-wrap: wrap;
   @media (max-width: 768px) {
     gap: 20px;

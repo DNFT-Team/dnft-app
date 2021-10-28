@@ -361,7 +361,6 @@ const MarketDetailScreen = (props) => {
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
     <div className={styles.marketDetail}>
-      <Icon className={styles.close} icon="ic:round-arrow-back-ios-new" onClick={historyBack}/>
       <div className={styles.main}>
         <div className={styles.mainL} style={{ backgroundImage: `url(${datas?.avatorUrl})`}}>
         </div>
@@ -417,7 +416,7 @@ const MarketDetailScreen = (props) => {
                       target='_blank'
                       rel="noopener noreferrer"
                     >
-                      {datas?.tokenAddress?.slice(0, 8)}...{datas?.tokenAddress?.slice(38)}
+                      {datas?.tokenAddress?.slice(0, 4)}...{datas?.tokenAddress?.slice(38)}
                     </a>
                   </div>
                 </div>
@@ -454,7 +453,7 @@ const MarketDetailScreen = (props) => {
                     return;
                   }
                   setIsOpen(true)
-                }}>Buy Now</Button>
+                }}>Buy</Button>
               <div className={styles.ipfsAddress}>
                 <span className={styles.contract}>IPFS address:
                   <a

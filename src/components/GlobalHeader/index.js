@@ -33,6 +33,7 @@ import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 // import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 import Logo from '../../images/home/dnftLogo.png';
 import assetSvg from 'images/asset/asset.svg';
+import accountSvg from 'images/common/account.svg';
 import { getCategoryList } from 'reduxs/actions/market';
 
 // const mvpUrl = 'http://mvp.dnft.world';
@@ -364,7 +365,7 @@ const GlobalHeader = (props) => {
             <span>Asset</span>
           </div>
         )}
-        <span
+        <div
           className={address ? styleHasAddress : styleAddress}
           onClick={async () => {
             if (address) {
@@ -376,10 +377,13 @@ const GlobalHeader = (props) => {
         >
           {address
             ? <Tooltip label="Go Profile" hasArrow bg="red.600">
-              <span>{address?.slice(0, 8)}...{address?.slice(38)}</span>
+              <span>
+                <img src={accountSvg} alt=""/>
+                {address?.slice(0, 8)}...{address?.slice(38)}
+              </span>
             </Tooltip>
-            : 'connect wallet'}
-        </span>
+            : 'Connect wallet'}
+        </div>
         <div className={styleActionContainer}
           onClick={() => {
             setIsNetListVisible(true);
@@ -506,7 +510,7 @@ const styleActionContainer = css`
 `;
 const styleModalContainer = css`
   width: 400px;
-  border-radius: 30px;
+  border-radius: 10px;
 
   .el-dialog__header {
     padding: 20px 32px;
@@ -520,6 +524,7 @@ const styleModalContainer = css`
   .el-dialog__title {
     color: #23262F;
     font-size: 32px;
+    font-family: Archivo Black,sans-serif;
   }
   .el-dialog__body {
     padding: 0 16px 20px 16px;
@@ -564,28 +569,26 @@ const styleSearchContainer = css`
 
 const styleHasAddress = css`
   cursor: pointer;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 13px 10px;
   margin-right: 30px;
-  border-radius: 10px;
-  border: 1px solid #E1E6FF;
-  font-family: Helvetica sans-serif;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 16px;
-  text-align: center;
-  color: #23262F;
-  &>span{
-    display: flex;
+  span{
+    border-radius: 10px;
+    border: 1px solid #0057D9;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 13px 10px;
+    display: inline-flex;
     align-items: center;
-    .styleDot {
-      background: #68d3bc;
-      border-radius: 6px;
-      width: 6px;
-      height: 6px;
-      margin-right: 6px;
+    justify-content: center;
+    font-family: Helvetica sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 18px;
+    color: #0057D9;
+    img{
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
     }
   }
 

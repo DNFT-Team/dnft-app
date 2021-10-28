@@ -10,7 +10,7 @@ import {noDataSvg} from '../../utils/svg';
 
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
-  { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
+  // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
 ]
 const IGOScreen = (props) => {
   let history = useHistory();

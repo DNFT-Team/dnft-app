@@ -10,15 +10,14 @@ import NFTCard from '../../components/NFTCard';
 import { get, post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import defaultHeadSvg from '../../images/asset/Head.svg';
 import globalConfig from '../../config';
 import { stakingJson } from 'pages/mining';
 import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
 // import { getCategoryList } from 'reduxs/actions/market';
 import CreateNFTModal from './create/index';
-import LoadingIcon from '../../images/asset/loading.gif'
-import {Tooltip} from '@chakra-ui/react';
+import LoadingIcon from 'images/asset/loading.gif'
+import dnft_unit from 'images/market/dnft_unit.png'
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -55,16 +54,6 @@ const AssetScreen = (props) => {
       },
     ];
 
-  const cateType = [
-    { label: 'All', value: 'ALL' },
-    { label: 'Virtual Reality', value: 'VIRTUAL_REALITY' },
-    { label: 'Domain', value: 'DOMAIN' },
-    { label: 'Art', value: 'ART' },
-    { label: 'Cooection', value: 'COOECTION' },
-    { label: 'Sports', value: 'SPORTS' },
-    { label: 'Game', value: 'GAME' },
-  ];
-
   const sortTagType = [
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
@@ -84,7 +73,6 @@ const AssetScreen = (props) => {
   const [bannerUrl, setBannerUrl] = useState('');
   const [avatorUrl, setAvatorUrl] = useState('');
   const [showCreateNft, setShowCreateNft] = useState(false);
-  console.log(avatorUrl, 'avatorUrl')
 
   let history = useHistory();
 
@@ -266,20 +254,15 @@ const AssetScreen = (props) => {
           marginBottom: '90px'
         }}>
         <div className={styleHeader}>
+
           <div className={styleAssetAccountContainer}>
-            <Tooltip label="Go Profile" hasArrow bg="red.600">
-              <div className={styleIcon} style={{
-                background: `center center / cover no-repeat url(${avatorUrl})`
-              }} onClick={() => {
-                if (address) {
-                  history.push(`/profile/address/${address}`, true)
-                }
-              }}>
-              </div>
-            </Tooltip>
-            <span className={styleCoinName}>DNF</span>
-            <span>{balance}</span>
+            <div className={styleACBalance}>
+              <img src={dnft_unit} alt=""/>
+              <span>{balance}</span>
+            </div>
+            <p>Available balance</p>
           </div>
+
           {currentNetEnv !== 'otherNet' &&
             <div
               className={styleCreateNFT}
@@ -520,32 +503,61 @@ const styleHeader = css`
 `;
 
 const styleCreateNFT = css`
-  background-color: #112df2;
-  color: white;
-  padding: 14px 18px;
-  font-size: 14px;
+  background: #0057D9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 10px 8px;
+  width: 120px;
   border-radius: 10px;
+  font-family: Archivo Black,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  color: #fcfcfd;
   cursor: pointer;
-  font-weight: bold;
+  user-select: none;
   @media (max-width: 900px) {
     width: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
     margin-top: 20px;
   }
 `;
 
 const styleAssetAccountContainer = css`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  span {
-    font-weight: bold;
-    font-size: 30px;
-    @media (max-width: 900px) {
-      font-size: 20px;
-    }
+  justify-content: center;
+  p {
+    user-select: none;
+    font-family: Judson, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 140%;
+    color: #718096;
+    margin: 0;
+  }
+`;
+const styleACBalance = css`
+  font-family: Bahnschrift sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 140%;
+  color: #2D3748;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  img{
+    user-select: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    margin-right: 8px;
   }
 `;
 
@@ -581,7 +593,6 @@ const styleTabContainer = css`
     @media (max-width: 900px) {
       gap: 0px;
       div {
-        border: none;
         min-width: auto;
       }
       &:first-child{
@@ -603,33 +614,20 @@ const styleTabContainer = css`
   }
 `;
 
-const styleIcon = css`
-  width: 80px;
-  height: 80px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const styleCoinName = css`
-  padding: 0 12px 0 20px;
-`;
-
 const styleTabButton = css`
-  height: 32px;
-  color: rgba(119, 126, 144, 1);
+  height: 38px;
+  box-sizing: border-box;
   font-size: 14px;
   display: flex;
   align-items: center;
-  padding: 6px 16px;
-  border-radius: 6px;
-  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 5px;
   cursor: pointer;
   border: 1px solid #E6E8EC;
-  min-width: 76px;
-  justify-content: center;
+  margin-right: 20px;
+  color: #BBBBBB;
+  font-family: Archivo Black,sans-serif;
+  user-select: none;
   @media (max-width: 900px) {
     flex: 1;
     justify-content: center;
@@ -638,8 +636,8 @@ const styleTabButton = css`
 `;
 
 const styleActiveTabButton = css`
-  background: rgba(17, 45, 242, 1);
-  color: white;
+  border: 1px solid #000000;
+  color: #000000;
   @media (max-width: 900px) {
     flex: 1;
     justify-content: center;

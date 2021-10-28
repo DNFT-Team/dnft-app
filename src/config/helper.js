@@ -19,26 +19,26 @@ export const  contactData =[
     {
         name: 'github',
         url: 'https://github.com/DNFT-Team/',
-        icon: 'jam:github-circle',
+        icon: 'mdi:github',
     },
     {
         name: 'telegram',
         url: 'https://t.me/dnftprotocol',
-        icon: 'ri:telegram-line',
+        icon: 'mdi:telegram',
     },
     // {
     //   name: 'discord',
     //   url: 'https://discord.gg/pxEZB7ny',
-    //   icon: 'jam:discord',
+    //   icon: 'fa-brands:discord',
     // },
     {
         name: 'twitter',
         url: 'https://twitter.com/DNFTProtocol',
-        icon: 'jam:twitter-circle',
+        icon: 'mdi:twitter',
     },
     {
         name: 'medium',
         url: 'https://medium.com/dnft-protocol',
-        icon: 'jam:medium-circle',
+        icon: 'mdi:medium',
     },
 ]

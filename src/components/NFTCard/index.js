@@ -1,7 +1,6 @@
 import { Dialog, InputNumber, Select, Button, Loading } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useState, useMemo } from 'react';
-import { Icon } from '@iconify/react';
 
 import { post } from 'utils/request';
 import { connect } from 'react-redux';
@@ -13,8 +12,7 @@ import {
   tradableNFTContract,
   tradableNFTContract721,
 } from '../../utils/contract';
-import { createNFTAbi1155, createNFTAbi721, tokenAbi, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
-import dayjs from 'dayjs';
+import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
@@ -380,7 +378,10 @@ const NFTCard = (props) => {
           }}>
             <div className="headLine">
               <span className="title">{item.name}</span>
-              <span className={styleNickNameContainer}><span className='dot'></span>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
+              <span className={styleNickNameContainer}>
+                {/* <span className='dot'></span>*/}
+                {item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}
+              </span>
             </div>
             {currentStatus.value === 'ONSALE' && !isProfile && <span
               style={{ color: '#000000', fontSize: '12px', padding: '2px 6px', fontWeight: '600', borderRadius: '4px' }}
@@ -398,7 +399,7 @@ const NFTCard = (props) => {
               style={{
                 opacity: isEmpty ? 0.5 : 1,
                 cursor: isEmpty ? 'not-allowed' : 'pointer',
-                background: '#0834e8'
+                background: '#0057D9'
               }}
               onClick={() => {
                 if (isEmpty) {
@@ -472,13 +473,19 @@ const styleButton = css`
   align-items: center;
   cursor: pointer;
   background: #ed6160;
-  color: white;
+  border-radius: 10px;
+  font-family: Archivo Black,sans-serif;
+  font-style: normal;
+  font-weight: normal;
   font-size: 14px;
+  line-height: 14px;
+  color: #FCFCFD;
+  box-sizing: border-box;
   padding: 8px 12px;
-  border-radius: 6px;
   position: relative;
-  width: 90%;
-  margin-bottom: 12px;
+  width: 140px;
+  height: 40px;
+  margin: 0 auto 12px auto;
 `;
 
 const stylePrice = css`
@@ -569,14 +576,13 @@ const styleInfo = css`
   .headLine{
     width: 80%;
     .title {
-      color: #11142d;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-      margin-right: 10px;
+      font-family: Archivo Black,sans-serif;
+      font-style: normal;
+      font-weight: normal;
       font-size: 16px;
-      font-weight: 600;
+      line-height: 16px;
+      letter-spacing: -0.01em;
+      color: #000000;
     }
   }
 `;
@@ -642,6 +648,13 @@ const styleNickNameContainer = css`
   flex-direction: row;
   align-items: center;
   margin-top: 8px;
+  font-family: Judson,sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.01em;
+  color: #75819A;
   .dot {
     background: #45B36B;
     width: 8px;

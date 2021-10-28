@@ -110,7 +110,7 @@ const styleContactItem = css`
   color: white;
   transition: color .2s ease-in-out;
   &:hover {
-    color: #3e9de5;
+    color: #00398D;
     transform: scale(1.2);
   }
 `;
