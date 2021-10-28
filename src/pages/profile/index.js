@@ -251,11 +251,10 @@ const ProfileScreen = (props) => {
                 showFileList={false}
                 accept={'.png,.gif,.jpeg,.jpg,.svg'}
                 action=""
-                // httpRequest={(e) => {uploadFile(e.file)}}
                 beforeUpload={(file) => beforeAvatarUpload(file)}
                 listType="picture"
               >
-                <Tooltip label="1657*236" hasArrow bg="red.600">
+                <Tooltip label="1800*300" hasArrow bg="red.600">
                   <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
                 </Tooltip>
               </Upload>
@@ -357,8 +356,9 @@ const ProfileScreen = (props) => {
         onCloseModal={() => {
           setVisible(false);
         }}
+        tip='banner'
         visible={visible}
-        aspectRatio={1657 / 236}
+        aspectRatio={1800 / 300}
         cropperBtn={cropperBtn}
       />
     </div>

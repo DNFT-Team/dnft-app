@@ -68,6 +68,16 @@ const CreateNFTModal = (props) => {
     }
   };
 
+  const beforeUpload = (file) => {
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+      toast.warn('The size of the uploaded NFT image cannot exceed 10MB!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return false;
+    }
+  }
+
   const getCollectionList = async () => {
     try {
       const { data } = await post(
@@ -300,6 +310,7 @@ const CreateNFTModal = (props) => {
               withCredentials
               showFileList={false}
               action=''
+              beforeUpload={(file) => beforeUpload(file)}
               httpRequest={async (e) => {
                 let result = await uploadFile(e.file);
                 setNftUrl(result);
@@ -320,9 +331,9 @@ const CreateNFTModal = (props) => {
                       <div className='el-upload__text'>
                         PNG, GIF
                       </div>
-                      <div className='el-upload__text'>
+                      {/* <div className='el-upload__text'>
                         Recommended size: 300 (W) X 300 (H)
-                      </div>
+                      </div> */}
                     </React.Fragment>
                   )}
                 </React.Fragment>

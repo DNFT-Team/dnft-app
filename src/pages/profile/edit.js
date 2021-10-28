@@ -44,21 +44,13 @@ const ProfileEditScreen = (props) => {
   };
 
   const beforeAvatarUpload = (file) => {
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      toast.warn('The size of the uploaded avatar image cannot exceed 2MB!', {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      return false;
-    }
     const reader = new FileReader();
-    reader.readAsDataURL(file); // 开始读取文件
+    reader.readAsDataURL(file);
     reader.onload = (e) => {
       setSrcCropper(e.target.result);
       setCropperVisible(true);
       onClose();
     };
-
     return false;
   }
   const editProfile = async () => {
@@ -150,7 +142,6 @@ const ProfileEditScreen = (props) => {
             accept={'.png,.gif,.jpeg,.jpg,.svg'}
             action=""
             beforeUpload={(file) => beforeAvatarUpload(file)}
-            // httpRequest={(e) => {uploadFile(e.file)}}
           >
             {<img src={form?.avatorUrl || camera} className={styles.avatarImg} />}
           </Upload>

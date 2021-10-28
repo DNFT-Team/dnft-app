@@ -3,13 +3,15 @@ import { Dialog, Button } from 'element-react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
+import { toast } from 'react-toastify';
+
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
 const CropperBox = (props) => {
   const cropperRef = useRef(null);
 
-  const { title = 'Crop the picture', visible, aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
+  const { title = 'Crop the picture', tip = 'avatar', visible, aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--) {
@@ -21,7 +23,13 @@ const CropperBox = (props) => {
     const cropper = cropperRef?.current?.cropper;
     let dataUrl = cropper.getCroppedCanvas().toDataURL();
     let file = dataURLtoFile(dataUrl, 'file')
-
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      toast.warn(`The size of the uploaded ${tip} image cannot exceed 2MB!`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return false;
+    }
     cropperBtn(dataUrl, file);
   }
   return (
