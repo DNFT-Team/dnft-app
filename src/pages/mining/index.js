@@ -32,6 +32,7 @@ import {Icon} from '@iconify/react';
 import {Link, Divider} from '@chakra-ui/react';
 import { setRem } from 'utils/rem';
 import isMobile from 'utils/isMobile';
+import dnft_unit from 'images/market/dnft_unit.png'
 
 export const stakingJson = [{
   'name': 'The Spirit Of Silence',
@@ -355,14 +356,19 @@ const Mining = (props) => {
           style={{ opacity: isBalanceLoading ? 0.5 : 1 }}
         >
           <div className={styleAssetAccountContainer}>
-            <div className={styleIcon}>
+            <div className={styleACBalance}>
+              <img src={dnft_unit} alt=""/>
+              <span>{balance}</span>
+            </div>
+            <p>Available balance</p>
+            {/* <div className={styleIcon}>
               <img src={defaultHeadSvg} />
             </div>
             <span className={styleCoinName}>DNF</span>
 
-            <span className='el-loading-demo'>{balance}</span>
+            <span className='el-loading-demo'>{balance}</span> */}
           </div>
-          <div className={styleCapital}>Available balance</div>
+          {/* <div className={styleCapital}>Available balance</div> */}
         </div>
       </div>
     ),
@@ -418,10 +424,10 @@ const Mining = (props) => {
         <div>
           <div className={styleCardTitle}>
             <div>
-              <img src={nft} />
+              <img src={dnft_unit} />
               <span>DNF Staking Pool</span>
             </div>
-            <span>{(stakeInfo?.duration / 30) || 0} Months</span>
+            {/* <span>{(stakeInfo?.duration / 30) || 0} Months</span> */}
           </div>
           <div className={styleCardInfo}>
             <div className={styleItemContainer}>
@@ -515,9 +521,9 @@ const Mining = (props) => {
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{color: '#000000'}}>Stake</span>
-                <span>Balance: <span style={{color: '#FF313C', fontSize: '17px'}}>{balance}</span></span>
+              <div className={styleStakeBalance}>
+                <span>Stake</span>
+                <span>Balance: <span style={{color: '#FF313C', fontSize: '17px', fontWeight: 'bold'}}>{balance}</span></span>
               </div>
               <div className={styleInputContainer}>
                 <div className={styleStakeDNF}>DNF</div>
@@ -814,10 +820,10 @@ const Mining = (props) => {
                 }}
               >
                 <img style={{width: 18, height: 18, marginRight: '8px'}} src={contractSvg} />
-                <span>Contract</span>
+                <span  style={{ fontFamily: 'Helvetica' }}>Contract</span>
               </span>
-              <span>Description ：</span>
-              <span style={{ color: '#8F9BBA' }}>
+              <span  style={{ fontFamily: 'Helvetica' }}>Description ：</span>
+              <span style={{ color: '#8F9BBA', fontFamily: 'Helvetica' }}>
                 {stakingJson[stakeIndex].description}
               </span>
             </div>
@@ -940,6 +946,10 @@ const Mining = (props) => {
 
   return (
     <div className={styleContainer}>
+      <header className={styleContainerTitle}>
+        <h4>Mining</h4>
+        <span>Choose <strong>“Single”</strong> if you want your collectible to be one of a kind or <strong>“Multiple”</strong> if you want to sell one collectible multiple times</span>
+      </header>
       {renderAssetHeader}
       <Divider />
       <Link href={helper.mining.book} isExternal fontWeight="600" color="brand.900"
@@ -997,6 +1007,29 @@ const styleContainer = css`
     }
   }
 `;
+const styleContainerTitle = css`
+  padding-bottom: 48px;
+  h4 {
+    font-family: Archivo Black;
+    font-size: 48px;
+    height: 78px;
+    line-height: 56px;
+    text-align: left;
+    margin: 0;
+    margin-bottom: 
+    letter-spacing: -0.02em;
+    color: #23262F;
+  }
+  span {
+    font-family: Poppins;
+    font-size: 14px;
+    line-height: 24px;
+    color: #777E91;
+    strong {
+      color: #23262F;
+    }
+  }
+`;
 
 const styleHeader = css`
   display: flex;
@@ -1019,18 +1052,49 @@ const styleHeaderInfo = css`
 `;
 
 const styleAssetAccountContainer = css`
+  // display: flex;
+  // flex-direction: row;
+  // align-items: center;
+  // span {
+  //   font-weight: bold;
+  //   font-size: 30px;
+  //   @media (max-width: 768px) {
+  //     font-size: 12px;
+  //   }
+  // }
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  span {
-    font-weight: bold;
-    font-size: 30px;
-    @media (max-width: 768px) {
-      font-size: 12px;
-    }
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  p {
+    user-select: none;
+    font-family: Judson, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 140%;
+    color: #718096;
+    margin: 0;
   }
 `;
-
+const styleACBalance = css`
+  font-family: Bahnschrift sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 140%;
+  color: #2D3748;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  img{
+    user-select: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    margin-right: 8px;
+  }
+`;
 const styleCapital = css`
   font-size: 14px;
   color: #8f9bba;
@@ -1080,7 +1144,7 @@ const styleCoinName = css`
 const styleButtonContainer = css`
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 20px;
   @media (max-width: 768px) {
     justify-content: center;
     padding-bottom: 10px;
@@ -1089,47 +1153,57 @@ const styleButtonContainer = css`
 `;
 
 const styleButton = css`
-  font-weight: 600;
-  font-size: 16px;
-  color: #666666;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-family: Poppins;
+  border: 1px solid #E6E8EC;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 8px 24px;
+  font-family: DM Sans;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  color: #777E90;
   @media (max-width: 768px) {
-    border: 2px solid #E6E8EC;
-    border-radius: 12px;
-    padding: 8px 24px;
+    // border: 2px solid #E6E8EC;
+    // border-radius: 12px;
+    // padding: 8px 24px;
   }
 `;
 
 const styleActiveButton = css`
-  color: #000000;
+  color: #fff;
+  background: #00398D;
+  border-color: #00398D;
 `;
 
 const styleCardList = css`
   margin-top: 40px;
-  display: flex;
+  display: grid;
   flex-direction: row;
-  gap: 56px;
+  gap: 42px;
   flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fill, minmax(515px, 1fr));
   @media (max-width: 768px) {
     gap: 20px;
     background: white;
     margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+
   }
 `;
 
 const styleCardContainer = css`
   display: flex;
-  flex: 1;
+  // flex: 1;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   filter: drop-shadow(0px 11px 21px rgba(0, 0, 0, 0.05));
   height: fit-content;
-  min-width: 370px;
+  // min-width: 370px;
   @media (max-width: 768px) {
     flex: initial;
     min-width: auto;
@@ -1160,6 +1234,11 @@ const styleCardTitle = css`
   font-weight: 600;
   font-size: 20px;
   color: #B3B7DD;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 22px;
   padding-bottom: 16px;
   border-bottom: 1px dashed #EDEDED;
   flex-direction: column;
@@ -1171,8 +1250,8 @@ const styleCardTitle = css`
     align-items: center;
     flex-direction: row;
     & > span{
-      color: #0834e8;
-      opacity: 0.8;
+      // color: #0834e8;
+      // opacity: 0.8;
       @media (max-width: 768px) {
         font-size: 14px;
       }
@@ -1209,13 +1288,19 @@ const styleAPY = css`
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  text-transform: uppercase;
   color: #777BA4;
+  font-family: SF Pro Display;
+  font-style: normal;
+  font-weight: normal;
 `;
 
 const stylePercent = css`
-  font-size: 24px;
-  font-weight: 800;
   color: #ff313c;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
   padding-right: 10px;
   @media (max-width: 768px) {
     font-size: 16px;
@@ -1240,9 +1325,9 @@ const styleItemContainer = css`
 `;
 
 const styleDollar = css`
-  font-weight: bold;
   font-size: 20px;
   color: #1B2559;
+  font-family: Archivo Black;
   @media (max-width: 768px) {
     font-size: 12px;
     transform: scale(0.8);
@@ -1255,14 +1340,20 @@ const styleText = css`
 `;
 
 const styleCardButton = css`
-  background: #112DF2;
+  background: #00398D;
   border-radius: 10px;
   width: 110px;
-  padding: 12px 0;
+  padding: 11px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
+  letter-spacing: -0.02em;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 24px;
   @media (max-width: 768px) {
     width: 72px;
     padding: 8px 0;
@@ -1270,15 +1361,18 @@ const styleCardButton = css`
 `;
 
 const styleTab = css`
-  color: #8588a7;
-  font-weight: normal;
   font-size: 16px;
+  font-family: Helvetica;
+  font-weight: normal;
+  font-size: 17px;
+  line-height: 22px;
+  color: #8588A7;
   cursor: pointer;
 `;
 
 const activeTab = css`
-  color: #112DF2;
   font-weight: bold;
+  color: #00398D;
 `;
 
 const styleModalContainer = css`
@@ -1316,7 +1410,7 @@ const styleModalContainer = css`
     font-size: 24px;
   }
   .el-dialog__body {
-    padding: 0;
+    padding: 0 7px;
   }
 `;
 
@@ -1328,10 +1422,13 @@ const styleTabContainer = css`
 `;
 
 const styleBodyTitle = css`
-  font-weight: bold;
   font-size: 24px;
   color: #21242e;
   margin-top: 30px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  letter-spacing: -0.02em;
   @media (max-width: 768px) {
     margin-top: 16px;
     transform: scale(0.4);
@@ -1340,8 +1437,12 @@ const styleBodyTitle = css`
 `;
 
 const styleBodyTips = css`
-  font-weight: 600;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
   font-size: 17px;
+  line-height: 20px;
+  letter-spacing: -0.02em;
   color: #49C1AB;
 `;
 
@@ -1353,6 +1454,9 @@ const styleTableHeader = css`
   justify-content: space-between;
   margin-top: 30px;
   padding: 10px 0 10px 50px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
   span {
     display: flex;
     flex: 1;
@@ -1381,17 +1485,39 @@ const styleTableBody = css`
   }
 `;
 
-const styleStakeTips = css`
+const styleStakeBalance = css`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
   font-size: 14px;
+  line-height: 20px;
+  color: #777BA4;
+  letter-spacing: -0.02em;
+  span:first-child {
+    font-size: 15px;
+    color: #000;
+  }
+`;
+
+const styleStakeTips = css`
+  font-size: 12px;
   color: #8f9bba;
-  letter-spacing: -1px;
   margin-top: 15px;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  text-align: center;
 `;
 
 const styleApproveButton = css`
-  width: 134px;
+  width: 100%;
   height: 46px;
-  background: #112df2;
+  background: #00398D;
   color: #ffffff;
   border-radius: 10px;
   display: flex;
@@ -1399,7 +1525,7 @@ const styleApproveButton = css`
   justify-content: center;
   margin-top: 28px;
   cursor: pointer;
-
+  font-size: 17px;
   .circular {
     width: 25px;
     height: 25px;
@@ -1474,9 +1600,14 @@ const styleTag = css`
 `;
 
 const styleUnStake = css`
-  padding: 4px 12px;
-  background: #112df2;
+  padding: 5px 13px;
+  background: #00398D;
   border-radius: 5px;
+  line-height: 20px;
+  font-family: SF Pro Display;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: -0.02em;
   color: white;
   cursor: pointer;
 `;
