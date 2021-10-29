@@ -16,7 +16,7 @@ import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } 
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
-
+import _ from 'lodash';
 const NFTCard = (props) => {
   const {
     needAction,
@@ -374,7 +374,7 @@ const NFTCard = (props) => {
       <div className={styleInfoContainer}>
         <div className={styleCardHeader}>
           <div className={styleInfo} style={{
-            borderBottom: currentStatus.value !== 'SOLD' ? '1px solid #F3F7F9' : 'none'
+            borderBottom: currentStatus.value !== 'SOLD' && _.isString(currentStatus) !== true ? '1px solid #F3F7F9' : 'none'
           }}>
             <div className="headLine">
               <span className="title">{item.name}</span>
@@ -419,7 +419,7 @@ const NFTCard = (props) => {
                 cursor: isEmpty ? 'not-allowed' : 'pointer',
               }}
               onClick={() => {
-                onShowOffShelfModal()();
+                onShowOffShelfModal();
               }}
             >
               Unsell
