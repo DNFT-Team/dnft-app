@@ -2,6 +2,7 @@
 import HomeScreen from 'pages/home';
 import MarketScreen from 'pages/market';
 import BridgeScreen from 'pages/bridge';
+import BridgeTransfer from 'pages/bridge/transfer';
 import MiningScreen from 'pages/mining';
 import DataScreen from 'pages/data';
 import CompetitionScreen from 'pages/data/competition';
@@ -36,7 +37,7 @@ const nets = ['devnet', 'testnet', 'mainnet']
 const menuAll = [
   { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true },
   { net_env: [nets[2]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
-  { net_env: [nets[2]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon },
+  { net_env: [nets[2]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon, exact: true },
   { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true },
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
   { net_env: [nets[0], nets[1]], path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true,  },
@@ -55,6 +56,7 @@ const ROUTER_MAP = [
   { path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
   { path: '/asset/create', exact: true, Component: CreateNFT },
   { path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
-  { path: '/gallery/unityView', exact: true, Component: UnityScreen, navName: 'Gallery' }
+  { path: '/gallery/unityView', exact: true, Component: UnityScreen, navName: 'Gallery' },
+  { path: '/bridge/transfer', exact: true, Component: BridgeTransfer, navName: 'Transfer' }
 ];
 export { MENU_MAP, ROUTER_MAP };

@@ -263,6 +263,6 @@ const styleRightContainer = css`
   height: 100vh;
   overflow: auto;
   @media (max-width: 768px) {
-    background-color: white;
+    background: #F5F7FA;
   }
 `
