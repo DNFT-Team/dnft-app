@@ -8,7 +8,7 @@ import Web3 from 'web3';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import {
-  Select, InputNumber, Loading, Dialog
+  Select, InputNumber, Dialog
 } from 'element-react';
 import {
   Button
