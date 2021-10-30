@@ -312,10 +312,10 @@ const BridgeScreen = (props) => {
       </div>
       <button className={styleBtn} onClick={submitCross}>Confirm</button>
     </div>
-    <div>
-      <h4>Transaction History</h4>
-      {historyList.length > 0 ? renderHistory : renderNoData}
-    </div>
+    {/* <div>*/}
+    {/*  <h4>Transaction History</h4>*/}
+    {/*  {historyList.length > 0 ? renderHistory : renderNoData}*/}
+    {/* </div>*/}
     <AlertDialog
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
