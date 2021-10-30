@@ -18,10 +18,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cloneDeep from 'lodash.clonedeep';
 import { useHistory } from 'react-router';
-import bg from '../../images/mining/bg.svg';
-import nft from '../../images/mining/logo.svg';
 import label from '../../images/mining/label.svg';
-import defaultHeadSvg from '../../images/asset/Head.svg';
 import contractSvg from '../../images/mining/contract.svg';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
@@ -29,9 +26,7 @@ import { connect } from 'react-redux';
 import globalConfig from '../../config'
 import helper from '../../config/helper';
 import {Icon} from '@iconify/react';
-import {Link, Divider} from '@chakra-ui/react';
-import { setRem } from 'utils/rem';
-import isMobile from 'utils/isMobile';
+import { Link } from '@chakra-ui/react';
 import dnft_unit from 'images/market/dnft_unit.png'
 
 export const stakingJson = [{
@@ -349,7 +344,7 @@ const Mining = (props) => {
       <div className={cx(styleHeader)}>
         <Loading
           loading={isBalanceLoading}
-          style={{ position: 'absolute', width: 'calc(100% - 76px)' }}
+          style={{ position: 'absolute', width: '100%' }}
         />
         <div
           className={styleHeaderInfo}
@@ -392,13 +387,13 @@ const Mining = (props) => {
         <div
           className={cx(
             styleButton,
-            selectedTab === 'Complete' && styleActiveButton
+            selectedTab === 'Ended' && styleActiveButton
           )}
           onClick={() => {
-            setSelectedTab('Complete');
+            setSelectedTab('Ended');
           }}
         >
-          Complete
+          Ended
         </div>
       </div>
     ),
@@ -947,19 +942,20 @@ const Mining = (props) => {
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
-        <h4>Mining</h4>
-        <span>Choose <strong>“Single”</strong> if you want your collectible to be one of a kind or <strong>“Multiple”</strong> if you want to sell one collectible multiple times</span>
+        <div className="headerT">
+          <span className="headerTitle">Mining</span>
+          <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
+            <Link href={helper.mining.youtube} isExternal color="#75819A" display="inline-block" >
+              <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.mining.title}
+            </Link>
+            <Link href={helper.mining.book} isExternal color="#75819A" display="inline-block" ml="1rem">
+              <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Stake
+            </Link>
+          </div>
+        </div>
+        <p>Choose <strong>“Single”</strong> if you want your collectible to be one of a kind or <strong>“Multiple”</strong> if you want to sell one collectible multiple times</p>
       </header>
       {renderAssetHeader}
-      <Divider />
-      <Link href={helper.mining.book} isExternal fontWeight="600" color="brand.900"
-        mt="2rem" mr="2rem" display="inline-block">
-        <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#112df2'}} /> Learn How To Stake
-      </Link>
-      <Link href={helper.mining.youtube} isExternal fontWeight="600" color="brand.900" mt="2rem"
-        display="inline-block">
-        <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.mining.title}
-      </Link>
       <div className={styleBody}>
         <div>
           {renderFilter}
@@ -991,7 +987,8 @@ export default withRouter(connect(mapStateToProps)(Mining));
 
 const styleContainer = css`
   background: #f5f7fa;
-  padding: 22px 20px 0 20px;
+  padding: 30px 50px;
+  box-sizing: border-box;
   height: 100%;
   @media (max-width: 768px) {
     padding: 22px 12px;
@@ -1009,19 +1006,19 @@ const styleContainer = css`
 `;
 const styleContainerTitle = css`
   padding-bottom: 48px;
-  h4 {
-    font-family: Archivo Black;
+  .headerTitle {
+    margin-bottom: 10px;
+    font-family: Archivo Black, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    margin-right: 1.8rem;
     font-size: 48px;
     height: 78px;
     line-height: 56px;
-    text-align: left;
-    margin: 0;
-    margin-bottom: 
-    letter-spacing: -0.02em;
-    color: #23262F;
   }
-  span {
-    font-family: Poppins;
+  p {
+    font-family: Poppins, sans-serif;
     font-size: 14px;
     line-height: 24px;
     color: #777E91;
@@ -1032,12 +1029,12 @@ const styleContainerTitle = css`
 `;
 
 const styleHeader = css`
+  position: relative;
   display: flex;
   flex-direction: row;
-  margin-bottom: 22px;
-  background: white;
-  display: flex;
   justify-content: space-between;
+  background: white;
+  margin-bottom: 22px;
   .circular {
     position: relative;
     top: 120px;
@@ -1224,23 +1221,20 @@ const styleCardContainer = css`
 
 const styleCardIsActive = css`
   cursor: pointer;
-  &:hover {
+/*  &:hover {
     top: -30px;
-  }
+  }*/
 `;
 
 const styleCardTitle = css`
   display: flex;
-  font-weight: 600;
-  font-size: 20px;
   color: #B3B7DD;
-  font-family: Archivo Black;
+  font-family: Archivo Black, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 20px;
   line-height: 22px;
   padding-bottom: 16px;
-  border-bottom: 1px dashed #EDEDED;
   flex-direction: column;
   @media (max-width: 768px) {
     font-size: 12px;
@@ -1311,7 +1305,6 @@ const styleCardInfo = css`
   display: flex;
   flex-direction: row;
   padding: 22px 0 30px 0;
-  border-bottom: 1px dashed #EDEDED;
   justify-content: space-around;
   @media (max-width: 768px) {
     padding: 18px 0 10px 0 ;

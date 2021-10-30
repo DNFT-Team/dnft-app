@@ -63,7 +63,7 @@ export default IGOScreen
 
 const styleIgo = css`
   border-radius: 1.429rem;
-  padding: 50px;
+  padding: 30px 50px;
   position: relative;
   z-index: 0;
   h3 {

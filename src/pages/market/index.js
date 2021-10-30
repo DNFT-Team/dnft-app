@@ -64,7 +64,7 @@ const Market = (props) => {
     if (reachBottom <= window.innerHeight && pageAble && datas?.length > 0) {
       fetchData()
     }
-  }, [reachBottom,pageAble, datas?.length,category, sortTag, address])
+  }, [reachBottom, pageAble, datas?.length, category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -88,7 +88,7 @@ const Market = (props) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerT}>
-          <span className={styles.headerTitle} style={{marginRight: '1.8rem'}}>Market</span>
+          <span className={styles.headerTitle}>Market</span>
           <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
             <Link href={helper.nftMagic.youtube} isExternal color="#75819A"
               display="inline-block">

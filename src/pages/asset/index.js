@@ -460,7 +460,8 @@ const styleLoadingIconContainer = css`
 `
 const styleContainer = css`
   background: #f5f7fa;
-  padding: 10px 16px;
+  padding: 22px 51px;
+  box-sizing: border-box;
   & > div {
     &:first-child {
       border-radius: 10px;
