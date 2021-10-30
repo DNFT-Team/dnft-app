@@ -49,13 +49,13 @@ const GlobalHeader = (props) => {
   const [address, setAddress] = useState();
   const netArray = useMemo(
     () => [
-      // {
-      //   name: 'Ethereum Mainnet',
-      //   icon: selectEthSvg,
-      //   shortName: ['ETH', 'Ethereum'],
-      //   shortIcon: ethSvg,
-      //   netWorkId: 1,
-      // },
+      {
+        name: 'Ethereum Mainnet',
+        icon: selectEthSvg,
+        shortName: ['ETH', 'Ethereum'],
+        shortIcon: ethSvg,
+        netWorkId: 1,
+      },
       // {
       //   name: 'Polkadot Mainnet',
       //   icon: selectPolkadotSvg,
@@ -322,7 +322,7 @@ const GlobalHeader = (props) => {
       >
         <Dialog.Body>
           {netArray.map((item, index) => (
-            <div
+            item.netWorkId !== 1 && <div
               key={index}
               className={styleNetItem}
               style={{ border: index === netArray.length - 1 && 'none' }}
