@@ -46,8 +46,8 @@ const IGOScreen = (props) => {
       </div>
       <Grid gap={50} height="max-content" templateColumns={['repeat(1, 1fr)', 'repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']}>
         {
-          gameList.length > 0 ? gameList.map((g) => (
-            <Box className={cardBox}>
+          gameList.length > 0 ? gameList.map((g, i) => (
+            <Box className={cardBox} key={i}>
               <img className="avatar" src={g.avatarUrl} alt=""/>
               {g.title && <Text className="title">{g.title}</Text>}
               {g.description && <Text className="desc">{g.description}</Text>}

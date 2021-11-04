@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useMemo} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { css } from 'emotion';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -9,20 +9,30 @@ import {
 import { toast } from 'react-toastify';
 import helper from 'config/helper';
 import Web3 from 'web3';
-import {NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR} from 'utils/contract';
-import {toDecimal, WEB3_MAX_NUM} from 'utils/web3Tools';
+import { NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR } from 'utils/contract';
+import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools';
 import axios from 'http/default'
 import globalConf from 'config'
 
 import IconEth from 'images/networks/logo_select_eth.svg';
 import IconBsc from 'images/networks/logo_select_bsc.svg';
-import {Icon} from '@iconify/react';
-import { noDataSvg } from 'utils/svg';
+import { Icon } from '@iconify/react';
+import TradeTable from 'components/TradeTable';
 
 /* Available network*/
 const NetOptions = [
   {key: 'ETH', icon: IconEth, netId: '', isShow: true },
   {key: 'BSC', icon: IconBsc, netId: '', isShow: true }
+]
+
+/* Table cols*/
+const TableCols = [
+  {title: 'TX HASH', key: 'tx_hash', ellipsis: true, isLink: true},
+  {title: 'AMOUNT', key: 'amount', isNum: true},
+  {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+  {title: 'STATUS', key: 'status'},
+  {title: 'FAILED CODE', key: 'failed_code'},
+  {title: 'UPDATED AT', key: 'updated_at'},
 ]
 
 const BridgeScreen = (props) => {
@@ -219,31 +229,10 @@ const BridgeScreen = (props) => {
     axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
       .then((res) => {list = res.data.data})
       .finally(() => {
-        if (list.length > 0) {
-          setHistoryList(list)
-        } else {
-          setHistoryList([])
-          toast('No record has been found yet')
-        }
+        setHistoryList(list)
+        list.length <= 0 && toast('No record has been found yet')
       })
   }
-
-  const renderNoData = useMemo(
-    () => (
-      <div className={styleNoDataContainer}>
-        <div>{noDataSvg}</div>
-      </div>
-    ),
-    []
-  );
-  const renderHistory = useMemo(
-    () => (
-      <div className={styleNoDataContainer}>
-        <div>{noDataSvg}</div>
-      </div>
-    ),
-    []
-  );
 
   //  render Dom
   return <div className={styleWrapper}>
@@ -286,7 +275,7 @@ const BridgeScreen = (props) => {
           />
           <InputRightAddon className={styleRight}>
             <img src={NetOptions[frNet].icon} alt='' />
-            <span> BEP-20 ${payloads.target} </span>
+            <span> ERC-20 ${payloads.target} </span>
           </InputRightAddon>
         </InputGroup>
         <p>Available balance : {balance} {payloads.target}</p>
@@ -305,17 +294,20 @@ const BridgeScreen = (props) => {
           />
           <InputRightAddon className={styleRight}>
             <img src={NetOptions[toNet].icon} alt='' />
-            <span> ERC-20 ${payloads.target} </span>
+            <span> BEP-20 ${payloads.target} </span>
           </InputRightAddon>
         </InputGroup>
         <p>By now, You will received 100% {payloads.target}</p>
       </div>
-      <button className={styleBtn} onClick={submitCross}>Confirm</button>
+      <div>
+        <button className={styleBtn} onClick={submitCross}>Confirm</button>
+        <button className={styleBtn} onClick={getHistory}>History</button>
+      </div>
     </div>
-    {/* <div>*/}
-    {/*  <h4>Transaction History</h4>*/}
-    {/*  {historyList.length > 0 ? renderHistory : renderNoData}*/}
-    {/* </div>*/}
+    <div>
+      <h4>Transaction History</h4>
+      <TradeTable cols={TableCols} data={historyList}/>
+    </div>
     <AlertDialog
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
@@ -377,7 +369,7 @@ const styleWrapper = css`
 `
 const styleBtn = css`
   user-select: none;
-  display: flex;
+  display: inline-flex;
   min-width: 177.37px;
   flex-direction: row;
   justify-content: center;
@@ -397,6 +389,9 @@ const styleBtn = css`
   text-align: center;
 
   color: #FCFCFD;
+  &:first-child{
+    margin-right: 1rem;
+  }
 `
 const styleTransferBox = css`
   background: #FFFFFF;
@@ -500,15 +495,3 @@ const styleLinks = css`
   display: inline-block;
   color: #75819A
 `
-const styleNoDataContainer = css`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  flex-direction: column;
-  padding: 2rem 0;
-  color: #233a7d;
-`;
