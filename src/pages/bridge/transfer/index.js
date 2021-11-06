@@ -246,7 +246,7 @@ const BridgeScreen = (props) => {
         closeOnPressEscape={false}
       >
         <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+          <span>You’ve connected to unsupported networks, please switch to ETH network.</span>
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button onClick={() => {

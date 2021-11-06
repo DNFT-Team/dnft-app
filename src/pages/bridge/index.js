@@ -2,7 +2,8 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
-import comingSoon from 'images/igo/igoComingSoon.png';
+import Tb2e from 'images/bridge/b2e.png';
+import Te2b from 'images/bridge/e2b.png';
 
 const cardData = [
   {
@@ -10,7 +11,7 @@ const cardData = [
     param: {from: 'BSC', to: 'ETH', target: 'DNF', protocol: 'BEP-20'},
     skipTo: '/bridge/transfer',
     isActive: false,
-    avatar: comingSoon,
+    avatar: Tb2e,
     txt: 'To transfer your BEP-20 DNF to ERC-20 DNF, you need to connect your wallet and switch to BSC Network!'
   },
   {
@@ -18,7 +19,7 @@ const cardData = [
     param: {from: 'ETH', to: 'BSC', target: 'DNF', protocol: 'ERC-20'},
     skipTo: '/bridge/transfer',
     isActive: true,
-    avatar: comingSoon,
+    avatar: Te2b,
     txt: 'To transfer your ERC-20 DNF to BEP-20 DNF, you need to connect your wallet and switch to ETH Network!'
   },
 ]
@@ -97,7 +98,6 @@ const styleCard = css`
     border-radius: 20px 20px 0 0;
     width: 100%;
     height: fit-content;
-    background-color: #1b225c;
   }
   p{
     margin: 40px 0;

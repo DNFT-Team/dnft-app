@@ -16,7 +16,7 @@ import {
 import Web3 from 'web3';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import cloneDeep from 'lodash.clonedeep';
+import { cloneDeep } from 'lodash';
 import { useHistory } from 'react-router';
 import label from '../../images/mining/label.svg';
 import contractSvg from '../../images/mining/contract.svg';
