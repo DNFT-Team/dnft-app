@@ -1,4 +1,4 @@
-import { Dialog, InputNumber, Loading } from 'element-react';
+import { Dialog, InputNumber, Loading, Button } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -84,6 +84,7 @@ const Mining = (props) => {
   const [isBalanceLoading, setBalanceIsLoading] = useState(false);
   const [isStakeInfoLoading, setIsStakeInfoLoading] = useState(false);
   const [isUnStakeLoading, setIsUnStakeLoading] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   const [stateData, setStateData] = useState(initState);
   const currentNetEnv = globalConfig.net_env;
@@ -295,8 +296,8 @@ const Mining = (props) => {
 
     if (ethereum) {
       if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/mining') {
-        setIsWrongNetWork(true)
-        goToRightNetwork(ethereum);
+        setIsWrongNetWork(true);
+        setIsShowSwitchModal(true);
       } else {
         setIsWrongNetWork(false);
       }
@@ -308,22 +309,6 @@ const Mining = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      // 监听网络切换
-      ethereum.on('networkChanged', (networkIDstring) => {
-        setStakeData([]);
-        setBalance(undefined);
-        setStateData(initState);
-
-        if (Number(networkIDstring) !== rightChainId && history.location.pathname === '/mining') {
-          setIsWrongNetWork(true)
-          goToRightNetwork(ethereum);
-          return;
-        }
-
-        setIsWrongNetWork(false);
-        init();
-      });
-
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined);
@@ -939,6 +924,29 @@ const Mining = (props) => {
     [isVisible, renderTab, renderStake, renderUnstake, renderClaim, stakeTab]
   );
 
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
+
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
@@ -976,6 +984,7 @@ const Mining = (props) => {
         </div>
       </div>
       {renderModal(stakeData[stakeIndex])}
+      {renderShowSwitchModal()}
     </div>
   );
 };
@@ -1663,5 +1672,40 @@ const styleLabelContainer = css`
   .percent{
     color: white;
     font-size: 16px;
+  }
+`
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
   }
 `

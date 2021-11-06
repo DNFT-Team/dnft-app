@@ -6,6 +6,7 @@ import {
   Text, Input, InputGroup, Link, InputRightAddon,
   AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay
 } from '@chakra-ui/react';
+import { Dialog, Button } from 'element-react';
 import { toast } from 'react-toastify';
 import helper from 'config/helper';
 import Web3 from 'web3';
@@ -56,7 +57,8 @@ const BridgeScreen = (props) => {
   const [historyList, setHistoryList] = useState([])
   //  alert pop-up
   const [isOpen, setIsOpen] = useState(false)
-  const onClose = () => setIsOpen(false)
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
+  const onClose = () => setIsOpen(false);
   const cancelRef = useRef()
 
   useEffect(() => {
@@ -104,8 +106,7 @@ const BridgeScreen = (props) => {
   const checkSuit = async (step = 3) => {
     let res = {netOk: false, address: '', balance: 0, isApprove: false}
     if (chainType !== 'ETH') {
-      goToRightNetwork(window.ethereum);
-      toast.warning('Please connect ETH-NET', {position: toast.POSITION.TOP_CENTER});
+      setIsShowSwitchModal(true)
       res.netOk = false
       setBalance(0)
     } else {
@@ -234,6 +235,29 @@ const BridgeScreen = (props) => {
       })
   }
 
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
+
   //  render Dom
   return <div className={styleWrapper}>
     <div>
@@ -334,6 +358,7 @@ const BridgeScreen = (props) => {
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
+    {renderShowSwitchModal()}
   </div>
 }
 
@@ -493,5 +518,41 @@ const styleLinks = css`
   font-weight: normal;
   font-size: .8rem;
   display: inline-block;
-  color: #75819A
+  color: #75819A;
+`
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
 `

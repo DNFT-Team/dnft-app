@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Dialog, Button } from 'element-react';
 import { css } from 'emotion';
 import bg from 'images/igo/game-bg.png';
 import medal from 'images/igo/medal.png';
@@ -47,6 +48,8 @@ const SyncBtcScreen = (props) => {
   const [showStepGif, setShowStepGif] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showConfirmSuccess, setShowConfirmSuccess] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
+
   const currentNetEnv = globalConfig.net_env;
   const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
   const right16ChainId =  currentNetEnv === 'testnet' ? '0x61' : '0x38';
@@ -64,14 +67,6 @@ const SyncBtcScreen = (props) => {
       } else {
         setIsWrongNetWork(false);
       }
-
-      ethereum.on('networkChanged', (networkIDstring) => {
-        if ((Number(networkIDstring) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
-          setIsWrongNetWork(true);
-        } else {
-          setIsWrongNetWork(false);
-        }
-      });
 
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
@@ -313,6 +308,20 @@ const SyncBtcScreen = (props) => {
     };
   }, [address]);
 
+  useEffect(() => {
+    setIsShowSwitchModal(false)
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (
+        Number(ethereum.networkVersion) !== rightChainId &&
+        history.location.pathname === '/igo/syncBtc'
+      ) {
+        setIsShowSwitchModal(true);
+      }
+    }
+  }, []);
+
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
       if (history.location.pathname !== '/igo/syncBtc') {
@@ -340,6 +349,29 @@ const SyncBtcScreen = (props) => {
       return false
     }
   }, []);
+
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
 
   return (
     <div className={styleContainer}>
@@ -382,7 +414,7 @@ const SyncBtcScreen = (props) => {
             }
 
             if (isWrongNetWork && history.location.pathname === '/igo/syncBtc') {
-              goToRightNetwork(ethereum)
+              setIsShowSwitchModal(true);
               return;
             }
 
@@ -595,6 +627,7 @@ const SyncBtcScreen = (props) => {
           </div>
         </div>
       )}
+      {renderShowSwitchModal()}
     </div>
   );
 };
@@ -971,3 +1004,39 @@ const styleConfirmSuccessModal = css`
     }
   }
 `;
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
+`

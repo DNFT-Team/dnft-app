@@ -19,7 +19,7 @@ import globalConfig from 'config/index'
 import {css, cx} from 'emotion';
 import NftSlider from 'components/NftSlider';
 import dnft_unit from 'images/market/dnft_unit.png'
-import busd_unit from 'images/market/busd.svg'
+import busd_unit from 'images/market/busd.svg';
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -38,6 +38,8 @@ const MarketDetailScreen = (props) => {
   const [options, setOptions] = useState([]);
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
+
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
@@ -78,18 +80,24 @@ const MarketDetailScreen = (props) => {
     // }
     getNFTList()
   }, [token]);
+
+  useEffect(() => {
+    setIsShowSwitchModal(false)
+  }, [])
+
   useEffect(() => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
       if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/market/detail') {
-        setIsWrongNetWork(true)
-        goToRightNetwork(ethereum);
+        setIsWrongNetWork(true);
+        setIsShowSwitchModal(true);
       } else {
         setIsWrongNetWork(false);
       }
     }
   }, [window.ethereum]);
+
   const goToRightNetwork = useCallback(async (ethereum) => {
     if (history.location.pathname !== '/market/detail') {
       return;
@@ -355,6 +363,29 @@ const MarketDetailScreen = (props) => {
       _amount = Number(Number(amount).toFixed(4))
     } catch (e) {}
     return _amount;
+  };
+
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
   }
 
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
@@ -562,6 +593,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
+      {renderShowSwitchModal()}
     </div>
   )
 }
@@ -615,5 +647,41 @@ const styleModalContainer = css`
   .el-dialog__footer {
     padding: 0px 22px;
     margin-bottom: 50px;
+  }
+`
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
   }
 `

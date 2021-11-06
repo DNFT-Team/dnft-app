@@ -1,4 +1,4 @@
-import { Dialog, Loading, Select } from 'element-react';
+import { Dialog, Button, Select } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -73,6 +73,7 @@ const AssetScreen = (props) => {
   const [bannerUrl, setBannerUrl] = useState('');
   const [avatorUrl, setAvatorUrl] = useState('');
   const [showCreateNft, setShowCreateNft] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   let history = useHistory();
 
@@ -175,6 +176,7 @@ const AssetScreen = (props) => {
   }, [token, category, selectedTab, sortTag, address, chainType]);
 
   useEffect(() => {
+    setIsShowSwitchModal(false)
     let ethereum = window.ethereum;
 
     if (ethereum) {
@@ -182,7 +184,7 @@ const AssetScreen = (props) => {
         Number(ethereum.networkVersion) !== rightChainId &&
         history.location.pathname === '/asset'
       ) {
-        goToRightNetwork(ethereum);
+        setIsShowSwitchModal(true);
       }
     }
   }, []);
@@ -191,19 +193,6 @@ const AssetScreen = (props) => {
     let ethereum = window.ethereum;
 
     if (ethereum) {
-      ethereum.on('networkChanged', (networkIDstring) => {
-        if (
-          Number(networkIDstring) !== rightChainId &&
-          history.location.pathname === '/asset'
-        ) {
-          setBalance(undefined);
-          goToRightNetwork(ethereum);
-          return;
-        }
-
-        init();
-      });
-
       ethereum.on('accountsChanged', (accounts) => {
         setBalance(undefined);
         init();
@@ -362,6 +351,29 @@ const AssetScreen = (props) => {
     []
   );
 
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
+
   return (
     <div className={styleContainer}>
       <div>
@@ -429,6 +441,7 @@ const AssetScreen = (props) => {
         }
         setShowCreateNft(false);
       }}/>}
+      {renderShowSwitchModal()}
     </div>
   );
 };
@@ -735,3 +748,39 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
+`
