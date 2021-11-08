@@ -88,16 +88,12 @@ const AssetScreen = (props) => {
   }
 
   useEffect(() => {
-    injectWallet();
-  }, []);
-
-  useEffect(() => {
     getBannerUrl()
   }, [address, token])
 
-  const init = () => {
+  useEffect(() => {
     getBalance();
-  };
+  }, [address])
 
   const getNFTList = async (currentAddress, currentToken) => {
     try {
@@ -189,33 +185,13 @@ const AssetScreen = (props) => {
     }
   }, []);
 
-  const injectWallet = useCallback(async () => {
-    let ethereum = window.ethereum;
-
-    if (ethereum) {
-      ethereum.on('accountsChanged', (accounts) => {
-        setBalance(undefined);
-        init();
-      });
-
-      init();
-    } else {
-      alert('Please install wallet');
-    }
-  }, [init]);
-
   const getBalance = async () => {
     try {
       if (window.ethereum) {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
         await ethereum.enable();
-
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        const account = accounts[0];
+        const account = address;
 
         const myContract = new window.web3.eth.Contract(
           tokenAbi,

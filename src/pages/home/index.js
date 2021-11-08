@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, withRouter } from 'react-router-dom';
-import { Carousel } from 'element-react';
+import { Carousel, Dialog, Button } from 'element-react';
 import { css } from 'emotion';
 import { post } from 'utils/request';
 import NftSlider from '../../components/NftSlider';
@@ -12,12 +12,19 @@ import banner2 from 'images/home/banner/mintNft.png'
 import banner3 from 'images/home/banner/mining.png'
 import banner4 from 'images/home/banner/gamefi.png'
 
+
 const HomeScreen = (props) => {
   const { token } = props;
   let history = useHistory();
 
+  const currentNetEnv = globalConf.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
+  const right16ChainId =  currentNetEnv === 'testnet' ? '0x61' : '0x38';
+  const rightRpcUrl = currentNetEnv === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
+
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   const dataTopAll = [
     {
@@ -72,6 +79,72 @@ const HomeScreen = (props) => {
     };
   }, []);
 
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      if (history.location.pathname !== '/') {
+        return;
+      }
+
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: right16ChainId,
+            chainName: 'Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: rightRpcUrl,
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsShowSwitchModal(false)
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (
+        Number(ethereum.networkVersion) !== rightChainId &&
+        history.location.pathname === '/'
+      ) {
+        setIsShowSwitchModal(true);
+      }
+    }
+  }, []);
+
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
+
+
   console.log('[list]', list);
   const renderHotList = useCallback((title) => (
     <NftSlider title={title} list={list} loading={isLoading} cww={currentWindowWidth} />
@@ -93,6 +166,7 @@ const HomeScreen = (props) => {
         ))}
       </Carousel>
       {renderHotList('Hot NFTs')}
+      {renderShowSwitchModal()}
     </div>
   );
 };
@@ -133,3 +207,39 @@ const styleContainer = css`
     }
   }
 `;
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
+`

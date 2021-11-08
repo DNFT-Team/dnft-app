@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import { css } from 'emotion';
 import { Heading, Text, Box, Grid } from '@chakra-ui/react';
@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 import comingSoon from 'images/igo/igoComingSoon.png';
 import igoAvatar from 'images/igo/igoAvatar.png';
 import {noDataSvg} from '../../utils/svg';
-
+import globalConfig from '../../config/index';
+import { Dialog, Button } from 'element-react';
 
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
@@ -15,10 +16,17 @@ const mockGameList = [
 const IGOScreen = (props) => {
   let history = useHistory();
 
-  const tabList = [[0, 'Ongoing'], [1, 'Ended']]
+  const tabList = [[0, 'Ongoing'], [1, 'Ended']];
+
+  const currentNetEnv = globalConfig.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
+  const right16ChainId =  currentNetEnv === 'testnet' ? '0x61' : '0x38';
+  const rightRpcUrl = currentNetEnv === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
+
   const [tab, setTab] = useState(0)
 
   const [gameList, setGameList] = useState(mockGameList)
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const handleTab = (tab) => {
     setTab(tab)
     setGameList(tab === 0 ? mockGameList : [])
@@ -29,6 +37,71 @@ const IGOScreen = (props) => {
     } else {
       toast('Coming soon!', {position: toast.POSITION.TOP_CENTER})
     }
+  }
+
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      if (history.location.pathname !== '/igo') {
+        return;
+      }
+
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: right16ChainId,
+            chainName: 'Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: rightRpcUrl,
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsShowSwitchModal(false)
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (
+        Number(ethereum.networkVersion) !== rightChainId &&
+        history.location.pathname === '/igo'
+      ) {
+        setIsShowSwitchModal(true);
+      }
+    }
+  }, []);
+
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
   }
 
   return (
@@ -56,6 +129,7 @@ const IGOScreen = (props) => {
           )) : <div className={styleNoDataContainer}>{noDataSvg}</div>
         }
       </Grid>
+      {renderShowSwitchModal()}
     </div>
   )
 }
@@ -196,3 +270,39 @@ const styleNoDataContainer = css`
   flex-direction: column;
   color: #233a7d;
 `;
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
+`

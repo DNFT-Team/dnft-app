@@ -384,13 +384,13 @@ const GlobalHeader = (props) => {
             </Tooltip>
             : 'Connect wallet'}
         </div>
-        <div className={styleActionContainer}
+        {address && <div className={styleActionContainer}
           onClick={() => {
             setIsNetListVisible(true);
           }}>
           <img src={netArray[currentNetIndex]?.shortIcon} alt=""/>
           <span> {netArray[currentNetIndex]?.shortName[1] || 'Network'}</span>
-        </div>
+        </div>}
         {/* <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>*/}
       </Box>
       <Box className={actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">

@@ -44,7 +44,7 @@ export const stakingJson = [{
 }]
 const Mining = (props) => {
   let history = useHistory();
-  const { token } = props;
+  const { token, address } = props;
 
   const initState = useMemo(
     () => ({
@@ -73,7 +73,7 @@ const Mining = (props) => {
     []
   );
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(0.00);
   const [selectedTab, setSelectedTab] = useState('Ongoing');
   const [stakeTab, setStakeTab] = useState('stake');
   const [isVisible, setIsVisible] = useState(false);
@@ -95,15 +95,10 @@ const Mining = (props) => {
       setBalanceIsLoading(true);
 
       if (window.ethereum) {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
-
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        const account = accounts[0];
+        if (!address) {
+          setBalance(0.00);
+        }
+        const account = address;
 
         const contractAddress = tokenContract[currentNetEnv];
         const myContract = new window.web3.eth.Contract(
@@ -199,13 +194,8 @@ const Mining = (props) => {
       if (window.ethereum) {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
+        const account = address;
         await ethereum.enable();
-
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-
-        const account = accounts[0];
         let firstStakeInfo = await getItemStakeInfoByContract(
           firstStakeAbi,
           firstStakeContract[currentNetEnv],
@@ -229,7 +219,7 @@ const Mining = (props) => {
     } finally {
       setIsStakeInfoLoading(false);
     }
-  }, [getItemStakeInfoByContract]);
+  }, [getItemStakeInfoByContract, address]);
 
   const init = useCallback(async (doNotNeedModalHidden) => {
     if (!doNotNeedModalHidden) {
@@ -239,7 +229,7 @@ const Mining = (props) => {
     await getBalance();
     await getStakeInfo();
     setIsUnStakeLoading(false)
-  }, [getStakeInfo]);
+  }, [getStakeInfo, address]);
 
   useEffect(() => {
     init();
@@ -303,26 +293,6 @@ const Mining = (props) => {
       }
     }
   }, [window.ethereum]);
-
-  //  get metaMask connect
-  const injectWallet = useCallback(async () => {
-    let ethereum = window.ethereum;
-
-    if (ethereum) {
-      // 监听账号切换
-      ethereum.on('accountsChanged', (accounts) => {
-        setBalance(undefined);
-        setStateData(initState);
-        init();
-      });
-    } else {
-      alert('Please install wallet');
-    }
-  }, [init, initState]);
-
-  useEffect(() => {
-    injectWallet();
-  }, [injectWallet]);
 
   const renderAssetHeader = useMemo(
     () => (
@@ -991,6 +961,7 @@ const Mining = (props) => {
 
 const mapStateToProps = ({ profile }) => ({
   token: profile.token,
+  address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(Mining));
 

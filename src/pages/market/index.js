@@ -1,16 +1,17 @@
 import InfiniteScroll from 'react-infinite-scroll-component';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { Dialog, Button, Select, Loading } from 'element-react';
 import styles from './index.less';
 import { css, cx } from 'emotion';
 import NFTCard from './component/item';
 import { noDataSvg } from 'utils/svg';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Select, Loading } from 'element-react';
 import { getMarketList } from 'reduxs/actions/market';
 import helper from '../../config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
+import globalConfig from '../../config/index';
 
 const Market = (props) => {
   let history = useHistory();
@@ -22,12 +23,19 @@ const Market = (props) => {
   const [sortOrder, setSortOrder] = useState('ASC');
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
+
   const domRef = useRef(null);
   const sortTagType = [
     { label: 'Most popular', value: 'like_count' },
     { label: 'Price:high to low', value: 'ASC-price' },
     { label: 'Price:low to high', value: 'DESC-price' },
   ];
+
+  const currentNetEnv = globalConfig.net_env;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
+  const right16ChainId =  currentNetEnv === 'testnet' ? '0x61' : '0x38';
+  const rightRpcUrl = currentNetEnv === 'testnet' ? ['https://data-seed-prebsc-1-s1.binance.org:8545/'] : ['https://bsc-dataseed.binance.org/'];
 
   useEffect(() => {
     if (token) {
@@ -84,6 +92,72 @@ const Market = (props) => {
     }} />,
     [category, sortTag]
   );
+
+  const goToRightNetwork = useCallback(async (ethereum) => {
+    try {
+      if (history.location.pathname !== '/market') {
+        return;
+      }
+
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: right16ChainId,
+            chainName: 'Smart Chain',
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: rightRpcUrl,
+          },
+        ],
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsShowSwitchModal(false)
+    let ethereum = window.ethereum;
+
+    if (ethereum) {
+      if (
+        Number(ethereum.networkVersion) !== rightChainId &&
+        history.location.pathname === '/market'
+      ) {
+        setIsShowSwitchModal(true);
+      }
+    }
+  }, []);
+
+  const renderShowSwitchModal = () => {
+    console.log(isShowSwitchModal, 'isShowSwitchModal')
+    return (
+      <Dialog
+        size="tiny"
+        className={styleSwitchModal}
+        visible={isShowSwitchModal}
+        closeOnClickModal={false}
+        closeOnPressEscape={false}
+      >
+        <Dialog.Body>
+          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button onClick={() => {
+            let ethereum = window.ethereum;
+            goToRightNetwork(ethereum);
+          }}>Switch Network</Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -157,6 +231,7 @@ const Market = (props) => {
           </div>
         </InfiniteScroll>
       </div>
+      {renderShowSwitchModal()}
     </div>
   );
 };
@@ -184,3 +259,39 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+
+const styleSwitchModal = css`
+  @media (max-width: 900px) {
+    width: calc(100% - 32px);
+  }
+  border-radius: 10px;
+  width: 400px;
+  padding: 40px 30px 30px 30px;
+  .el-dialog__header {
+    display: none;
+  }
+  .el-dialog__body {
+    padding: 0;
+    font-family: Archivo Black;
+    color: #000000;
+    font-size: 18px;
+    line-height: 30px;
+    span {
+      display: flex;
+      text-align: center;
+    }
+  }
+  .dialog-footer {
+    padding: 0;
+    text-align: center;
+    margin-top: 16px;
+    button {
+      background: rgba(0, 87, 217, 1);
+      color: #FCFCFD;
+      font-size: 16px;
+      border-radius: 10px;
+      font-family: Archivo Black;
+      padding: 18px 24px;
+    }
+  }
+`
