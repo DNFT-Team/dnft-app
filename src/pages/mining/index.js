@@ -195,7 +195,6 @@ const Mining = (props) => {
         let ethereum = window.ethereum;
         window.web3 = new Web3(ethereum);
         const account = address;
-        await ethereum.enable();
         let firstStakeInfo = await getItemStakeInfoByContract(
           firstStakeAbi,
           firstStakeContract[currentNetEnv],
