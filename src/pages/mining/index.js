@@ -922,10 +922,10 @@ const Mining = (props) => {
         <div className="headerT">
           <span className="headerTitle">Mining</span>
           <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
-            <Link href={helper.mining.youtube} isExternal color="#75819A" display="inline-block" >
+            <Link href={helper.mining.youtube} isExternal color="#0057D9" fontStyle='italic' display="inline-block" >
               <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.mining.title}
             </Link>
-            <Link href={helper.mining.book} isExternal color="#75819A" display="inline-block" ml="1rem">
+            <Link href={helper.mining.book} isExternal color="#0057D9" fontStyle='italic' display="inline-block" ml="1rem">
               <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Stake
             </Link>
           </div>

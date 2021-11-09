@@ -399,6 +399,8 @@ const MarketDetailScreen = (props) => {
           <div className={styles.product}>
             <div className={styles.proName}>
               <div className={styles.proNameText}>{datas?.name}</div>
+            </div>
+            <div className={styles.collectionBox}>
               <div className={styles.proNameType}>{datas?.category}</div>
               <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
             </div>
@@ -407,14 +409,14 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <p className={styles.userName}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName}</p>
+                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName}</a>
                 </div>
               </div>
               <div className={styles.user} onClick={() => handleLinkProfile(datas?.address)}>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
-                  <p className={styles.userName}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</p>
+                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</a>
                 </div>
               </div>
               <div className={styles.user}>
@@ -447,7 +449,7 @@ const MarketDetailScreen = (props) => {
                       target='_blank'
                       rel="noopener noreferrer"
                     >
-                      {datas?.tokenAddress?.slice(0, 4)}...{datas?.tokenAddress?.slice(38)}
+                      {datas?.tokenAddress?.slice(0, 7)}...{datas?.tokenAddress?.slice(-6)}
                     </a>
                   </div>
                 </div>
@@ -485,7 +487,7 @@ const MarketDetailScreen = (props) => {
                   }
                   setIsOpen(true)
                 }}>Buy</Button>
-              <div className={styles.ipfsAddress}>
+              {/* <div className={styles.ipfsAddress}>
                 <span className={styles.contract}>IPFS address:
                   <a
                     href={datas?.avatorUrl}
@@ -494,10 +496,9 @@ const MarketDetailScreen = (props) => {
                     rel="noopener noreferrer"
                   >
                     {ipfs_address?.slice(0, 8)}...{ipfs_address?.slice(38)}
-                    {/* {datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1]} */}
                   </a>
                 </span>
-              </div>
+              </div> */}
             </div>
 
           </div>

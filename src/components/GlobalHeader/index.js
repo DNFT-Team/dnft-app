@@ -376,12 +376,12 @@ const GlobalHeader = (props) => {
           }}
         >
           {address
-            ? <Tooltip label="Go Profile" hasArrow bg="red.600">
-              <span>
-                <img src={accountSvg} alt=""/>
-                {address?.slice(0, 8)}...{address?.slice(38)}
-              </span>
-            </Tooltip>
+            // ? <Tooltip label="Go Profile" hasArrow bg="red.600">
+            ? <span>
+              <img src={accountSvg} alt=""/>
+              {address?.slice(0, 7)}...{address?.slice(-6)}
+            </span>
+            // </Tooltip>
             : 'Connect wallet'}
         </div>
         {address && <div className={styleActionContainer}

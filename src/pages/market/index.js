@@ -164,11 +164,11 @@ const Market = (props) => {
         <div className={styles.headerT}>
           <span className={styles.headerTitle}>Market</span>
           <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
-            <Link href={helper.nftMagic.youtube} isExternal color="#75819A"
+            <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic'
               display="inline-block">
               <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
             </Link>
-            <Link href={helper.nftMagic.book} isExternal color="#75819A"
+            <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic'
               display="inline-block" ml="1rem">
               <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
             </Link>
@@ -176,7 +176,7 @@ const Market = (props) => {
         </div>
         <div className={styles.headerR}>
           <Select
-            className={styles.selectType}
+            className={`${styles.selectType} ${styleSelectContainer}`}
             value={category}
             placeholder='please choose'
             onChange={(value) => {
@@ -189,7 +189,7 @@ const Market = (props) => {
           </Select>
           <Select
             value={sortTag}
-            className={styles.selectType}
+            className={`${styles.selectType} ${styleSelectContainer}`}
             placeholder='please choose'
             onChange={(value) => {
               setSortTag(value);
@@ -259,7 +259,29 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+const styleSelectContainer = css`
+  .el-select .el-input .el-input__icon {
+    color: #777E90;
+  }
+  .el-icon-caret-top:before {
+    content: \e603;
+  }
+  .el-input__inner {
+    border: 1px solid #E6E8EC;
+    color: #23262F;
+    font-family: Archivo Black;
 
+  }
+  .el-select-dropdown__item {
+    color: #8F9BBA;
+    font-family: Archivo Black;
+  }
+  .el-select-dropdown__item.selected {
+    color: #23262F;
+    font-family: Archivo Black;
+    background: #0057D9;
+  }
+`;
 const styleSwitchModal = css`
   @media (max-width: 900px) {
     width: calc(100% - 32px);

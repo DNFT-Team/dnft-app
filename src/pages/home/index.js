@@ -184,7 +184,7 @@ const styleBanner = css`
   background-size: cover;
 `
 const styleContainer = css`
-  margin: 30px 50px;
+  margin: 50px 50px;
   .el-carousel {
     border-radius: 10px;
     background: transparent;

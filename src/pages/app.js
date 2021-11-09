@@ -180,7 +180,7 @@ const styleLeftNav = css`
     }
   }
   section{
-    padding-top: 50px;
+    padding-top: 10px;
   }
 
   .styleNavText {

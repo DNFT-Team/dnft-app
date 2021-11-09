@@ -36,9 +36,9 @@ const nets = ['devnet', 'testnet', 'mainnet']
  */
 const menuAll = [
   { net_env: nets, path: '/', Component: HomeScreen, navName: 'Home', icon: homeIcon, exact: true },
+  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true },
   { net_env: [nets[2]], path: '/mining', Component: MiningScreen, navName: 'Mining', icon: miningIcon },
   { net_env: [nets[2]], path: '/bridge', Component: BridgeScreen, navName: 'Bridge', icon: bridgeIcon, exact: true },
-  { net_env: nets, path: '/market', Component: MarketScreen, navName: 'Market', icon: marketIcon, exact: true },
   { net_env: nets, path: '/igo', Component: IGOScreen, navName: 'IGO', icon: igoIcon, exact: true },
   { net_env: [nets[0], nets[1]], path: '/data', Component: DataScreen, navName: 'Data', icon: dataIcon, exact: true,  },
   { net_env: [nets[0]], path: '/gallery', Component: GalleryScreen, navName: 'Gallery', icon: galleryIcon, exact: true },

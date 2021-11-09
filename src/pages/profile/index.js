@@ -305,7 +305,7 @@ const ProfileScreen = (props) => {
             }
           </div>
           <div className={styles.authorName}>{datas?.nickName}</div>
-          <div className={styles.addressBox}>{newAddress && `${newAddress?.slice(0, 8)}...${newAddress?.slice(38)}`}
+          <div className={styles.addressBox}>{newAddress && `${newAddress?.slice(0, 7)}...${newAddress?.slice(-6)}`}
             <img
               className={styles.copyAddress}
               onClick={handleCopyAddress}
