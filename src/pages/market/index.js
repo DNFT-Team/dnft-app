@@ -224,7 +224,7 @@ const Market = (props) => {
             </p >
           }
         >
-          <div className={styles.contentBox} ref={domRef}>
+          <div className={`${styles.contentBox} ${stylesContentBoxScreen}`} ref={domRef}>
             {datas?.length > 0
               ? datas?.map((item, index) =>  renderCard(item, index))
               : renderNoData}
@@ -257,6 +257,13 @@ const styleNoDataContainer = css`
   color: #233a7d;
   span {
     margin-top: 20px;
+  }
+`;
+const stylesContentBoxScreen = css`
+  grid-template-columns: repeat(5,  minmax(250px, 1fr));
+  @media (max-width: 1250px) {
+    grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
+    width: calc(100% - 32px);
   }
 `;
 const styleSelectContainer = css`
