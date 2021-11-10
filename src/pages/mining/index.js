@@ -139,36 +139,41 @@ const Mining = (props) => {
       let rewardRate = await myContract.methods.rewardRate().call();
       rewardRate = getFormatNumber(rewardRate * 100 * (12 / (duration / 30)));
 
-      let stakeListLength = await myContract.methods
-        .getStakeInfoLength(account)
-        .call({
-          _addr: account,
-        });
-
+      let isRewardNft;
+      let isClaimNft;
       let stakeInfoList = [];
       let rewardList = [];
 
-      for (let i = 0; i < stakeListLength; i++) {
-        let currentStakeInfo = await myContract.methods
-          .getStakeInfo(account, i)
+      if (account) {
+        let stakeListLength = await myContract.methods
+          .getStakeInfoLength(account)
           .call({
             _addr: account,
-            idx: i,
           });
 
-        let currentRewardInfo = await myContract.methods
-          .getReward(account, i)
-          .call({
-            _addr: account,
-            idx: i,
-          });
 
-        stakeInfoList.push(currentStakeInfo);
-        rewardList.push(currentRewardInfo);
+        for (let i = 0; i < stakeListLength; i++) {
+          let currentStakeInfo = await myContract.methods
+            .getStakeInfo(account, i)
+            .call({
+              _addr: account,
+              idx: i,
+            });
+
+          let currentRewardInfo = await myContract.methods
+            .getReward(account, i)
+            .call({
+              _addr: account,
+              idx: i,
+            });
+
+          stakeInfoList.push(currentStakeInfo);
+          rewardList.push(currentRewardInfo);
+        }
+
+        isRewardNft = await myContract.methods.isRewardNftOf(account).call();
+        isClaimNft = await myContract.methods.isClaimNftOf(account).call();
       }
-
-      let isRewardNft = await myContract.methods.isRewardNftOf(account).call();
-      let isClaimNft = await myContract.methods.isClaimNftOf(account).call();
 
       return {
         rewardRate,
@@ -362,6 +367,13 @@ const Mining = (props) => {
           (!isStakeInfoLoading || isWrongNetWork) && styleCardIsActive
         )}
         onClick={() => {
+          if (!address) {
+            toast.warn('Please link wallet', {
+              position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+          }
+
           if (isStakeInfoLoading || isWrongNetWork) {
             return;
           }

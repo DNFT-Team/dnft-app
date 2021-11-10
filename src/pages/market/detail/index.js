@@ -304,6 +304,13 @@ const MarketDetailScreen = (props) => {
     history.push('/market', {category, sortTag})
   }
   const handleStar = async () => {
+    if (!address) {
+      toast.warn('Please link wallet', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+
     const { data } = await post(
       '/api/v1/nft/save',
       {
