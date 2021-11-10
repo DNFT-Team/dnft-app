@@ -1,9 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
 import Tb2e from 'images/bridge/b2e.png';
 import Te2b from 'images/bridge/e2b.png';
+import { connect } from 'react-redux';
 
 const cardData = [
   {
@@ -26,6 +27,7 @@ const cardData = [
 
 const BridgeScreen = (props) => {
   let history = useHistory();
+  const { address } = props;
 
   return <div className={styleBridge}>
     <h3>Bridge</h3>
@@ -42,6 +44,13 @@ const BridgeScreen = (props) => {
             <img src={item.avatar} alt=""/>
             <p>{item.txt}</p>
             <button onClick={() => {
+              if (!address) {
+                toast.warn('Please link wallet', {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+                return;
+              }
+
               if (item.isActive && item.skipTo) {
                 history.push(item.skipTo, {key: item.key, param: item.param})
               } else {
@@ -55,7 +64,11 @@ const BridgeScreen = (props) => {
   </div>
 }
 
-export default BridgeScreen;
+const mapStateToProps = ({ profile }) => ({
+  address: profile.address,
+});
+export default withRouter(connect(mapStateToProps)(BridgeScreen));
+
 
 const styleBridge = css`
   position: relative;
