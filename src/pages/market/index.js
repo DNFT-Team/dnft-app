@@ -261,9 +261,8 @@ const styleNoDataContainer = css`
 `;
 const stylesContentBoxScreen = css`
   grid-template-columns: repeat(5,  minmax(250px, 1fr));
-  @media (max-width: 1250px) {
+  @media (max-width: 1550px) {
     grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
-    width: calc(100% - 32px);
   }
 `;
 const styleSelectContainer = css`

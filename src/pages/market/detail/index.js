@@ -405,6 +405,12 @@ const MarketDetailScreen = (props) => {
               <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
             </div>
             <div className={styles.userInfo}>
+              <div className={styles.user}>
+                <div className={styles.userInfoText}>
+                  <p className={styles.owner}>Collection</p>
+                  <p className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
+                </div>
+              </div>
               <div className={styles.user} onClick={() => handleLinkProfile(datas?.createrAddress)}>
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
@@ -419,17 +425,11 @@ const MarketDetailScreen = (props) => {
                   <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</a>
                 </div>
               </div>
-              <div className={styles.user}>
-                <div className={styles.userInfoText}>
-                  <p className={styles.owner}>Collection</p>
-                  <p className={styles.userName}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
-                </div>
-              </div>
             </div>
             <div className={styles.content_box}>
               <p className={styles.description}>Description</p>
               <p className={styles.description_text}>{datas?.description}</p>
-              <div className={styles.desc_line} />
+              {/* <div className={styles.desc_line} /> */}
               <p className={styles.description}>Contract Details</p>
               <div className={styles.contract_details}>
                 <div className={styles.contract_details_item}>
@@ -441,7 +441,7 @@ const MarketDetailScreen = (props) => {
                   <div>ERC-{datas?.contractType}</div>
                 </div>
                 <div className={styles.contract_details_item}>
-                  <div>Contract address:</div>
+                  <div>Contract Address:</div>
                   <div>
                     <a
                       href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
@@ -594,7 +594,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
-      {renderShowSwitchModal()}
+      {/* {renderShowSwitchModal()} */}
     </div>
   )
 }
