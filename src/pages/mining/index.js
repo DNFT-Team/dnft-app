@@ -1007,6 +1007,9 @@ const styleContainerTitle = css`
     font-size: 48px;
     height: 78px;
     line-height: 56px;
+    @media (max-width: 900px)  {
+      font-size: 2rem;
+    }
   }
   p {
     font-family: Poppins, sans-serif;

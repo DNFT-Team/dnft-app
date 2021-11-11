@@ -166,6 +166,9 @@ const styleTitle = css`
   line-height: 36px;
   margin: 0;
   color: #000000;
+  @media (max-width: 900px)  {
+    font-size: 2rem;
+  }
 `;
 const styleSliderContainer = css`
   width: 100%;

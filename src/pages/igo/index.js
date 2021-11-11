@@ -148,6 +148,9 @@ const styleIgo = css`
     line-height: 56px;
     letter-spacing: -0.02em;
     color: #23262F;
+    @media (max-width: 900px)  {
+      font-size: 2rem;
+    }
   }
   .describe {
     margin: 21px 0 40px 0;

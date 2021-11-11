@@ -16,6 +16,11 @@
     font-size: 3.4285rem;
     font-weight: 700;
 }
+@media (max-width: 900px) {
+    .nft-gallery  {
+      font-size: 2rem;
+    }
+}
 .article {
     webkit-box-orient: vertical;
     display: -webkit-inline-box;

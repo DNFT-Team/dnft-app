@@ -25,7 +25,7 @@ const HomeScreen = (props) => {
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
-
+  const [bannerHeight, setBannerHeight] = useState(413);
   const dataTopAll = [
     {
       src: banner1,
@@ -143,16 +143,27 @@ const HomeScreen = (props) => {
       </Dialog>
     )
   }
+  const getWindowSize = () => ({
+    innerHeight: window.innerHeight,
+    innerWidth: window.innerWidth,
+  });
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  });
+  const handleResize = () => {
+    setBannerHeight(
+      getWindowSize()?.innerHeight > 900 ? '45vh' : 413
+    )
+  };
 
-
-  console.log('[list]', list);
   const renderHotList = useCallback((title) => (
     <NftSlider title={title} list={list} loading={isLoading} cww={currentWindowWidth} />
   ), [list, isLoading]);
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger='click' height="413px" interval={6000}>
+      <Carousel trigger='click' style={{height: '900px'}} height={bannerHeight} interval={6000}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div className={styleBanner} style={{
