@@ -10,15 +10,16 @@ const NFTCard = (props) => {
   const {
     item,
     index,
+    newAddress,
   } = props;
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1;
   let randomLen = Math.floor(Math.random() * (item?.nftAvatorUrls?.length || 0));
   const viewUrl = !flag ? url : item?.nftAvatorUrls?.[randomLen] || noImg;
   let history = useHistory();
-
+  let len = item?.nftAvatorUrls?.length;
   return (
-    <div key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item})}>
+    <div key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item, newAddress})}>
       <div
         style={{
           backgroundImage: `url(${viewUrl})`,
@@ -33,9 +34,8 @@ const NFTCard = (props) => {
           })
         }
         {
-          new Array(3 - (item?.nftAvatorUrls?.length || 0)).fill().map((obj, index) =>
-            <div />
-            // <img key={index} src={noImg} />
+          len <= 3 && new Array(3 - len).fill().map((obj, index) =>
+            <div key={index + '_'} />
           )
         }
       </div>

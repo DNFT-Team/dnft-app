@@ -167,6 +167,7 @@ const ProfileScreen = (props) => {
           <NFTCollectionsCard
             key={`${item.id}_${selectedTab}`}
             item={item}
+            newAddress={newAddress}
             index={index}
           />
         );

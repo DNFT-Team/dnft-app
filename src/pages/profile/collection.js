@@ -15,8 +15,7 @@ import { get, post } from 'utils/request';
 
 const CollectionScreen = (props) => {
   const {
-    item,
-    index,
+    address,
     location: {state},
     dispatch,
     token
@@ -65,6 +64,7 @@ const CollectionScreen = (props) => {
     ),
     []
   );
+  console.log(state,'state')
   return (
     <div className={styleCardContainer}>
       <header className={styleCardHeaderBox}>
@@ -72,14 +72,17 @@ const CollectionScreen = (props) => {
           <h4>{list?.[0]?.collectionName}</h4>
           <div>{list?.[0]?.collectionDesc}</div>
         </div>
-        <div
-          className={styleEditCollection}
-          onClick={() => {
-            setShowCreateCollection(true)
-          }}
-        >
-          Edit Collection
-        </div>
+        {
+          address === state?.newAddress &&
+          <div
+            className={styleEditCollection}
+            onClick={() => {
+              setShowCreateCollection(true)
+            }}
+          >
+            Edit Collection
+          </div>
+        }
       </header>
       <div className={styleInfoContainer}>
         {list?.length > 0
