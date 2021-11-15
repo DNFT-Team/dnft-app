@@ -131,7 +131,7 @@
   width: 100%;
   margin-bottom: 37px;
 }
-.description {
+.descriptionTitle {
   margin: 0;
   color: #000000;
   margin-bottom: 6px;
@@ -141,18 +141,58 @@
   font-size: 18px;
   line-height: 24px;
   color: #000000;
-
 }
-.description_text {
+.warpperDesc {
+  display: flex;
+  overflow: hidden;
+}
+.description {
+  position: relative;
   word-break: break-word;
   white-space: pre-line;
-  max-height: 77px;
   overflow: auto;
   font-family: Helvetica;
   font-size: 14px;
   line-height: 24px;
   letter-spacing: -0.01em;
   color: #75819A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow:hidden;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+}
+
+.description::before{
+  content: '';
+  float: right;
+  width: 0;
+  /*height: calc(100% - 24px);*/
+  height: calc(100% - 24px);
+}
+.description::after {
+  content: '';
+  width: 999vw;
+  height: 999vw;
+  position: absolute;
+  box-shadow: inset calc(100px - 999vw) calc(30px - 999vw) 0 0 #fff;
+    margin-left: -100px;
+}
+.description .icon {
+  float: right;
+  clear: both;
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+  cursor: pointer;
+}
+.slider {
+  position: relative;
+  height: auto;
+  -webkit-line-clamp: 999;
+
 }
 .desc_line {
   width: 100%;

@@ -39,7 +39,7 @@ const MarketDetailScreen = (props) => {
   const [isWrongNetWork, setIsWrongNetWork] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
-
+  const [lineFlag, setLineFlag] = useState(false);
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
@@ -394,7 +394,7 @@ const MarketDetailScreen = (props) => {
       </Dialog>
     )
   }
-
+  console.log(lineFlag,'lineFlag')
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
@@ -434,10 +434,15 @@ const MarketDetailScreen = (props) => {
               </div>
             </div>
             <div className={styles.content_box}>
-              <p className={styles.description}>Description</p>
-              <p className={styles.description_text}>{datas?.description}</p>
+              <p className={styles.descriptionTitle}>Description</p>
+              {/* <p className={`${lineFlag ? styles.description_text : styles.slider}`}>{datas?.description}</p> */}
+              <div className={styles.warpperDesc}>
+                <p className={`${styles.description} ${lineFlag && styles.slider}`}><Icon color='#000' onClick={() => {
+                  setLineFlag((lineFlag) => !lineFlag)
+                }} className={styles.icon} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} />{datas?.description}</p>
+              </div>
               {/* <div className={styles.desc_line} /> */}
-              <p className={styles.description}>Contract Details</p>
+              <p className={styles.descriptionTitle}>Contract Details</p>
               <div className={styles.contract_details}>
                 <div className={styles.contract_details_item}>
                   <div>Blockchain:</div>
@@ -476,9 +481,11 @@ const MarketDetailScreen = (props) => {
                   </div>
                 </div>
               </div>
-              <div className={styles.stock}>
-                {datas?.quantity} in stock
-              </div>
+              {
+                datas?.contractType && <div className={styles.stock}>
+                  {datas?.quantity} Available
+                </div>
+              }
             </div>
             <div className={styles.btnBox}>
               <Button
@@ -601,7 +608,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
-      {/* {renderShowSwitchModal()} */}
+      {renderShowSwitchModal()}
     </div>
   )
 }

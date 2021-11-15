@@ -72,7 +72,7 @@ const Market = (props) => {
     if (reachBottom <= window.innerHeight && pageAble && datas?.length > 0) {
       fetchData()
     }
-  }, [reachBottom, pageAble, datas?.length, category, sortTag, address])
+  }, [reachBottom, window.innerHeight, pageAble, datas?.length, category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -160,77 +160,78 @@ const Market = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.headerT}>
-          <span className={styles.headerTitle}>Market</span>
-          <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
-            <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic'
-              display="inline-block">
-              <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
-            </Link>
-            <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic'
-              display="inline-block" ml="1rem">
-              <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
-            </Link>
+      <Loading
+        loading={pending && page === 0}
+        style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
+      />
+      <InfiniteScroll
+        dataLength={datas?.length}
+        next={fetchData}
+        pullDownToRefreshThreshold={50}
+        hasMore={pageAble}
+        height={'100%'}
+        loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
+        endMessage={
+          <p className={styles.noData} >
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        <div className={styles.header}>
+          <div className={styles.headerT}>
+            <span className={styles.headerTitle}>Market</span>
+            <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
+              <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic'
+                display="inline-block">
+                <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
+              </Link>
+              <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic'
+                display="inline-block" ml="1rem">
+                <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
+              </Link>
+            </div>
+          </div>
+          <div className={styles.headerR}>
+            <Select
+              className={`${styles.selectType} ${styleSelectContainer}`}
+              value={category}
+              placeholder='please choose'
+              onChange={(value) => {
+                setCategory(value);
+              }}
+            >
+              {categoryList?.map((el) => (
+                <Select.Option key={el} label={el} value={el} />
+              ))}
+            </Select>
+            <Select
+              value={sortTag}
+              className={`${styles.selectType} ${styleSelectContainer}`}
+              placeholder='please choose'
+              onChange={(value) => {
+                setSortTag(value);
+                if (value.includes('price')) {
+                  // setSortTag('price');
+                  setSortOrder(value.split('-')[0]);
+                } else {
+                  setSortTag(value);
+                }
+              }}
+            >
+              {sortTagType.map((el) => (
+                <Select.Option key={el.value} label={el.label} value={el.value} />
+              ))}
+            </Select>
           </div>
         </div>
-        <div className={styles.headerR}>
-          <Select
-            className={`${styles.selectType} ${styleSelectContainer}`}
-            value={category}
-            placeholder='please choose'
-            onChange={(value) => {
-              setCategory(value);
-            }}
-          >
-            {categoryList?.map((el) => (
-              <Select.Option key={el} label={el} value={el} />
-            ))}
-          </Select>
-          <Select
-            value={sortTag}
-            className={`${styles.selectType} ${styleSelectContainer}`}
-            placeholder='please choose'
-            onChange={(value) => {
-              setSortTag(value);
-              if (value.includes('price')) {
-                // setSortTag('price');
-                setSortOrder(value.split('-')[0]);
-              } else {
-                setSortTag(value);
-              }
-            }}
-          >
-            {sortTagType.map((el) => (
-              <Select.Option key={el.value} label={el.label} value={el.value} />
-            ))}
-          </Select>
-        </div>
-      </div>
-      <div className={styles.ArtContainer}>
-        <Loading
-          loading={pending && page === 0}
-          style={{ position: 'fixed', top: '50%', width: 'calc(100% - 76px)', zIndex: 10000 }}
-        />
-        <InfiniteScroll
-          dataLength={datas?.length}
-          next={fetchData}
-          hasMore={pageAble}
-          height={600}
-          loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
-          endMessage={
-            <p className={styles.noData} >
-              <b>Yay! You have seen it all</b>
-            </p >
-          }
-        >
+        <div className={styles.ArtContainer}>
           <div className={`${styles.contentBox} ${stylesContentBoxScreen}`} ref={domRef}>
             {datas?.length > 0
               ? datas?.map((item, index) =>  renderCard(item, index))
               : renderNoData}
           </div>
-        </InfiniteScroll>
-      </div>
+        </div>
+      </InfiniteScroll>
       {renderShowSwitchModal()}
     </div>
   );
@@ -261,7 +262,7 @@ const styleNoDataContainer = css`
 `;
 const stylesContentBoxScreen = css`
   grid-template-columns: repeat(5,  minmax(250px, 1fr));
-  @media (max-width: 1550px) {
+  @media (max-width: 1650px) {
     grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
   }
 `;
