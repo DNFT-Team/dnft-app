@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
-import { useCoingeckoPrice } from '@usedapp/coingecko'
+// import { useCoingeckoPrice } from '@usedapp/coingecko'
 import { Dialog, Input } from 'element-react';
 import {
   Box, Avatar, Link,
@@ -81,7 +81,7 @@ const GlobalHeader = (props) => {
   );
   console.log('globalheader', chainType)
 
-  const dnftPrice = useCoingeckoPrice('dnft-protocol', 'usd')
+  // const dnftPrice = useCoingeckoPrice('dnft-protocol', 'usd')
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -356,13 +356,13 @@ const GlobalHeader = (props) => {
       {/* </div>*/}
       <Box className={actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         {renderFaucet()}
-        {
-          dnftPrice && (
-            <div className={priceBlock}>
-              <img src={dnft_unit} alt=""/>
-              <span>$ {Number(dnftPrice).toFixed(2)}</span>
-            </div>)
-        }
+        {/* {*/}
+        {/*  dnftPrice && (*/}
+        {/*    <div className={priceBlock}>*/}
+        {/*      <img src={dnft_unit} alt=""/>*/}
+        {/*      <span>$ {Number(dnftPrice).toFixed(2)}</span>*/}
+        {/*    </div>)*/}
+        {/* }*/}
         {address && (
           <div
             className={styleAssetTarget}
