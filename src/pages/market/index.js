@@ -41,7 +41,7 @@ const Market = (props) => {
     if (token) {
       let _sortTag = sortTag
       if (sortTag?.includes('price')) {
-        _sortTag = 'price'
+        _sortTag = 'totalPrice'
       }
       fetchData(true);
     }
@@ -51,7 +51,7 @@ const Market = (props) => {
   const fetchData =  (tag) => {
     let _sortTag = sortTag
     if (sortTag?.includes('price')) {
-      _sortTag = 'price'
+      _sortTag = 'totalPrice'
     }
     dispatch(
       getMarketList(

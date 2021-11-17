@@ -169,7 +169,6 @@
   content: '';
   float: right;
   width: 0;
-  /*height: calc(100% - 24px);*/
   height: calc(100% - 24px);
 }
 .description::after {
@@ -179,6 +178,21 @@
   position: absolute;
   box-shadow: inset calc(100px - 999vw) calc(30px - 999vw) 0 0 #fff;
     margin-left: -100px;
+}
+.exp{
+  display: none;
+}
+.exp:checked+.description{
+  max-height: none;
+}
+.exp:checked+.description::after{
+  visibility: hidden;
+}
+.exp:checked+.description .icon::before{
+  visibility: hidden;
+}
+.exp:checked+.description::after{
+  visibility: hidden;
 }
 .description .icon {
   float: right;

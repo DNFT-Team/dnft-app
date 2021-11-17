@@ -437,9 +437,10 @@ const MarketDetailScreen = (props) => {
               <p className={styles.descriptionTitle}>Description</p>
               {/* <p className={`${lineFlag ? styles.description_text : styles.slider}`}>{datas?.description}</p> */}
               <div className={styles.warpperDesc}>
-                <p className={`${styles.description} ${lineFlag && styles.slider}`}><Icon color='#000' onClick={() => {
+                <input id="exp1" className={styles.exp} type="checkbox" />
+                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label for={'exp1'}><Icon  className={styles.icon}  color='#000' onClick={() => {
                   setLineFlag((lineFlag) => !lineFlag)
-                }} className={styles.icon} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} />{datas?.description}</p>
+                }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
               </div>
               {/* <div className={styles.desc_line} /> */}
               <p className={styles.descriptionTitle}>Contract Details</p>
@@ -481,11 +482,9 @@ const MarketDetailScreen = (props) => {
                   </div>
                 </div>
               </div>
-              {
-                datas?.contractType && <div className={styles.stock}>
-                  {datas?.quantity} Available
-                </div>
-              }
+              <div className={styles.stock}>
+                {datas?.quantity} Available
+              </div>
             </div>
             <div className={styles.btnBox}>
               <Button
@@ -608,7 +607,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
-      {renderShowSwitchModal()}
+      {/* {renderShowSwitchModal()} */}
     </div>
   )
 }
