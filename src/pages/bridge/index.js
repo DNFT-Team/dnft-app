@@ -9,16 +9,14 @@ import { connect } from 'react-redux';
 const cardData = [
   {
     key: 'b2e',
-    param: {from: 'BSC', to: 'ETH', target: 'DNF', protocol: 'BEP-20'},
-    skipTo: '/bridge/transfer',
-    isActive: false,
+    skipTo: '/bridge/transfer?fr=bsc&to=eth',
+    isActive: true,
     avatar: Tb2e,
     txt: 'To transfer your BEP-20 DNF to ERC-20 DNF, you need to connect your wallet and switch to BSC Network!'
   },
   {
     key: 'e2b',
-    param: {from: 'ETH', to: 'BSC', target: 'DNF', protocol: 'ERC-20'},
-    skipTo: '/bridge/transfer',
+    skipTo: '/bridge/transfer?fr=eth&to=bsc',
     isActive: true,
     avatar: Te2b,
     txt: 'To transfer your ERC-20 DNF to BEP-20 DNF, you need to connect your wallet and switch to ETH Network!'
@@ -45,14 +43,12 @@ const BridgeScreen = (props) => {
             <p>{item.txt}</p>
             <button onClick={() => {
               if (!address) {
-                toast.warn('Please link wallet', {
-                  position: toast.POSITION.TOP_CENTER,
-                });
+                toast.warn('Please link wallet');
                 return;
               }
 
               if (item.isActive && item.skipTo) {
-                history.push(item.skipTo, {key: item.key, param: item.param})
+                history.push(item.skipTo)
               } else {
                 toast('Coming soon!')
               }
