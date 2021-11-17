@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
-
+import { useCoingeckoPrice } from '@usedapp/coingecko'
 import { Dialog, Input } from 'element-react';
 import {
   Box, Avatar, Link,
@@ -34,6 +34,7 @@ import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import Logo from '../../images/home/dnftLogo.png';
 import assetSvg from 'images/asset/asset.svg';
 import accountSvg from 'images/common/account.svg';
+import dnft_unit from 'images/market/dnft_unit.png'
 import { getCategoryList } from 'reduxs/actions/market';
 
 // const mvpUrl = 'http://mvp.dnft.world';
@@ -79,6 +80,8 @@ const GlobalHeader = (props) => {
     []
   );
   console.log('globalheader', chainType)
+
+  const dnftPrice = useCoingeckoPrice('dnft-protocol', 'usd')
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
@@ -277,7 +280,7 @@ const GlobalHeader = (props) => {
   const renderFaucet = () => (
     globalConf.net_env === 'testnet' && address && (
       <Menu closeOnSelect>
-        <MenuButton as={Button} colorScheme="custom" variant="outline" mx="1rem" borderRadius="5.36rem">
+        <MenuButton as={Button} colorScheme="custom" variant="outline" borderRadius="5.36rem">
               FAUCET
         </MenuButton>
         <MenuList width="max-content">
@@ -353,6 +356,13 @@ const GlobalHeader = (props) => {
       {/* </div>*/}
       <Box className={actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
         {renderFaucet()}
+        {
+          dnftPrice && (
+            <div className={priceBlock}>
+              <img src={dnft_unit} alt=""/>
+              <span>$ {Number(dnftPrice).toFixed(2)}</span>
+            </div>)
+        }
         {address && (
           <div
             className={styleAssetTarget}
@@ -645,4 +655,23 @@ const actionContainer  = css`
   padding: 10px 30px 10px 56px;
   align-items: center;
   color: #233a7d;
+`
+const priceBlock  = css`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  box-sizing: border-box;
+  margin: 0 20px;
+  color: #233a7d;
+  img{
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+  }
+  span{
+    font-family: Archivo Black,sans-serif;
+    font-style: normal;
+    font-weight: normal;
+  }
 `

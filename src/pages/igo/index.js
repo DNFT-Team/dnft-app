@@ -25,17 +25,21 @@ const IGOScreen = (props) => {
 
   const [tab, setTab] = useState(0)
 
-  const [gameList, setGameList] = useState(mockGameList)
+  const [gameList, setGameList] = useState([])
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const handleTab = (tab) => {
     setTab(tab)
-    setGameList(tab === 0 ? mockGameList : [])
+    setGameList(tab === 1 ? mockGameList : [])
   }
   const handlePlay = (item) => {
+    if (tab === 1) {
+      toast('Sorry, The game is ended!')
+      return
+    }
     if (!item.isComing && item.skipTo) {
       history.push(item.skipTo)
     } else {
-      toast('Coming soon!', {position: toast.POSITION.TOP_CENTER})
+      toast('Coming soon!')
     }
   }
 

@@ -25,6 +25,7 @@
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@iconify/react": "^3.0.0",
+    "@usedapp/coingecko": "^0.3.24",
     "axios": "^0.21.1",
     "bfj": "^7.0.2",
     "bignumber": "^1.1.0",
