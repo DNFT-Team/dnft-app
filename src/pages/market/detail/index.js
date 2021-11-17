@@ -438,7 +438,7 @@ const MarketDetailScreen = (props) => {
               {/* <p className={`${lineFlag ? styles.description_text : styles.slider}`}>{datas?.description}</p> */}
               <div className={styles.warpperDesc}>
                 <input id="exp1" className={styles.exp} type="checkbox" />
-                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label for={'exp1'}><Icon  className={styles.icon}  color='#000' onClick={() => {
+                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label for={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
                   setLineFlag((lineFlag) => !lineFlag)
                 }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
               </div>
@@ -476,15 +476,18 @@ const MarketDetailScreen = (props) => {
               <div className={styles.currentPrice}>
                 <div className={styles.priceAll}>
                   {datas?.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
-                  <h4 className={styles.priceAmount}>{transPrice(price)} {datas?.type}</h4>
-                  <div className={styles.worth}>≈$
+                  <h4 className={styles.priceAmount}>{transPrice(price)}</h4>
+                  <div className={styles.worth}>≈ $
                     {transPrice(datas?.amount * price)}
                   </div>
                 </div>
               </div>
-              <div className={styles.stock}>
-                {datas?.quantity} Available
-              </div>
+              {
+                datas?.contractType == 1155 &&
+                <div className={styles.stock}>
+                  {datas?.quantity} Available
+                </div>
+              }
             </div>
             <div className={styles.btnBox}>
               <Button
