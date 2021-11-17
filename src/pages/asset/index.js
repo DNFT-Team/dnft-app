@@ -367,6 +367,7 @@ const AssetScreen = (props) => {
             <div>
               <Select
                 value={category}
+                className={styleSelectContainer}
                 placeholder="please choose"
                 onChange={(value) => {
                   setCategory(value);
@@ -379,6 +380,7 @@ const AssetScreen = (props) => {
               {isTestNet && (
                 <Select
                   value={sortTag}
+                  className={styleSelectContainer}
                   placeholder="please choose"
                   onChange={(value) => {
                     setSortTag(value);
@@ -491,7 +493,29 @@ const styleHeader = css`
     width: 80%;
   }
 `;
+const styleSelectContainer = css`
+  .el-select .el-input .el-input__icon {
+    color: #777E90;
+  }
+  .el-icon-caret-top:before {
+    content: \e603;
+  }
+  .el-input__inner {
+    border: 1px solid #E6E8EC;
+    color: #23262F;
+    font-family: Archivo Black;
 
+  }
+  .el-select-dropdown__item {
+    color: #8F9BBA;
+    font-family: Archivo Black;
+  }
+  .el-select-dropdown__item.selected {
+    color: #23262F;
+    font-family: Archivo Black;
+    background: #0057D9;
+  }
+`;
 const styleCreateNFT = css`
   background: #0057D9;
   display: flex;
@@ -523,7 +547,7 @@ const styleAssetAccountContainer = css`
   justify-content: center;
   p {
     user-select: none;
-    font-family: Judson, sans-serif;
+    font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
@@ -533,7 +557,7 @@ const styleAssetAccountContainer = css`
   }
 `;
 const styleACBalance = css`
-  font-family: Bahnschrift sans-serif;
+  font-family: Bahnschrift;
   font-style: normal;
   font-weight: bold;
   font-size: 30px;
@@ -611,12 +635,12 @@ const styleTabButton = css`
   display: flex;
   align-items: center;
   padding: 6px 12px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   border: 1px solid #E6E8EC;
   margin-right: 20px;
   color: #BBBBBB;
-  font-family: Archivo Black,sans-serif;
+  font-family: Archivo Black;
   user-select: none;
   @media (max-width: 900px) {
     flex: 1;
