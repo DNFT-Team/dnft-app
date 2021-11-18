@@ -32,6 +32,9 @@ import camera from 'images/profile/camera.png';
 import youtube from 'images/profile/youtube.png';
 import CropperBox from './components/cropperBox';
 
+import u_twitter from 'images/profile/u_twitter.png';
+import u_youtube from 'images/profile/u_youtube.png';
+import u_ins from 'images/profile/u_ins.png';
 import {
   TelegramShareButton,
   TwitterShareButton,
@@ -317,17 +320,17 @@ const ProfileScreen = (props) => {
             <a style={{
               pointerEvents: !isUrl(datas?.twitterAddress) && 'none'
             }} href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
-              <img className={styles.contact_img} src={twitter} />
+              <img className={styles.contact_img} src={isUrl(datas?.twitterAddress) ? twitter : u_twitter} />
             </a>
             <a style={{
               pointerEvents: !isUrl(datas?.facebookAddress) && 'none'
             }} href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
-              <img className={styles.contact_img} src={ins} />
+              <img className={styles.contact_img} src={isUrl(datas?.facebookAddress) ? ins : u_ins} />
             </a>
             <a style={{
               pointerEvents: !isUrl(datas?.youtubeAddress) && 'none'
             }}  href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
-              <img style={{width: 28}} className={styles.contact_img} src={youtube} />
+              <img style={{width: 28}} className={styles.contact_img} src={isUrl(datas?.youtubeAddress) ? youtube : u_youtube} />
             </a>
           </div>
         </div>
@@ -388,15 +391,16 @@ const styleTabButton = css`
   padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
-  border: 1px solid #E6E8EC;
-  margin-right: 20px;
-  color: #BBBBBB;
+  border: 1px solid #DDDDDD;
+  margin-right: 30px;
+  color: #AAAAAA;
   font-family: Archivo Black;
 `;
 
 const styleActiveTabButton = css`
-  border: 1px solid #000000;
-  color: #000000;
+  border: 1px solid #417ED9;
+  color: #FFFFFF;
+  background: #417ED9;
 `;
 
 const styleCardList = css`

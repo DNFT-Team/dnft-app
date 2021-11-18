@@ -415,7 +415,10 @@ const MarketDetailScreen = (props) => {
               <div className={styles.user}>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Collection</p>
-                  <p className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
+                  <p onClick={() => history.push('/profile/collection', {item: {
+                    id: datas?.collectionId,
+                    flag: true,
+                  }, newAddress: datas?.address})} className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
                 </div>
               </div>
               <div className={styles.user} onClick={() => handleLinkProfile(datas?.createrAddress)}>

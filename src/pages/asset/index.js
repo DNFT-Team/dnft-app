@@ -602,7 +602,7 @@ const styleTabContainer = css`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 24px;
+    gap: 30px;
 
     @media (max-width: 900px) {
       gap: 0px;
@@ -637,9 +637,9 @@ const styleTabButton = css`
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
-  border: 1px solid #E6E8EC;
-  margin-right: 20px;
-  color: #BBBBBB;
+  border: 1px solid #DDDDDD;
+  //margin-right: 30px;
+  color: #AAAAAA;
   font-family: Archivo Black;
   user-select: none;
   @media (max-width: 900px) {
@@ -650,8 +650,9 @@ const styleTabButton = css`
 `;
 
 const styleActiveTabButton = css`
-  border: 1px solid #000000;
-  color: #000000;
+  border: 1px solid #417ED9;
+  color: #FFFFFF;
+  background: #417ED9;
   @media (max-width: 900px) {
     flex: 1;
     justify-content: center;
