@@ -343,7 +343,10 @@ const ProfileScreen = (props) => {
               renderCard(item, index)
             ))
             : renderNoData}
-          <CollectionAdd />
+          {
+            selectedTab === 'Collections' && address === newAddress &&
+            <CollectionAdd />
+          }
         </div>
       </div>
       <ProfileEditScreen
