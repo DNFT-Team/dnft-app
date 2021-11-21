@@ -1,32 +1,81 @@
+/**
+ * React Framework
+ */
 import React, { useState, useEffect, useRef } from 'react';
-import { css } from 'emotion';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory  } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+/**
+ * Plugins
+ */
+import { css } from 'emotion';
+import axios from 'http/default'
+
+/**
+ * Web3 Ref
+ */
+import Web3 from 'web3';
+import {
+  NERVE_BRIDGE, NERVE_WALLET_ADDR,
+  TOKEN_DNF, bscTestTokenContact
+} from 'utils/contract';
+import {tokenAbi} from 'utils/abi';
+import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools';
+
+/**
+ * Components
+ */
 import {
   Text, Input, InputGroup, Link, InputRightAddon,
   AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay
 } from '@chakra-ui/react';
 import { Dialog, Button } from 'element-react';
 import { toast } from 'react-toastify';
-import helper from 'config/helper';
-import Web3 from 'web3';
-import { NERVE_BRIDGE, TOKEN_DNF, NERVE_WALLET_ADDR } from 'utils/contract';
-import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools';
-import axios from 'http/default'
-import globalConf from 'config'
-
-import IconEth from 'images/networks/logo_select_eth.svg';
-import IconBsc from 'images/networks/logo_select_bsc.svg';
-import { Icon } from '@iconify/react';
 import TradeTable from 'components/TradeTable';
 
-/* Available network*/
-const NetOptions = [
-  {key: 'ETH', icon: IconEth, netId: '', isShow: true },
-  {key: 'BSC', icon: IconBsc, netId: '', isShow: true }
-]
+/**
+* Icon
+*/
+import { Icon } from '@iconify/react';
+import IconEth from 'images/networks/logo_select_eth.svg';
+import IconBsc from 'images/networks/logo_select_bsc.svg';
 
-/* Table cols*/
+/**
+ * Config state
+ */
+import helper from 'config/helper';
+import globalConf from 'config';
+
+/**
+ * Chain Node
+ */
+const ChainNodes = {
+  'eth': {
+    key: 'ETH', protocol: 'ERC-20', icon: IconEth,
+    chain: {chainId: '0x1'}, nerveChainId: '9',
+    abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract,
+    heterogeneousChain: 'eth',
+  },
+  'bsc': {
+    key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
+    chain: {
+      chainId: '0x38',
+      chainName: 'Smart Chain',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'bnb',
+        decimals: 18,
+      },
+      rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    }, nerveChainId: '9',
+    abi: tokenAbi, address: bscTestTokenContact.mainnet,
+    heterogeneousChain: 'bnb',
+  }
+}
+
+/**
+ * Table cols
+ */
 const TableCols = [
   {title: 'TX HASH', key: 'tx_hash', ellipsis: true, isLink: true},
   {title: 'AMOUNT', key: 'amount', isNum: true},
@@ -35,17 +84,30 @@ const TableCols = [
   {title: 'FAILED CODE', key: 'failed_code'},
   {title: 'UPDATED AT', key: 'updated_at'},
 ]
+const getQueryString = (url, name) => {
+  let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+  let r = url.substr(1).match(reg);
+  if (r != null) {
+    return decodeURIComponent(r[2]);
+  }
+  return null;
+}
 
-const BridgeScreen = (props) => {
+/**
+ * The View of Bridge Transfer
+ * @description BSC, ETH......
+ */
+const TransferView = (props) => {
+  const TargetToken = 'DNFT'  //  The target token asset
   const {location, address, chainType} = props;
-  const payloads = location?.state?.param;
-  if (!payloads) {
-    let histroy = useHistory()
-    histroy.goBack()
+  const fr = getQueryString(location?.search, 'fr')
+  const to = getQueryString(location?.search, 'to')
+  if (!fr || !to || fr === to || !ChainNodes[fr] || !ChainNodes[to]) {
+    useHistory().push('/bridge')
   }
   //  networks
-  const frNet = 0
-  const toNet = 1
+  const frNet = ChainNodes[fr]
+  const toNet = ChainNodes[to]
   //  global loading
   const [loading, setLoading] = useState(false)
   const [isInjected, setIsInjected] = useState(false)
@@ -60,34 +122,15 @@ const BridgeScreen = (props) => {
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const onClose = () => setIsOpen(false);
   const cancelRef = useRef()
-
+  //  initial check
   useEffect(() => {
     // console.log('useEffect', address, chainType);
-    if (chainType) {
-      init()
-    }
+    chainType && init()
   }, [address, chainType]);
   const init = async () => {
-    if (!isInjected) {await injectWallet()}
+    !isInjected && await injectWallet()
     return await checkSuit()
   }
-
-  const goToRightNetwork = async (ethereum) => {
-    try {
-      await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [
-          {
-            chainId: '0x1',
-          },
-        ],
-      })
-    } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
-      return false
-    }
-  };
-
   //  setUp wallet
   const injectWallet = async () => {
     try {
@@ -97,15 +140,15 @@ const BridgeScreen = (props) => {
         await ethereum.enable();
         setIsInjected(true)
       } else {
-        toast.error('Please install wallet', {position: toast.POSITION.TOP_CENTER});
+        toast.error('Please install wallet');
       }
     } catch (err) {
-      toast.error(err, {position: toast.POSITION.TOP_CENTER});
+      toast.error(err);
     }
   }
   const checkSuit = async (step = 3) => {
     let res = {netOk: false, address: '', balance: 0, isApprove: false}
-    if (chainType !== 'ETH') {
+    if (chainType !== frNet.key) {
       setIsShowSwitchModal(true)
       res.netOk = false
       setBalance(0)
@@ -122,7 +165,7 @@ const BridgeScreen = (props) => {
     let balance = 0
     try {
       if (address) {
-        const contract = new window.web3.eth.Contract(TOKEN_DNF.abi, TOKEN_DNF.tokenContract);
+        const contract = new window.web3.eth.Contract(frNet.abi, frNet.address);
         const dnfBalance = await contract.methods['balanceOf'](address).call();
         balance = Number(toDecimal(dnfBalance))
         console.info('===>DNF-Balance', balance, dnfBalance);
@@ -137,7 +180,7 @@ const BridgeScreen = (props) => {
   const getIsApprove = async (chainSuit) => {
     try {
       if (chainSuit.netOk && chainSuit.address) {
-        const contract = new window.web3.eth.Contract(TOKEN_DNF.abi, TOKEN_DNF.tokenContract);
+        const contract = new window.web3.eth.Contract(frNet.abi, frNet.address);
         const dnfAuth = await contract.methods['allowance'](chainSuit.address, NERVE_BRIDGE.tokenContract).call();
         console.log('dnfAuth', dnfAuth);
         return Number(dnfAuth) > 0
@@ -152,22 +195,20 @@ const BridgeScreen = (props) => {
   const approveDnfToNerve = async () => {
     onClose()
     try {
-      const dnfContract = new window.web3.eth.Contract(TOKEN_DNF.abi, TOKEN_DNF.tokenContract);
+      const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
       await dnfContract.methods['approve'](NERVE_BRIDGE.tokenContract, WEB3_MAX_NUM).send({ from: address });
     } catch (err) {
       console.error('approveDnfToNerve', err);
-      if (err.code === 4001) {
-        toast.error('You denied the approve', {position: toast.POSITION.TOP_CENTER});
-      }
+      err.code === 4001 && toast.error('You denied the approve');
     }
   }
   const submitCross = async () => {
     if (amount <= 0) {
-      toast.warning('Please Input active number.', {position: toast.POSITION.TOP_CENTER});
+      toast.warning('Please Input active number.');
       return
     }
     if (amount < 5) {
-      toast.warning('Quantity is at least 5.', {position: toast.POSITION.TOP_CENTER});
+      toast.warning('Quantity is at least 5.');
       return
     }
 
@@ -177,7 +218,7 @@ const BridgeScreen = (props) => {
     console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
       if (chainSuit.balance < Number(amount)) {
-        toast.warning('Your balance is not enough.', {position: toast.POSITION.TOP_CENTER});
+        toast.warning('Your balance is not enough.');
         setLoading(false)
         return
       }
@@ -191,7 +232,7 @@ const BridgeScreen = (props) => {
         nerveContract.methods['crossOut'](
           NERVE_WALLET_ADDR,
           toDecimal(amount, true, 'ether', true),
-          TOKEN_DNF.tokenContract
+          frNet.address
         ).send({
           from: chainSuit.address,
           gas: gasNum,
@@ -200,22 +241,24 @@ const BridgeScreen = (props) => {
           console.log('#nerveContract', err, hash);
           setLoading(false)
           if (err) {
-            toast.error(err.message, {position: toast.POSITION.TOP_CENTER})
+            toast.error(err.message)
           } else {
-            toast.success('Trade Packing Success', {position: toast.POSITION.TOP_CENTER})
+            toast.success('Trade Packing Success')
             setTransaction({
               timestamp: Date.now(),
               account: address,
               amount, hash,
-              from: 'ETH', to: 'BSC'
+              from: frNet.key, to: toNet.key
             })
             axios.post('/monitor', {
-              amount,
-              to_address: address,
-              tx_hash: hash,
-              chain_id: '9'
+              amount, // 提现数额
+              to_address: address, // 提现地址
+              tx_hash: hash, // 交易哈希
+              chain_id: toNet.nerveChainId, // nerve桥链id[主网9，测试网5],表示跨链服务使用主网还是测试网
+              upChain: frNet.heterogeneousChain, // 跨链发起方链名称['eth','bnb','ht','okt']
+              heterogeneousChain: toNet.heterogeneousChain  // 跨链接收方（DNF异构链）名称['eth','bnb','ht','okt']
             }, {baseURL: globalConf.bridgeApi}).then(() => {
-              toast.success('Cross Service has got your withdraw!', {position: toast.POSITION.TOP_CENTER})
+              toast.success('Cross Service has got your withdraw!')
             })
           }
         })
@@ -224,7 +267,7 @@ const BridgeScreen = (props) => {
       setLoading(false)
     }
   }
-
+  //  get history list
   const getHistory = () => {
     let list = []
     axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
@@ -235,6 +278,27 @@ const BridgeScreen = (props) => {
       })
   }
 
+  /**
+   * @description switch network
+   */
+  const goToRightNetwork = async (ethereum) => {
+    try {
+      if (frNet.key === 'ETH') {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [frNet.chain],
+        })
+      } else {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [frNet.chain],
+        })
+      }
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  };
   const renderShowSwitchModal = () => {
     console.log(isShowSwitchModal, 'isShowSwitchModal')
     return (
@@ -246,7 +310,7 @@ const BridgeScreen = (props) => {
         closeOnPressEscape={false}
       >
         <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to ETH network.</span>
+          <span>You’ve connected to unsupported networks, please switch to {frNet.key} network.</span>
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button onClick={() => {
@@ -257,11 +321,10 @@ const BridgeScreen = (props) => {
       </Dialog>
     )
   }
-
   //  render Dom
   return <div className={styleWrapper}>
     <div>
-      <span className={styleTitleH3}>Transfer ${payloads.target} from {payloads.from} to {payloads.to}</span>
+      <span className={styleTitleH3}>Transfer ${TargetToken} from {frNet.key} to {toNet.key}</span>
       <div className={styleLinks}>
         <Link href={helper.bridge.youtube} isExternal color="#75819A"
           display="inline-block">
@@ -298,11 +361,11 @@ const BridgeScreen = (props) => {
             }}
           />
           <InputRightAddon className={styleRight}>
-            <img src={NetOptions[frNet].icon} alt='' />
-            <span> ERC-20 ${payloads.target} </span>
+            <img src={frNet.icon} alt='' />
+            <span> {frNet.protocol} ${TargetToken} </span>
           </InputRightAddon>
         </InputGroup>
-        <p>Available balance : {balance} {payloads.target}</p>
+        <p>Available balance : {balance} {TargetToken}</p>
       </div>
       <div className={styleFormItem}>
         <label>For</label>
@@ -317,11 +380,11 @@ const BridgeScreen = (props) => {
             value={amount}
           />
           <InputRightAddon className={styleRight}>
-            <img src={NetOptions[toNet].icon} alt='' />
-            <span> BEP-20 ${payloads.target} </span>
+            <img src={toNet.icon} alt='' />
+            <span> {toNet.protocol} ${TargetToken} </span>
           </InputRightAddon>
         </InputGroup>
-        <p>By now, You will received 100% {payloads.target}</p>
+        <p>By now, You will received 100% {TargetToken}</p>
       </div>
       <div>
         <button className={styleBtn} onClick={submitCross}>Confirm</button>
@@ -361,13 +424,15 @@ const BridgeScreen = (props) => {
     {renderShowSwitchModal()}
   </div>
 }
-
 const mapStateToProps = ({ profile }) => ({
   address: profile.address,
   chainType: profile.chainType
 });
-export default withRouter(connect(mapStateToProps)(BridgeScreen));
+export default withRouter(connect(mapStateToProps)(TransferView));
 
+/**
+ * Emotion css
+ * */
 const styleWrapper = css`
   position: relative;
   padding: 30px 50px;
@@ -520,7 +585,6 @@ const styleLinks = css`
   display: inline-block;
   color: #75819A;
 `
-
 const styleSwitchModal = css`
   @media (max-width: 900px) {
     width: calc(100% - 32px);
@@ -533,7 +597,7 @@ const styleSwitchModal = css`
   }
   .el-dialog__body {
     padding: 0;
-    font-family: Archivo Black;
+    font-family: Archivo Black,sans-serif;
     color: #000000;
     font-size: 18px;
     line-height: 30px;
@@ -551,7 +615,7 @@ const styleSwitchModal = css`
       color: #FCFCFD;
       font-size: 16px;
       border-radius: 10px;
-      font-family: Archivo Black;
+      font-family: Archivo Black,sans-serif;
       padding: 18px 24px;
     }
   }
