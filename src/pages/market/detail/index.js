@@ -409,7 +409,7 @@ const MarketDetailScreen = (props) => {
             </div>
             <div className={styles.collectionBox}>
               <div className={styles.proNameType}>{datas?.category}</div>
-              <Icon className={styles.star}  style={datas?.isSaved && {color: 'red'}}  icon="akar-icons:star" onClick={handleStar}/>
+              <Icon className={styles.star}  style={datas?.isSaved && {}} icon={datas?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'} onClick={handleStar}/>
             </div>
             <div className={styles.userInfo}>
               <div className={styles.user}>
