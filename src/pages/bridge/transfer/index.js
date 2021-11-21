@@ -52,8 +52,9 @@ import globalConf from 'config';
 const ChainNodes = {
   'eth': {
     key: 'ETH', protocol: 'ERC-20', icon: IconEth,
-    chain: {chainId: '0x1'}, netId: '9',
-    abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract
+    chain: {chainId: '0x1'}, nerveChainId: '9',
+    abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract,
+    heterogeneousChain: 'eth',
   },
   'bsc': {
     key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
@@ -66,8 +67,9 @@ const ChainNodes = {
         decimals: 18,
       },
       rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    }, netId: '9',
-    abi: tokenAbi, address: bscTestTokenContact.mainnet
+    }, nerveChainId: '9',
+    abi: tokenAbi, address: bscTestTokenContact.mainnet,
+    heterogeneousChain: 'bnb',
   }
 }
 
@@ -249,10 +251,12 @@ const TransferView = (props) => {
               from: frNet.key, to: toNet.key
             })
             axios.post('/monitor', {
-              amount,
-              to_address: address,
-              tx_hash: hash,
-              chain_id: toNet.netId
+              amount, // 提现数额
+              to_address: address, // 提现地址
+              tx_hash: hash, // 交易哈希
+              chain_id: toNet.nerveChainId, // nerve桥链id[主网9，测试网5],表示跨链服务使用主网还是测试网
+              upChain: frNet.heterogeneousChain, // 跨链发起方链名称['eth','bnb','ht','okt']
+              heterogeneousChain: toNet.heterogeneousChain  // 跨链接收方（DNF异构链）名称['eth','bnb','ht','okt']
             }, {baseURL: globalConf.bridgeApi}).then(() => {
               toast.success('Cross Service has got your withdraw!')
             })
