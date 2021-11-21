@@ -35,6 +35,7 @@ import CropperBox from './components/cropperBox';
 import u_twitter from 'images/profile/u_twitter.png';
 import u_youtube from 'images/profile/u_youtube.png';
 import u_ins from 'images/profile/u_ins.png';
+import CollectionAdd from './components/collectionAdd';
 import {
   TelegramShareButton,
   TwitterShareButton,
@@ -342,6 +343,7 @@ const ProfileScreen = (props) => {
               renderCard(item, index)
             ))
             : renderNoData}
+          <CollectionAdd />
         </div>
       </div>
       <ProfileEditScreen

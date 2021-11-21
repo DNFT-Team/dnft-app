@@ -44,7 +44,7 @@ const Profile = (state = initialState, action) => {
     _batch = _batch.filter((obj) => Array.isArray(obj.nftAvatorUrls) && obj.nftAvatorUrls.length > 0)
     return {
       ...state,
-      batch: _batch
+      batch: action.payload.data
     }
   case GET_MY_PROFILE_OWNED.SUCCESS:
     return {

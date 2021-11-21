@@ -629,7 +629,7 @@ const styleTabContainer = css`
 `;
 
 const styleTabButton = css`
-  height: 38px;
+  height: 40px;
   box-sizing: border-box;
   font-size: 14px;
   display: flex;
@@ -666,7 +666,7 @@ const styleCardList = css`
   flex-direction: row;
   height: 100%;
   gap: 30px 16px;
-  margin-top: 20px;
+  margin-top: 50px;
   @media (max-width: 900px) {
     justify-content: center;
   }
