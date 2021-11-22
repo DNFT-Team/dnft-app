@@ -8,6 +8,7 @@ import styles from './index.less';
 import noImg from 'images/common/noImg.svg'
 import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg'
+import { Icon } from '@iconify/react';
 
 const NFTCard = (props) => {
   const { needAction, item, index, clickDetail, token, address, onLike, onSave } = props;
@@ -27,10 +28,10 @@ const NFTCard = (props) => {
       <div className={styles.styleInfoContainer}>
         <div className={styles.styleCardHeader}>
           <div className={styles.styleCardHeaderBox}>
-            <span className={styles.styleName}>{item.name}</span>
-            <div className={styles.price_box}>
-              {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
-              <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
+            <span className={styles.styleName}>{item.name || 'Unknown'}</span>
+            <div className={styles.starBox}>
+              <Icon className={styles.star}  style={item?.isSaved && {}} icon={item?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'}/>
+              <span style={{color: item?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{item?.saveCount}</span>
             </div>
           </div>
           <div className={styles.styleInfo}>
@@ -38,10 +39,10 @@ const NFTCard = (props) => {
               {/* <div className={styles.styleInfoProfileImg} /> */}
               <span className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
             </div>
-            {/* <div className={styles.price_box}>
+            <div className={styles.price_box}>
               {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
               <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

@@ -410,6 +410,7 @@ const MarketDetailScreen = (props) => {
             <div className={styles.collectionBox}>
               <div className={styles.proNameType}>{datas?.category}</div>
               <Icon className={styles.star}  style={datas?.isSaved && {}} icon={datas?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'} onClick={handleStar}/>
+              <span style={{color: datas?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{datas?.saveCount}</span>
             </div>
             <div className={styles.userInfo}>
               <div className={styles.user}>
@@ -425,14 +426,14 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName}</a>
+                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
                 </div>
               </div>
               <div className={styles.user} onClick={() => handleLinkProfile(datas?.address)}>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
-                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName}</a>
+                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
                 </div>
               </div>
             </div>
