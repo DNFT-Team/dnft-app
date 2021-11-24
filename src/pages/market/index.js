@@ -274,8 +274,8 @@ const styleSelectContainer = css`
     content: \e603;
   }
   .el-input__inner {
-    border: 1px solid #E6E8EC;
-    color: #23262F;
+    border: 1px solid #DDDDDD;
+    color: #AAAAAA;
     font-family: Archivo Black;
 
   }

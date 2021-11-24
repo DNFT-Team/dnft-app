@@ -502,7 +502,7 @@ const styleActionContainer = css`
   height: 40px;
   padding: 11px 10px;
   border-radius: 10px;
-  border: 1px solid #E1E6FF;
+  border: 1px solid rgba(35, 38, 47, 0.8);
   img {
     height: 20px;
     width: 20px;
