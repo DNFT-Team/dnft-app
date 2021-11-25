@@ -280,7 +280,7 @@ const GlobalHeader = (props) => {
   const renderFaucet = () => (
     globalConf.net_env === 'testnet' && address && (
       <Menu closeOnSelect>
-        <MenuButton as={Button} colorScheme="custom" variant="outline" borderRadius="5.36rem">
+        <MenuButton as={Button} colorScheme="custom" variant="outline" borderRadius="5.36rem" mr="30px">
               FAUCET
         </MenuButton>
         <MenuList width="max-content">
@@ -428,7 +428,7 @@ const GlobalHeader = (props) => {
         </Box>
       </Box>
       {renderModal}
-      <Drawer placement="bottom" onClose={() => {setIsDrawer(false)}} isOpen={isDrawer} isFullHeight>
+      <Drawer placement="right" onClose={() => {setIsDrawer(false)}} isOpen={isDrawer} size="xl">
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">
