@@ -149,9 +149,18 @@ const MarketDetailScreen = (props) => {
       return false
     }
   }, []);
-
+  const getMarketList = (id, isSave) => {
+    let data = list.slice();
+    data.map((obj) => {
+      if(obj.id === id) {
+        obj.isSaved = isSave;
+        obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
+      }
+    })
+    setList(data);
+  }
   const renderHotList = useCallback((title) => (
-    <NftSlider title={title} list={list} loading={isLoading} cww={currentWindowWidth} />
+    <NftSlider title={title} list={list}  getMarketList={getMarketList} loading={isLoading} cww={currentWindowWidth} />
   ), [list, isLoading]);
   const isApproved = async () => {
     setApproveLoading(true)
@@ -409,7 +418,7 @@ const MarketDetailScreen = (props) => {
             </div>
             <div className={styles.collectionBox}>
               <div className={styles.proNameType}>{datas?.category}</div>
-              <Icon className={styles.star}  style={datas?.isSaved && {}} icon={datas?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'} onClick={handleStar}/>
+              <Icon className={styles.star} icon={datas?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'} onClick={handleStar}/>
               <span style={{color: datas?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{datas?.saveCount}</span>
             </div>
             <div className={styles.userInfo}>
@@ -618,7 +627,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
-      {/* {renderShowSwitchModal()} */}
+      {renderShowSwitchModal()}
     </div>
   )
 }

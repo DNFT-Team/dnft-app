@@ -10,9 +10,10 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg'
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
+import { get, post } from 'utils/request';
 
 const NFTCard = (props) => {
-  const { needAction, item, index, clickDetail, token, address, onLike, onSave } = props;
+  const { needAction, item, index, clickDetail, token, address, getMarketList, onSave } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
   let history = useHistory();
 
@@ -29,6 +30,29 @@ const NFTCard = (props) => {
     }
     history.push(`/profile/address/${address}`)
   }
+  const handleStar = async () => {
+
+    if (!address) {
+      toast.warn('Please link wallet', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+
+    const { data } = await post(
+      '/api/v1/nft/save',
+      {
+        saved: item?.isSaved ? 0 : 1,
+        nftId: item?.nftId,
+      },
+      token
+    );
+    const flag = data?.success;
+    const msg = flag ? `${item?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message;
+    toast[flag ? 'success' : 'error'](msg, { position: toast.POSITION.TOP_CENTER});
+    // getMarketInfo();
+    if(flag) getMarketList(item.id, !item?.isSaved);
+  }
   return (
     <div key={`title-${index}`} onClick={clickDetail} className={styles.styleCardContainer}>
       <div
@@ -41,7 +65,10 @@ const NFTCard = (props) => {
           <div className={styles.styleCardHeaderBox}>
             <span className={styles.styleName} onClick={() => alert(1)}>{item.name || 'Unknown'}</span>
             <div className={styles.starBox}>
-              <Icon className={styles.star}  style={item?.isSaved && {}} icon={item?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'}/>
+              <Icon className={styles.star} onClick={(e) => {
+                e.stopPropagation()
+                handleStar()
+              }} icon={item?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'}/>
               <span style={{color: item?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{item?.saveCount}</span>
             </div>
           </div>

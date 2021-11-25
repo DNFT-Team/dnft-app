@@ -11,7 +11,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Loading } from 'element-react';
 
 const NftSlider = (props) => {
-  const { title, list, loading, cww } = props;
+  const { title, list, loading, cww, getMarketList } = props;
   let history = useHistory();
 
   const SampleNextArrow = useCallback(
@@ -121,9 +121,9 @@ const NftSlider = (props) => {
     history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
   }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={index} item={item} index={index} needAction
+    (item, index) => <NFTCard  key={index} item={item} getMarketList={getMarketList} index={index} needAction
       clickDetail={() => clickDetail(item)} />,
-    []
+    [list]
   );
   return (
     <div className={styleArtContainer}>

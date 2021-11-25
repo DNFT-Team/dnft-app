@@ -1,4 +1,4 @@
-import { GET_MARKET_LIST, GET_CATEGORY_LIST } from '../types/market';
+import { GET_MARKET_LIST, GET_CATEGORY_LIST, SET_MARKET_LIST } from '../types/market';
 
 const initialState = {
   pending: false,
@@ -24,6 +24,11 @@ const market = (state = initialState, action) => {
     return {
       ...state,
       pending: false,
+    }
+  case SET_MARKET_LIST.SUCCESS:
+    return {
+      ...state,
+      datas: action.payload.data,
     }
   case GET_CATEGORY_LIST.SUCCESS:
     let category = action.payload.data?.slice() || []

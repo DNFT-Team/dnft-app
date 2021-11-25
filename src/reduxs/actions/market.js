@@ -1,4 +1,4 @@
-import { GET_MARKET_LIST, GET_CATEGORY_LIST } from '../types/market';
+import { GET_MARKET_LIST, GET_CATEGORY_LIST, SET_MARKET_LIST } from '../types/market';
 
 import { parseRestError } from '../errorHelper';
 import { Message } from 'element-react';
@@ -23,6 +23,14 @@ export const getMarketList = (params = {},token) => (dispatch) => {
     .catch((error) => {
       dispatch({ type: GET_MARKET_LIST.ERROR })
     })
+}
+
+export const setMarketList = (params = [],token) => (dispatch) => {
+  dispatch({
+    type: SET_MARKET_LIST.SUCCESS, payload: {
+      data: params,
+    }
+  })
 }
 
 export const getCategoryList = (params = {},token) => (dispatch) => {

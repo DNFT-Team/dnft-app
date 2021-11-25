@@ -67,7 +67,16 @@ const HomeScreen = (props) => {
       setIsLoading(false)
     }
   }, [token]);
-
+  const getMarketList = (id, isSave) => {
+    let data = list.slice();
+    data.map((obj) => {
+      if(obj.id === id) {
+        obj.isSaved = isSave;
+        obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
+      }
+    })
+    setList(data);
+  }
   useEffect(() => {
     getNFTList()
   }, [token]);
@@ -158,7 +167,7 @@ const HomeScreen = (props) => {
   };
 
   const renderHotList = useCallback((title) => (
-    <NftSlider title={title} list={list} loading={isLoading} cww={currentWindowWidth} />
+    <NftSlider title={title} list={list} getMarketList={getMarketList} loading={isLoading} cww={currentWindowWidth} />
   ), [list, isLoading]);
 
   return (

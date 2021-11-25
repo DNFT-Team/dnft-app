@@ -7,7 +7,7 @@ import NFTCard from './component/item';
 import { noDataSvg } from 'utils/svg';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getMarketList } from 'reduxs/actions/market';
+import { getMarketList, setMarketList } from 'reduxs/actions/market';
 import helper from '../../config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
@@ -86,8 +86,20 @@ const Market = (props) => {
     // if(pending) return;
     history.push('/market/detail', {item, category, sortTag})
   }
+  const getMarketStarList = (id, isSave) => {
+    let data = datas.slice();
+    data.map((obj) => {
+      if(obj.id === id) {
+        obj.isSaved = isSave;
+        obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
+      }
+    })
+    dispatch(
+      setMarketList(data)
+    );
+  }
   const renderCard = useCallback(
-    (item, index) => <NFTCard key={item.id} item={item} index={index} needAction clickDetail={() => {
+    (item, index) => <NFTCard key={item.id} item={item} index={index} needAction fromMarket={true} getMarketList={getMarketStarList} clickDetail={() => {
       clickDetail(item);
     }} />,
     [category, sortTag]
@@ -168,7 +180,7 @@ const Market = (props) => {
         dataLength={datas?.length}
         next={fetchData}
         pullDownToRefreshThreshold={50}
-        hasMore={pageAble}
+        hasMore={pageAble || pending}
         height={'100%'}
         loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
         endMessage={
