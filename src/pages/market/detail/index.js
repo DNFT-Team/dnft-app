@@ -11,7 +11,7 @@ import {
   Select, InputNumber, Dialog
 } from 'element-react';
 import {
-  Button
+  Button, Tooltip
 } from '@chakra-ui/react';
 import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
@@ -332,7 +332,7 @@ const MarketDetailScreen = (props) => {
       });
       return;
     }
-    history.push(`/profile/address/${datas?.address}`)
+    history.push(`/profile/address/${address}`)
   }
   const renderFormItem = (label, item) => (
     <div className={styles.styleFormItemContainer}>
@@ -426,14 +426,18 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
+                  <Tooltip label={`${datas?.createrAddress?.slice(0, 7)}...${datas?.createrAddress?.slice(-6)}`} hasArrow>
+                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
+                  </Tooltip>
                 </div>
               </div>
               <div className={styles.user} onClick={() => handleLinkProfile(datas?.address)}>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
-                  <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
+                  <Tooltip label={`${datas?.address?.slice(0, 7)}...${datas?.address?.slice(-6)}`} hasArrow>
+                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
+                  </Tooltip>
                 </div>
               </div>
             </div>
@@ -450,15 +454,15 @@ const MarketDetailScreen = (props) => {
               <p className={styles.descriptionTitle}>Contract Details</p>
               <div className={styles.contract_details}>
                 <div className={styles.contract_details_item}>
-                  <div>Blockchain:</div>
+                  <div>Blockchain</div>
                   <div>{datas?.chainType}</div>
                 </div>
                 <div className={styles.contract_details_item}>
-                  <div>Token Standard:</div>
+                  <div>Token Standard</div>
                   <div>ERC-{datas?.contractType}</div>
                 </div>
                 <div className={styles.contract_details_item}>
-                  <div>Contract Address:</div>
+                  <div>Contract Address</div>
                   <div>
                     <a
                       href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
@@ -471,7 +475,7 @@ const MarketDetailScreen = (props) => {
                   </div>
                 </div>
                 <div className={styles.contract_details_item}>
-                  <div>Token Id:</div>
+                  <div>Token Id</div>
                   <div>{datas?.tokenId}</div>
                 </div>
               </div>

@@ -507,13 +507,17 @@ const styleSelectContainer = css`
 
   }
   .el-select-dropdown__item {
-    color: #8F9BBA;
+    color: #888888;
     font-family: Archivo Black;
   }
+  
+  .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover, .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+    background: #DDDDDD;
+  }
   .el-select-dropdown__item.selected {
-    color: #23262F;
+    color: #FFFFFF; 
     font-family: Archivo Black;
-    background: #0057D9;
+    background: #417ED9;
   }
 `;
 const styleCreateNFT = css`

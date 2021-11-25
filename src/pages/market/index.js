@@ -69,10 +69,10 @@ const Market = (props) => {
 
   }
   useEffect(() => {
-    if (reachBottom <= window.innerHeight && pageAble && datas?.length > 0) {
+    if (domRef?.current?.getBoundingClientRect()?.bottom <= window.innerHeight && pageAble && datas?.length > 0) {
       fetchData()
     }
-  }, [reachBottom, window.innerHeight, pageAble, datas?.length, category, sortTag, address])
+  }, [domRef?.current?.getBoundingClientRect()?.bottom, window.innerHeight, pageAble, datas?.length, category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -280,13 +280,17 @@ const styleSelectContainer = css`
 
   }
   .el-select-dropdown__item {
-    color: #8F9BBA;
+    color: #888888;
     font-family: Archivo Black;
   }
+  
+  .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover, .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+    background: #DDDDDD;
+  }
   .el-select-dropdown__item.selected {
-    color: #23262F;
+    color: #FFFFFF; 
     font-family: Archivo Black;
-    background: #0057D9;
+    background: #417ED9;
   }
 `;
 const styleSwitchModal = css`
