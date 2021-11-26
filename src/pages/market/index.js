@@ -102,7 +102,7 @@ const Market = (props) => {
     (item, index) => <NFTCard key={item.id} item={item} index={index} needAction fromMarket={true} getMarketList={getMarketStarList} clickDetail={() => {
       clickDetail(item);
     }} />,
-    [category, sortTag]
+    [category, sortTag, datas]
   );
 
   const goToRightNetwork = useCallback(async (ethereum) => {
@@ -180,7 +180,7 @@ const Market = (props) => {
         dataLength={datas?.length}
         next={fetchData}
         pullDownToRefreshThreshold={50}
-        hasMore={pageAble || pending}
+        hasMore={pageAble}
         height={'100%'}
         loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
         endMessage={
