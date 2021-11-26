@@ -88,7 +88,8 @@ const TradeTable = (props) => {
               <td
                 key={`td_${ri}_${rci}`}
                 className={cx(rc.ellipsis && 'ellipsis', rc.isNum && 'numTd')}
-              >{rc.isLink ? <a href={`https://etherscan.io/tx/${r[rc.key]}`} target='_blank' rel="noopener noreferrer">{r[rc.key]}</a> : r[rc.key]}</td>
+              >{rc.cell ? rc.cell(r[rc.key]) : r[rc.key]}
+              </td>
             ))}
           </tr>
         ))}

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
  */
 import { css } from 'emotion';
 import axios from 'http/default'
+import { shortenString } from 'utils/tools';
 
 /**
  * Web3 Ref
@@ -77,11 +78,20 @@ const ChainNodes = {
  * Table cols
  */
 const TableCols = [
-  {title: 'TX HASH', key: 'tx_hash', ellipsis: true, isLink: true},
+  {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (val) => (
+    <a href={`https://etherscan.io/tx/${val}`}
+      target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(val)}</a>
+  )},
+  {title: 'FROM', key: 'upChain', cell: (val) => (
+    <img src={val === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+  )},
+  {title: 'TO', key: 'heterogeneousChain', cell: (val) => (
+    <img src={val === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+  )},
   {title: 'AMOUNT', key: 'amount', isNum: true},
-  {title: 'DYNAMIC INFO', key: 'dynamic_info'},
   {title: 'STATUS', key: 'status'},
-  {title: 'FAILED CODE', key: 'failed_code'},
+  {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+  // {title: 'FAILED CODE', key: 'failed_code'},
   {title: 'UPDATED AT', key: 'updated_at'},
 ]
 const getQueryString = (url, name) => {
@@ -109,6 +119,7 @@ const TransferView = (props) => {
   const frNet = ChainNodes[fr]
   const toNet = ChainNodes[to]
   //  global loading
+  const [tableLoad, setTableLoad] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isInjected, setIsInjected] = useState(false)
   const [transaction, setTransaction] = useState(null)
@@ -129,6 +140,7 @@ const TransferView = (props) => {
   }, [address, chainType]);
   const init = async () => {
     !isInjected && await injectWallet()
+    getHistory()
     return await checkSuit()
   }
   //  setUp wallet
@@ -251,7 +263,7 @@ const TransferView = (props) => {
               from: frNet.key, to: toNet.key
             })
             axios.post('/monitor', {
-              amount, // 提现数额
+              amount: Number(amount), // 提现数额
               to_address: address, // 提现地址
               tx_hash: hash, // 交易哈希
               chain_id: toNet.nerveChainId, // nerve桥链id[主网9，测试网5],表示跨链服务使用主网还是测试网
@@ -269,6 +281,8 @@ const TransferView = (props) => {
   }
   //  get history list
   const getHistory = () => {
+    if (tableLoad) {return}
+    setTableLoad(true)
     let list = []
     axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
       .then((res) => {list = res.data.data})
@@ -276,6 +290,10 @@ const TransferView = (props) => {
         setHistoryList(list)
         list.length <= 0 && toast('No record has been found yet')
       })
+      .catch(() => {
+        setHistoryList([])
+      })
+      .finally(() => {setTableLoad(false)})
   }
 
   /**
@@ -299,9 +317,9 @@ const TransferView = (props) => {
       return false
     }
   };
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
+  const renderShowSwitchModal = () =>
+    // console.log(isShowSwitchModal, 'isShowSwitchModal')
+    (
       <Dialog
         size="tiny"
         className={styleSwitchModal}
@@ -320,17 +338,17 @@ const TransferView = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  }
+
   //  render Dom
   return <div className={styleWrapper}>
     <div>
       <span className={styleTitleH3}>Transfer ${TargetToken} from {frNet.key} to {toNet.key}</span>
       <div className={styleLinks}>
-        <Link href={helper.bridge.youtube} isExternal color="#75819A"
+        <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block">
           <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.bridge.title}
         </Link>
-        <Link href={helper.bridge.book} isExternal color="#75819A"
+        <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block" ml="1rem">
           <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Cross
         </Link>
@@ -388,11 +406,15 @@ const TransferView = (props) => {
       </div>
       <div>
         <button className={styleBtn} onClick={submitCross}>Confirm</button>
-        <button className={styleBtn} onClick={getHistory}>History</button>
       </div>
     </div>
     <div>
-      <h4>Transaction History</h4>
+      <h4>
+        Transaction History
+        <button className={styleBtnIcon} onClick={getHistory}>
+          <Icon icon="zmdi:refresh" className={tableLoad && spinIcon}/>
+        </button>
+      </h4>
       <TradeTable cols={TableCols} data={historyList}/>
     </div>
     <AlertDialog
@@ -457,6 +479,36 @@ const styleWrapper = css`
     }
   }
 `
+const styleBtnIcon = css`
+  user-select: none;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
+  margin-left: 16px;
+
+  background: #0057D9;
+  border-radius: 10px;
+  text-align: center;
+  svg{
+    height: 24px;
+    width: 24px;
+    color: #FCFCFD;
+  }
+  @keyframes spin{
+    0%{
+      transform: rotate(0);
+    }
+    100%{
+      transform: rotate(180deg);
+    }
+  }
+`
+const spinIcon = css`
+  animation: spin infinite ease-in-out 1s;
+`
 const styleBtn = css`
   user-select: none;
   display: inline-flex;
@@ -479,9 +531,6 @@ const styleBtn = css`
   text-align: center;
 
   color: #FCFCFD;
-  &:first-child{
-    margin-right: 1rem;
-  }
 `
 const styleTransferBox = css`
   background: #FFFFFF;
@@ -619,4 +668,11 @@ const styleSwitchModal = css`
       padding: 18px 24px;
     }
   }
+`
+const tableLink = css`
+  color: #0057D9;
+  font-style: italic;
+`
+const tableIcon = css`
+  height: 40px;
 `
