@@ -54,17 +54,19 @@ module.exports = function (app) {
       },
     )
   );
-  app.use(
-    createProxyMiddleware(
-      '/bridgeApi',
-      {
-        target: 'http://92.205.29.78:8081/bridgeApi',
-        changeOrigin: true,
-        pathRewrite: {
-          '/bridgeApi': ''
-        },
-        secure: false
-      },
-    )
-  );
+  // app.use(
+  //   createProxyMiddleware(
+  //     '/bridgeApi',
+  //     {
+  //       // target: 'https://dev.dnft.world/bridgeApi',
+  //       // target: 'https://bkapi.dnft.world:8081/transaction',
+  //       target: 'https://mainnervetrx.dnft.world/transaction',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '/bridgeApi': ''
+  //       },
+  //       secure: false
+  //     },
+  //   )
+  // );
 };

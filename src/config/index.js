@@ -11,8 +11,8 @@ const net_env = process.env.REACT_APP_NET_ENV
 // const baseUrl = baseUrl_main
 
 export default {
-  net_name,
-  net_env,
+  net_name: "mainnet",
+  net_env: "mainnet",
   // baseUrl,
   // /*java-core-api*/
   // backendApi: baseUrl + `/api`,
@@ -33,7 +33,7 @@ export default {
   /*static-file-data  fixed in main*/
   staticApi: `/data/`,
   /*bridge-api  fixed in main*/
-  bridgeApi: `/bridgeApi`,
+  bridgeApi: `https://mainnervetrx.dnft.world/transaction`,
   /*faucet-api  fixed in test*/
   faucetApi: `/faucet`,
   /*ipfs-api  fixed in main*/

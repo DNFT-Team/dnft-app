@@ -88,7 +88,7 @@ const TradeTable = (props) => {
               <td
                 key={`td_${ri}_${rci}`}
                 className={cx(rc.ellipsis && 'ellipsis', rc.isNum && 'numTd')}
-              >{rc.cell ? rc.cell(r[rc.key]) : r[rc.key]}
+              >{rc.cell ? rc.cell(r) : r[rc.key]}
               </td>
             ))}
           </tr>

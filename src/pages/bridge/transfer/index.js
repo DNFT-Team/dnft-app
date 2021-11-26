@@ -53,12 +53,15 @@ import globalConf from 'config';
 const ChainNodes = {
   'eth': {
     key: 'ETH', protocol: 'ERC-20', icon: IconEth,
+    exploreURL: 'https://etherscan.io',
     chain: {chainId: '0x1'}, nerveChainId: '9',
     abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract,
     heterogeneousChain: 'eth',
+    nerveContract: '0x6758d4C4734Ac7811358395A8E0c3832BA6Ac624'
   },
   'bsc': {
     key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
+    exploreURL: 'https://bscscan.com',
     chain: {
       chainId: '0x38',
       chainName: 'Smart Chain',
@@ -71,29 +74,27 @@ const ChainNodes = {
     }, nerveChainId: '9',
     abi: tokenAbi, address: bscTestTokenContact.mainnet,
     heterogeneousChain: 'bnb',
+    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5'
+  },
+  'bnb': {
+    key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
+    exploreURL: 'https://bscscan.com',
+    chain: {
+      chainId: '0x38',
+      chainName: 'Smart Chain',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'bnb',
+        decimals: 18,
+      },
+      rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    }, nerveChainId: '9',
+    abi: tokenAbi, address: bscTestTokenContact.mainnet,
+    heterogeneousChain: 'bnb',
+    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5'
   }
 }
 
-/**
- * Table cols
- */
-const TableCols = [
-  {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (val) => (
-    <a href={`https://etherscan.io/tx/${val}`}
-      target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(val)}</a>
-  )},
-  {title: 'FROM', key: 'upChain', cell: (val) => (
-    <img src={val === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
-  )},
-  {title: 'TO', key: 'heterogeneousChain', cell: (val) => (
-    <img src={val === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
-  )},
-  {title: 'AMOUNT', key: 'amount', isNum: true},
-  {title: 'STATUS', key: 'status'},
-  {title: 'DYNAMIC INFO', key: 'dynamic_info'},
-  // {title: 'FAILED CODE', key: 'failed_code'},
-  {title: 'UPDATED AT', key: 'updated_at'},
-]
 const getQueryString = (url, name) => {
   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
   let r = url.substr(1).match(reg);
@@ -115,6 +116,28 @@ const TransferView = (props) => {
   if (!fr || !to || fr === to || !ChainNodes[fr] || !ChainNodes[to]) {
     useHistory().push('/bridge')
   }
+  const nerveContractAddress = ChainNodes[fr].nerveContract
+
+  /**
+   * Table cols
+   */
+  const TableCols = [
+    {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (row) => ChainNodes?.[row.upChain]?.exploreURL &&
+                <a href={`${ChainNodes[row.upChain].exploreURL}/tx/${row.tx_hash}`}
+                  target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.tx_hash)}</a>
+    },
+    {title: 'FROM', key: 'upChain', cell: (row) => (
+      <img src={row?.upChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+    )},
+    {title: 'TO', key: 'heterogeneousChain', cell: (row) => (
+      <img src={row?.heterogeneousChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+    )},
+    {title: 'AMOUNT', key: 'amount', isNum: true},
+    {title: 'STATUS', key: 'status'},
+    {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+    // {title: 'FAILED CODE', key: 'failed_code'},
+    {title: 'UPDATED AT', key: 'updated_at'},
+  ]
   //  networks
   const frNet = ChainNodes[fr]
   const toNet = ChainNodes[to]
@@ -193,7 +216,7 @@ const TransferView = (props) => {
     try {
       if (chainSuit.netOk && chainSuit.address) {
         const contract = new window.web3.eth.Contract(frNet.abi, frNet.address);
-        const dnfAuth = await contract.methods['allowance'](chainSuit.address, NERVE_BRIDGE.tokenContract).call();
+        const dnfAuth = await contract.methods['allowance'](chainSuit.address, nerveContractAddress).call();
         console.log('dnfAuth', dnfAuth);
         return Number(dnfAuth) > 0
       } else {
@@ -208,7 +231,7 @@ const TransferView = (props) => {
     onClose()
     try {
       const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
-      await dnfContract.methods['approve'](NERVE_BRIDGE.tokenContract, WEB3_MAX_NUM).send({ from: address });
+      await dnfContract.methods['approve'](nerveContractAddress, WEB3_MAX_NUM).send({ from: address });
     } catch (err) {
       console.error('approveDnfToNerve', err);
       err.code === 4001 && toast.error('You denied the approve');
@@ -219,10 +242,10 @@ const TransferView = (props) => {
       toast.warning('Please Input active number.');
       return
     }
-    if (amount < 5) {
-      toast.warning('Quantity is at least 5.');
-      return
-    }
+    // if (amount < 5) {
+    //   toast.warning('Quantity is at least 5.');
+    //   return
+    // }
 
     setLoading(true)
     setTransaction(null)
@@ -238,7 +261,7 @@ const TransferView = (props) => {
         setLoading(false)
         setIsOpen(true)
       } else {
-        const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, NERVE_BRIDGE.tokenContract)
+        const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, nerveContractAddress)
         const gasNum = 210000, gasPrice = '20000000000';
         // transfer DNF token
         nerveContract.methods['crossOut'](
@@ -272,6 +295,9 @@ const TransferView = (props) => {
             }, {baseURL: globalConf.bridgeApi}).then(() => {
               toast.success('Cross Service has got your withdraw!')
             })
+              .finally(() => {
+                getHistory()
+              })
           }
         })
       }
