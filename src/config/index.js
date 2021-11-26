@@ -11,8 +11,8 @@ const net_env = process.env.REACT_APP_NET_ENV
 // const baseUrl = baseUrl_main
 
 export default {
-  net_name: "mainnet",
-  net_env: "mainnet",
+  net_name,
+  net_env,
   // baseUrl,
   // /*java-core-api*/
   // backendApi: baseUrl + `/api`,
