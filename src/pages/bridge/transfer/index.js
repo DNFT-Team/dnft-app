@@ -122,10 +122,6 @@ const TransferView = (props) => {
    * Table cols
    */
   const TableCols = [
-    {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (row) => ChainNodes?.[row.upChain]?.exploreURL &&
-                <a href={`${ChainNodes[row.upChain].exploreURL}/tx/${row.tx_hash}`}
-                  target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.tx_hash)}</a>
-    },
     {title: 'FROM', key: 'upChain', cell: (row) => (
       <img src={row?.upChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
     )},
@@ -133,8 +129,24 @@ const TransferView = (props) => {
       <img src={row?.heterogeneousChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
     )},
     {title: 'AMOUNT', key: 'amount', isNum: true},
+    {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (row) => ChainNodes?.[row.upChain]?.exploreURL &&
+          <a href={`${ChainNodes[row.upChain].exploreURL}/tx/${row.tx_hash}`}
+            target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.tx_hash)}</a>
+    },
+    {title: 'FEE HASH', key: 'fee_hash', ellipsis: true, cell: (row) => {
+      const base = ChainNodes?.[row.upChain]?.exploreURL
+      if (!base) {return null}
+      if (!row.fee_hash) {
+        return row.status === 'failed'
+          ? null
+          : <button onClick={() => {sendWithdrawFee(row.tx_hash)}} className={styleBtnIcon}>Send Fee</button>
+      }
+      return <a href={`${base}/tx/${row.fee_hash}`}
+        target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.fee_hash)}</a>
+    }
+    },
     {title: 'STATUS', key: 'status'},
-    {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+    // {title: 'DYNAMIC INFO', key: 'dynamic_info'},
     // {title: 'FAILED CODE', key: 'failed_code'},
     {title: 'UPDATED AT', key: 'updated_at'},
   ]
@@ -145,7 +157,6 @@ const TransferView = (props) => {
   const [tableLoad, setTableLoad] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isInjected, setIsInjected] = useState(false)
-  const [transaction, setTransaction] = useState(null)
   //  form - input
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState(0)
@@ -248,7 +259,6 @@ const TransferView = (props) => {
     // }
 
     setLoading(true)
-    setTransaction(null)
     const chainSuit = await checkSuit(4)
     console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
@@ -263,6 +273,7 @@ const TransferView = (props) => {
       } else {
         const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, nerveContractAddress)
         const gasNum = 210000, gasPrice = '20000000000';
+        const isEth = to === 'eth';
         // transfer DNF token
         nerveContract.methods['crossOut'](
           NERVE_WALLET_ADDR,
@@ -278,26 +289,27 @@ const TransferView = (props) => {
           if (err) {
             toast.error(err.message)
           } else {
-            toast.success('Trade Packing Success')
-            setTransaction({
-              timestamp: Date.now(),
-              account: address,
-              amount, hash,
-              from: frNet.key, to: toNet.key
-            })
-            axios.post('/monitor', {
+            toast.success('Cross out success.')
+            const param = {
               amount: Number(amount), // 提现数额
               to_address: address, // 提现地址
               tx_hash: hash, // 交易哈希
+              fee_hash: isEth ? '' : hash, // 手续费哈希
               chain_id: toNet.nerveChainId, // nerve桥链id[主网9，测试网5],表示跨链服务使用主网还是测试网
               upChain: frNet.heterogeneousChain, // 跨链发起方链名称['eth','bnb','ht','okt']
               heterogeneousChain: toNet.heterogeneousChain  // 跨链接收方（DNF异构链）名称['eth','bnb','ht','okt']
-            }, {baseURL: globalConf.bridgeApi}).then(() => {
-              toast.success('Cross Service has got your withdraw!')
-            })
-              .finally(() => {
-                getHistory()
+            }
+            axios
+              .post('/monitor', param, {baseURL: globalConf.bridgeApi})
+              .then(() => {
+                if (isEth) {
+                  toast.success('Step2.Transfer withdraw fee.')
+                  sendWithdrawFee(hash)
+                } else {
+                  toast.success('Please wait for the withdraw.')
+                }
               })
+              .finally(getHistory)
           }
         })
       }
@@ -305,16 +317,42 @@ const TransferView = (props) => {
       setLoading(false)
     }
   }
+  const sendWithdrawFee = async (tx_hash) => {
+    if (!tx_hash) {return null}
+    try {
+      const BLACK_HOLE_ADDRESS = '0x67E0a20E82815DEae3e200d73de6883A6CBeeC78'
+      // const FEE_AMOUNT = toDecimal('1000', true, 'ether', true)
+      const FEE_AMOUNT = toDecimal('1', true, 'ether', true)
+      const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
+      dnfContract.methods['transfer'](BLACK_HOLE_ADDRESS, FEE_AMOUNT)
+        .send({ from: address }, (err, fee_hash) => {
+          if (err) {
+            toast.error(err.message)
+          } else {
+            axios.post('/monitor/update', {
+              tx_hash,
+              fee_hash, // 手续费哈希
+            }, {baseURL: globalConf.bridgeApi})
+              .then(() => {
+                toast.success('Withdraw fee sent.')
+              })
+              .finally(getHistory)
+          }
+        });
+    } catch (err) {
+      toast.error(err.message)
+    }
+  }
   //  get history list
   const getHistory = () => {
     if (tableLoad) {return}
     setTableLoad(true)
     let list = []
-    axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
+    axios.get(`/query?address=${address}&upChain=${fr === 'bsc' ? 'bnb' : 'eth'}`, {baseURL: globalConf.bridgeApi})
       .then((res) => {list = res.data.data})
       .finally(() => {
         setHistoryList(list)
-        list.length <= 0 && toast('No record has been found yet')
+        list.length <= 0 && toast('No record has been found yet!')
       })
       .catch(() => {
         setHistoryList([])
@@ -428,7 +466,11 @@ const TransferView = (props) => {
             <span> {toNet.protocol} ${TargetToken} </span>
           </InputRightAddon>
         </InputGroup>
-        <p>By now, You will received 100% {TargetToken}</p>
+        {
+          to === 'eth'
+            ? <p>Fees 1000 {TargetToken}</p>
+            : <p>By now, You will received 100% {TargetToken}</p>
+        }
       </div>
       <div>
         <button className={styleBtn} onClick={submitCross}>Confirm</button>
@@ -518,6 +560,13 @@ const styleBtnIcon = css`
   background: #0057D9;
   border-radius: 10px;
   text-align: center;
+  font-family: Archivo Black, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 16px;
+
+  color: #FCFCFD;
   svg{
     height: 24px;
     width: 24px;
@@ -701,4 +750,5 @@ const tableLink = css`
 `
 const tableIcon = css`
   height: 40px;
+  width: 40px;
 `
