@@ -134,7 +134,7 @@ const ProfileEditScreen = (props) => {
         customClass={styleModalContainer}
         onCancel={onClose}>
         <Dialog.Body style={{paddingBottom: 0}}>
-          <div className={styles.profile_phone}>*Profile Photo<span>Maximum 2MB</span></div>
+          <div className={styles.profile_phone}>Profile Photo<i>*</i><span>Maximum 2MB</span></div>
           <Upload
             className={styleUploadContainer1}
             multiple={false}
@@ -199,7 +199,9 @@ const ProfileEditScreen = (props) => {
             />
           )}
         </Dialog.Body>
-        <Dialog.Footer p="10px 32px" justifyContent="flex-start">
+        <Dialog.Footer style={{
+          textAlign: 'center'
+        }} p="10px 32px">
           <Button
             loading={loading}
             className={styleModalContainerBtn}
@@ -254,11 +256,12 @@ const styleModalContainer = css`
   // height: 80vh;
   overflow: auto;
   .el-dialog__title {
-    font-family: Poppins;
+    color: #11142D;
+    font-family: Archivo Black;
     font-style: normal;
-    font-weight: 500;
+    font-weight: normal;
     font-size: 24px;
-    line-height: 32px;
+    line-height: 24px;
   }
   .el-dialog__header {
     padding: 20px 32px 0px 32px;
@@ -268,7 +271,12 @@ const styleModalContainer = css`
   }
   .el-dialog__headerbtn .el-dialog__close {
     color: #1B1D21;
+    font-weight: bold;
     font-size: 16px;
+  }
+  .el-input__inner {
+    border: 2px solid #E1E6FF;
+    height: 40px;
   }
   .el-dialog__footer {
     padding: 0px 32px;
@@ -276,16 +284,17 @@ const styleModalContainer = css`
   }
 `
 const styleModalContainerBtn = css`
-  width: 100%;
+  width: 150px;
+  height: 40px;
+  margin: 0 auto;
   background: #0057D9;
+  border-radius: 5px;
   margin-bottom: 20px;
   font-size: 16px;
-  height: 48px;
-  font-family: DM Sans;
-  font-weight: bold;
+  font-family: Archivo Black;
   border-radius: 5px;
   outline: none;
-  color: #fff;
+  color: #FCFCFD;
   border: 0;
   &:hover {
     color: #fff;

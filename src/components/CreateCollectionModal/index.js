@@ -30,7 +30,7 @@ const CreateCollectionModal = (props) => {
 
   const renderFormItem = (label, item, isRequired) => (
     <div className={styleFormItemContainer}>
-      <div className='label'><span style={{color: '#FF2E2E'}}>{isRequired && '*'}</span>{label}</div>
+      <div className='label'><span style={{color: '#FF2E2E'}}></span>{label}{isRequired && <i>*</i>}</div>
       {item}
     </div>
   );
@@ -107,6 +107,9 @@ const CreateCollectionModal = (props) => {
             type='textarea'
             placeholder='Description (Maximum 500 char)'
             maxLength={500}
+            style={{
+              background: '#fff'
+            }}
             value={colData.description}
             autosize={{ minRows: 4, maxRows: 4 }}
             onChange={(value) => {
@@ -135,21 +138,28 @@ const styleCollectionModalContainer = css`
   border-radius: 10px;
   height: 80vh;
   overflow: auto;
+  .el-input__inner {
+    border: 2px solid #E1E6FF;
+    height: 40px;
+  }
   .el-textarea__inner {
+    border: 2px solid #E1E6FF;
     font-family: Arial;
-    background: #F4F5F6;
-    border: none;
   }
 
   .el-dialog__headerbtn .el-dialog__close {
-    color: #233a7d;
-    font-size: 12px;
+    color: #000000;
+    font-family: Archivo Black;
+
+    font-size: 14px;
   }
   .el-dialog__title {
-    color: #11142d;
-    font-size: 18px;
-    font-weight: 500;
-    font-family: Poppins;
+    font-family: Archivo Black;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 24px;
+    color: #000000;
   }
   .el-dialog__header {
     padding: 20px 32px 52px 32px;
@@ -178,6 +188,17 @@ const styleFormItemContainer = css`
   margin-bottom: 50px;
   .label {
     margin-bottom: 10px;
-    font-family: Inter;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 14px;
+    color: #000000;
+    i {
+      font-size: 18px;
+      padding-left: 4px;
+      font-style: normal;
+      color: #FF4242;
+    }
   }
 `;

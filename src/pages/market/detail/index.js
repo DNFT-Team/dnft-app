@@ -627,7 +627,7 @@ const MarketDetailScreen = (props) => {
           }}
         />
       )}
-      {renderShowSwitchModal()}
+      {/* {renderShowSwitchModal()} */}
     </div>
   )
 }
