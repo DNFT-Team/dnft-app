@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
  */
 import { css } from 'emotion';
 import axios from 'http/default'
+import { shortenString } from 'utils/tools';
 
 /**
  * Web3 Ref
@@ -52,12 +53,15 @@ import globalConf from 'config';
 const ChainNodes = {
   'eth': {
     key: 'ETH', protocol: 'ERC-20', icon: IconEth,
+    exploreURL: 'https://etherscan.io',
     chain: {chainId: '0x1'}, nerveChainId: '9',
     abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract,
     heterogeneousChain: 'eth',
+    nerveContract: '0x6758d4C4734Ac7811358395A8E0c3832BA6Ac624'
   },
   'bsc': {
     key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
+    exploreURL: 'https://bscscan.com',
     chain: {
       chainId: '0x38',
       chainName: 'Smart Chain',
@@ -70,20 +74,27 @@ const ChainNodes = {
     }, nerveChainId: '9',
     abi: tokenAbi, address: bscTestTokenContact.mainnet,
     heterogeneousChain: 'bnb',
+    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5'
+  },
+  'bnb': {
+    key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
+    exploreURL: 'https://bscscan.com',
+    chain: {
+      chainId: '0x38',
+      chainName: 'Smart Chain',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'bnb',
+        decimals: 18,
+      },
+      rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    }, nerveChainId: '9',
+    abi: tokenAbi, address: bscTestTokenContact.mainnet,
+    heterogeneousChain: 'bnb',
+    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5'
   }
 }
 
-/**
- * Table cols
- */
-const TableCols = [
-  {title: 'TX HASH', key: 'tx_hash', ellipsis: true, isLink: true},
-  {title: 'AMOUNT', key: 'amount', isNum: true},
-  {title: 'DYNAMIC INFO', key: 'dynamic_info'},
-  {title: 'STATUS', key: 'status'},
-  {title: 'FAILED CODE', key: 'failed_code'},
-  {title: 'UPDATED AT', key: 'updated_at'},
-]
 const getQueryString = (url, name) => {
   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
   let r = url.substr(1).match(reg);
@@ -105,13 +116,47 @@ const TransferView = (props) => {
   if (!fr || !to || fr === to || !ChainNodes[fr] || !ChainNodes[to]) {
     useHistory().push('/bridge')
   }
+  const nerveContractAddress = ChainNodes[fr].nerveContract
+
+  /**
+   * Table cols
+   */
+  const TableCols = [
+    {title: 'FROM', key: 'upChain', cell: (row) => (
+      <img src={row?.upChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+    )},
+    {title: 'TO', key: 'heterogeneousChain', cell: (row) => (
+      <img src={row?.heterogeneousChain === 'bnb' ? IconBsc : IconEth} alt='' className={tableIcon}/>
+    )},
+    {title: 'AMOUNT', key: 'amount', isNum: true},
+    {title: 'TX HASH', key: 'tx_hash', ellipsis: true, cell: (row) => ChainNodes?.[row.upChain]?.exploreURL &&
+          <a href={`${ChainNodes[row.upChain].exploreURL}/tx/${row.tx_hash}`}
+            target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.tx_hash)}</a>
+    },
+    {title: 'FEE HASH', key: 'fee_hash', ellipsis: true, cell: (row) => {
+      const base = ChainNodes?.[row.upChain]?.exploreURL
+      if (!base) {return null}
+      if (!row.fee_hash) {
+        return row.status === 'failed'
+          ? null
+          : <button onClick={() => {sendWithdrawFee(row.tx_hash)}} className={styleBtnIcon}>Send Fee</button>
+      }
+      return <a href={`${base}/tx/${row.fee_hash}`}
+        target='_blank' rel="noopener noreferrer" className={tableLink}>{shortenString(row.fee_hash)}</a>
+    }
+    },
+    {title: 'STATUS', key: 'status'},
+    // {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+    // {title: 'FAILED CODE', key: 'failed_code'},
+    {title: 'UPDATED AT', key: 'updated_at'},
+  ]
   //  networks
   const frNet = ChainNodes[fr]
   const toNet = ChainNodes[to]
   //  global loading
+  const [tableLoad, setTableLoad] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isInjected, setIsInjected] = useState(false)
-  const [transaction, setTransaction] = useState(null)
   //  form - input
   const [amount, setAmount] = useState('')
   const [balance, setBalance] = useState(0)
@@ -129,6 +174,7 @@ const TransferView = (props) => {
   }, [address, chainType]);
   const init = async () => {
     !isInjected && await injectWallet()
+    getHistory()
     return await checkSuit()
   }
   //  setUp wallet
@@ -181,7 +227,7 @@ const TransferView = (props) => {
     try {
       if (chainSuit.netOk && chainSuit.address) {
         const contract = new window.web3.eth.Contract(frNet.abi, frNet.address);
-        const dnfAuth = await contract.methods['allowance'](chainSuit.address, NERVE_BRIDGE.tokenContract).call();
+        const dnfAuth = await contract.methods['allowance'](chainSuit.address, nerveContractAddress).call();
         console.log('dnfAuth', dnfAuth);
         return Number(dnfAuth) > 0
       } else {
@@ -196,7 +242,7 @@ const TransferView = (props) => {
     onClose()
     try {
       const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
-      await dnfContract.methods['approve'](NERVE_BRIDGE.tokenContract, WEB3_MAX_NUM).send({ from: address });
+      await dnfContract.methods['approve'](nerveContractAddress, WEB3_MAX_NUM).send({ from: address });
     } catch (err) {
       console.error('approveDnfToNerve', err);
       err.code === 4001 && toast.error('You denied the approve');
@@ -207,13 +253,12 @@ const TransferView = (props) => {
       toast.warning('Please Input active number.');
       return
     }
-    if (amount < 5) {
-      toast.warning('Quantity is at least 5.');
-      return
-    }
+    // if (amount < 5) {
+    //   toast.warning('Quantity is at least 5.');
+    //   return
+    // }
 
     setLoading(true)
-    setTransaction(null)
     const chainSuit = await checkSuit(4)
     console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
@@ -226,8 +271,9 @@ const TransferView = (props) => {
         setLoading(false)
         setIsOpen(true)
       } else {
-        const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, NERVE_BRIDGE.tokenContract)
+        const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, nerveContractAddress)
         const gasNum = 210000, gasPrice = '20000000000';
+        const isEth = to === 'eth';
         // transfer DNF token
         nerveContract.methods['crossOut'](
           NERVE_WALLET_ADDR,
@@ -243,23 +289,27 @@ const TransferView = (props) => {
           if (err) {
             toast.error(err.message)
           } else {
-            toast.success('Trade Packing Success')
-            setTransaction({
-              timestamp: Date.now(),
-              account: address,
-              amount, hash,
-              from: frNet.key, to: toNet.key
-            })
-            axios.post('/monitor', {
-              amount, // 提现数额
+            toast.success('Cross out success.')
+            const param = {
+              amount: Number(amount), // 提现数额
               to_address: address, // 提现地址
               tx_hash: hash, // 交易哈希
+              fee_hash: isEth ? '' : hash, // 手续费哈希
               chain_id: toNet.nerveChainId, // nerve桥链id[主网9，测试网5],表示跨链服务使用主网还是测试网
               upChain: frNet.heterogeneousChain, // 跨链发起方链名称['eth','bnb','ht','okt']
               heterogeneousChain: toNet.heterogeneousChain  // 跨链接收方（DNF异构链）名称['eth','bnb','ht','okt']
-            }, {baseURL: globalConf.bridgeApi}).then(() => {
-              toast.success('Cross Service has got your withdraw!')
-            })
+            }
+            axios
+              .post('/monitor', param, {baseURL: globalConf.bridgeApi})
+              .then(() => {
+                if (isEth) {
+                  toast.success('Step2.Transfer withdraw fee.')
+                  sendWithdrawFee(hash)
+                } else {
+                  toast.success('Please wait for the withdraw.')
+                }
+              })
+              .finally(getHistory)
           }
         })
       }
@@ -267,15 +317,47 @@ const TransferView = (props) => {
       setLoading(false)
     }
   }
+  const sendWithdrawFee = async (tx_hash) => {
+    if (!tx_hash) {return null}
+    try {
+      const BLACK_HOLE_ADDRESS = '0x67E0a20E82815DEae3e200d73de6883A6CBeeC78'
+      // const FEE_AMOUNT = toDecimal('1000', true, 'ether', true)
+      const FEE_AMOUNT = toDecimal('1', true, 'ether', true)
+      const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
+      dnfContract.methods['transfer'](BLACK_HOLE_ADDRESS, FEE_AMOUNT)
+        .send({ from: address }, (err, fee_hash) => {
+          if (err) {
+            toast.error(err.message)
+          } else {
+            axios.post('/monitor/update', {
+              tx_hash,
+              fee_hash, // 手续费哈希
+            }, {baseURL: globalConf.bridgeApi})
+              .then(() => {
+                toast.success('Withdraw fee sent.')
+              })
+              .finally(getHistory)
+          }
+        });
+    } catch (err) {
+      toast.error(err.message)
+    }
+  }
   //  get history list
   const getHistory = () => {
+    if (tableLoad) {return}
+    setTableLoad(true)
     let list = []
-    axios.get(`/query?address=${address}`, {baseURL: globalConf.bridgeApi})
+    axios.get(`/query?address=${address}&upChain=${fr === 'bsc' ? 'bnb' : 'eth'}`, {baseURL: globalConf.bridgeApi})
       .then((res) => {list = res.data.data})
       .finally(() => {
         setHistoryList(list)
-        list.length <= 0 && toast('No record has been found yet')
+        list.length <= 0 && toast('No record has been found yet!')
       })
+      .catch(() => {
+        setHistoryList([])
+      })
+      .finally(() => {setTableLoad(false)})
   }
 
   /**
@@ -299,9 +381,9 @@ const TransferView = (props) => {
       return false
     }
   };
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
+  const renderShowSwitchModal = () =>
+    // console.log(isShowSwitchModal, 'isShowSwitchModal')
+    (
       <Dialog
         size="tiny"
         className={styleSwitchModal}
@@ -320,17 +402,17 @@ const TransferView = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  }
+
   //  render Dom
   return <div className={styleWrapper}>
     <div>
       <span className={styleTitleH3}>Transfer ${TargetToken} from {frNet.key} to {toNet.key}</span>
       <div className={styleLinks}>
-        <Link href={helper.bridge.youtube} isExternal color="#75819A"
+        <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block">
           <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.bridge.title}
         </Link>
-        <Link href={helper.bridge.book} isExternal color="#75819A"
+        <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block" ml="1rem">
           <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Cross
         </Link>
@@ -384,15 +466,23 @@ const TransferView = (props) => {
             <span> {toNet.protocol} ${TargetToken} </span>
           </InputRightAddon>
         </InputGroup>
-        <p>By now, You will received 100% {TargetToken}</p>
+        {
+          to === 'eth'
+            ? <p>Fees 1000 {TargetToken}</p>
+            : <p>By now, You will received 100% {TargetToken}</p>
+        }
       </div>
       <div>
         <button className={styleBtn} onClick={submitCross}>Confirm</button>
-        <button className={styleBtn} onClick={getHistory}>History</button>
       </div>
     </div>
     <div>
-      <h4>Transaction History</h4>
+      <h4>
+        Transaction History
+        <button className={styleBtnIcon} onClick={getHistory}>
+          <Icon icon="zmdi:refresh" className={tableLoad && spinIcon}/>
+        </button>
+      </h4>
       <TradeTable cols={TableCols} data={historyList}/>
     </div>
     <AlertDialog
@@ -457,6 +547,43 @@ const styleWrapper = css`
     }
   }
 `
+const styleBtnIcon = css`
+  user-select: none;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
+  margin-left: 16px;
+
+  background: #0057D9;
+  border-radius: 10px;
+  text-align: center;
+  font-family: Archivo Black, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 16px;
+
+  color: #FCFCFD;
+  svg{
+    height: 24px;
+    width: 24px;
+    color: #FCFCFD;
+  }
+  @keyframes spin{
+    0%{
+      transform: rotate(0);
+    }
+    100%{
+      transform: rotate(180deg);
+    }
+  }
+`
+const spinIcon = css`
+  animation: spin infinite ease-in-out 1s;
+`
 const styleBtn = css`
   user-select: none;
   display: inline-flex;
@@ -479,9 +606,6 @@ const styleBtn = css`
   text-align: center;
 
   color: #FCFCFD;
-  &:first-child{
-    margin-right: 1rem;
-  }
 `
 const styleTransferBox = css`
   background: #FFFFFF;
@@ -619,4 +743,12 @@ const styleSwitchModal = css`
       padding: 18px 24px;
     }
   }
+`
+const tableLink = css`
+  color: #0057D9;
+  font-style: italic;
+`
+const tableIcon = css`
+  height: 40px;
+  width: 40px;
 `

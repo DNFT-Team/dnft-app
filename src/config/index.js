@@ -33,7 +33,7 @@ export default {
   /*static-file-data  fixed in main*/
   staticApi: `/data/`,
   /*bridge-api  fixed in main*/
-  bridgeApi: `/bridgeApi`,
+  bridgeApi: `https://mainnervetrx.dnft.world/transaction`,
   /*faucet-api  fixed in test*/
   faucetApi: `/faucet`,
   /*ipfs-api  fixed in main*/
