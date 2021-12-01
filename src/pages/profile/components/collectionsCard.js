@@ -93,11 +93,11 @@ const styleCardContainer = css`
   flex: 1;
   min-width: 300px;
   padding: 6px;
-  &:hover {
-    background: white;
-    position: relative;
-    top: -10px;
-  }
+  // &:hover {
+  //   background: white;
+  //   position: relative;
+  //   top: -10px;
+  // }
 `;
 const styleInfoContainer = css`
   padding: 20px 0px 0 0px;

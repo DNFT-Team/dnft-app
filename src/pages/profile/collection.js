@@ -50,6 +50,7 @@ const CollectionScreen = (props) => {
       <NFTCard
         item={item}
         index={index}
+        fromCollection={true}
         currentStatus={''}
       />
     ),

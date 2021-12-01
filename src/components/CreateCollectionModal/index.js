@@ -124,7 +124,7 @@ const CreateCollectionModal = (props) => {
           className={styleCreateCollection}
           onClick={submitColl}
         >
-          Submit
+          Save
         </div>
       </Dialog.Body>
     </Dialog>
@@ -173,10 +173,16 @@ const styleCollectionModalContainer = css`
 `;
 
 const styleCreateCollection = css`
-   background-color: rgba(17, 45, 242, 1);
-   color: white;
-   padding: 12px;
+   background-color: #0057D9;
+   font-family: Archivo Black;
+   font-style: normal;
+   font-weight: normal;
    font-size: 16px;
+   line-height: 16px;
+   color: #FCFCFD;
+   line-height: 40px;
+   width: 150px;
+   margin: 0 auto;
    border-radius: 5px;
    cursor: pointer;
    text-align: center;

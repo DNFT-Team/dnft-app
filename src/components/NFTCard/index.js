@@ -28,7 +28,8 @@ const NFTCard = (props) => {
     onLike,
     onSave,
     onRefresh,
-    isProfile
+    isProfile,
+    fromCollection
   } = props;
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
@@ -363,7 +364,7 @@ const NFTCard = (props) => {
   console.log(item, 'item')
 
   return (
-    <div key={`title-${index}`} className={styleCardContainer}>
+    <div key={`title-${index}`} className={`${styleCardContainer} ${fromCollection && styleCardCollection}`}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
         style={{
@@ -548,7 +549,11 @@ const styleCardContainer = css`
     }
   }
 `;
-
+const styleCardCollection = css`
+  &:hover {
+    top: 0px;
+  }
+`
 const styleInfoContainer = css`
   padding: 18px 14px 0 14px;
   display: flex;
