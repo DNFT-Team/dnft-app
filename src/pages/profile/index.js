@@ -36,6 +36,7 @@ import u_twitter from 'images/profile/u_twitter.png';
 import u_youtube from 'images/profile/u_youtube.png';
 import u_ins from 'images/profile/u_ins.png';
 import CollectionAdd from './components/collectionAdd';
+import ChangeBg from './changeBg';
 import {
   TelegramShareButton,
   TwitterShareButton,
@@ -51,13 +52,13 @@ const ProfileScreen = (props) => {
   const tabArray = ['Collections', 'Owned', 'Created'];
   const [selectedTab, setSelectedTab] = useState('Collections');
   const [showEditScreen, setShowEditScreen] = useState(false);
+  const [showBgScreen, setShowBgScreen] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   let _newAddress = location?.pathname?.split('/') || [];
   _newAddress = _newAddress[_newAddress.length - 1]
   const [newAddress, setNewAddress] = useState(_newAddress);
   const [srcCropper, setSrcCropper] = useState('');
   const [visible, setVisible] = useState(false)
-
   let history = useHistory();
   useEffect(() => {
     if (address === newAddress || state) {
@@ -219,6 +220,7 @@ const ProfileScreen = (props) => {
         });
         dispatch(getMyProfileList({userId: newAddress}, token));
       }
+      setShowBgScreen(false)
     } catch (e) {
       console.log(e, 'e');
     }
@@ -250,7 +252,7 @@ const ProfileScreen = (props) => {
           {
             newAddress === address &&
             <React.Fragment>
-              <Upload
+              {/* <Upload
                 className="upload-demo"
                 multiple={false}
                 showFileList={false}
@@ -258,11 +260,11 @@ const ProfileScreen = (props) => {
                 action=""
                 beforeUpload={(file) => beforeAvatarUpload(file)}
                 listType="picture"
-              >
-                <Tooltip label="1800*300" hasArrow bg="red.600">
-                  <div className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
-                </Tooltip>
-              </Upload>
+              > */}
+              <Tooltip label="1800*300" hasArrow bg="red.600">
+                <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+              </Tooltip>
+              {/* </Upload> */}
               <Popover placement="bottom" width="280" trigger="hover" content={(
                 <div className={styles.shareBoxAll}>
                   <div className={styles.shareTitle}>Share your NFT</div>
@@ -349,13 +351,22 @@ const ProfileScreen = (props) => {
           }
         </div>
       </div>
+      <ChangeBg
+        visible={showBgScreen}
+        onSuccess={() => setShowBgScreen(false)}
+        newAddress={newAddress}
+        datas={datas}
+        onOpen={() => {
+          setShowBgScreen(true);
+        }}
+        onClose={() => {
+          setShowBgScreen(false);
+        }}
+      />
       <ProfileEditScreen
         datas={datas}
         visible={showEditScreen}
-        onSuccess={(res) => {
-          setShowEditScreen(false);
-          getProfileInfo();
-        }}
+        onSuccess={cropperBtn}
         onOpen={() => {
           setShowEditScreen(true);
         }}

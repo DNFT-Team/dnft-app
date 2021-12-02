@@ -11,7 +11,7 @@ import 'cropperjs/dist/cropper.css';
 const CropperBox = (props) => {
   const cropperRef = useRef(null);
 
-  const { title = 'Crop the picture', tip = 'avatar', visible, aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
+  const { title = 'Crop Image', tip = 'avatar', visible, aspectRatio = 1, srcCropper, onCloseModal, cropperBtn } = props;
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
     while(n--) {
@@ -53,7 +53,7 @@ const CropperBox = (props) => {
           src={srcCropper}
         />
       </Dialog.Body>
-      <Dialog.Footer p="10 32px" justifyContent="flex-start">
+      <Dialog.Footer style={{textAlign: 'center'}}>
         <Button className={styleModalContainerBtn} onClick={submitBtn}>Save</Button>
       </Dialog.Footer>
     </Dialog>
@@ -73,35 +73,41 @@ const styleModalContainer = css`
   // height: 80vh;
   overflow: auto;
   .el-dialog__title {
-    font-family: Poppins;
+    font-family: Archivo Black;
     font-style: normal;
-    font-weight: 500;
+    font-weight: normal;
     font-size: 24px;
-    line-height: 32px;
+    line-height: 24px;
+    color: #11142D;
   }
   .el-dialog__header {
-    padding: 20px 32px 0px 32px;
+    padding: 30px;
   }
   .el-dialog__body {
-    padding: 49px 32px 32px 32px;
+    padding: 0px 30px 30px 30px;
   }
   .el-dialog__headerbtn .el-dialog__close {
     color: #1B1D21;
+    font-family: Archivo Black;
+    font-weight: bold;
     font-size: 16px;
   }
   .el-dialog__footer {
-    padding: 0px 32px;
+    padding-bottom: 10px;
   }
 `
 const styleModalContainerBtn = css`
-  width: 100%;
+  width: 150px;
   background: #0057D9;
   margin-bottom: 20px;
   font-size: 16px;
-  height: 48px;
-  font-family: DM Sans;
-  font-weight: bold;
-  border-radius: 5px;
+  height: 40px;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  border-radius: 10px;
   outline: none;
   color: #fff;
   border: 0;

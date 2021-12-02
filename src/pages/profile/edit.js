@@ -28,9 +28,9 @@ const ProfileEditScreen = (props) => {
     setForm({
       avatorUrl: datas?.avatorUrl,
       nickName: datas?.nickName,
-      twitterAddress: datas?.twitterAddress,
-      facebookAddress: datas?.facebookAddress,
-      youtubeAddress: datas?.youtubeAddress,
+      twitterAddress: datas?.twitterAddress?.replace('https://twitter.com/','') ,
+      facebookAddress: datas?.facebookAddress?.replace('https://www.instagram.com/','') ,
+      youtubeAddress: datas?.youtubeAddress?.replace('https://youtube.com/','') ,
     })
   }, [datas])
   const renderFormItem = (label, item) => {
@@ -90,9 +90,9 @@ const ProfileEditScreen = (props) => {
       formData.append('address', datas?.address)
       formData.append('avatorUrl', avatorUrl);
       formData.append('nickName', form?.nickName);
-      formData.append('twitterAddress', form?.twitterAddress || '');
-      formData.append('facebookAddress', form?.facebookAddress || '');
-      formData.append('youtubeAddress', form?.youtubeAddress || '');
+      formData.append('twitterAddress', form?.twitterAddress ? 'https://twitter.com/' + form?.twitterAddress : '');
+      formData.append('facebookAddress', form?.facebookAddress ? 'https://www.instagram.com/' + form?.facebookAddress : '');
+      formData.append('youtubeAddress', form?.youtubeAddress ? 'https://www.youtube.com/' + form?.youtubeAddress : '');
 
       const { data }  = await post(
         '/api/v1/users/updateUser',
@@ -162,8 +162,9 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Twitter',
             <Input
+              prepend="https://twitter.com/"
               value={form?.twitterAddress}
-              placeholder='https://twitter.com/'
+              placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -175,8 +176,9 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Instagram',
             <Input
+              prepend="https://www.instagram.com/"
               value={form?.facebookAddress}
-              placeholder='https://www.instagram.com/'
+              placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -188,8 +190,9 @@ const ProfileEditScreen = (props) => {
           {renderFormItem(
             'Youtube',
             <Input
+              prepend="https://www.youtube.com/"
               value={form?.youtubeAddress}
-              placeholder='https://www.youtube.com/'
+              placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
