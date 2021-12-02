@@ -93,6 +93,7 @@ const styleModalContainer = css`
     font-size: 16px;
   }
   .el-dialog__footer {
+    padding: 0;
     padding-bottom: 10px;
   }
 `
