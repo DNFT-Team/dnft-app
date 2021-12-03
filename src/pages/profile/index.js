@@ -366,7 +366,10 @@ const ProfileScreen = (props) => {
       <ProfileEditScreen
         datas={datas}
         visible={showEditScreen}
-        onSuccess={cropperBtn}
+        onSuccess={() => {
+          setShowEditScreen(false);
+          getProfileInfo()
+        }}
         onOpen={() => {
           setShowEditScreen(true);
         }}
