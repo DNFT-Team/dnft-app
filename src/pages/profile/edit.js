@@ -151,6 +151,7 @@ const ProfileEditScreen = (props) => {
               maxLength={30}
               placeholder='Name'
               value={form?.nickName}
+              className={styleNickName}
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -164,7 +165,7 @@ const ProfileEditScreen = (props) => {
             <Input
               prepend="https://twitter.com/"
               value={form?.twitterAddress}
-              placeholder='please enter'
+              // placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -178,7 +179,7 @@ const ProfileEditScreen = (props) => {
             <Input
               prepend="https://www.instagram.com/"
               value={form?.facebookAddress}
-              placeholder='please enter'
+              // placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -192,7 +193,7 @@ const ProfileEditScreen = (props) => {
             <Input
               prepend="https://www.youtube.com/"
               value={form?.youtubeAddress}
-              placeholder='please enter'
+              // placeholder='please enter'
               onChange={(value) => {
                 setForm({
                   ...form,
@@ -233,7 +234,7 @@ export default withRouter(connect(mapStateToProps)(ProfileEditScreen));
 
 
 const styleUploadContainer1 = css`
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   .el-upload-dragger {
     display: flex;
     flex-direction: column;
@@ -253,7 +254,7 @@ const styleUploadContainer1 = css`
   }
 `;
 const styleModalContainer = css`
-  max-width: 564px;
+  max-width: 500px;
   width: calc(100% - 40px);
   border-radius: 10px;
   // height: 80vh;
@@ -267,25 +268,39 @@ const styleModalContainer = css`
     line-height: 24px;
   }
   .el-dialog__header {
-    padding: 20px 32px 0px 32px;
+    padding: 30px;
+    padding-bottom: 0px;
   }
   .el-dialog__body {
-    padding: 49px 32px 32px 32px;
+    padding: 30px;
   }
   .el-dialog__headerbtn .el-dialog__close {
     color: #1B1D21;
     font-weight: bold;
     font-size: 16px;
   }
+  .el-input-group__append, .el-input-group__prepend {
+    padding-right: 0;
+    color: #1f2d3d;
+  }
   .el-input__inner {
     border: 2px solid #E1E6FF;
     height: 40px;
+    padding-left: 0;
+    border-left: 0
   }
   .el-dialog__footer {
     padding: 0px 32px;
 
   }
 `
+const styleNickName = css`
+.el-input__inner {
+  border: 2px solid #E1E6FF;
+  height: 40px;
+  padding: 0 10px;
+}
+`;
 const styleModalContainerBtn = css`
   width: 150px;
   height: 40px;

@@ -261,9 +261,9 @@ const ProfileScreen = (props) => {
                 beforeUpload={(file) => beforeAvatarUpload(file)}
                 listType="picture"
               > */}
-              <Tooltip label="1800*300" hasArrow bg="red.600">
-                <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
-              </Tooltip>
+              {/* <Tooltip label="1800*300" hasArrow bg="red.600"> */}
+              <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+              {/* </Tooltip> */}
               {/* </Upload> */}
               <Popover placement="bottom" width="280" trigger="hover" content={(
                 <div className={styles.shareBoxAll}>
@@ -344,7 +344,7 @@ const ProfileScreen = (props) => {
             ? renderAction(selectedTab)?.map((item, index) => (
               renderCard(item, index)
             ))
-            : renderNoData}
+            : selectedTab !== 'Collections' && renderNoData}
           {
             selectedTab === 'Collections' && address === newAddress &&
             <CollectionAdd />

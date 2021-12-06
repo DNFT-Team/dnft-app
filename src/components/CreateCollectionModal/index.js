@@ -30,7 +30,7 @@ const CreateCollectionModal = (props) => {
 
   const renderFormItem = (label, item, isRequired) => (
     <div className={styleFormItemContainer}>
-      <div className='label'><span style={{color: '#FF2E2E'}}></span>{label}{isRequired && <i>*</i>}</div>
+      <div className='label'><span style={{color: '#FF2E2E'}}></span>{label}{<i>*</i>}</div>
       {item}
     </div>
   );
@@ -47,15 +47,20 @@ const CreateCollectionModal = (props) => {
         });
         return;
       }
-      colData.name = colData.name.trim();
-      if (!colData.name) {
-        toast.warning('Name is required', {
-          position: toast.POSITION.TOP_CENTER,
-        });
-        return;
-      }
     }
-
+    colData.name = colData.name.trim();
+    if (!colData.name) {
+      toast.warning('Name is required', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    if (!colData.description) {
+      toast.warning('Description is required', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
     try {
       const url = `/api/v1/${isNew ? 'collection/' : 'collection/update'}`;
       const { data } = await post(url, colData, token);
