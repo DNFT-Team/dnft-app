@@ -63,7 +63,7 @@ const NFTCard = (props) => {
       <div className={styles.styleInfoContainer}>
         <div className={styles.styleCardHeader}>
           <div className={styles.styleCardHeaderBox}>
-            <span className={styles.styleName} onClick={() => alert(1)}>{item.name || 'Unknown'}</span>
+            <span className={styles.styleName}>{item.name}</span>
             <div className={styles.starBox}>
               <Icon className={styles.star} onClick={(e) => {
                 e.stopPropagation()
@@ -75,10 +75,10 @@ const NFTCard = (props) => {
           <div className={styles.styleInfo}>
             <div className={styles.styleInfoProfile}>
               {/* <div className={styles.styleInfoProfileImg} /> */}
-              <span onClick={(e) => {
+              <a onClick={(e) => {
                 e.stopPropagation()
                 handleLinkProfile(item?.address)
-              }} className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}</span>
+              }} className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName  || 'Unknown'}</a>
             </div>
             <div className={styles.price_box}>
               {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
