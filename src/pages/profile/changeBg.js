@@ -7,7 +7,6 @@ import {
 } from 'element-react';
 import styles from './index.less';
 import { css } from 'emotion';
-import camera from 'images/profile/camera.png';
 import { toast } from 'react-toastify';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';

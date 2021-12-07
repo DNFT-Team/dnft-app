@@ -7,7 +7,7 @@ import {
 } from 'element-react';
 import styles from './index.less';
 import { css } from 'emotion';
-import camera from 'images/profile/camera.png';
+import upload_icon from 'images/profile/upload_icon.png'
 import { toast } from 'react-toastify';
 import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
@@ -143,7 +143,14 @@ const ProfileEditScreen = (props) => {
             action=""
             beforeUpload={(file) => beforeAvatarUpload(file)}
           >
-            {<img src={form?.avatorUrl || camera} className={styles.avatarImg} />}
+            {
+              form?.avatorUrl
+                ? <img src={form?.avatorUrl} className={'avatarImg'} />
+                : <div className='upload_icon'>
+                  <img src={upload_icon} />
+                  <span>PNG, JPG</span>
+                </div>
+            }
           </Upload>
           {renderFormItem(
             'Name',
@@ -251,6 +258,35 @@ const styleUploadContainer1 = css`
   };
   .avatar {
     background: #fbfdff
+  }
+  .avatarImg {
+    // background-color: #DDDDDD;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+  }
+  .upload_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: #DDDDDD;
+    img {
+      width: 14px;
+    }
+    span {
+      font-family: Helvetica;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 12px;
+      color: #888888;
+      margin-top: 5px;
+
+    }
   }
 `;
 const styleModalContainer = css`

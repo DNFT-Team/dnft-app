@@ -121,20 +121,25 @@ const styleInfo = css`
   .title {
     color: #000;
     display: block;
+    font-family: Archivo Black;
+    font-style: normal;
+    font-weight: normal;
     font-size: 14px;
-    font-weight: bold;
-    font-family: DM Sans;
-    margin-bottom: 19px;
+    line-height: 14px;
+    margin-bottom: 10px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .desc {
-    color: #23262F;
+    color: #000000;    
     font-family: DM Sans;
     height: 32px;
-    font-size: 12px;
-    line-height: 16px;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
