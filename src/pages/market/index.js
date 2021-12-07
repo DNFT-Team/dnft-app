@@ -69,10 +69,11 @@ const Market = (props) => {
 
   }
   useEffect(() => {
-    if (domRef?.current?.getBoundingClientRect()?.bottom <= window.innerHeight && pageAble && datas?.length > 0) {
+    // domRef?.current?.getBoundingClientRect()?.bottom <= window.innerHeight &&
+    if (pageAble && datas?.length > 0) {
       fetchData()
     }
-  }, [domRef?.current?.getBoundingClientRect()?.bottom, window.innerHeight, pageAble, datas?.length, category, sortTag, address])
+  }, [pageAble, datas?.length, category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -184,9 +185,9 @@ const Market = (props) => {
         height={'100%'}
         loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
         endMessage={
-          <p className={styles.noData} >
+          datas?.length && <p className={styles.noData} >
             <b>Yay! You have seen it all</b>
-          </p>
+          </p> || null
         }
       >
         <div className={styles.header}>
