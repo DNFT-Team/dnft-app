@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Dialog } from 'element-react';
+import { Input, Dialog, Button } from 'element-react';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
@@ -23,6 +23,8 @@ const CreateCollectionModal = (props) => {
     formDs = COLL_SCHEMA, //  form Data
     isProfile
   } = props;
+  const [loading, setLoading] = useState(false)
+
   const [colData, setColData] = useState({
     ...COLL_SCHEMA,
     ...formDs,
@@ -37,6 +39,7 @@ const CreateCollectionModal = (props) => {
 
   const submitColl = async () => {
     const { address, chainType } = colData;
+    setLoading(true)
     if(!isProfile) {
       if (!token || !address) {
         return;
@@ -48,17 +51,19 @@ const CreateCollectionModal = (props) => {
         return;
       }
     }
-    colData.name = colData.name.trim();
+    colData.name = colData.name?.trim();
     if (!colData.name) {
       toast.warning('Name is required', {
         position: toast.POSITION.TOP_CENTER,
       });
+      setLoading(false)
       return;
     }
     if (!colData.description) {
       toast.warning('Description is required', {
         position: toast.POSITION.TOP_CENTER,
       });
+      setLoading(false)
       return;
     }
     try {
@@ -74,8 +79,10 @@ const CreateCollectionModal = (props) => {
           position: toast.POSITION.TOP_CENTER,
         });
       }
+      setLoading(false)
     } catch (e) {
       console.log(e, 'e');
+      setLoading(false)
       toast.error(e, {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -125,12 +132,13 @@ const CreateCollectionModal = (props) => {
             }}
           />
         )}
-        <div
+        <Button
+          loading={loading}
           className={styleCreateCollection}
           onClick={submitColl}
         >
           Save
-        </div>
+        </Button>
       </Dialog.Body>
     </Dialog>
   );
@@ -167,10 +175,10 @@ const styleCollectionModalContainer = css`
     color: #000000;
   }
   .el-dialog__header {
-    padding: 20px 32px 52px 32px;
+    padding: 30px;
   }
   .el-dialog__body {
-    padding: 0 32px 32px 32px;
+    padding: 0 30px 30px 30px;
   }
   .el-input-number {
     width: 100%;
@@ -183,20 +191,26 @@ const styleCreateCollection = css`
    font-style: normal;
    font-weight: normal;
    font-size: 16px;
-   line-height: 16px;
    color: #FCFCFD;
-   line-height: 40px;
    width: 150px;
+   height: 40px;
    margin: 0 auto;
    border-radius: 5px;
    cursor: pointer;
    text-align: center;
+   display: flex;
+   justify-content: center;
+   outline: none;
+   &:hover {
+    color: #fff;
+    background: #0057D9;
+  }
 `
 
 const styleFormItemContainer = css`
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   .label {
     margin-bottom: 10px;
     font-family: Helvetica;

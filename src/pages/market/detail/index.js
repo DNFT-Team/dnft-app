@@ -55,7 +55,7 @@ const MarketDetailScreen = (props) => {
   const getMarketInfo = async () => {
     try {
       const { data } = await get(
-        `/api/v1/trans/market/${item?.orderId}`,
+        `/api/v1/trans/market/${item?.contractType}/${item?.orderId}`,
         '',
         token
       )

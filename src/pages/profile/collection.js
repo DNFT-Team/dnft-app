@@ -20,7 +20,7 @@ const CollectionScreen = (props) => {
     dispatch,
     token
   } = props;
-  const [list, setList] = useState([]);
+  const [list, setList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
 
@@ -36,7 +36,7 @@ const CollectionScreen = (props) => {
           '',
           token
         );
-        setList(data?.data?.content || [])
+        setList(data?.data)
         setIsLoading(false)
 
       } catch (e) {
@@ -70,8 +70,8 @@ const CollectionScreen = (props) => {
     <div className={styleCardContainer}>
       <header className={styleCardHeaderBox}>
         <div className={styleCardHeader}>
-          <h4>{list?.[0]?.collectionName}</h4>
-          <div>{list?.[0]?.collectionDesc}</div>
+          <h4>{list?.name}</h4>
+          <div>{list?.collectionDesc}</div>
         </div>
         {
           address === state?.newAddress &&
@@ -86,8 +86,8 @@ const CollectionScreen = (props) => {
         }
       </header>
       <div className={styleInfoContainer}>
-        {list?.length > 0
-          ? list.map((item, index) => renderCard(item, index))
+        {list?.content?.length > 0
+          ? list.content.map((item, index) => renderCard(item, index))
           : renderNoData}
       </div>
       {isLoading && <div className={styleLoadingIconContainer}>
@@ -95,7 +95,7 @@ const CollectionScreen = (props) => {
       </div>}
       {showCreateCollection && (
         <CreateCollectionModal
-          formDs={{ name: list?.[0]?.collectionName, description: list?.[0]?.collectionDesc, id: state?.item.id, chainType: state?.item.chainType }}
+          formDs={{ name: list?.name, description: list?.collectionDesc, id: state?.item.id, chainType: state?.item.chainType }}
           token={token}
           isNew={false}
           isProfile
