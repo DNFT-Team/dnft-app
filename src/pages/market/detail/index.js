@@ -42,7 +42,7 @@ const MarketDetailScreen = (props) => {
   const [lineFlag, setLineFlag] = useState(false);
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
-  const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
   const currentWindowWidth = useMemo(() => window.innerWidth, []);
   useEffect(() => {
     if (item) {
@@ -152,7 +152,7 @@ const MarketDetailScreen = (props) => {
   const getMarketList = (id, isSave) => {
     let data = list.slice();
     data.map((obj) => {
-      if(obj.id === id) {
+      if (obj.id === id) {
         obj.isSaved = isSave;
         obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
       }
@@ -403,7 +403,7 @@ const MarketDetailScreen = (props) => {
       </Dialog>
     )
   }
-  console.log(lineFlag,'lineFlag')
+  console.log(lineFlag, 'lineFlag')
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
@@ -455,7 +455,7 @@ const MarketDetailScreen = (props) => {
               {/* <p className={`${lineFlag ? styles.description_text : styles.slider}`}>{datas?.description}</p> */}
               <div className={styles.warpperDesc}>
                 <input id="exp1" className={styles.exp} type="checkbox" />
-                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label for={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
+                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label htmlFor={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
                   setLineFlag((lineFlag) => !lineFlag)
                 }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
               </div>

@@ -88,7 +88,7 @@ const Mining = (props) => {
 
   const [stateData, setStateData] = useState(initState);
   const currentNetEnv = globalConfig.net_env;
-  const rightChainId =  currentNetEnv === 'testnet' ? 4 : 56;
+  const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
 
   const getBalance = async () => {
     try {
@@ -937,7 +937,8 @@ const Mining = (props) => {
             <Link href={helper.mining.youtube} isExternal color="#0057D9" fontStyle='italic' display="inline-block" >
               <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.mining.title}
             </Link>
-            <Link href={helper.mining.book} isExternal color="#0057D9" fontStyle='italic' display="inline-block" ml="1rem">
+            <Link href={helper.mining.book} isExternal color="#0057D9" fontStyle='italic' display="inline-block"
+              ml="1rem">
               <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Stake
             </Link>
           </div>
