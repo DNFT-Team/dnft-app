@@ -404,7 +404,6 @@ const TransferView = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  console.log(frNet.key,'frNet.key')
   //  render Dom
   return <div className={styleWrapper}>
     <div>

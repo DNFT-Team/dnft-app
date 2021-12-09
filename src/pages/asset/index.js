@@ -282,6 +282,9 @@ const AssetScreen = (props) => {
         currentStatus={selectedTab}
         onLike={getNFTList}
         onSave={getNFTList}
+        handleDetail={() => {
+          history.push('/asset/detail', {item})
+        }}
         onRefresh={(currentAddress, currentToken) =>
           getNFTList(currentAddress, currentToken)
         }

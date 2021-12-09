@@ -29,7 +29,8 @@ const NFTCard = (props) => {
     onSave,
     onRefresh,
     isProfile,
-    fromCollection
+    fromCollection,
+    handleDetail
   } = props;
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
@@ -367,6 +368,7 @@ const NFTCard = (props) => {
     <div key={`title-${index}`} className={`${styleCardContainer} ${fromCollection && styleCardCollection}`}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
+        onClick={(e) => {handleDetail && handleDetail()}}
         style={{
           backgroundImage: `url(${viewUrl})`,
         }}
@@ -419,7 +421,8 @@ const NFTCard = (props) => {
                 opacity: isEmpty ? 0.5 : 1,
                 cursor: isEmpty ? 'not-allowed' : 'pointer',
               }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 onShowOffShelfModal();
               }}
             >

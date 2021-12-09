@@ -18,6 +18,8 @@ import ProfileEditScreen from 'pages/profile/edit';
 import CreateNFT from 'pages/asset/create';
 import GalleryScreen from 'pages/gallery';
 import UnityScreen from 'pages/gallery/unitys';
+import AssetDetailScreen from 'pages/asset/detail';
+
 //  Menu - Icon
 import homeIcon from '../images/nav/home_selected.svg';
 import miningIcon from '../images/nav/mining_selected.svg';
@@ -49,6 +51,7 @@ const ROUTER_MAP = [
   ...MENU_MAP,
   { path: '/market/detail', exact: true, Component: MarketDetailScreen, navName: 'market' },
   { path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
+  { path: '/asset/detail', exact: true, Component: AssetDetailScreen, navName: 'asset' },
   { path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
   { path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
   { path: '/profile/collection', exact: true, Component: collectionScreen, navName: 'profile' },
