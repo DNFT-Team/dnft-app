@@ -368,7 +368,7 @@ const NFTCard = (props) => {
     <div key={`title-${index}`} className={`${styleCardContainer} ${fromCollection && styleCardCollection}`}>
       {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
       <div
-        onClick={(e) => {handleDetail && handleDetail()}}
+        onClick={(e) => {handleDetail && item?.status === 'ONSALE' &&  handleDetail()}}
         style={{
           backgroundImage: `url(${viewUrl})`,
         }}
