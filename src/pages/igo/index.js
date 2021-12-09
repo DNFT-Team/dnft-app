@@ -144,6 +144,9 @@ const styleIgo = css`
   padding: 30px 50px;
   position: relative;
   z-index: 0;
+  @media (max-width: 900px) {
+    padding: 15px;
+  }
   h3 {
     font-family: Archivo Black, sans-serif;
     font-style: normal;

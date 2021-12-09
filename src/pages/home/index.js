@@ -205,6 +205,9 @@ const styleBanner = css`
 `
 const styleContainer = css`
   margin: 50px 50px;
+  @media (max-width: 900px) {
+    margin: 10px;
+  }
   .el-carousel {
     border-radius: 10px;
     background: transparent;

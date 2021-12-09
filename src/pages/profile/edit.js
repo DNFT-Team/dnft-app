@@ -78,6 +78,7 @@ const ProfileEditScreen = (props) => {
         fileData.append('file', profileFile)
         const ipfsData = await ipfs_post('/v0/add', fileData);
         ipfsHash = ipfsData?.data?.['Hash']
+        console.log('Hash,HashHash',ipfsData,ipfsData?.data,ipfsHash)
         if (!ipfsHash) {
           toast.error('IPFS upload failed!');
           setLoading(false)

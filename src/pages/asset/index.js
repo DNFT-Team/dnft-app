@@ -456,6 +456,9 @@ const styleContainer = css`
   background: #f5f7fa;
   padding: 0 50px 30px 50px;
   box-sizing: border-box;
+  @media (max-width: 900px) {
+    padding: 0 15px 15px 15px;
+  }
   & > div {
     &:first-child {
       border-radius: 10px;

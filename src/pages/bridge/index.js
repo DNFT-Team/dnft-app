@@ -99,6 +99,9 @@ const styleCard = css`
   box-sizing: border-box;
   padding: 30px 50px;
   border-radius: 20px;
+  @media (max-width: 900px) {
+    padding: 15px;
+  }
   img{
     border-radius: 20px 20px 0 0;
     width: 100%;
