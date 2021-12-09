@@ -3,7 +3,7 @@ export const URL_CLOUD = globalConf.ipfsUp;
 
 let BASE_URL = URL_CLOUD;
 
-const FETCH_TIMEOUT = 15 * 1000
+const FETCH_TIMEOUT = 60 * 1000
 let _token = ''
 
 export function setTokenForReq (token) {
