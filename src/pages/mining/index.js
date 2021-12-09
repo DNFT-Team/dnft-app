@@ -943,7 +943,7 @@ const Mining = (props) => {
             </Link>
           </div>
         </div>
-        <p>Choose <strong>“Single”</strong> if you want your collectible to be one of a kind or <strong>“Multiple”</strong> if you want to sell one collectible multiple times</p>
+        <p>Stake your asset to earn more. High-yield staking is ongoing.</p>
       </header>
       {renderAssetHeader}
       <div className={styleBody}>

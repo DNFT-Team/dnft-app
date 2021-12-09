@@ -67,6 +67,7 @@ const ProfileByScreen = (props) => {
         ipfsHash = globalConf.ipfsDown +  data?.data?.['Hash']
         if (!ipfsHash) {
           toast.error('IPFS upload failed!');
+          setLoading(false)
           return
         }
         if (ipfsHash) {

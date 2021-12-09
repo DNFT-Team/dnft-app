@@ -54,6 +54,7 @@ const ProfileEditScreen = (props) => {
     return false;
   }
   const editProfile = async () => {
+    setLoading(true)
     if (!form?.nickName) {
       toast.warn('nickName cannot be empty', {
         position: toast.POSITION.TOP_CENTER,
@@ -65,9 +66,9 @@ const ProfileEditScreen = (props) => {
       toast.dark('please upload Profile Photo', {
         position: toast.POSITION.TOP_CENTER,
       });
+      setLoading(false)
       return;
     }
-    setLoading(true)
 
 
     try {
@@ -79,6 +80,7 @@ const ProfileEditScreen = (props) => {
         ipfsHash = ipfsData?.data?.['Hash']
         if (!ipfsHash) {
           toast.error('IPFS upload failed!');
+          setLoading(false)
           return
         }
         toast.success('IPFS upload success!');

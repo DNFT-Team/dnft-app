@@ -57,7 +57,8 @@ const ChainNodes = {
     chain: {chainId: '0x1'}, nerveChainId: '9',
     abi: TOKEN_DNF.abi, address: TOKEN_DNF.tokenContract,
     heterogeneousChain: 'eth',
-    nerveContract: '0x6758d4C4734Ac7811358395A8E0c3832BA6Ac624'
+    nerveContract: '0x6758d4C4734Ac7811358395A8E0c3832BA6Ac624',
+    title: 'Ethereum network'
   },
   'bsc': {
     key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
@@ -74,7 +75,8 @@ const ChainNodes = {
     }, nerveChainId: '9',
     abi: tokenAbi, address: bscTestTokenContact.mainnet,
     heterogeneousChain: 'bnb',
-    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5'
+    nerveContract: '0x3758AA66caD9F2606F1F501c9CB31b94b713A6d5',
+    title: 'Binance Smart Chain'
   },
   'bnb': {
     key: 'BSC', protocol: 'BEP-20', icon: IconBsc,
@@ -402,7 +404,7 @@ const TransferView = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-
+  console.log(frNet.key,'frNet.key')
   //  render Dom
   return <div className={styleWrapper}>
     <div>
@@ -419,11 +421,8 @@ const TransferView = (props) => {
       </div>
     </div>
     <h5>
-      Choose
-      <strong>“Single”</strong>
-      if you want your collectible to be one of a kind or
-      <strong>“Multiple”</strong>
-      if you want to sell one collectible multiple times</h5>
+      Bridge your $DNF from {ChainNodes[fr]?.title} to {ChainNodes[to]?.title}
+    </h5>
     <div className={styleTransferBox}>
       <div className={styleFormItem}>
         <label>Send</label>

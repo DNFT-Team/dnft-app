@@ -30,11 +30,7 @@ const BridgeScreen = (props) => {
   return <div className={styleBridge}>
     <h3>Bridge</h3>
     <h5>
-      Choose
-      <strong>“Single”</strong>
-      if you want your collectible to be one of a kind or
-      <strong>“Multiple”</strong>
-      if you want to sell one collectible multiple times</h5>
+    $DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. </h5>
     <div className={styleRow}>
       {
         cardData.map((item, i) => (
