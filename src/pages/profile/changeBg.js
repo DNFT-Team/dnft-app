@@ -41,6 +41,11 @@ const ProfileByScreen = (props) => {
 
   const beforeAvatarUpload = (file) => {
     const reader = new FileReader();
+    const isLt15M = file.size / 1024 / 1024 < 15;
+    if (!isLt15M) {
+      toast.warn('Upload image size cannot exceed 15MB!');
+      return
+    }
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       setSrcCropper(e.target.result);
