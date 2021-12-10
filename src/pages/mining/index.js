@@ -42,6 +42,9 @@ export const stakingJson = [{
   'description': 'There are no strange lands. It is the traveler who is the only stranger.',
   'image': 'https://www.dnft.world/staking/pool3.png',
 }]
+
+const gasNum = 210000, gasPrice = '20000000000', gasLimit = 300000;
+
 const Mining = (props) => {
   let history = useHistory();
   const { token, address } = props;
@@ -550,7 +553,7 @@ const Mining = (props) => {
                       .stake(Web3.utils.toWei(String(stakeValue), 'ether'))
                       .send({
                         amount: Web3.utils.toWei(String(stakeValue), 'ether'),
-                        from: stakeInfo.account,
+                        from: stakeInfo.account, gas: gasNum, gasPrice, gasLimit
                       });
                     toast.info('Operation succeeded！', {
                       position: toast.POSITION.TOP_CENTER,
@@ -584,7 +587,7 @@ const Mining = (props) => {
                           )
                         )
                         .send({
-                          from: stakeInfo.account,
+                          from: stakeInfo.account, gas: gasNum, gasPrice, gasLimit
                         });
                     }
                   } finally {
@@ -694,7 +697,7 @@ const Mining = (props) => {
 
                         await stakeContract.methods.withdraw(index).send({
                           from: stakeInfo.account,
-                          idx: index,
+                          idx: index, gas: gasNum, gasPrice, gasLimit
                         });
                         toast.info('Operation succeeded！', {
                           position: toast.POSITION.TOP_CENTER,
@@ -824,7 +827,7 @@ const Mining = (props) => {
                   );
 
                   let result =  await stakeContract.methods.claimNft().send({
-                    from: stakeInfo.account,
+                    from: stakeInfo.account, gas: gasNum, gasPrice, gasLimit
                   });
 
                   toast.info('Operation succeeded！', {

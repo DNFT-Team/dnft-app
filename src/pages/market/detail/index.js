@@ -220,7 +220,7 @@ const MarketDetailScreen = (props) => {
           tradableNFTAbiType,
           tradableNFTAddress
         );
-        const gasNum = 210000, gasPrice = '20000000000';
+        const gasNum = 210000, gasPrice = '20000000000', gasLimit = 300000;
         let format = datas?.contractType == 1155 ? [datas?.orderId, form.quantity] : [datas?.orderId]
         if (datas?.contractType == 721) {
           await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
@@ -228,6 +228,7 @@ const MarketDetailScreen = (props) => {
           )
             .send({
               from: address,
+              gasLimit,
               gas: gasNum,
               gasPrice: gasPrice,
             }, function (error, transactionHash) {
@@ -253,11 +254,9 @@ const MarketDetailScreen = (props) => {
                 },
                 token
               );
-              toast[data?.success ? 'success' : 'error']('Buy success', {
-                position: toast.POSITION.TOP_CENTER,
-              });
-              historyBack();
+              toast[data?.success ? 'success' : 'error']('Buy success');
               console.log('交易状态：', receipt.status)
+              historyBack();
             });
         } else {
           await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
@@ -265,6 +264,7 @@ const MarketDetailScreen = (props) => {
           )
             .send({
               from: address,
+              gasLimit,
               gas: gasNum,
               gasPrice: gasPrice,
             }, function (error, transactionHash) {
@@ -293,8 +293,8 @@ const MarketDetailScreen = (props) => {
               toast[data?.success ? 'success' : 'error'](data?.success ? 'Buy success' : 'Buy failed', {
                 position: toast.POSITION.TOP_CENTER,
               });
-              historyBack();
               console.log('交易状态：', receipt.status)
+              historyBack();
             });
         }
       }

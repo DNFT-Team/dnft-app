@@ -106,6 +106,8 @@ const getQueryString = (url, name) => {
   return null;
 }
 
+const gasNum = 210000, gasPrice = '20000000000', gasLimit = 300000;
+
 /**
  * The View of Bridge Transfer
  * @description BSC, ETH......
@@ -244,7 +246,7 @@ const TransferView = (props) => {
     onClose()
     try {
       const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
-      await dnfContract.methods['approve'](nerveContractAddress, WEB3_MAX_NUM).send({ from: address });
+      await dnfContract.methods['approve'](nerveContractAddress, WEB3_MAX_NUM).send({ from: address, gas: gasNum, gasPrice, gasLimit });
     } catch (err) {
       console.error('approveDnfToNerve', err);
       err.code === 4001 && toast.error('You denied the approve');
@@ -274,7 +276,6 @@ const TransferView = (props) => {
         setIsOpen(true)
       } else {
         const nerveContract = new window.web3.eth.Contract(NERVE_BRIDGE.abi, nerveContractAddress)
-        const gasNum = 210000, gasPrice = '20000000000';
         const isEth = to === 'eth';
         // transfer DNF token
         nerveContract.methods['crossOut'](
@@ -284,7 +285,8 @@ const TransferView = (props) => {
         ).send({
           from: chainSuit.address,
           gas: gasNum,
-          gasPrice: gasPrice
+          gasPrice,
+          gasLimit
         }, (err, hash) => {
           console.log('#nerveContract', err, hash);
           setLoading(false)
