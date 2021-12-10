@@ -22,7 +22,7 @@ const Market = (props) => {
   const [sortTag, setSortTag] = useState(sortTagBack || 'like_count');
   const [sortOrder, setSortOrder] = useState('ASC');
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(20);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   const domRef = useRef(null);
