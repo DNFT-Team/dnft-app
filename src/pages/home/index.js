@@ -13,12 +13,13 @@ import globalConf from 'config/index'
  */
 
 // import banner1 from 'images/home/banner/marketplace.png'
-import banner1 from 'images/home/banner/marketplace2.jpg'
+import banner1 from 'images/home/banner/marketplace2.png'
 // import banner2 from 'images/home/banner/mintNft.png'
-import banner2 from 'images/home/banner/mintNft2.jpg'
+import banner2 from 'images/home/banner/mintNft2.png'
 // import banner3 from 'images/home/banner/mining.png'
-import banner3 from 'images/home/banner/mining2.jpg'
+import banner3 from 'images/home/banner/mining2.png'
 // import banner4 from 'images/home/banner/gamefi.png'
+import banner4 from 'images/home/banner/festival.png'
 
 
 const HomeScreen = (props) => {
@@ -39,6 +40,11 @@ const HomeScreen = (props) => {
       src: banner1,
       title: 'NFT MARKET',
       route: '/market'
+    },
+    {
+      src: banner4,
+      title: 'NFT Mint',
+      route: '/asset'
     },
     {
       src: banner2,
