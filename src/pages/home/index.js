@@ -48,7 +48,6 @@ const HomeScreen = (props) => {
     {
       src: banner3,
       title: 'DNFT MINING',
-      position: 'right',
       route: '/mining',
       isHide: globalConf.net_env !== 'mainnet'
     },
