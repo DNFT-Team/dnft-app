@@ -68,12 +68,11 @@ const Market = (props) => {
     setPage(tag ? 1 : page + 1);
 
   }
-  useEffect(() => {
-    // domRef?.current?.getBoundingClientRect()?.bottom <= window.innerHeight &&
-    if (pageAble && datas?.length > 0) {
-      fetchData()
-    }
-  }, [pageAble, datas?.length, category, sortTag, address])
+  // useEffect(() => {
+  //   if (pageAble && datas?.length > 0) {
+  //     fetchData()
+  //   }
+  // }, [pageAble, datas?.length, category, sortTag, address])
 
   const renderNoData = useMemo(
     () => (
@@ -105,7 +104,9 @@ const Market = (props) => {
     }} />,
     [category, sortTag, datas]
   );
-
+  const handleMore = () => {
+    fetchData()
+  }
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
       if (history.location.pathname !== '/market') {
@@ -183,7 +184,7 @@ const Market = (props) => {
         pullDownToRefreshThreshold={50}
         hasMore={pageAble}
         height={'100%'}
-        loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
+        // loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
         endMessage={
           datas?.length && <p className={styles.noData} >
             <b>Yay! You have seen it all</b>
@@ -244,6 +245,11 @@ const Market = (props) => {
               : renderNoData}
           </div>
         </div>
+        {
+          pageAble && <div className={stylesNextPage} >
+            <Button onClick={handleMore} loading={pending}>{pending ? 'Loading' : 'Next page'}</Button>
+          </div>
+        }
       </InfiniteScroll>
       {renderShowSwitchModal()}
     </div>
@@ -342,5 +348,23 @@ const styleSwitchModal = css`
       font-family: Archivo Black;
       padding: 18px 24px;
     }
+  }
+`
+const stylesNextPage = css`
+  display: flex;
+  justify-content: center;
+  .el-button {
+    border: 0;
+    background: transparent;
+    font-family: Helvetica;
+    //font-style: italic;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: #0057D9;
+  }
+  .el-button.is-loading:before {
+    background: transparent;
+
   }
 `
