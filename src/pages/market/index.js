@@ -19,17 +19,17 @@ const Market = (props) => {
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
   const [category, setCategory] = useState(categoryBack || 'All');
-  const [sortTag, setSortTag] = useState(sortTagBack || 'like_count');
-  const [sortOrder, setSortOrder] = useState('ASC');
+  const [sortTag, setSortTag] = useState(sortTagBack || 'save_count');
+  const [sortOrder, setSortOrder] = useState('DESC');
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   const domRef = useRef(null);
   const sortTagType = [
-    { label: 'Most popular', value: 'like_count' },
-    { label: 'Price:high to low', value: 'ASC-price' },
-    { label: 'Price:low to high', value: 'DESC-price' },
+    { label: 'Most popular', value: 'save_count' },
+    { label: 'Price:high to low', value: 'DESC-price' },
+    { label: 'Price:low to high', value: 'ASC-price' },
   ];
 
   const currentNetEnv = globalConfig.net_env;
@@ -41,7 +41,7 @@ const Market = (props) => {
     if (token) {
       let _sortTag = sortTag
       if (sortTag?.includes('price')) {
-        _sortTag = 'totalPrice'
+        _sortTag = 'total_price'
       }
       fetchData(true);
     }
@@ -51,7 +51,7 @@ const Market = (props) => {
   const fetchData =  (tag) => {
     let _sortTag = sortTag
     if (sortTag?.includes('price')) {
-      _sortTag = 'totalPrice'
+      _sortTag = 'total_price'
     }
     dispatch(
       getMarketList(

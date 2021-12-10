@@ -231,11 +231,11 @@ const NFTCard = (props) => {
                         setShowSellModal(false);
                         setIsAprroveLoading(false);
                         setIsOnLoading(false);
-                        onRefresh(address, token);
+                        onRefresh(address, token, true);
                         setIsApproved(false);
-                        toast.info('Operation succeeded！', {
-                          position: toast.POSITION.TOP_CENTER,
-                        });
+                        // toast.info('Operation succeeded！', {
+                        //   position: toast.POSITION.TOP_CENTER,
+                        // });
                       }
                     } finally {
                       setIsOnLoading(false);
@@ -342,12 +342,12 @@ const NFTCard = (props) => {
                       token
                     );
                     setShowOffShelfModal(false);
-                    onRefresh(address, token);
+                    onRefresh(address, token, true);
                     setIsOffLoading(false);
 
-                    toast.info('Operation succeeded！', {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
+                    // toast.info('Operation succeeded！', {
+                    //   position: toast.POSITION.TOP_CENTER,
+                    // });
                   }
                 }
               } finally {

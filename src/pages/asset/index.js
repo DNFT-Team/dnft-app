@@ -95,7 +95,7 @@ const AssetScreen = (props) => {
     getBalance();
   }, [address])
 
-  const getNFTList = async (currentAddress, currentToken) => {
+  const getNFTList = async (currentAddress, currentToken, callback) => {
     try {
       setIsLoading(true);
 
@@ -113,6 +113,11 @@ const AssetScreen = (props) => {
         currentToken || token
       );
       setList(data?.data?.content || []);
+      if(callback) {
+        toast.info('Operation succeeded！', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
       // }
     } finally {
       setIsLoading(false);
@@ -285,8 +290,8 @@ const AssetScreen = (props) => {
         handleDetail={() => {
           history.push('/asset/detail', {item})
         }}
-        onRefresh={(currentAddress, currentToken) =>
-          getNFTList(currentAddress, currentToken)
+        onRefresh={(currentAddress, currentToken, callback) =>
+          getNFTList(currentAddress, currentToken, callback)
         }
       />
     ),

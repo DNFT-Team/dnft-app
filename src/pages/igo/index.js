@@ -112,7 +112,7 @@ const IGOScreen = (props) => {
     <div className={styleIgo}>
       <Heading as="h3">IGO</Heading>
       <Text className="describe">
-        Choose “Single” if you want your collectible to be one of a kind or “<strong>Multiple</strong>” if you want to sell one collectible multiple times
+      This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.
       </Text>
       <div className={tabRow}>
         {
