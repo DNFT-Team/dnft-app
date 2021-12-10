@@ -7,10 +7,18 @@ import { post } from 'utils/request';
 import NftSlider from '../../components/NftSlider';
 import globalConf from 'config/index'
 
-import banner1 from 'images/home/banner/marketplace.png'
-import banner2 from 'images/home/banner/mintNft.png'
-import banner3 from 'images/home/banner/mining.png'
-import banner4 from 'images/home/banner/gamefi.png'
+
+/**
+ * pixel 1140*413
+ */
+
+// import banner1 from 'images/home/banner/marketplace.png'
+import banner1 from 'images/home/banner/marketplace2.jpg'
+// import banner2 from 'images/home/banner/mintNft.png'
+import banner2 from 'images/home/banner/mintNft2.jpg'
+// import banner3 from 'images/home/banner/mining.png'
+import banner3 from 'images/home/banner/mining2.jpg'
+// import banner4 from 'images/home/banner/gamefi.png'
 
 
 const HomeScreen = (props) => {
@@ -25,7 +33,7 @@ const HomeScreen = (props) => {
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
-  const [bannerHeight, setBannerHeight] = useState(413);
+  const [bannerHeight, setBannerHeight] = useState(window.innerWidth / (1440 / 413) + 'px');
   const dataTopAll = [
     {
       src: banner1,
@@ -44,15 +52,16 @@ const HomeScreen = (props) => {
       route: '/mining',
       isHide: globalConf.net_env !== 'mainnet'
     },
-    {
-      src: banner4,
-      title: 'GAMEFI NEWS EARLY',
-      route: '/igo'
-    },
+    // {
+    //   src: banner4,
+    //   title: 'GAMEFI NEWS EARLY',
+    //   route: '/igo'
+    // },
   ];
   const dataTop = dataTopAll.filter((e) => !e.isHide)
 
-  const currentWindowWidth = useMemo(() => window.innerWidth, []);
+  // const currentWindowWidth = useMemo(() => window.innerWidth, []);
+  const [currentWindowWidth, setCurWindowWidth] = useState(window.innerWidth);
 
   const getNFTList = useCallback(async () => {
     try {
@@ -70,7 +79,7 @@ const HomeScreen = (props) => {
   const getMarketList = (id, isSave) => {
     let data = list.slice();
     data.map((obj) => {
-      if(obj.id === id) {
+      if (obj.id === id) {
         obj.isSaved = isSave;
         obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
       }
@@ -81,12 +90,12 @@ const HomeScreen = (props) => {
     getNFTList()
   }, [token]);
 
-  useEffect(() => {
-    window.addEventListener('resize', (e) => currentWindowWidth);
-    return () => {
-      window.removeEventListener('resize', () => currentWindowWidth);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener('resize', (e) => currentWindowWidth);
+  //   return () => {
+  //     window.removeEventListener('resize', () => currentWindowWidth);
+  //   };
+  // }, []);
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
@@ -161,9 +170,13 @@ const HomeScreen = (props) => {
     return () => window.removeEventListener('resize', handleResize);
   });
   const handleResize = () => {
-    setBannerHeight(
-      getWindowSize()?.innerHeight > 900 ? '45vh' : 413
-    )
+    let winSize  = getWindowSize();
+    let  w = winSize?.innerWidth || 1140;
+    let h = w / (1140 / 413);
+    // console.log('size', h, w);
+    // getWindowSize()?.innerHeight > 900 ? '45vh' : 413
+    setBannerHeight(h + 'px');
+    setCurWindowWidth(winSize?.innerWidth);
   };
 
   const renderHotList = useCallback((title) => (
@@ -172,7 +185,7 @@ const HomeScreen = (props) => {
 
   return (
     <div className={styleContainer}>
-      <Carousel trigger='click' style={{height: '900px'}} height={bannerHeight} interval={6000}>
+      <Carousel trigger='click' height={bannerHeight} interval={6000}>
         {dataTop?.map((item, index) => (
           <Carousel.Item key={index}>
             <div className={styleBanner} style={{

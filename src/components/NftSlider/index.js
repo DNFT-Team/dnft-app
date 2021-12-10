@@ -205,9 +205,6 @@ const stylePrevArrow = css`
   background: #ffffff;
   border-radius: 100%;
   color: #3F4FA5;
-  @media (max-width: 768px) {
-    left: calc(100% - 76px) !important;
-  }
   &:hover{
     color: #3F4FA5;
     background: #ffffff;
