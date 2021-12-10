@@ -12,13 +12,9 @@ import globalConf from 'config/index'
  * pixel 1140*413
  */
 
-// import banner1 from 'images/home/banner/marketplace.png'
 import banner1 from 'images/home/banner/marketplace2.png'
-// import banner2 from 'images/home/banner/mintNft.png'
 import banner2 from 'images/home/banner/mintNft2.png'
-// import banner3 from 'images/home/banner/mining.png'
 import banner3 from 'images/home/banner/mining2.png'
-// import banner4 from 'images/home/banner/gamefi.png'
 import banner4 from 'images/home/banner/festival.png'
 
 
@@ -56,12 +52,7 @@ const HomeScreen = (props) => {
       title: 'DNFT MINING',
       route: '/mining',
       isHide: globalConf.net_env !== 'mainnet'
-    },
-    // {
-    //   src: banner4,
-    //   title: 'GAMEFI NEWS EARLY',
-    //   route: '/igo'
-    // },
+    }
   ];
   const dataTop = dataTopAll.filter((e) => !e.isHide)
 
