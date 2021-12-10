@@ -257,10 +257,10 @@ const TransferView = (props) => {
       toast.warning('Please Input active number.');
       return
     }
-    // if (amount < 5) {
-    //   toast.warning('Quantity is at least 5.');
-    //   return
-    // }
+    if (amount < 5) {
+      toast.warning('Quantity is at least 5.');
+      return
+    }
 
     setLoading(true)
     const chainSuit = await checkSuit(4)
@@ -323,8 +323,8 @@ const TransferView = (props) => {
     if (!tx_hash) {return null}
     try {
       const BLACK_HOLE_ADDRESS = '0x67E0a20E82815DEae3e200d73de6883A6CBeeC78'
-      // const FEE_AMOUNT = toDecimal('1000', true, 'ether', true)
-      const FEE_AMOUNT = toDecimal('1', true, 'ether', true)
+      const FEE_AMOUNT = toDecimal('1000', true, 'ether', true)
+      // const FEE_AMOUNT = toDecimal('1', true, 'ether', true)
       const dnfContract = new window.web3.eth.Contract(frNet.abi, frNet.address);
       dnfContract.methods['transfer'](BLACK_HOLE_ADDRESS, FEE_AMOUNT)
         .send({ from: address }, (err, fee_hash) => {
