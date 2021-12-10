@@ -85,9 +85,13 @@ const GlobalHeader = (props) => {
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
-
+    console.log('[injectWallet]');
     if (ethereum) {
-      setAddress(ethereum.selectedAddress);
+      const reqAccounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      const curAccount = ethereum.selectedAddress || reqAccounts[0];
+      setAddress(curAccount);
       const currentIndex = netArray.findIndex(
         (item) => Number(item.netWorkId) === Number(ethereum.networkVersion)
       );
@@ -111,7 +115,7 @@ const GlobalHeader = (props) => {
 
         setCurrentNetIndex(currentIndex);
       });
-      let params = {address: ethereum.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+      let params = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
       // 存储address
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
