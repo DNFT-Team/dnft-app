@@ -18,7 +18,7 @@ import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
 import _ from 'lodash';
 
-const gas = 210000, gasPrice = '20000000000', gasLimit = 300000;
+const gasLimit = 300000;
 const NFTCard = (props) => {
   const {
     needAction,
@@ -172,9 +172,7 @@ const NFTCard = (props) => {
                             )
                             .send({
                               from: address,
-                              gas,
-                              gasLimit,
-                              gasPrice,
+                              gasLimit
                             });
                         } else {
                           putOnResult = await myContract.methods
@@ -186,9 +184,7 @@ const NFTCard = (props) => {
                             )
                             .send({
                               from: address,
-                              gas,
-                              gasLimit,
-                              gasPrice,
+                              gasLimit
                             });
                         }
 
@@ -202,9 +198,7 @@ const NFTCard = (props) => {
                             )
                             .send({
                               from: address,
-                              gas,
                               gasLimit,
-                              gasPrice,
                             });
 
                         } else {
@@ -217,9 +211,7 @@ const NFTCard = (props) => {
                             )
                             .send({
                               from: address,
-                              gas,
-                              gasLimit,
-                              gasPrice,
+                              gasLimit
                             });
                         }
                       }
@@ -272,9 +264,7 @@ const NFTCard = (props) => {
                           .setApprovalForAll(is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName], true)
                           .send({
                             from: address,
-                            gas,
-                            gasLimit,
-                            gasPrice,
+                            gasLimit
                           });
                         if (result) {
                           setIsApproved(true);
@@ -347,9 +337,7 @@ const NFTCard = (props) => {
                     .off(item.orderId)
                     .send({
                       from: address,
-                      gas,
-                      gasLimit,
-                      gasPrice,
+                      gasLimit
                     });
 
                   if (offResult) {
