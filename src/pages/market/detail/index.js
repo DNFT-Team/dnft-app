@@ -220,7 +220,7 @@ const MarketDetailScreen = (props) => {
           tradableNFTAbiType,
           tradableNFTAddress
         );
-        const gasNum = 210000, gasPrice = '20000000000', gasLimit = 300000;
+        const gasNum = 210000, gasPrice = '20000000000', gasLimit = 3000000;
         let format = datas?.contractType == 1155 ? [datas?.orderId, form.quantity] : [datas?.orderId]
         if (datas?.contractType == 721) {
           await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](

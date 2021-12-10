@@ -106,7 +106,7 @@ const getQueryString = (url, name) => {
   return null;
 }
 
-const gasLimit = 300000;
+const gasLimit = 3000000;
 
 /**
  * The View of Bridge Transfer

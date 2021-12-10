@@ -18,7 +18,7 @@ import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
 import _ from 'lodash';
 
-const gasLimit = 300000;
+const gasLimit = 3000000;
 const NFTCard = (props) => {
   const {
     needAction,

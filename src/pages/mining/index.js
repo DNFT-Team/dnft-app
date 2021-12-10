@@ -43,7 +43,7 @@ export const stakingJson = [{
   'image': 'https://www.dnft.world/staking/pool3.png',
 }]
 
-const gasLimit = 300000;
+// const gasLimit = 3000000;
 
 const Mining = (props) => {
   let history = useHistory();
@@ -553,7 +553,7 @@ const Mining = (props) => {
                       .stake(Web3.utils.toWei(String(stakeValue), 'ether'))
                       .send({
                         amount: Web3.utils.toWei(String(stakeValue), 'ether'),
-                        from: stakeInfo.account, gasLimit
+                        from: stakeInfo.account
                       });
                     toast.info('Operation succeeded！', {
                       position: toast.POSITION.TOP_CENTER,
@@ -587,7 +587,7 @@ const Mining = (props) => {
                           )
                         )
                         .send({
-                          from: stakeInfo.account, gasLimit
+                          from: stakeInfo.account
                         });
                     }
                   } finally {
@@ -697,7 +697,7 @@ const Mining = (props) => {
 
                         await stakeContract.methods.withdraw(index).send({
                           from: stakeInfo.account,
-                          idx: index, gasLimit
+                          idx: index
                         });
                         toast.info('Operation succeeded！', {
                           position: toast.POSITION.TOP_CENTER,
@@ -827,7 +827,7 @@ const Mining = (props) => {
                   );
 
                   let result =  await stakeContract.methods.claimNft().send({
-                    from: stakeInfo.account, gasLimit
+                    from: stakeInfo.account
                   });
 
                   toast.info('Operation succeeded！', {
