@@ -45,7 +45,7 @@ const CreateNFTModal = (props) => {
     name: 'name',
     collectionId: 'collection',
     category: 'category',
-    contractType: 'contact type',
+    contractType: 'contract type',
     supply: 'supply',
   };
 
@@ -418,7 +418,7 @@ const CreateNFTModal = (props) => {
             )}
             <div style={{display: 'flex', gap: '20px'}}>
               {renderFormItem(
-                'Contact Type',
+                'Contract Type',
                 <Select
                   value={form.contractType}
                   placeholder='Please choose'
