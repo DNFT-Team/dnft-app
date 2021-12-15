@@ -10,7 +10,7 @@ export default {
         youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
     },
     nftMagic:{
-        title:'NFT Magic via DNFT',
+        title:'Tutorial',
         book:'https://dnft.gitbook.io/dnft/user-manual/create-sell-buy-nft',
         youtube:'https://www.youtube.com/watch?v=uGwQNCxuheo'
     }

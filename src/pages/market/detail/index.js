@@ -518,7 +518,8 @@ const MarketDetailScreen = (props) => {
                     });
                     return;
                   }
-                  setIsOpen(true)
+                  if(datas?.contractType === '721') clickBuyItem()
+                  else setIsOpen(true)
                 }}>Buy</Button>
               {/* <div className={styles.ipfsAddress}>
                 <span className={styles.contract}>IPFS address:

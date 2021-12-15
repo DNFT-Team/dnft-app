@@ -27,9 +27,9 @@ const Market = (props) => {
 
   const domRef = useRef(null);
   const sortTagType = [
-    { label: 'Most popular', value: 'save_count' },
-    { label: 'Price:high to low', value: 'DESC-price' },
-    { label: 'Price:low to high', value: 'ASC-price' },
+    { label: 'Most Likes', value: 'save_count' },
+    { label: 'Price: High to Low', value: 'DESC-price' },
+    { label: 'Price: Low to High', value: 'ASC-price' },
   ];
 
   const currentNetEnv = globalConfig.net_env;
@@ -185,23 +185,23 @@ const Market = (props) => {
         hasMore={pageAble}
         height={'100%'}
         // loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
-        endMessage={
-          datas?.length && <p className={styles.noData} >
-            <b>Yay! You have seen it all</b>
-          </p> || null
-        }
+        // endMessage={
+        //   datas?.length && <p className={styles.noData} >
+        //     <b>Yay! You have seen it all</b>
+        //   </p> || null
+        // }
       >
         <div className={styles.header}>
           <div className={styles.headerT}>
             <span className={styles.headerTitle}>Market</span>
-            <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
-              <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic'
+            <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
+              <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
                 display="inline-block">
-                <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.nftMagic.title}
+                <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
               </Link>
-              <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic'
-                display="inline-block" ml="1rem">
-                <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn NFT Magic
+              <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
+                display="inline-block">
+                <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
               </Link>
             </div>
           </div>
@@ -305,9 +305,12 @@ const styleSelectContainer = css`
     color: #888888;
     font-family: Archivo Black;
   }
-  
+  .el-select-dropdown {
+    left: 0!important;
+  }
   .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover, .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
     background: #DDDDDD;
+
   }
   .el-select-dropdown__item.selected {
     color: #FFFFFF; 
