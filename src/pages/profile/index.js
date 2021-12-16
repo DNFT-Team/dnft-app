@@ -408,7 +408,7 @@ const styleTabButton = css`
   display: flex;
   align-items: center;
   padding: 6px 12px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   border: 1px solid #DDDDDD;
   margin-right: 30px;

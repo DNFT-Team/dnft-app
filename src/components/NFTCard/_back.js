@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
 import _ from 'lodash';
-import NFTCardItem from 'pages/market/component/item';
+
 const gasLimit = 3000000;
 const NFTCard = (props) => {
   const {
@@ -32,8 +32,7 @@ const NFTCard = (props) => {
     onRefresh,
     isProfile,
     fromCollection,
-    handleDetail,
-    getList
+    handleDetail
   } = props;
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
@@ -375,47 +374,71 @@ const NFTCard = (props) => {
 
   return (
     <div key={`title-${index}`} className={`${styleCardContainer} ${fromCollection && styleCardCollection}`}>
-      <NFTCardItem
-        item={item}
-        index={index}
-        whetherShowPrice={false}
-        getMarketList={getList}
-        clickDetail={(e) => {handleDetail && item?.status === 'ONSALE' &&  handleDetail()}}
-      >
-        {
-          currentStatus.value === 'INWALLET' && <div
-            className={cx(styleButton)}
-            style={{
-              opacity: isEmpty ? 0.5 : 1,
-              cursor: isEmpty ? 'not-allowed' : 'pointer',
-              background: '#0057D9'
-            }}
-            onClick={() => {
-              if (isEmpty) {
-                return;
-              }
-              onShowSellModal();
-            }}
-          >
-              Sell
+      {item.sold && <div className={styleSoldOutBanner}>sold out</div>}
+      <div
+        onClick={(e) => {handleDetail && item?.status === 'ONSALE' &&  handleDetail()}}
+        style={{
+          backgroundImage: `url(${viewUrl})`,
+        }}
+        className="shortPic"
+      />
+      <div className={styleInfoContainer}>
+        <div className={styleCardHeader}>
+          <div className={styleInfo} style={{
+            borderBottom: currentStatus.value !== 'SOLD' && _.isString(currentStatus) !== true ? '1px solid #F3F7F9' : 'none'
+          }}>
+            <div className="headLine">
+              <span className="title">{item.name}</span>
+              <span className={styleNickNameContainer}>
+                {/* <span className='dot'></span>*/}
+                {item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName}
+              </span>
+            </div>
+            {currentStatus.value === 'ONSALE' && !isProfile && <span
+              style={{ color: '#000000', fontSize: '12px', padding: '2px 6px', fontWeight: '600', borderRadius: '4px' }}
+            >
+              {item.price > 0 &&
+                ['ONSALE', 'SOLD'].includes(currentStatus.value) &&
+                `${Web3.utils.fromWei(String(item.price), 'ether')} ${
+                  item.type || ''
+                }`}
+            </span>}
           </div>
-        }
-        {
-          currentStatus.value === 'ONSALE' && <div
-            className={cx(styleButton)}
-            style={{
-              opacity: isEmpty ? 0.5 : 1,
-              cursor: isEmpty ? 'not-allowed' : 'pointer',
-            }}
-            onClick={(e) => {
-              e.stopPropagation()
-              onShowOffShelfModal();
-            }}
-          >
-            Unsell
-          </div>
-        }
-      </NFTCardItem>
+          {
+            currentStatus.value === 'INWALLET' && <div
+              className={cx(styleButton)}
+              style={{
+                opacity: isEmpty ? 0.5 : 1,
+                cursor: isEmpty ? 'not-allowed' : 'pointer',
+                background: '#0057D9'
+              }}
+              onClick={() => {
+                if (isEmpty) {
+                  return;
+                }
+                onShowSellModal();
+              }}
+            >
+                Sell
+            </div>
+          }
+          {
+            currentStatus.value === 'ONSALE' && <div
+              className={cx(styleButton)}
+              style={{
+                opacity: isEmpty ? 0.5 : 1,
+                cursor: isEmpty ? 'not-allowed' : 'pointer',
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onShowOffShelfModal();
+              }}
+            >
+              Unsell
+            </div>
+          }
+        </div>
+      </div>
       {showSellModal && renderSellModal}
       {showOffShelfModal && renderOffShelfModal}
     </div>
@@ -504,18 +527,18 @@ const styleSoldOutBanner = css`
 `;
 
 const styleCardContainer = css`
-  ${'' /* background: #ffffff; */}
+  background: #ffffff;
   border-radius: 10px;
-  ${'' /* max-width: 300px; */}
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   /* cursor: pointer; */
   position: relative;
   flex: 1;
-  ${'' /* min-width: 300px; */}
+  min-width: 300px;
   &:hover {
     position: relative;
-    ${'' /* top: -10px; */}
+    top: -10px;
   }
   .shortPic{
     min-height: 300px;

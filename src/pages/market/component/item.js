@@ -11,9 +11,9 @@ import busd_unit from 'images/market/busd.svg'
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import { get, post } from 'utils/request';
-
+import { Tooltip } from '@chakra-ui/react';
 const NFTCard = (props) => {
-  const { needAction, item, index, clickDetail, token, address, getMarketList, onSave } = props;
+  const { needAction, item, index, clickDetail, token, address, getMarketList, onSave, children, whetherShowPrice = true } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
   let history = useHistory();
 
@@ -51,7 +51,7 @@ const NFTCard = (props) => {
     const msg = flag ? `${item?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message;
     toast[flag ? 'success' : 'error'](msg, { position: toast.POSITION.TOP_CENTER});
     // getMarketInfo();
-    if(flag) getMarketList(item.id, !item?.isSaved);
+    if(flag) getMarketList && getMarketList(item.id, !item?.isSaved);
   }
   return (
     <div key={`title-${index}`} onClick={clickDetail} className={styles.styleCardContainer}>
@@ -75,18 +75,24 @@ const NFTCard = (props) => {
           <div className={styles.styleInfo}>
             <div className={styles.styleInfoProfile}>
               {/* <div className={styles.styleInfoProfileImg} /> */}
-              <a onClick={(e) => {
-                e.stopPropagation()
-                handleLinkProfile(item?.address)
-              }} className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName  || 'Unknown'}</a>
+              <Tooltip label={`${item?.address?.slice(0, 7)}...${item?.address?.slice(-6)}`} hasArrow>
+                <a onClick={(e) => {
+                  e.stopPropagation()
+                  handleLinkProfile(item?.address)
+                }} className={styles.nickName}>{item?.nickName && item.nickName.length > 10 ? `${item.nickName?.slice(0, 10)}...` : item?.nickName  || 'Unknown'}</a>
+              </Tooltip>
             </div>
-            <div className={styles.price_box}>
-              {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
-              <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
-            </div>
+            {
+              whetherShowPrice &&
+              <div className={styles.price_box}>
+                {item.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
+                <span className={styles.price}>{Number(price) ? (Math.round(price * 100) / 100) : price} </span>
+              </div>
+            }
           </div>
         </div>
       </div>
+      {children}
     </div>
   );
 };

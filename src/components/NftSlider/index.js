@@ -154,6 +154,9 @@ const styleArtContainer = css`
     width: 100px;
     height: 100px;
   }
+  .css-1xqmw5w .slick-track {
+    padding-bottom: 10px
+  }
   @media (max-width: 768px) {
     padding: 40px 0;
   }

@@ -66,7 +66,7 @@ const AssetScreen = (props) => {
   const [balance, setBalance] = useState(0);
   const [category, setCategory] = useState('All');
   const [sortTag, setSortTag] = useState('ASC-price');
-  const [list, setList] = useState();
+  const [list, setList] = useState([]);
   const [sortOrder, setSortOrder] = useState('ASC');
   const rightChainId = currentNetEnv === 'testnet' ? 97 : 56;
   const [isLoading, setIsLoading] = useState(false);
@@ -95,6 +95,16 @@ const AssetScreen = (props) => {
     getBalance();
   }, [address])
 
+  const getList = (id, isSave) => {
+    let _list = list.slice();
+    _list.map((obj) => {
+      if(obj.id === id) {
+        obj.isSaved = isSave;
+        obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
+      }
+    })
+    setList(_list)
+  }
   const getNFTList = async (currentAddress, currentToken, callback) => {
     try {
       setIsLoading(true);
@@ -218,10 +228,13 @@ const AssetScreen = (props) => {
       <div
         style={{
           background: `#b7b7b7 center center / cover no-repeat url(${bannerUrl})`,
-          height: '236px',
+          // height: '236px',
+          height: 0,
+          paddingBottom: '16.67%',
           borderRadius: '10px',
           position: 'relative',
-          marginBottom: '90px'
+          marginBottom: '90px',
+          // marginBottom: '8.34%',
         }}>
         <div className={styleHeader}>
 
@@ -285,6 +298,7 @@ const AssetScreen = (props) => {
         index={index}
         needAction={isTestNet}
         currentStatus={selectedTab}
+        getList={getList}
         onLike={getNFTList}
         onSave={getNFTList}
         handleDetail={() => {
@@ -295,7 +309,7 @@ const AssetScreen = (props) => {
         }
       />
     ),
-    [selectedTab]
+    [selectedTab, list]
   );
 
   const renderModal = useMemo(
@@ -409,7 +423,7 @@ const AssetScreen = (props) => {
 
           <div
             className={styleCardList}
-            style={{ opacity: isLoading ? 0.5 : 1 }}
+            style={{ opacity: isLoading ? 0.5 : 1, display: (isLoading || list?.length == 0) && 'flex' }}
           >
             {!isLoading && list?.length > 0
               ? list.map((item, index) => renderCard(item, index))
@@ -486,10 +500,13 @@ const styleHeader = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
+  ${'' /* position: absolute; */}
   width: calc(100% - 146px);
-  left: 50%;
-  top: 180px;
+  margin: 0 auto;
+  ${'' /* left: 50%; */}
+  ${'' /* top: 180px; */}
+  margin-top: calc(16.7% - 55px);
+  margin-left: 50%;
   transform: translate(-50%, 0);
   background: linear-gradient(112.83deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.8) 110.84%);
   border: 1.5px solid #FFFFFF;
@@ -620,7 +637,7 @@ const styleTabContainer = css`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
 
     @media (max-width: 900px) {
       gap: 0px;
@@ -679,15 +696,21 @@ const styleActiveTabButton = css`
 `;
 
 const styleCardList = css`
-  display: flex;
+  ${'' /* display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   height: 100%;
-  gap: 30px 16px;
+  gap: 30px 16px; */}
   margin-top: 50px;
-  @media (max-width: 900px) {
-    justify-content: center;
+  display: grid;
+  gap: 20px 20px;
+  grid-template-columns: repeat(5,  minmax(250px, 1fr));
+  @media (max-width: 1950px) {
+    grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
   }
+  ${'' /* @media (max-width: 900px) {
+    justify-content: center;
+  } */}
 `;
 
 const styleModalContainer = css`
@@ -760,12 +783,15 @@ const styleNoDataContainer = css`
   align-items: center;
   justify-content: center;
   flex: 1;
+  width: 100%;
   flex-direction: column;
   color: #233a7d;
   min-height: calc(100vh - 400px);
   span {
     margin-top: 20px;
   }
+
+  
 `;
 
 const styleSwitchModal = css`
