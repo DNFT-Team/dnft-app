@@ -36,6 +36,7 @@ import assetSvg from 'images/asset/asset.svg';
 import accountSvg from 'images/common/account.svg';
 import dnft_unit from 'images/market/dnft_unit.png'
 import { getCategoryList } from 'reduxs/actions/market';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
@@ -46,6 +47,7 @@ const GlobalHeader = (props) => {
   const ref = useRef();
 
   const [isNetListVisible, setIsNetListVisible] = useState(false);
+  const [isSwitchWalletVisible, setIsSwitchWalletVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
   const netArray = useMemo(
@@ -79,13 +81,10 @@ const GlobalHeader = (props) => {
     ],
     []
   );
-  console.log('globalheader', chainType)
-
   // const dnftPrice = useCoingeckoPrice('dnft-protocol', 'usd')
 
   const injectWallet = useCallback(async () => {
     let ethereum = window.ethereum;
-    console.log('[injectWallet]');
     if (ethereum) {
       const reqAccounts = await ethereum.request({
         method: 'eth_requestAccounts',
@@ -99,12 +98,10 @@ const GlobalHeader = (props) => {
 
       //  监听节点切换
       ethereum.on('chainChanged', (chainId) => {
-        console.log(chainId);
         window.location.reload()
       })
       // 监听网络切换
       ethereum.on('networkChanged', (networkIDstring) => {
-        console.log(networkIDstring, 'networkIDstring')
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
@@ -121,9 +118,6 @@ const GlobalHeader = (props) => {
       dispatch(setProfileToken(params))
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
-        if (accounts[0] &&  accounts[0] !== address) {
-          console.log(accounts[0], address)
-        }
         setAddress(accounts[0]);
         let params = {address: accounts[0], chainType: NET_WORK_VERSION[ethereum.networkVersion]}
 
@@ -131,14 +125,57 @@ const GlobalHeader = (props) => {
         dispatch(setProfileToken(params))
 
       });
-    } else {
-      alert('Please install wallet');
     }
   }, [address, netArray]);
 
   useEffect(() => {
     injectWallet();
   }, [injectWallet, window.ethereum]);
+
+  const injectWalletConnect = useCallback(async () => {
+    if (localStorage.getItem('walletconnect')) {
+      const provider = new WalletConnectProvider({
+        infuraId: 'f65c0bbb601041e19fb6a106560bc9ac',
+        qrcode: true,
+        rpc: {
+          56: 'https://bsc-dataseed.binance.org/',
+          97: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+        }
+      });
+      provider.enable();
+      console.log(provider, 'provider')
+      window.walletProvider = provider;
+    }
+    if (!window.walletProvider) {
+      return;
+    }
+    const provider = window.walletProvider;
+    const currentIndex = netArray.findIndex(
+      (item) => Number(item.netWorkId) === Number(provider.chainId)
+    );
+    let params = {address: provider.accounts[0], chainType: NET_WORK_VERSION[provider.chainId]}
+    setCurrentNetIndex(currentIndex)
+    setAddress(provider.accounts[0]);
+    dispatch(setProfileAddress(params))
+    dispatch(setProfileToken(params))
+    provider.wc.on('accountsChanged', (accounts) => {
+      const currentIndex = netArray.findIndex(
+        (item) => Number(item.netWorkId) === Number(provider.chainId)
+      );
+      setCurrentNetIndex(currentIndex)
+      setAddress(accounts[0]);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    });
+    provider.on('wc_sessionUpdate', (chainId) => {
+      // TODO: 监听不到chainId的改变
+      window.location.reload()
+    });
+  }, [address, netArray])
+
+  useEffect(() => {
+    injectWalletConnect()
+  },[window.walletProvider, injectWalletConnect]);
 
   const goToRightNetwork = async (ethereum, netWorkId) => {
     try {
@@ -192,7 +229,7 @@ const GlobalHeader = (props) => {
     }
   };
 
-  const connectWallet = async () => {
+  const connectMetaMaskWallet = async () => {
     try {
       let ethereum = window.ethereum;
       await ethereum.enable();
@@ -211,6 +248,31 @@ const GlobalHeader = (props) => {
       console.log(e, 'e')
     }
   };
+
+  const connectWalletConnect = async () => {
+    try {
+      const provider = new WalletConnectProvider({
+        infuraId: 'f65c0bbb601041e19fb6a106560bc9ac',
+        qrcode: true,
+        rpc: {
+          56: 'https://bsc-dataseed.binance.org/',
+          97: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+        }
+      });
+      await provider.enable();
+      window.walletProvider = provider;
+      const currentIndex = netArray.findIndex(
+        (item) => Number(item.netWorkId) === Number(provider.chainId)
+      );
+      let params = {address: provider.accounts[0], chainType: NET_WORK_VERSION[provider.chainId]}
+      setCurrentNetIndex(currentIndex)
+      setAddress(provider.accounts[0]);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  }
 
   const [giftLoading, setGiftLoading] = useState(false);
   const [isDrawer, setIsDrawer] = useState(false)
@@ -352,6 +414,43 @@ const GlobalHeader = (props) => {
     [netArray, isNetListVisible]
   );
 
+  const renderSwitchWallet = useMemo(
+    () => (
+      <Dialog
+        customClass={styleModalContainer}
+        title='Switch to'
+        visible={isSwitchWalletVisible}
+        onCancel={() => {
+          setIsSwitchWalletVisible(false);
+        }}
+      >
+        <Dialog.Body>
+          <div
+            key={'Metamask'}
+            className={styleNetItem}
+            onClick={async () => {
+              setIsSwitchWalletVisible(false);
+              await connectMetaMaskWallet()
+            }}
+          >
+            <span>Metamask</span>
+          </div>
+          <div
+            key={'Wallet Connect'}
+            className={styleNetItem}
+            onClick={async () => {
+              setIsSwitchWalletVisible(false);
+              await connectWalletConnect()
+            }}
+          >
+            <span>Wallet Connect</span>
+          </div>
+        </Dialog.Body>
+      </Dialog>
+    ),
+    [isSwitchWalletVisible]
+  );
+
   return (
     <header className={styleHeader}>
       {/* <div className={styleSearchContainer}>*/}
@@ -386,7 +485,7 @@ const GlobalHeader = (props) => {
               history.push(`/profile/address/${address}`, true)
               return;
             }
-            await connectWallet()
+            setIsSwitchWalletVisible(true);
           }}
         >
           {address
@@ -422,7 +521,7 @@ const GlobalHeader = (props) => {
             ) : (
               <Text bgColor="brand.600" color="white" cursor="pointer" mr="1.5rem" p=".4rem .6rem"
                 fontSize=".8rem" fontWeight="bolder" borderRadius="16px" onClick={async () => {
-                  await connectWallet()
+                  setIsSwitchWalletVisible(true);
                 }}>
                 Connect
               </Text>
@@ -432,6 +531,7 @@ const GlobalHeader = (props) => {
         </Box>
       </Box>
       {renderModal}
+      {renderSwitchWallet}
       <Drawer placement="right" onClose={() => {setIsDrawer(false)}} isOpen={isDrawer} size="xl">
         <DrawerOverlay />
         <DrawerContent>

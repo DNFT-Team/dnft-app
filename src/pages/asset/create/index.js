@@ -193,10 +193,10 @@ const CreateNFTModal = (props) => {
       toast.success('NFT upload success!');
       toast.info('Step 2. Mint NFT via contract...');
       //  mint nft
-      if (window.ethereum) {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
+      const wallet = window.ethereum || window.walletProvider;
+      if (wallet) {
+        window.web3 = new Web3(wallet);
+        await wallet.enable();
 
         let createNFTResult;
         let contractAddress =
@@ -251,7 +251,6 @@ const CreateNFTModal = (props) => {
               from: address,
               value: fee,
             });
-          console.log(createNFTResult, 'createNFTResult');
 
           if (createNFTResult.transactionHash) {
             const result = await post(
@@ -272,6 +271,8 @@ const CreateNFTModal = (props) => {
           }
         }
       }
+    } catch (e) {
+      console.log(e, 'e')
     } finally {
       setIsLoading(false);
     }

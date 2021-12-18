@@ -86,17 +86,18 @@ const MarketDetailScreen = (props) => {
   }, [])
 
   useEffect(() => {
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
-      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/market/detail') {
+    if (wallet) {
+      if (
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) && history.location.pathname === '/market/detail') {
         setIsWrongNetWork(true);
         setIsShowSwitchModal(true);
       } else {
         setIsWrongNetWork(false);
       }
     }
-  }, [window.ethereum]);
+  }, [window.ethereum, window.walletProvider]);
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     if (history.location.pathname !== '/market/detail') {
@@ -204,10 +205,11 @@ const MarketDetailScreen = (props) => {
 
   const clickBuyItem = async () => {
     try {
-      if (window.ethereum) {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
+      let wallet = window.ethereum || window.walletProvider;
+
+      if (wallet) {
+        window.web3 = new Web3(wallet);
+        await wallet.enable();
         setLoading(true)
 
         await isApproved();

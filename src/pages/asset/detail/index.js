@@ -72,17 +72,18 @@ const MarketDetailScreen = (props) => {
   }
 
   useEffect(() => {
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
-      if (Number(ethereum.networkVersion) !== rightChainId && history.location.pathname === '/market/detail') {
+    if (wallet) {
+      if (
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) && history.location.pathname === '/market/detail') {
         setIsWrongNetWork(true);
         setIsShowSwitchModal(true);
       } else {
         setIsWrongNetWork(false);
       }
     }
-  }, [window.ethereum]);
+  }, [window.ethereum, window.walletProvider]);
 
 
   const handleStar = async () => {
@@ -159,10 +160,11 @@ const MarketDetailScreen = (props) => {
             onClick={async () => {
               try {
                 setIsOffLoading(true);
-                if (window.ethereum) {
-                  let ethereum = window.ethereum;
-                  window.web3 = new Web3(ethereum);
-                  await ethereum.enable();
+                const wallet = window.ethereum || window.walletProvider;
+
+                if (wallet) {
+                  window.web3 = new Web3(wallet);
+                  await wallet.enable();
                   const is721Contract = item.contractType == 721;
 
                   const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];

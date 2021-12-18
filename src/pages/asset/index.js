@@ -188,24 +188,24 @@ const AssetScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
+    if (wallet) {
       if (
-        Number(ethereum.networkVersion) !== rightChainId &&
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) &&
         history.location.pathname === '/asset'
       ) {
         setIsShowSwitchModal(true);
       }
     }
-  }, []);
+  }, [window.ethereum, window.walletProvider]);
 
   const getBalance = async () => {
     try {
-      if (window.ethereum) {
-        let ethereum = window.ethereum;
-        window.web3 = new Web3(ethereum);
-        await ethereum.enable();
+      let wallet = window.ethereum || window.walletProvider;
+      if (wallet) {
+        window.web3 = new Web3(wallet);
+        await wallet.enable();
         const account = address;
 
         const myContract = new window.web3.eth.Contract(

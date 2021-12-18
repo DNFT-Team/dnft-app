@@ -137,17 +137,17 @@ const Market = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
+    if (wallet) {
       if (
-        Number(ethereum.networkVersion) !== rightChainId &&
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) &&
         history.location.pathname === '/market'
       ) {
         setIsShowSwitchModal(true);
       }
     }
-  }, []);
+  }, [window.ethereum, window.walletProvider]);
 
   const renderShowSwitchModal = () => {
     console.log(isShowSwitchModal, 'isShowSwitchModal')

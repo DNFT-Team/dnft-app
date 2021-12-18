@@ -146,10 +146,10 @@ const NFTCard = (props) => {
               }
 
               try {
-                if (window.ethereum) {
-                  let ethereum = window.ethereum;
-                  window.web3 = new Web3(ethereum);
-                  await ethereum.enable();
+                const wallet = window.ethereum || window.walletProvider;
+                if (wallet) {
+                  window.web3 = new Web3(wallet);
+                  await wallet.enable();
 
                   if (isApproved) {
                     try {
@@ -321,10 +321,10 @@ const NFTCard = (props) => {
             onClick={async () => {
               try {
                 setIsOffLoading(true);
-                if (window.ethereum) {
-                  let ethereum = window.ethereum;
-                  window.web3 = new Web3(ethereum);
-                  await ethereum.enable();
+                const wallet = window.ethereum || window.walletProvider;
+                if (wallet) {
+                  window.web3 = new Web3(wallet);
+                  await wallet.enable();
                   const is721Contract = item.contractType == 721;
 
                   const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
@@ -370,7 +370,6 @@ const NFTCard = (props) => {
     )
   }, [isOffLoading])
   const isEmpty = item.quantity === 0;
-  console.log(item, 'item')
 
   return (
     <div key={`title-${index}`} className={`${styleCardContainer} ${fromCollection && styleCardCollection}`}>

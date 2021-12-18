@@ -57,19 +57,19 @@ const SyncBtcScreen = (props) => {
   const isTestnet = currentNetEnv === 'testnet';
 
   const injectWallet = async () => {
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
-      setAddress(ethereum.selectedAddress);
-
-      if ((Number(ethereum.networkVersion) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
+    if (wallet) {
+      if (
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) && history.location.pathname === '/igo/syncBtc') {
         setIsWrongNetWork(true);
       } else {
         setIsWrongNetWork(false);
       }
 
+      setAddress(wallet.selectedAddress || wallet.accounts[0]);
       // 监听账号切换
-      ethereum.on('accountsChanged', (accounts) => {
+      wallet.on('accountsChanged', (accounts) => {
         setAddress(accounts[0]);
       });
     } else {
@@ -78,10 +78,11 @@ const SyncBtcScreen = (props) => {
   };
 
   const getMedalInfo = useCallback(async () => {
-    if (window.ethereum) {
-      let ethereum = window.ethereum;
-      window.web3 = new Web3(ethereum);
-      await ethereum.enable();
+    let wallet = window.ethereum || window.walletProvider;
+
+    if (wallet) {
+      window.web3 = new Web3(wallet);
+      await wallet.enable();
 
       const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
@@ -139,10 +140,10 @@ const SyncBtcScreen = (props) => {
       return;
     }
 
-    if (window.ethereum) {
-      let ethereum = window.ethereum;
-      window.web3 = new Web3(ethereum);
-      await ethereum.enable();
+    let wallet = window.ethereum || window.walletProvider;
+    if (wallet) {
+      window.web3 = new Web3(wallet);
+      await wallet.enable();
 
       const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
@@ -214,10 +215,10 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   const getIsApproved = useCallback(async () => {
-    if (window.ethereum) {
-      let ethereum = window.ethereum;
-      window.web3 = new Web3(ethereum);
-      await ethereum.enable();
+    let wallet = window.ethereum || window.walletProvider;
+    if (wallet) {
+      window.web3 = new Web3(wallet);
+      await wallet.enable();
 
       try {
         const myBusdContract = new window.web3.eth.Contract(
@@ -237,10 +238,10 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   const getBusdAmount = useCallback(async () => {
-    if (window.ethereum) {
-      let ethereum = window.ethereum;
-      window.web3 = new Web3(ethereum);
-      await ethereum.enable();
+    let wallet = window.ethereum || window.walletProvider;
+    if (wallet) {
+      window.web3 = new Web3(wallet);
+      await wallet.enable();
 
       try {
         const myBusdContract = new window.web3.eth.Contract(
@@ -261,12 +262,12 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   useEffect(() => {
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
+    if (wallet) {
       injectWallet();
     }
-  }, [injectWallet, window.ethereum]);
+  }, [injectWallet, window.ethereum, window.walletProvider]);
 
   useEffect(() => {
     if (isTestnet) {
@@ -310,17 +311,17 @@ const SyncBtcScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let ethereum = window.ethereum;
+    let wallet = window.ethereum || window.walletProvider;
 
-    if (ethereum) {
+    if (wallet) {
       if (
-        Number(ethereum.networkVersion) !== rightChainId &&
+        (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) &&
         history.location.pathname === '/igo/syncBtc'
       ) {
         setIsShowSwitchModal(true);
       }
     }
-  }, []);
+  }, [window.ethereum, window.walletProvider]);
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     try {
@@ -391,8 +392,7 @@ const SyncBtcScreen = (props) => {
               });
               return;
             }
-
-            let ethereum = window.ethereum;
+            let wallet = window.ethereum || window.walletProvider;
 
             if (medalData.Total.isNotEnough) {
               toast.info('Ended', {
@@ -402,9 +402,9 @@ const SyncBtcScreen = (props) => {
             }
 
             if (!address) {
-              await ethereum.enable();
+              await wallet.enable();
 
-              const accounts = await ethereum.request({
+              const accounts = await wallet.request({
                 method: 'eth_requestAccounts',
               });
               const account = accounts[0];
