@@ -128,10 +128,6 @@ const GlobalHeader = (props) => {
     }
   }, [address, netArray]);
 
-  useEffect(() => {
-    injectWallet();
-  }, [injectWallet, window.ethereum]);
-
   const injectWalletConnect = useCallback(async () => {
     if (localStorage.getItem('walletconnect')) {
       const provider = new WalletConnectProvider({
@@ -142,7 +138,7 @@ const GlobalHeader = (props) => {
           97: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
         }
       });
-      provider.enable();
+      await provider.enable();
       console.log(provider, 'provider')
       window.walletProvider = provider;
     }
@@ -174,8 +170,13 @@ const GlobalHeader = (props) => {
   }, [address, netArray])
 
   useEffect(() => {
-    injectWalletConnect()
-  },[window.walletProvider, injectWalletConnect]);
+    if (window.ethereum) {
+      injectWallet();
+    } else if (window.walletProvider) {
+      injectWalletConnect()
+    }
+  }, [injectWallet,injectWalletConnect,window.walletProvider, window.ethereum]);
+
 
   const goToRightNetwork = async (ethereum, netWorkId) => {
     try {
