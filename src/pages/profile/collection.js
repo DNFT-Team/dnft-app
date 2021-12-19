@@ -141,7 +141,7 @@ const styleCardContainer = css`
   flex-direction: column;
   position: relative;
   flex: 1;
-  padding: 30px;
+  padding: 50px;
 
 `;
 const styleCardHeaderBox = css`
@@ -155,39 +155,55 @@ const styleCardHeader = css`
   flex-direction: column;
   justify-content: space-between;
   h4 {
-    font-size: 32px;
-    line-height: 30px;
-    margin: 15px 0;
-    font-family: DM Sans;
+    font-family: Archivo Black;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    line-height: 36px;
+    color: #000000;
+    margin: 0;
+    margin-bottom: 20px;
   }
   div {
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: normal;
     font-size: 14px;
     line-height: 16px;
-    color: #75819A;
-    font-family: SF Pro Display;
+    color: #888888;
   }
 `;
 
 const styleInfoContainer = css`
-  margin-top: 46px;
-  display: flex;
+  margin-top:30px;
+  display: grid;
   flex-wrap: wrap;
   flex-direction: row;
   gap: 30px 16px;
+  grid-template-columns: repeat(5,  minmax(250px, 1fr));
+  @media (max-width: 1650px) {
+    grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
+  }
   @media (max-width: 900px) {
     justify-content: center;
   }
 `;
 
 const styleEditCollection = css`
-  background-color: #00398D;
-  color: #FCFCFD;
-  padding: 16px 24px;
-  font-size: 14px;
-  line-height: 14px;
+  padding: 0px 20px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  height: 40px;
+  background: #0057D9;
+  border-radius: 10px;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 40px;
+  text-align: center;
+  color: #FFFFFF;
   @media (max-width: 900px) {
     width: 100%;
     align-items: center;

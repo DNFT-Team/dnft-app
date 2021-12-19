@@ -5,6 +5,9 @@ import { css } from 'emotion';
 import Tb2e from 'images/bridge/b2e.png';
 import Te2b from 'images/bridge/e2b.png';
 import { connect } from 'react-redux';
+import helper from 'config/helper';
+import { Icon } from '@iconify/react';
+import { Link } from '@chakra-ui/react';
 
 const cardData = [
   {
@@ -28,7 +31,19 @@ const BridgeScreen = (props) => {
   const { address } = props;
 
   return <div className={styleBridge}>
-    <h3>Bridge</h3>
+    <div className='styleHeader'>
+      <h3>Bridge</h3>
+      <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
+        <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
+          display="inline-block">
+          <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
+        </Link>
+        <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
+          display="inline-block">
+          <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
+        </Link>
+      </div>
+    </div>
     <h5>
     $DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. </h5>
     <div className={styleRow}>
@@ -65,6 +80,10 @@ export default withRouter(connect(mapStateToProps)(BridgeScreen));
 const styleBridge = css`
   position: relative;
   padding: 30px 50px;
+  .styleHeader {
+    display: flex;
+    align-items: center;
+  }
   h3 {
     font-family: Archivo Black, sans-serif;
     font-style: normal;
@@ -73,6 +92,7 @@ const styleBridge = css`
     line-height: 56px;
     letter-spacing: -0.02em;
     color: #23262F;
+    margin-right: 30px;
   }
   h5 {
     margin: 21px 0 40px 0;

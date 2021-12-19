@@ -1,14 +1,15 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import { useHistory } from 'react-router-dom';
 import { css } from 'emotion';
-import { Heading, Text, Box, Grid } from '@chakra-ui/react';
+import { Heading, Text, Box, Grid, Link } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import comingSoon from 'images/igo/igoComingSoon.png';
 import igoAvatar from 'images/igo/igoAvatar.png';
 import {noDataSvg} from '../../utils/svg';
 import globalConfig from '../../config/index';
 import { Dialog, Button } from 'element-react';
-
+import helper from 'config/helper';
+import { Icon } from '@iconify/react';
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
   // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
@@ -110,7 +111,19 @@ const IGOScreen = (props) => {
 
   return (
     <div className={styleIgo}>
-      <Heading as="h3">IGO</Heading>
+      <div className='styleHeader'>
+        <Heading as="h3">IGO</Heading>
+        <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
+          <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
+            display="inline-block">
+            <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
+          </Link>
+          <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
+            display="inline-block">
+            <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
+          </Link>
+        </div>
+      </div>
       <Text className="describe">
       This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.
       </Text>
@@ -121,7 +134,7 @@ const IGOScreen = (props) => {
           ))
         }
       </div>
-      <Grid gap={50} height="max-content" templateColumns={['repeat(1, 1fr)', 'repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']}>
+      <Grid gap={50} height="max-content" templateColumns={['repeat(1, 1fr)', 'repeat(1, 1fr)', 'repeat(2, 1fr)']}>
         {
           gameList.length > 0 ? gameList.map((g, i) => (
             <Box className={cardBox} key={i}>
@@ -144,6 +157,10 @@ const styleIgo = css`
   padding: 30px 50px;
   position: relative;
   z-index: 0;
+  .styleHeader {
+    display: flex;
+    align-items: center;
+  }
   @media (max-width: 900px) {
     padding: 15px;
   }
@@ -155,12 +172,14 @@ const styleIgo = css`
     line-height: 56px;
     letter-spacing: -0.02em;
     color: #23262F;
+    margin: 0;
+    margin-right: 30px;
     @media (max-width: 900px)  {
       font-size: 2rem;
     }
   }
   .describe {
-    margin: 21px 0 40px 0;
+    margin: 30px 0 50px 0;
     font-family: Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -173,7 +192,7 @@ const styleIgo = css`
   }
 `
 const tabRow = css`
-  margin-bottom: 80px;
+  margin-bottom: 30px;
   .tabBtn{
     cursor: pointer;
 
@@ -186,7 +205,7 @@ const tabRow = css`
     height: 38px;
     border: 1px solid #E6E8EC;
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 10px;
 
     font-family: DM Sans,sans-serif;
     font-style: normal;
@@ -204,10 +223,11 @@ const tabRow = css`
 `
 const cardBox = css`
   border-radius: 20px;
-  padding: 10px;
+  // padding: 10px;
   box-sizing: border-box;
   width: 100%;
-  border: 2px solid #E6E8EC;
+  // border: 2px solid #E6E8EC;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
   text-align: center;
   display: inline-flex;
   flex-direction: column;
@@ -221,12 +241,12 @@ const cardBox = css`
     background-repeat: no-repeat;
   }
   .title{
-    margin: 46px 0 20px 0;
-    font-family: Archivo Black, sans-serif;
+    margin: 30px 0 30px 0;
+    font-family: Archivo Black;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
-    line-height: 20px;
+    line-height: 24px;
     /* identical to box height, or 83% */
     width: 100%;
     color: #1B2559;
@@ -255,17 +275,17 @@ const cardBox = css`
     justify-content: center;
     align-items: center;
     padding: 16px 24px;
-    margin-bottom: 32px;
+    margin-bottom: 30px;
     box-sizing: border-box;
     width: 165.21px;
-    height: 45.36px;
+    height: 40px;
     background: #0057D9;
     border-radius: 10px;
-    font-family: DM Sans,sans-serif;
+    font-family: Archivo Black;
     font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 16px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 14px;
     color: #FCFCFD;
   }
 `
