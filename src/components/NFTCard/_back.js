@@ -146,7 +146,7 @@ const NFTCard = (props) => {
               }
 
               try {
-                const wallet = window.ethereum || window.walletProvider;
+                let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
                 if (wallet) {
                   window.web3 = new Web3(wallet);
                   await wallet.enable();
@@ -321,7 +321,7 @@ const NFTCard = (props) => {
             onClick={async () => {
               try {
                 setIsOffLoading(true);
-                const wallet = window.ethereum || window.walletProvider;
+                let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
                 if (wallet) {
                   window.web3 = new Web3(wallet);
                   await wallet.enable();

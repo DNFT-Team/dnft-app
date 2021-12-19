@@ -18,6 +18,7 @@ import { bscTestTokenContact, busdContract } from '../../utils/contract';
 import CreateNFTModal from './create/index';
 import LoadingIcon from 'images/asset/loading.gif'
 import dnft_unit from 'images/market/dnft_unit.png'
+import SwitchModal from 'components/SwitchModal';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -78,13 +79,13 @@ const AssetScreen = (props) => {
   let history = useHistory();
 
   const getBannerUrl = async () => {
-    const { data } = await post(
+    const result = await post(
       `/api/v1/users/address/${address}`,
       {},
       token
     );
-    setBannerUrl(data?.data?.bannerUrl)
-    setAvatorUrl(data?.data?.avatorUrl)
+    setBannerUrl(result?.data?.data?.bannerUrl)
+    setAvatorUrl(result?.data?.data?.avatorUrl)
   }
 
   useEffect(() => {
@@ -134,7 +135,8 @@ const AssetScreen = (props) => {
     }
   };
 
-  const goToRightNetwork = useCallback(async (ethereum) => {
+  const goToRightNetwork = useCallback(async () => {
+    const ethereum = window.ethereum;
     if (history.location.pathname !== '/asset') {
       return;
     }
@@ -188,7 +190,8 @@ const AssetScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    console.log(wallet, 'wallet')
 
     if (wallet) {
       if (
@@ -202,7 +205,7 @@ const AssetScreen = (props) => {
 
   const getBalance = async () => {
     try {
-      let wallet = window.ethereum || window.walletProvider;
+      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
       if (wallet) {
         window.web3 = new Web3(wallet);
         await wallet.enable();
@@ -349,29 +352,6 @@ const AssetScreen = (props) => {
     []
   );
 
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }
-
   return (
     <div className={styleContainer}>
       <div>
@@ -441,7 +421,9 @@ const AssetScreen = (props) => {
         }
         setShowCreateNft(false);
       }}/>}
-      {renderShowSwitchModal()}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </div>
   );
 };
@@ -793,39 +775,3 @@ const styleNoDataContainer = css`
 
   
 `;
-
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black;
-      padding: 18px 24px;
-    }
-  }
-`

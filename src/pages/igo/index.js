@@ -3,13 +3,14 @@ import { useHistory } from 'react-router-dom';
 import { css } from 'emotion';
 import { Heading, Text, Box, Grid, Link } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
-import comingSoon from 'images/igo/igoComingSoon.png';
 import igoAvatar from 'images/igo/igoAvatar.png';
 import {noDataSvg} from '../../utils/svg';
 import globalConfig from '../../config/index';
 import { Dialog, Button } from 'element-react';
 import helper from 'config/helper';
 import { Icon } from '@iconify/react';
+import SwitchModal from 'components/SwitchModal';
+
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
   // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
@@ -44,7 +45,8 @@ const IGOScreen = (props) => {
     }
   }
 
-  const goToRightNetwork = useCallback(async (ethereum) => {
+  const goToRightNetwork = useCallback(async () => {
+    const ethereum = window.ethereum;
     try {
       if (history.location.pathname !== '/igo') {
         return;
@@ -74,7 +76,7 @@ const IGOScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       if (
@@ -85,29 +87,6 @@ const IGOScreen = (props) => {
       }
     }
   }, [window.ethereum, window.walletProvider]);
-
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }
 
   return (
     <div className={styleIgo}>
@@ -146,7 +125,9 @@ const IGOScreen = (props) => {
           )) : <div className={styleNoDataContainer}>{noDataSvg}</div>
         }
       </Grid>
-      {renderShowSwitchModal()}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </div>
   )
 }
@@ -301,38 +282,3 @@ const styleNoDataContainer = css`
   color: #233a7d;
 `;
 
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black;
-      padding: 18px 24px;
-    }
-  }
-`
