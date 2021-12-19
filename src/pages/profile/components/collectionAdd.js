@@ -13,7 +13,9 @@ const CollectionAdd = (props) => {
     address,
     dispatch,
     token,
-    chainType
+    chainType,
+    style  = {},
+    handleCollect,
   } = props;
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const getCollectionNftList = () => {
@@ -32,7 +34,7 @@ const CollectionAdd = (props) => {
   }
   return (
     <>
-      <div  className={styleCardContainer}>
+      <div style={style}  className={styleCardContainer}>
         <img src={add} />
         <div onClick={() => setShowCreateCollection(true)} >Create Collection</div>
       </div>

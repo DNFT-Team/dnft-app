@@ -23,15 +23,16 @@ import Web3 from 'web3';
 import globalConfig from '../../../config';
 import LoadingIcon from '../../../images/asset/loading.gif'
 const CreateNFTModal = (props) => {
-  const { dispatch, datas, location, address, chainType, token, categoryList, onClose } =
+  const { dispatch, datas, collectionId, location, address, chainType, token, categoryList, onClose } =
     props;
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({
     supply: 1,
     contractType: '721',
+    collectionId: collectionId,
   });
-
+  console.log(form,'collectionIdcollectionIdcollectionIdcollectionId')
   const [nftUrl, setNftUrl] = useState();
   const [nftFile, setNftFile] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -377,6 +378,7 @@ const CreateNFTModal = (props) => {
                   value={form.collectionId}
                   className={styleCollection}
                   style={{ flex: 1, marginRight: '8px' }}
+                  disabled={collectionId}
                   onChange={(value) => {
                     setForm({
                       ...form,

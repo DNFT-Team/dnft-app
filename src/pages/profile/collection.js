@@ -10,6 +10,8 @@ import LoadingIcon from 'images/asset/loading.gif'
 import NFTCard from '../../components/NFTCard';
 import { noDataSvg } from 'utils/svg';
 import CreateCollectionModal from 'components/CreateCollectionModal';
+import add from 'images/profile/add.png';
+import CreateNFTModal from '../asset/create/index';
 
 import { get, post } from 'utils/request';
 
@@ -23,6 +25,7 @@ const CollectionScreen = (props) => {
   const [list, setList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const [showCreateNft, setShowCreateNft] = useState(false);
 
   useEffect(() => {
     getCollectionNftList()
@@ -88,7 +91,11 @@ const CollectionScreen = (props) => {
       <div className={styleInfoContainer}>
         {list?.content?.length > 0
           ? list.content.map((item, index) => renderCard(item, index))
-          : renderNoData}
+          : null}
+        <div className={styleCardContainerNFT}>
+          <img src={add} />
+          <div onClick={() => setShowCreateNft(true)} >Create NFT</div>
+        </div>
       </div>
       {isLoading && <div className={styleLoadingIconContainer}>
         <img src={LoadingIcon} alt=""/>
@@ -108,6 +115,12 @@ const CollectionScreen = (props) => {
           }}
         />
       )}
+      {showCreateNft && <CreateNFTModal collectionId={state?.item?.id} onClose={(isCreate) => {
+        if (isCreate) {
+          getCollectionNftList();
+        }
+        setShowCreateNft(false);
+      }}/>}
     </div>
   );
 };
@@ -224,4 +237,33 @@ const styleNoDataContainer = css`
     margin-top: 20px;
   }
 `;
+const styleCardContainerNFT = css`
+  background: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  flex: 1;
+  margin: 0 .6rem;
+  width: calc(100% - 1.2rem);
 
+  img {
+    width: 84px;
+    height: 84px;
+    margin: 113px 0;
+  }
+  div {
+    width: 181px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #0057D9;
+    border-radius: 10px;
+    font-family: Archivo Black;
+    font-size: 14px;
+    text-align: center;
+    color: #FCFCFD;
+    cursor: pointer;
+  }
+`;
