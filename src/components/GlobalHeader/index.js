@@ -139,7 +139,6 @@ const GlobalHeader = (props) => {
         }
       });
       await provider.enable();
-      console.log(provider, 'provider')
       window.walletProvider = provider;
     }
     if (!window.walletProvider) {
@@ -170,7 +169,7 @@ const GlobalHeader = (props) => {
   }, [address, netArray])
 
   useEffect(() => {
-    if (window.ethereum) {
+    if (window.ethereum.selectedAddress) {
       injectWallet();
     } else if (window.walletProvider) {
       injectWalletConnect()
