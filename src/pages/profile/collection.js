@@ -47,7 +47,19 @@ const CollectionScreen = (props) => {
       }
     }
   }
-
+  const getList = (id, isSave) => {
+    let _list = list?.content?.slice();
+    _list.map((obj) => {
+      if(obj.id === id) {
+        obj.isSaved = isSave;
+        obj.saveCount = isSave ? obj.saveCount + 1 : obj.saveCount - 1;
+      }
+    })
+    setList({
+      ...list,
+      content: _list,
+    })
+  }
   const renderCard = useCallback(
     (item, index) => (
       <NFTCard
@@ -55,9 +67,10 @@ const CollectionScreen = (props) => {
         index={index}
         fromCollection={true}
         currentStatus={''}
+        getList={getList}
       />
     ),
-    []
+    [list]
   );
   const renderNoData = useMemo(
     () => (

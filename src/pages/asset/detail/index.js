@@ -60,12 +60,12 @@ const MarketDetailScreen = (props) => {
   const getMarketInfo = async () => {
     try {
       const { data } = await get(
-        `/api/v1/trans/market/${item?.contractType}/${item?.orderId}`,
+        `/api/v1/trans/asset/${item?.address}/${item?.status}/${item?.nftId}`,
         '',
         token
       )
-      if(Array.isArray(data?.data?.content) && data?.data?.content?.length)
-        setDatas(data?.data?.content?.[0])
+      console.log(data,'datadata')
+      setDatas(data?.data?.content)
     } catch (e) {
       console.log(e, 'e');
     }
@@ -208,7 +208,7 @@ const MarketDetailScreen = (props) => {
       </Dialog>
     )
   }, [isOffLoading])
-  console.log(lineFlag, 'lineFlag')
+  console.log(datas, 'lineFlag')
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   return (
     <div className={styles.marketDetail}>

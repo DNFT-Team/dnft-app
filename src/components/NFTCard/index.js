@@ -379,7 +379,7 @@ const NFTCard = (props) => {
         index={index}
         whetherShowPrice={false}
         getMarketList={getList}
-        clickDetail={(e) => {handleDetail && item?.status === 'ONSALE' &&  handleDetail()}}
+        clickDetail={(e) => {handleDetail && handleDetail()}}
       >
         {
           currentStatus.value === 'INWALLET' && <div
