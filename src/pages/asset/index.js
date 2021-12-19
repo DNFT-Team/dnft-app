@@ -239,11 +239,11 @@ const AssetScreen = (props) => {
         <div className={styleHeader}>
 
           <div className={styleAssetAccountContainer}>
+            <p>Balance</p>
             <div className={styleACBalance}>
               <img src={dnft_unit} alt=""/>
-              <span>{balance}</span>
+              <span>{balance} DNF</span>
             </div>
-            <p>Available balance</p>
           </div>
 
           {currentNetEnv !== 'otherNet' &&
@@ -578,7 +578,7 @@ const styleCreateNFT = css`
 const styleAssetAccountContainer = css`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  // align-items: center;
   justify-content: center;
   p {
     user-select: none;
@@ -592,7 +592,7 @@ const styleAssetAccountContainer = css`
   }
 `;
 const styleACBalance = css`
-  font-family: Bahnschrift;
+  font-family: Helvetica;
   font-style: normal;
   font-weight: bold;
   font-size: 30px;
@@ -606,7 +606,7 @@ const styleACBalance = css`
     width: 35px;
     height: 35px;
     border-radius: 100%;
-    margin-right: 8px;
+    margin-right: 10px;
   }
 `;
 
