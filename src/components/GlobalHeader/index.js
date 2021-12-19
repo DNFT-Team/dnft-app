@@ -139,7 +139,6 @@ const GlobalHeader = (props) => {
         }
       });
       await provider.enable();
-      console.log(provider, 'provider')
       window.walletProvider = provider;
     }
     if (!window.walletProvider) {
@@ -163,14 +162,14 @@ const GlobalHeader = (props) => {
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
     });
-    provider.on('wc_sessionUpdate', (chainId) => {
+    provider.on('chainChanged', (chainId) => {
       // TODO: 监听不到chainId的改变
       window.location.reload()
     });
   }, [address, netArray])
 
   useEffect(() => {
-    if (window.ethereum) {
+    if (window.ethereum.selectedAddress) {
       injectWallet();
     } else if (window.walletProvider) {
       injectWalletConnect()
