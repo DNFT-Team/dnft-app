@@ -12,6 +12,7 @@ import helper from '../../config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import globalConfig from '../../config/index';
+import SwitchModal from 'components/SwitchModal';
 
 const Market = (props) => {
   let history = useHistory();
@@ -107,7 +108,8 @@ const Market = (props) => {
   const handleMore = () => {
     fetchData()
   }
-  const goToRightNetwork = useCallback(async (ethereum) => {
+  const goToRightNetwork = useCallback(async () => {
+    const ethereum = window.ethereum;
     try {
       if (history.location.pathname !== '/market') {
         return;
@@ -137,7 +139,7 @@ const Market = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       if (
@@ -148,29 +150,6 @@ const Market = (props) => {
       }
     }
   }, [window.ethereum, window.walletProvider]);
-
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }
 
   return (
     <div className={styles.container}>
@@ -251,7 +230,9 @@ const Market = (props) => {
           </div>
         }
       </InfiniteScroll>
-      {renderShowSwitchModal()}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </div>
   );
 };
@@ -318,41 +299,6 @@ const styleSelectContainer = css`
     background: #417ED9;
   }
 `;
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black;
-      padding: 18px 24px;
-    }
-  }
-`
 const stylesNextPage = css`
   display: flex;
   justify-content: center;

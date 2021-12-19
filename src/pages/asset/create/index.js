@@ -193,7 +193,7 @@ const CreateNFTModal = (props) => {
       toast.success('NFT upload success!');
       toast.info('Step 2. Mint NFT via contract...');
       //  mint nft
-      const wallet = window.ethereum || window.walletProvider;
+      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
       if (wallet) {
         window.web3 = new Web3(wallet);
         await wallet.enable();

@@ -129,6 +129,36 @@ const GlobalHeader = (props) => {
   }, [address, netArray]);
 
   const injectWalletConnect = useCallback(async () => {
+    const provider = window.walletProvider;
+    const currentIndex = netArray.findIndex(
+      (item) => Number(item.netWorkId) === Number(provider.chainId)
+    );
+    let params = {address: provider.accounts[0], chainType: NET_WORK_VERSION[provider.chainId]}
+    setCurrentNetIndex(currentIndex)
+    setAddress(provider.accounts[0]);
+    dispatch(setProfileAddress(params))
+    dispatch(setProfileToken(params))
+
+    provider.wc.on('accountsChanged', (accounts) => {
+      const currentIndex = netArray.findIndex(
+        (item) => Number(item.netWorkId) === Number(provider.chainId)
+      );
+      setCurrentNetIndex(currentIndex)
+      setAddress(accounts[0]);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    });
+    provider.on('disconnect', (payload) => {
+      localStorage.removeItem('walletconnect');
+      window.walletProvider = undefined;
+      let params = {address: undefined, chainType: chainType}
+      setAddress(undefined);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    })
+  }, [address, netArray]);
+
+  const getWalletConnectFromStorage = useCallback(async () => {
     if (localStorage.getItem('walletconnect')) {
       const provider = new WalletConnectProvider({
         infuraId: 'f65c0bbb601041e19fb6a106560bc9ac',
@@ -140,42 +170,26 @@ const GlobalHeader = (props) => {
       });
       await provider.enable();
       window.walletProvider = provider;
-    }
-    if (!window.walletProvider) {
-      return;
-    }
-    const provider = window.walletProvider;
-    const currentIndex = netArray.findIndex(
-      (item) => Number(item.netWorkId) === Number(provider.chainId)
-    );
-    let params = {address: provider.accounts[0], chainType: NET_WORK_VERSION[provider.chainId]}
-    setCurrentNetIndex(currentIndex)
-    setAddress(provider.accounts[0]);
-    dispatch(setProfileAddress(params))
-    dispatch(setProfileToken(params))
-    provider.wc.on('accountsChanged', (accounts) => {
       const currentIndex = netArray.findIndex(
         (item) => Number(item.netWorkId) === Number(provider.chainId)
       );
+      let params = {address: provider.accounts[0], chainType: NET_WORK_VERSION[provider.chainId]}
       setCurrentNetIndex(currentIndex)
-      setAddress(accounts[0]);
+      setAddress(provider.accounts[0]);
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
-    });
-    provider.on('chainChanged', (chainId) => {
-      // TODO: 监听不到chainId的改变
-      window.location.reload()
-    });
-  }, [address, netArray])
+    }
+  }, [])
 
   useEffect(() => {
-    if (window.ethereum.selectedAddress) {
+    if (window.ethereum?.selectedAddress) {
       injectWallet();
-    } else if (window.walletProvider) {
+    } else if (window.walletProvider?.connected) {
       injectWalletConnect()
+    } else {
+      getWalletConnectFromStorage()
     }
-  }, [injectWallet,injectWalletConnect,window.walletProvider, window.ethereum]);
-
+  }, [address, netArray, window.walletProvider, window.ethereum, getWalletConnectFromStorage]);
 
   const goToRightNetwork = async (ethereum, netWorkId) => {
     try {

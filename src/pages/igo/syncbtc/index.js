@@ -22,6 +22,7 @@ import { post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../../config/index';
+import SwitchModal from 'components/SwitchModal';
 
 const iframeUrl = `https://fun.dnft.world/${globalConfig.net_env === 'mainnet' ? 'syncbtc' : 'test_syncbtc'}/`
 
@@ -57,7 +58,7 @@ const SyncBtcScreen = (props) => {
   const isTestnet = currentNetEnv === 'testnet';
 
   const injectWallet = async () => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       if (
@@ -78,7 +79,7 @@ const SyncBtcScreen = (props) => {
   };
 
   const getMedalInfo = useCallback(async () => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       window.web3 = new Web3(wallet);
@@ -140,7 +141,7 @@ const SyncBtcScreen = (props) => {
       return;
     }
 
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
     if (wallet) {
       window.web3 = new Web3(wallet);
       await wallet.enable();
@@ -215,7 +216,7 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   const getIsApproved = useCallback(async () => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
     if (wallet) {
       window.web3 = new Web3(wallet);
       await wallet.enable();
@@ -238,7 +239,7 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   const getBusdAmount = useCallback(async () => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
     if (wallet) {
       window.web3 = new Web3(wallet);
       await wallet.enable();
@@ -262,7 +263,7 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   useEffect(() => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       injectWallet();
@@ -311,7 +312,7 @@ const SyncBtcScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       if (
@@ -323,7 +324,8 @@ const SyncBtcScreen = (props) => {
     }
   }, [window.ethereum, window.walletProvider]);
 
-  const goToRightNetwork = useCallback(async (ethereum) => {
+  const goToRightNetwork = useCallback(async () => {
+    const ethereum = window.ethereum;
     try {
       if (history.location.pathname !== '/igo/syncBtc') {
         return;
@@ -351,29 +353,6 @@ const SyncBtcScreen = (props) => {
     }
   }, []);
 
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }
-
   return (
     <div className={styleContainer}>
       <Icon className={styleBackArrow} icon="ic:round-arrow-back-ios-new" onClick={() => {history.push('/igo')}}/>
@@ -392,7 +371,7 @@ const SyncBtcScreen = (props) => {
               });
               return;
             }
-            let wallet = window.ethereum || window.walletProvider;
+            let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
             if (medalData.Total.isNotEnough) {
               toast.info('Ended', {
@@ -627,7 +606,9 @@ const SyncBtcScreen = (props) => {
           </div>
         </div>
       )}
-      {renderShowSwitchModal()}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </div>
   );
 };
@@ -1004,39 +985,3 @@ const styleConfirmSuccessModal = css`
     }
   }
 `;
-
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black;
-      padding: 18px 24px;
-    }
-  }
-`

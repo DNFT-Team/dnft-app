@@ -28,6 +28,7 @@ import helper from '../../config/helper';
 import {Icon} from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import dnft_unit from 'images/market/dnft_unit.png'
+import SwitchModal from 'components/SwitchModal';
 
 export const stakingJson = [{
   'name': 'The Spirit Of Silence',
@@ -97,7 +98,7 @@ const Mining = (props) => {
     try {
       setBalanceIsLoading(true);
 
-      let wallet = window.ethereum || window.walletProvider;
+      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
       if (wallet) {
         window.web3 = new Web3(wallet);
         await wallet.enable();
@@ -202,7 +203,7 @@ const Mining = (props) => {
   const getStakeInfo = useCallback(async () => {
     try {
       setIsStakeInfoLoading(true);
-      const wallet = window.ethereum || window.walletProvider;
+      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
       if (wallet) {
         window.web3 = new Web3(wallet);
@@ -246,7 +247,8 @@ const Mining = (props) => {
     init();
   }, [init]);
 
-  const goToRightNetwork = useCallback(async (ethereum) => {
+  const goToRightNetwork = useCallback(async () => {
+    const ethereum = window.ethereum;
     if (history.location.pathname !== '/mining') {
       return;
     }
@@ -293,7 +295,7 @@ const Mining = (props) => {
   }, []);
 
   useEffect(() => {
-    let wallet = window.ethereum || window.walletProvider;
+    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
 
     if (wallet) {
       if (
@@ -913,29 +915,6 @@ const Mining = (props) => {
     [isVisible, renderTab, renderStake, renderUnstake, renderClaim, stakeTab]
   );
 
-  const renderShowSwitchModal = () => {
-    console.log(isShowSwitchModal, 'isShowSwitchModal')
-    return (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to BSC network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }
-
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
@@ -974,7 +953,9 @@ const Mining = (props) => {
         </div>
       </div>
       {renderModal(stakeData[stakeIndex])}
-      {renderShowSwitchModal()}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </div>
   );
 };
@@ -1666,40 +1647,5 @@ const styleLabelContainer = css`
   .percent{
     color: white;
     font-size: 16px;
-  }
-`
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black;
-      padding: 18px 24px;
-    }
   }
 `

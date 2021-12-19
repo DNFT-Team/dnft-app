@@ -33,6 +33,7 @@ import {
 import { Dialog, Button } from 'element-react';
 import { toast } from 'react-toastify';
 import TradeTable from 'components/TradeTable';
+import SwitchModal from 'components/SwitchModal';
 
 /**
 * Icon
@@ -46,6 +47,7 @@ import IconBsc from 'images/networks/logo_select_bsc.svg';
  */
 import helper from 'config/helper';
 import globalConf from 'config';
+
 
 /**
  * Chain Node
@@ -365,7 +367,8 @@ const TransferView = (props) => {
   /**
    * @description switch network
    */
-  const goToRightNetwork = async (ethereum) => {
+  const goToRightNetwork = async () => {
+    const ethereum = window.ethereum;
     try {
       if (frNet.key === 'ETH') {
         await ethereum.request({
@@ -383,27 +386,7 @@ const TransferView = (props) => {
       return false
     }
   };
-  const renderShowSwitchModal = () =>
-    // console.log(isShowSwitchModal, 'isShowSwitchModal')
-    (
-      <Dialog
-        size="tiny"
-        className={styleSwitchModal}
-        visible={isShowSwitchModal}
-        closeOnClickModal={false}
-        closeOnPressEscape={false}
-      >
-        <Dialog.Body>
-          <span>You’ve connected to unsupported networks, please switch to {frNet.key} network.</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button onClick={() => {
-            let ethereum = window.ethereum;
-            goToRightNetwork(ethereum);
-          }}>Switch Network</Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
+
   //  render Dom
   return <div className={styleWrapper}>
     <div>
@@ -509,7 +492,9 @@ const TransferView = (props) => {
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
-    {renderShowSwitchModal()}
+    <SwitchModal visible={isShowSwitchModal} networkName={frNet.key} goToRightNetwork={goToRightNetwork} onClose={() => {
+      setIsShowSwitchModal(false)
+    }} />
   </div>
 }
 const mapStateToProps = ({ profile }) => ({
@@ -707,41 +692,7 @@ const styleLinks = css`
   display: inline-block;
   color: #75819A;
 `
-const styleSwitchModal = css`
-  @media (max-width: 900px) {
-    width: calc(100% - 32px);
-  }
-  border-radius: 10px;
-  width: 400px;
-  padding: 40px 30px 30px 30px;
-  .el-dialog__header {
-    display: none;
-  }
-  .el-dialog__body {
-    padding: 0;
-    font-family: Archivo Black,sans-serif;
-    color: #000000;
-    font-size: 18px;
-    line-height: 30px;
-    span {
-      display: flex;
-      text-align: center;
-    }
-  }
-  .dialog-footer {
-    padding: 0;
-    text-align: center;
-    margin-top: 16px;
-    button {
-      background: rgba(0, 87, 217, 1);
-      color: #FCFCFD;
-      font-size: 16px;
-      border-radius: 10px;
-      font-family: Archivo Black,sans-serif;
-      padding: 18px 24px;
-    }
-  }
-`
+
 const tableLink = css`
   color: #0057D9;
   font-style: italic;
