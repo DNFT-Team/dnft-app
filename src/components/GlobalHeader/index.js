@@ -163,7 +163,7 @@ const GlobalHeader = (props) => {
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
     });
-    provider.on('wc_sessionUpdate', (chainId) => {
+    provider.on('chainChanged', (chainId) => {
       // TODO: 监听不到chainId的改变
       window.location.reload()
     });
