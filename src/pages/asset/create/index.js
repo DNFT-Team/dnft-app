@@ -378,7 +378,6 @@ const CreateNFTModal = (props) => {
                   value={form.collectionId}
                   className={styleCollection}
                   style={{ flex: 1, marginRight: '8px' }}
-                  disabled={collectionId}
                   onChange={(value) => {
                     setForm({
                       ...form,
