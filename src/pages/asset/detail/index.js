@@ -55,7 +55,8 @@ const MarketDetailScreen = (props) => {
     }
   }, [item])
   useEffect(() => {
-    getMarketInfo();
+    if(item?.status !== 'INWALLET')
+      getMarketInfo();
   }, [token])
   const getMarketInfo = async () => {
     try {
@@ -105,8 +106,8 @@ const MarketDetailScreen = (props) => {
     const flag = data?.success;
     const msg = flag ? `${datas?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message;
     toast[flag ? 'success' : 'error'](msg, { position: toast.POSITION.TOP_CENTER});
-    getMarketInfo();
-
+    if(item?.status !== 'INWALLET')
+      getMarketInfo();
   }
   const handleLinkProfile = (address) => {
     if (!token) {
