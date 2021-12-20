@@ -389,8 +389,8 @@ const TransferView = (props) => {
 
   //  render Dom
   return <div className={styleWrapper}>
-    <div>
-      <span className={styleTitleH3}>Transfer ${TargetToken} from {frNet.key} to {toNet.key}</span>
+    <div className='styleHeader'>
+      <span className={styleTitleH3}>{frNet.key} Bridge to {toNet.key}</span>
       <div className={styleLinks}>
         <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block">
@@ -398,7 +398,7 @@ const TransferView = (props) => {
         </Link>
         <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle="italic"
           display="inline-block" ml="1rem">
-          <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Cross
+          <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Mechanism
         </Link>
       </div>
     </div>
@@ -412,7 +412,7 @@ const TransferView = (props) => {
           <Input
             className={styleInput}
             is-full-width="true"
-            focusBorderColor="#00398D"
+            focusBorderColor="#ddd"
             placeholder="Amount"
             autoFocus
             isInvalid={amount < 0}
@@ -509,6 +509,9 @@ export default withRouter(connect(mapStateToProps)(TransferView));
 const styleWrapper = css`
   position: relative;
   padding: 30px 50px;
+  .styleHeader {
+    display: flex
+  }
   h4{
     font-family: Archivo Black, sans-serif;
     font-style: normal;
@@ -623,30 +626,35 @@ const styleFormItem = css`
 
     color: #8F9BBA;
   }
+  .css-irsh4f[disabled], .css-irsh4f[aria-disabled=true], .css-irsh4f[data-disabled] {
+    opacity: 1;
+    background: #EEEEEE;
+    color: #888888;
+  }
 `
 const styleInput = css`
-  border: 2px solid #E6E8EC;
+  border: 2px solid #DDDDDD!important;
   box-sizing: border-box;
   border-radius: 10px;
-  height: 50px !important;
+  height: 44px !important;
   
-  font-family: Poppins,sans-serif;
+  font-family: Helvetica;
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 14px;
   line-height: 24px;
   /* identical to box height, or 120% */
 
   display: flex;
   align-items: center;
 
-  color: #1B2559;
+  color: #000;
 `
 const styleRight = css`
-  background: #F2F2F2;
+  background: #DDDDDD!important;
   border-radius: 10px;
   box-sizing: border-box;
-  height: 50px !important;
+  height: 44px !important;
   img{
     height: 90%;
     margin-right: .6rem;
@@ -679,8 +687,8 @@ const styleTitleH3 = css`
   font-family: Archivo Black, sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 48px;
-  line-height: 56px;
+  font-size: 36px;
+  line-height: 36px;
   letter-spacing: -0.02em;
   color: #23262F;
 `

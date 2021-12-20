@@ -34,11 +34,11 @@ const BridgeScreen = (props) => {
     <div className='styleHeader'>
       <h3>Bridge</h3>
       <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
-        <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
+        <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
           <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
         </Link>
-        <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
+        <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
           <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
         </Link>

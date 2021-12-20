@@ -17,6 +17,7 @@ const styleNoDataContainer = css`
 const styleTable = css`
   width: 100%;
   margin: 0 auto;
+  border-spacing: 0;
   thead {
     background: #F7F7F7;
     color: #8F9BBA;
@@ -77,7 +78,10 @@ const TradeTable = (props) => {
   return isEmpty ? renderNoData : (
     <table className={styleTable}>
       <thead>
-        <tr>
+        <tr style={{
+          background: '#ddd',
+          color: '#888'
+        }}>
           {cols.map((e, i) => (<th key={'th' + i}>{e.title}</th>))}
         </tr>
       </thead>

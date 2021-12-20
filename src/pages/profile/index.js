@@ -186,6 +186,9 @@ const ProfileScreen = (props) => {
             isProfile
             currentStatus={selectedTab}
             newAddress={newAddress}
+            handleDetail={() => {
+              history.push('/asset/detail', {item})
+            }}
           />
         );
       }
@@ -339,7 +342,7 @@ const ProfileScreen = (props) => {
         </div>
         {/* DATA */}
         <div className={styles.tabs}>{renderTabList}</div>
-        <div className={renderAction(selectedTab)?.length > 0 ? styleCardList : styleCardListEmpty}>
+        <div className={renderAction(selectedTab)?.length > 0 ? selectedTab === 'Collections' ? styleCollections : styleCardList : styleCardListEmpty}>
           {renderAction(selectedTab)?.length > 0
             ? renderAction(selectedTab)?.map((item, index) => (
               renderCard(item, index)
@@ -425,13 +428,21 @@ const styleActiveTabButton = css`
 const styleCardList = css`
   display: grid;
   gap: 20px 19px;
+  grid-template-columns: repeat(5,  minmax(250px, 1fr));
+    @media (max-width: 1650px) {
+      grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
+    }
+`;
+const styleCollections = css`
+  display: grid;
+  gap: 20px 19px;
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
-
 `;
 const styleCardListEmpty = css`
   display: grid;
   gap: 20px 19px;
-  grid-template-columns: repeat(auto-fill);
+  // grid-template-columns: repeat(auto-fill);
+ 
 `;
 
 const styleNoDataContainer = css`

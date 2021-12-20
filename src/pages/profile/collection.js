@@ -1,6 +1,7 @@
 import { Dialog, InputNumber, Select, Button, Loading } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useHistory } from 'react-router';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -26,6 +27,7 @@ const CollectionScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [showCreateNft, setShowCreateNft] = useState(false);
+  let history = useHistory();
 
   useEffect(() => {
     getCollectionNftList()
@@ -68,6 +70,9 @@ const CollectionScreen = (props) => {
         fromCollection={true}
         currentStatus={''}
         getList={getList}
+        handleDetail={() => {
+          history.push('/asset/detail', {item})
+        }}
       />
     ),
     [list]
