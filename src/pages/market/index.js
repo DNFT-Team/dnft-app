@@ -13,6 +13,7 @@ import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import globalConfig from '../../config/index';
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 const Market = (props) => {
   let history = useHistory();
@@ -139,7 +140,7 @@ const Market = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -149,7 +150,7 @@ const Market = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   return (
     <div className={styles.container}>

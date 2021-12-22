@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react';
 import { css } from 'emotion';
 import axios from 'axios';
+import Web3 from 'web3';
 
 import { NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
@@ -158,6 +159,25 @@ const GlobalHeader = (props) => {
     })
   }, [address, netArray]);
 
+  const injectOntoConnect = useCallback(async () => {
+    const onto = window.onto;
+    console.log(onto, 'onto inject')
+    const currentIndex = netArray.findIndex(
+      (item) => Number(item.netWorkId) === Number(onto.chainId)
+    );
+    let params = {address: onto.accounts[0], chainType: NET_WORK_VERSION[onto.chainId]}
+    setCurrentNetIndex(currentIndex)
+    setAddress(onto.accounts[0]);
+    dispatch(setProfileAddress(params))
+    dispatch(setProfileToken(params))
+    window.onto.on('disconnect', (payload) => {
+      let params = {address: undefined, chainType: chainType}
+      setAddress(undefined);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    })
+  }, [address, netArray]);
+
   const getWalletConnectFromStorage = useCallback(async () => {
     if (localStorage.getItem('walletconnect')) {
       const provider = new WalletConnectProvider({
@@ -186,10 +206,12 @@ const GlobalHeader = (props) => {
       injectWallet();
     } else if (window.walletProvider?.connected) {
       injectWalletConnect()
+    } else if (window.onto?.isConnected) {
+      injectOntoConnect()
     } else {
       getWalletConnectFromStorage()
     }
-  }, [address, netArray, window.walletProvider, window.ethereum, getWalletConnectFromStorage]);
+  }, [address, netArray, window.walletProvider,window.onto , window.ethereum, getWalletConnectFromStorage]);
 
   const goToRightNetwork = async (ethereum, netWorkId) => {
     try {
@@ -287,6 +309,24 @@ const GlobalHeader = (props) => {
       console.log(e, 'e')
     }
   }
+
+  const connectOntoWallet = async () => {
+    try {
+      const web3 = new Web3(window.onto);
+      let accounts = await web3.eth.requestAccounts();
+      let chainId = await web3.eth.getChainId();
+      const currentIndex = netArray.findIndex(
+        (item) => Number(item.netWorkId) === Number(chainId)
+      );
+      let params = {address: accounts[0], chainType: NET_WORK_VERSION[chainId]}
+      setCurrentNetIndex(currentIndex)
+      setAddress(accounts[0]);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
+    } catch (e) {
+      console.log(e, 'e')
+    }
+  };
 
   const [giftLoading, setGiftLoading] = useState(false);
   const [isDrawer, setIsDrawer] = useState(false)
@@ -458,6 +498,16 @@ const GlobalHeader = (props) => {
             }}
           >
             <span>Wallet Connect</span>
+          </div>
+          <div
+            key={'ONTO'}
+            className={styleNetItem}
+            onClick={async () => {
+              setIsSwitchWalletVisible(false);
+              await connectOntoWallet()
+            }}
+          >
+            <span>ONTO</span>
           </div>
         </Dialog.Body>
       </Dialog>

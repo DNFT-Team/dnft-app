@@ -21,6 +21,7 @@ import NftSlider from 'components/NftSlider';
 import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg';
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -87,7 +88,7 @@ const MarketDetailScreen = (props) => {
   }, [])
 
   useEffect(() => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -98,7 +99,7 @@ const MarketDetailScreen = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   const goToRightNetwork = useCallback(async () => {
     const ethereum = window.ethereum;
@@ -207,11 +208,10 @@ const MarketDetailScreen = (props) => {
 
   const clickBuyItem = async () => {
     try {
-      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+      let wallet = getWallet();
 
       if (wallet) {
         window.web3 = new Web3(wallet);
-        await wallet.enable();
         setLoading(true)
 
         await isApproved();

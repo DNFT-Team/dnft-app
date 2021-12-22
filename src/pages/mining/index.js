@@ -29,6 +29,7 @@ import {Icon} from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 export const stakingJson = [{
   'name': 'The Spirit Of Silence',
@@ -98,10 +99,9 @@ const Mining = (props) => {
     try {
       setBalanceIsLoading(true);
 
-      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+      let wallet = getWallet();
       if (wallet) {
         window.web3 = new Web3(wallet);
-        await wallet.enable();
         if (!address) {
           setBalance(0.00);
         }
@@ -203,7 +203,7 @@ const Mining = (props) => {
   const getStakeInfo = useCallback(async () => {
     try {
       setIsStakeInfoLoading(true);
-      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+      let wallet = getWallet();
 
       if (wallet) {
         window.web3 = new Web3(wallet);
@@ -231,7 +231,7 @@ const Mining = (props) => {
     } finally {
       setIsStakeInfoLoading(false);
     }
-  }, [getItemStakeInfoByContract, address]);
+  }, [getItemStakeInfoByContract, address, getWallet]);
 
   const init = useCallback(async (doNotNeedModalHidden) => {
     if (!doNotNeedModalHidden) {
@@ -295,7 +295,7 @@ const Mining = (props) => {
   }, []);
 
   useEffect(() => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -306,7 +306,7 @@ const Mining = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   const renderAssetHeader = useMemo(
     () => (

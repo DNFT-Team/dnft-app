@@ -10,6 +10,7 @@ import { Dialog, Button } from 'element-react';
 import helper from 'config/helper';
 import { Icon } from '@iconify/react';
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
@@ -76,7 +77,7 @@ const IGOScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -86,7 +87,7 @@ const IGOScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   return (
     <div className={styleIgo}>

@@ -29,11 +29,13 @@ const SwitchModal = (props) => {
       </Dialog.Body>
       <Dialog.Footer className='dialog-footer'>
         <Button onClick={async () => {
-          const provider = window.walletProvider;
           if (window.ethereum.selectedAddress) {
             goToRightNetwork(window.ethereum);
-          }else if (window.walletProvider) {
-            provider.disconnect();
+          } else if (window.walletProvider) {
+            window.walletProvider.disconnect();
+            onClose();
+          } else if (window.onto) {
+            // window.onto.disconnect();
             onClose();
           }
         }}>{window.ethereum.selectedAddress ? 'Switch Network' : 'Disconnect'}</Button>

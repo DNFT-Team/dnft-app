@@ -23,6 +23,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../../config/index';
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 const iframeUrl = `https://fun.dnft.world/${globalConfig.net_env === 'mainnet' ? 'syncbtc' : 'test_syncbtc'}/`
 
@@ -58,7 +59,7 @@ const SyncBtcScreen = (props) => {
   const isTestnet = currentNetEnv === 'testnet';
 
   const injectWallet = async () => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -79,11 +80,10 @@ const SyncBtcScreen = (props) => {
   };
 
   const getMedalInfo = useCallback(async () => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       window.web3 = new Web3(wallet);
-      await wallet.enable();
 
       const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
@@ -134,17 +134,16 @@ const SyncBtcScreen = (props) => {
         },
       });
     }
-  }, []);
+  }, [getWallet]);
 
   const getRewardInfo = useCallback(async () => {
     if (address == undefined) {
       return;
     }
 
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
     if (wallet) {
       window.web3 = new Web3(wallet);
-      await wallet.enable();
 
       const contractAddress = igoContract[currentNetEnv];
       const abi = igoAbi;
@@ -157,7 +156,7 @@ const SyncBtcScreen = (props) => {
 
       setIsReward(isReward > 0);
     }
-  }, [address]);
+  }, [address, getWallet]);
 
   const getFormatName = (nftId) => {
     switch (nftId) {
@@ -216,10 +215,9 @@ const SyncBtcScreen = (props) => {
   }, [address]);
 
   const getIsApproved = useCallback(async () => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
     if (wallet) {
       window.web3 = new Web3(wallet);
-      await wallet.enable();
 
       try {
         const myBusdContract = new window.web3.eth.Contract(
@@ -236,13 +234,12 @@ const SyncBtcScreen = (props) => {
       } finally {
       }
     }
-  }, [address]);
+  }, [address, getWallet]);
 
   const getBusdAmount = useCallback(async () => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
     if (wallet) {
       window.web3 = new Web3(wallet);
-      await wallet.enable();
 
       try {
         const myBusdContract = new window.web3.eth.Contract(
@@ -260,15 +257,15 @@ const SyncBtcScreen = (props) => {
       } finally {
       }
     }
-  }, [address]);
+  }, [address, getWallet]);
 
   useEffect(() => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       injectWallet();
     }
-  }, [injectWallet, window.ethereum, window.walletProvider]);
+  }, [injectWallet, getWallet]);
 
   useEffect(() => {
     if (isTestnet) {
@@ -312,7 +309,7 @@ const SyncBtcScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -322,7 +319,7 @@ const SyncBtcScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   const goToRightNetwork = useCallback(async () => {
     const ethereum = window.ethereum;
@@ -371,7 +368,7 @@ const SyncBtcScreen = (props) => {
               });
               return;
             }
-            let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+            let wallet = getWallet();
 
             if (medalData.Total.isNotEnough) {
               toast.info('Ended', {
@@ -381,7 +378,6 @@ const SyncBtcScreen = (props) => {
             }
 
             if (!address) {
-              await wallet.enable();
 
               const accounts = await wallet.request({
                 method: 'eth_requestAccounts',

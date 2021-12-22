@@ -19,6 +19,7 @@ import CreateNFTModal from './create/index';
 import LoadingIcon from 'images/asset/loading.gif'
 import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
+import { getWallet } from 'utils/get-wallet';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -188,12 +189,14 @@ const AssetScreen = (props) => {
     }
   }, [token, category, selectedTab, sortTag, address, chainType]);
 
+
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
     console.log(wallet, 'wallet')
 
     if (wallet) {
+      console.log(wallet, 'wallet', rightChainId)
       if (
         (Number(wallet.networkVersion || wallet.chainId) !== rightChainId) &&
         history.location.pathname === '/asset'
@@ -201,14 +204,13 @@ const AssetScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   const getBalance = async () => {
     try {
-      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+      let wallet = getWallet();
       if (wallet) {
         window.web3 = new Web3(wallet);
-        await wallet.enable();
         const account = address;
 
         const myContract = new window.web3.eth.Contract(

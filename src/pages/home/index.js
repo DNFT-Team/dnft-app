@@ -17,6 +17,7 @@ import banner1 from 'images/home/banner/marketplace2.png'
 import banner2 from 'images/home/banner/mintNft2.png'
 import banner3 from 'images/home/banner/mining2.png'
 import banner4 from 'images/home/banner/festival.png'
+import { getWallet } from 'utils/get-wallet';
 
 
 const HomeScreen = (props) => {
@@ -124,7 +125,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     setIsShowSwitchModal(false)
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -134,7 +135,7 @@ const HomeScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
   const getWindowSize = () => ({
     innerHeight: window.innerHeight,

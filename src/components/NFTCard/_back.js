@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
 import _ from 'lodash';
+import { getWallet } from 'utils/get-wallet';
 
 const gasLimit = 3000000;
 const NFTCard = (props) => {
@@ -146,10 +147,9 @@ const NFTCard = (props) => {
               }
 
               try {
-                let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+                let wallet = getWallet();
                 if (wallet) {
                   window.web3 = new Web3(wallet);
-                  await wallet.enable();
 
                   if (isApproved) {
                     try {
@@ -288,7 +288,7 @@ const NFTCard = (props) => {
         </Dialog.Body>
       </Dialog>
     );
-  }, [sellForm, isApproved, isApproveLoading, isOnLoading]);
+  }, [sellForm, isApproved, isApproveLoading, isOnLoading, wallet]);
 
   const renderOffShelfModal = useMemo(() => {
     console.log('off');
@@ -321,10 +321,9 @@ const NFTCard = (props) => {
             onClick={async () => {
               try {
                 setIsOffLoading(true);
-                let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+                let wallet = getWallet();
                 if (wallet) {
                   window.web3 = new Web3(wallet);
-                  await wallet.enable();
                   const is721Contract = item.contractType == 721;
 
                   const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
@@ -368,7 +367,7 @@ const NFTCard = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  }, [isOffLoading])
+  }, [isOffLoading, wallet])
   const isEmpty = item.quantity === 0;
 
   return (

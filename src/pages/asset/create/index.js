@@ -22,6 +22,7 @@ import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi';
 import Web3 from 'web3';
 import globalConfig from '../../../config';
 import LoadingIcon from '../../../images/asset/loading.gif'
+import { getWallet } from 'utils/get-wallet';
 const CreateNFTModal = (props) => {
   const { dispatch, datas, collectionId, location, address, chainType, token, categoryList, onClose } =
     props;
@@ -194,10 +195,10 @@ const CreateNFTModal = (props) => {
       toast.success('NFT upload success!');
       toast.info('Step 2. Mint NFT via contract...');
       //  mint nft
-      let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+      let wallet = getWallet();
       if (wallet) {
         window.web3 = new Web3(wallet);
-        await wallet.enable();
+        await window.web3.eth.requestAccounts()
 
         let createNFTResult;
         let contractAddress =

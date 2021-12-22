@@ -25,6 +25,7 @@ import {
   tradableNFTContract721,
 } from 'utils/contract';
 import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } from 'utils/abi';
+import { getWallet } from 'utils/get-wallet';
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -73,7 +74,7 @@ const MarketDetailScreen = (props) => {
   }
 
   useEffect(() => {
-    let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+    let wallet = getWallet();
 
     if (wallet) {
       if (
@@ -84,7 +85,7 @@ const MarketDetailScreen = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [window.ethereum, window.walletProvider]);
+  }, [getWallet]);
 
 
   const handleStar = async () => {
@@ -161,11 +162,10 @@ const MarketDetailScreen = (props) => {
             onClick={async () => {
               try {
                 setIsOffLoading(true);
-                let wallet = window.ethereum.selectedAddress ? window.ethereum : window.walletProvider;
+                let wallet = getWallet();
 
                 if (wallet) {
                   window.web3 = new Web3(wallet);
-                  await wallet.enable();
                   const is721Contract = item.contractType == 721;
 
                   const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
@@ -208,8 +208,8 @@ const MarketDetailScreen = (props) => {
         </Dialog.Footer>
       </Dialog>
     )
-  }, [isOffLoading])
-  console.log(datas, 'lineFlag')
+  }, [isOffLoading, getWallet])
+  console.log(lineFlag, 'lineFlag')
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   return (
     <div className={styles.marketDetail}>
