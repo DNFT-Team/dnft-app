@@ -21,7 +21,7 @@ import { getWallet } from 'utils/get-wallet';
 
 
 const HomeScreen = (props) => {
-  const { token } = props;
+  const { token, address } = props;
   let history = useHistory();
 
   const currentNetEnv = globalConf.net_env;
@@ -126,6 +126,7 @@ const HomeScreen = (props) => {
   useEffect(() => {
     setIsShowSwitchModal(false)
     let wallet = getWallet();
+    console.log(wallet, 'wallet')
 
     if (wallet) {
       if (
@@ -135,7 +136,7 @@ const HomeScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   const getWindowSize = () => ({
     innerHeight: window.innerHeight,

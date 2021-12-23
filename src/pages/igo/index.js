@@ -87,7 +87,7 @@ const IGOScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum]);
 
   return (
     <div className={styleIgo}>

@@ -85,8 +85,7 @@ const MarketDetailScreen = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [getWallet]);
-
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   const handleStar = async () => {
     if (!address) {

@@ -150,7 +150,7 @@ const Market = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   return (
     <div className={styles.container}>

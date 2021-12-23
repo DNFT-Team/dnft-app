@@ -99,7 +99,7 @@ const MarketDetailScreen = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   const goToRightNetwork = useCallback(async () => {
     const ethereum = window.ethereum;

@@ -4,7 +4,35 @@ import { css, cx } from 'emotion';
 
 const SwitchModal = (props) => {
   const { networkName, goToRightNetwork, onClose, visible } = props;
-  const isMetamask = window.ethereum.selectedAddress;
+
+  const getTipsByWallet = () => {
+    if (window.ethereum.selectedAddress) {
+      return <span>You’ve connected to unsupported networks, please switch to {networkName} network.</span>
+    }
+    if (window.walletProvider?.connected) {
+      return <span>You’ve connected to unsupported networks, please switch to {networkName} network and reconnect wallet.</span>
+    }
+    if (window.onto?.isConnected) {
+      return <span>You’ve connected to unsupported networks, please switch to {networkName} network and reconnect wallet.</span>
+    }
+  };
+
+  const renderButtonByWallet = () => {
+    if (window.ethereum.selectedAddress) {
+      return <Button onClick={async () => {
+        goToRightNetwork(window.ethereum);
+      }}>Switch Network</Button>
+    }
+    if (window.walletProvider?.connected) {
+      return <Button onClick={async () => {
+        window.walletProvider.disconnect();
+        onClose();
+      }}>Disconnect</Button>
+    }
+    if (window.onto?.isConnected) {
+      return null
+    }
+  }
 
   return (
     <Dialog
@@ -15,30 +43,10 @@ const SwitchModal = (props) => {
       closeOnPressEscape={false}
     >
       <Dialog.Body>
-        {isMetamask ? (
-          <span>
-            You’ve connected to unsupported networks, please switch to{' '}
-            {networkName} network.
-          </span>
-        ) : (
-          <span>
-            You’ve connected to unsupported networks, please switch to{' '}
-            {networkName} network and reconnect wallet.
-          </span>
-        )}
+        {getTipsByWallet()}
       </Dialog.Body>
       <Dialog.Footer className='dialog-footer'>
-        <Button onClick={async () => {
-          if (window.ethereum.selectedAddress) {
-            goToRightNetwork(window.ethereum);
-          } else if (window.walletProvider) {
-            window.walletProvider.disconnect();
-            onClose();
-          } else if (window.onto) {
-            // window.onto.disconnect();
-            onClose();
-          }
-        }}>{window.ethereum.selectedAddress ? 'Switch Network' : 'Disconnect'}</Button>
+        {renderButtonByWallet()}
       </Dialog.Footer>
     </Dialog>);
 };
@@ -48,6 +56,7 @@ export default SwitchModal;
 const styleSwitchModal = css`
   @media (max-width: 900px) {
     width: calc(100% - 32px);
+
   }
   border-radius: 10px;
   width: 400px;

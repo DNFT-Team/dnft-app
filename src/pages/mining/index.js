@@ -306,7 +306,7 @@ const Mining = (props) => {
         setIsWrongNetWork(false);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   const renderAssetHeader = useMemo(
     () => (

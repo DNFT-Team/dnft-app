@@ -204,7 +204,7 @@ const AssetScreen = (props) => {
         setIsShowSwitchModal(true);
       }
     }
-  }, [getWallet]);
+  }, [window.onto, window.walletProvider, window.ethereum, address]);
 
   const getBalance = async () => {
     try {
@@ -222,6 +222,8 @@ const AssetScreen = (props) => {
           from: account,
         });
         setBalance((dnftBalance * Math.pow(10, -18)).toFixed(2));
+      }else {
+        setBalance(undefined)
       }
     } catch (e) {
       console.log(e, 'e');
