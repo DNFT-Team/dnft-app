@@ -507,7 +507,7 @@ const GlobalHeader = (props) => {
               await connectOntoWallet()
             }}
           >
-            <span>ONTO</span>
+            <span>ONTO Wallet</span>
           </div>
         </Dialog.Body>
       </Dialog>
@@ -585,7 +585,7 @@ const GlobalHeader = (props) => {
             ) : (
               <Text bgColor="brand.600" color="white" cursor="pointer" mr="1.5rem" p=".4rem .6rem"
                 fontSize=".8rem" fontWeight="bolder" borderRadius="16px" onClick={async () => {
-                  setIsSwitchWalletVisible(true);
+                  await connectMetaMaskWallet()
                 }}>
                 Connect
               </Text>
