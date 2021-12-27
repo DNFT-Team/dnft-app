@@ -92,10 +92,13 @@ const GlobalHeader = (props) => {
       });
       const curAccount = ethereum?.selectedAddress || reqAccounts[0];
       setAddress(curAccount);
+      dispatch(setProfileAddress(curAccount))
       const currentIndex = netArray.findIndex(
         (item) => Number(item.netWorkId) === Number(ethereum.networkVersion)
       );
+      let defaultparams = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
       setCurrentNetIndex(currentIndex)
+      dispatch(setProfileToken(defaultparams))
 
       //  监听节点切换
       ethereum.on('chainChanged', (chainId) => {
@@ -277,9 +280,12 @@ const GlobalHeader = (props) => {
         (item) =>
           Number(item.netWorkId) === Number(ethereum.networkVersion)
       );
+      let params = {address: account, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
 
       setCurrentNetIndex(currentIndex);
       setAddress(account);
+      dispatch(setProfileAddress(params))
+      dispatch(setProfileToken(params))
     } catch (e) {
       console.log(e, 'e')
     }
