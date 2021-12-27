@@ -69,7 +69,7 @@ const SyncBtcScreen = (props) => {
         setIsWrongNetWork(false);
       }
 
-      setAddress(wallet.selectedAddress || wallet.accounts[0]);
+      setAddress(wallet?.selectedAddress || wallet.accounts[0]);
       // 监听账号切换
       wallet.on('accountsChanged', (accounts) => {
         setAddress(accounts[0]);

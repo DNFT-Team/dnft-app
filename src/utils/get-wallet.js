@@ -1,5 +1,5 @@
 export const getWallet = () => {
-  if (window.ethereum.selectedAddress) {
+  if (window.ethereum?.selectedAddress) {
     return window.ethereum;
   }
   if (window.walletProvider?.connected) {

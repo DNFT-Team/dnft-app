@@ -6,7 +6,7 @@ const SwitchModal = (props) => {
   const { networkName, goToRightNetwork, onClose, visible } = props;
 
   const getTipsByWallet = () => {
-    if (window.ethereum.selectedAddress) {
+    if (window.ethereum?.selectedAddress) {
       return <span>You’ve connected to unsupported networks, please switch to {networkName} network.</span>
     }
     if (window.walletProvider?.connected) {
@@ -18,7 +18,7 @@ const SwitchModal = (props) => {
   };
 
   const renderButtonByWallet = () => {
-    if (window.ethereum.selectedAddress) {
+    if (window.ethereum?.selectedAddress) {
       return <Button onClick={async () => {
         goToRightNetwork(window.ethereum);
       }}>Switch Network</Button>
