@@ -54,9 +54,10 @@ const NFTCard = (props) => {
     if(flag) getMarketList && getMarketList(item.id, !item?.isSaved);
   }
   return (
-    <div key={`title-${index}`} onClick={clickDetail} className={styles.styleCardContainer}>
+    <div key={`title-${index}`} className={styles.styleCardContainer}>
       <div
         noDataText="No Data"
+        onClick={clickDetail}
         style={{backgroundImage: `url(${viewUrl})`}}
         className={cx(styles.styleShortPicture, flag && styles.styleNoPicture)}
       />
