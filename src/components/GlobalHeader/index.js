@@ -801,15 +801,17 @@ const styleAssetTarget = css`
   font-size: 12px;
   padding: 10px 8px;
   margin-right: 30px;
-  width: 100px;
+  width: 97px;
   border-radius: 10px;
+  justify-content: center;
   img{
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
   }
   span{
     display: inline-block;
-    width: 66px;
+    //width: 66px;
     text-align: center;
     font-family: Archivo Black,sans-serif;
     font-style: normal;
@@ -826,7 +828,7 @@ const actionContainer  = css`
   //margin-left: 20px;
   height: 64px;
   box-sizing: border-box;
-  padding: 10px 30px 10px 56px;
+  padding: 15px 50px 15px 56px;
   align-items: center;
   color: #233a7d;
 `

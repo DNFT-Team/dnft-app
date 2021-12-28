@@ -177,7 +177,7 @@ const Market = (props) => {
             <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
               <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
                 display="inline-block">
-                <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
+                <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.nftMagic.title}
               </Link>
               <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
                 display="inline-block">
@@ -268,6 +268,11 @@ const stylesContentBoxScreen = css`
   }
 `;
 const styleSelectContainer = css`
+  .el-select-dropdown__list {
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
   .el-select .el-input .el-input__icon {
     color: #777E90;
   }
@@ -283,16 +288,26 @@ const styleSelectContainer = css`
     font-family: Archivo Black;
 
   }
+  ..el-select-dropdown__item {
+    height: 40px;
+  }
+  .el-input__inner:hover {
+    color: #888;
+    border: 1px solid #aaa;
+
+  }
   .el-select-dropdown__item {
     color: #888888;
     font-family: Archivo Black;
   }
   .el-select-dropdown {
     left: 0!important;
+    border-radius: 10px;
+
   }
   .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover, .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
     background: #DDDDDD;
-
+    
   }
   .el-select-dropdown__item.selected {
     color: #FFFFFF; 
