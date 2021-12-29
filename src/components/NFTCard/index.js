@@ -392,7 +392,7 @@ const NFTCard = (props) => {
               if (isEmpty) {
                 return;
               }
-              if(!item?.sellable) {
+              if(item?.sellable === false) {
                 toast.warn('This nft is not allowed to sell', {
                   position: toast.POSITION.TOP_CENTER,
                 });
