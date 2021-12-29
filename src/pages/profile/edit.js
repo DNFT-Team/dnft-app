@@ -346,7 +346,7 @@ const styleNickName = css`
 }
 `;
 const styleModalContainerBtn = css`
-  width: 150px;
+  // width: 150px;
   height: 40px;
   margin: 0 auto;
   background: #0057D9;

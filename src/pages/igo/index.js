@@ -96,7 +96,7 @@ const IGOScreen = (props) => {
         <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
           <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
             display="inline-block">
-            <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
+            <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.nftMagic.title}
           </Link>
           <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
             display="inline-block">
@@ -136,7 +136,7 @@ export default IGOScreen
 
 const styleIgo = css`
   border-radius: 1.429rem;
-  padding: 30px 50px;
+  padding: 50px 50px;
   position: relative;
   z-index: 0;
   .styleHeader {
@@ -150,8 +150,8 @@ const styleIgo = css`
     font-family: Archivo Black, sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font-size: 3rem;
+    line-height: 3rem;
     letter-spacing: -0.02em;
     color: #23262F;
     margin: 0;

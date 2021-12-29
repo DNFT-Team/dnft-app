@@ -391,14 +391,14 @@ const TransferView = (props) => {
   return <div className={styleWrapper}>
     <div className='styleHeader'>
       <span className={styleTitleH3}>{frNet.key} Bridge to {toNet.key}</span>
-      <div className={styleLinks}>
-        <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic"
+      <div  style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}} className={styleLinks}>
+        <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic" marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
-          <Icon icon="logos:youtube-icon" style={{marginRight: '.6rem'}} /> {helper.bridge.title}
+          <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.bridge.title}
         </Link>
-        <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle="italic"
-          display="inline-block" ml="1rem">
-          <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Mechanism
+        <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle="italic" style={{display: 'flex', alignItems: 'center'}}
+          display="inline-block">
+          <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
         </Link>
       </div>
     </div>
@@ -508,7 +508,7 @@ export default withRouter(connect(mapStateToProps)(TransferView));
  * */
 const styleWrapper = css`
   position: relative;
-  padding: 30px 50px;
+  padding: 50px 50px;
   .styleHeader {
     display: flex
   }
@@ -521,7 +521,7 @@ const styleWrapper = css`
     color: #000000;
   }
   h5 {
-    margin: 21px 0 40px 0;
+    margin: 30px 0;
     font-family: Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -656,7 +656,7 @@ const styleRight = css`
   box-sizing: border-box;
   height: 44px !important;
   img{
-    height: 90%;
+    height: 70%;
     margin-right: .6rem;
   }
   span{

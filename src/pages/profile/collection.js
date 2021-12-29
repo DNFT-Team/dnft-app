@@ -133,7 +133,7 @@ const CollectionScreen = (props) => {
           }}
         />
       )}
-      {showCreateNft && <CreateNFTModal collectionId={state?.item?.id} onClose={(isCreate) => {
+      {showCreateNft && address === state?.newAddress && <CreateNFTModal collectionId={state?.item?.id} onClose={(isCreate) => {
         if (isCreate) {
           getCollectionNftList();
         }

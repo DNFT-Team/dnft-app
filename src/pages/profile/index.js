@@ -268,7 +268,11 @@ const ProfileScreen = (props) => {
               <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
               {/* </Tooltip> */}
               {/* </Upload> */}
-              <Popover placement="bottom" width="280" trigger="hover" content={(
+              <Popover placement="bottom"  style={{
+                borderRadius: 10,
+                width: 340,
+                padding: 0,
+              }} trigger="hover" content={(
                 <div className={styles.shareBoxAll}>
                   <div className={styles.shareTitle}>Share your NFT</div>
                   <div className={styles.shareBox}>

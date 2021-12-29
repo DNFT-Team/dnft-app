@@ -36,7 +36,7 @@ const BridgeScreen = (props) => {
       <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
         <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
-          <Icon icon="logos:youtube-icon" style={{marginRight: '10px'}} /> {helper.nftMagic.title}
+          <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.nftMagic.title}
         </Link>
         <Link href={helper.bridge.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
@@ -79,7 +79,7 @@ export default withRouter(connect(mapStateToProps)(BridgeScreen));
 
 const styleBridge = css`
   position: relative;
-  padding: 30px 50px;
+  padding: 50px 50px;
   .styleHeader {
     display: flex;
     align-items: center;
@@ -88,14 +88,14 @@ const styleBridge = css`
     font-family: Archivo Black, sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font-size: 3rem;
+    line-height: 3rem;
     letter-spacing: -0.02em;
     color: #23262F;
     margin-right: 30px;
   }
   h5 {
-    margin: 21px 0 40px 0;
+    margin: 34px 0 46px 0;
     font-family: Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -115,10 +115,13 @@ const styleRow = css`
 `
 const styleCard = css`
   background: #FFFFFF;
-  border: 1px solid #E6E8EC;
+  // border: 1px solid #E6E8EC;
   box-sizing: border-box;
-  padding: 30px 50px;
+  padding: 100px 50px 50px 50px;
   border-radius: 20px;
+  &:hover {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  }
   @media (max-width: 900px) {
     padding: 15px;
   }
