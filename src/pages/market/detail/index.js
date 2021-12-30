@@ -8,10 +8,10 @@ import Web3 from 'web3';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import {
-  Select, InputNumber, Dialog
+  Select, InputNumber, Dialog, Button
 } from 'element-react';
 import {
-  Button, Tooltip
+  Tooltip
 } from '@chakra-ui/react';
 import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
@@ -42,6 +42,9 @@ const MarketDetailScreen = (props) => {
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const [lineFlag, setLineFlag] = useState(false);
+  const [showOffShelfModal, setShowOffShelfModal] = useState(false);
+  const [isOffLoading, setIsOffLoading] = useState(false);
+
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
   const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
@@ -168,45 +171,28 @@ const MarketDetailScreen = (props) => {
   ), [list, isLoading]);
   const isApproved = async () => {
     setApproveLoading(true)
-    const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
+    const { contractType, type } = datas || {};
+    const tradableNFTAddress = (contractType == 1155 ? tradableNFTContract : tradableNFTContract721)[currentNetName]
 
-    if (datas?.type === 'DNF') {
-      const contract = new window.web3.eth.Contract(tokenAbi, bscTestTokenContact[currentNetName]);
-      const dnfAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
-      if (!(dnfAuth > 0)) {
-        await contract.methods
-          .approve(
-            tradableNFTAddress,
-            Web3.utils.toBN(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639935'
-            )
+    const contract = new window.web3.eth.Contract(tokenAbi, (type === 'DNF' ? bscTestTokenContact : busdMarketContract)[currentNetName]);
+    const auth = await contract.methods['allowance'](address, tradableNFTAddress).call();
+    if (!(auth > 0)) {
+      await contract.methods
+        .approve(
+          tradableNFTAddress,
+          Web3.utils.toBN(
+            '115792089237316195423570985008687907853269984665640564039457584007913129639935'
           )
-          .send({
-            from: address,
-          });
-      }
-    }
-
-    if (datas?.type === 'BUSD') {
-      const contract = new window.web3.eth.Contract(tokenAbi, busdMarketContract[currentNetName]);
-      const busdAuth = await contract.methods['allowance'](address, tradableNFTAddress).call();
-      if (!(busdAuth > 0)) {
-        await contract.methods
-          .approve(
-            tradableNFTAddress,
-            Web3.utils.toBN(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639935'
-            )
-          )
-          .send({
-            from: address,
-          });
-      }
+        )
+        .send({
+          from: address,
+        });
     }
 
   }
 
   const clickBuyItem = async () => {
+    const { contractType, type } = datas || {};
     try {
       let wallet = getWallet();
 
@@ -218,89 +204,50 @@ const MarketDetailScreen = (props) => {
 
         setApproveLoading(false)
         setIsOpen(false)
-        const tradableNFTAddress = datas?.contractType == 1155 ? tradableNFTContract[currentNetName] : tradableNFTContract721[currentNetName];
-        const tradableNFTAbiType = datas?.contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721;
+        const tradableNFTAddress = (contractType == 1155 ? tradableNFTContract :  tradableNFTContract721)[currentNetName];
+
+        const tradableNFTAbiType = contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721;
         const myContract = new window.web3.eth.Contract(
           tradableNFTAbiType,
           tradableNFTAddress
         );
         const gasNum = 210000, gasPrice = '20000000000', gasLimit = 3000000;
-        let format = datas?.contractType == 1155 ? [datas?.orderId, form.quantity] : [datas?.orderId]
-        if (datas?.contractType == 721) {
-          await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
-            datas?.orderId
-          )
-            .send({
-              from: address,
-              gasLimit,
-              gas: gasNum,
-              gasPrice: gasPrice,
-            }, function (error, transactionHash) {
-              if (!error) {
-                console.log('交易hash: ', transactionHash)
-              } else {
-                console.log('error', error)
-              }
-            })
-            .then(async function (receipt) { // 监听后续的交易情况
-              // console.log(receipt)
-              setLoading(false)
-              const { data } = await post(
-                '/api/v1/trans/sell_out',
-                {
-                  buyerAddress: address,
-                  // collectionId: form?.collectionId,
-                  collectionId: -1,
-                  tokenAddress: datas?.tokenAddress,
-                  nftId: datas?.nftId,
-                  orderId: datas?.orderId,
-                  quantity: form.quantity,
-                },
-                token
-              );
-              toast[data?.success ? 'success' : 'error']('Buy success');
-              console.log('交易状态：', receipt.status)
-              historyBack();
+        const params = contractType == 721 ? [datas?.orderId] : [datas?.orderId, form.quantity];
+        await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
+          ...params
+        )
+          .send({
+            from: address,
+            gasLimit,
+            gas: gasNum,
+            gasPrice: gasPrice,
+          }, function (error, transactionHash) {
+            if (!error) {
+              console.log('交易hash: ', transactionHash)
+            } else {
+              console.log('error', error)
+            }
+          })
+          .then(async function (receipt) { // 监听后续的交易情况
+            setLoading(false)
+            const { data } = await post(
+              '/api/v1/trans/sell_out',
+              {
+                buyerAddress: address,
+                collectionId: -1,
+                tokenAddress: datas?.tokenAddress,
+                nftId: datas?.nftId,
+                orderId: datas?.orderId,
+                quantity: contractType == 721 ? 1 : form?.quantity,
+              },
+              token
+            );
+            toast[data?.success ? 'success' : 'error'](data?.success ? 'Buy success' : 'Buy failed', {
+              position: toast.POSITION.TOP_CENTER,
             });
-        } else {
-          await myContract.methods[datas?.type === 'BUSD' ? 'buyByBusd' : 'buyByDnft'](
-            datas?.orderId, form.quantity
-          )
-            .send({
-              from: address,
-              gasLimit,
-              gas: gasNum,
-              gasPrice: gasPrice,
-            }, function (error, transactionHash) {
-              if (!error) {
-                console.log('交易hash: ', transactionHash)
-              } else {
-                console.log('error', error)
-              }
-            })
-            .then(async function (receipt) { // 监听后续的交易情况
-              // console.log(receipt)
-              setLoading(false)
-              const { data } = await post(
-                '/api/v1/trans/sell_out',
-                {
-                  buyerAddress: address,
-                  // collectionId: form?.collectionId,
-                  collectionId: -1,
-                  tokenAddress: datas?.tokenAddress,
-                  nftId: datas?.nftId,
-                  orderId: datas?.orderId,
-                  quantity: form.quantity,
-                },
-                token
-              );
-              toast[data?.success ? 'success' : 'error'](data?.success ? 'Buy success' : 'Buy failed', {
-                position: toast.POSITION.TOP_CENTER,
-              });
-              console.log('交易状态：', receipt.status)
-              historyBack();
-            });
-        }
+            console.log('交易状态：', receipt.status)
+            historyBack();
+          });
       }
     } catch (e) {
       setLoading(false)
@@ -385,9 +332,85 @@ const MarketDetailScreen = (props) => {
     return _amount;
   };
 
+  const renderOffShelfModal = useMemo(() => {
+    console.log('off');
+    return (
+      <Dialog
+        title="Tips"
+        size="tiny"
+        visible
+        closeOnClickModal={false}
+        customClass={styleOffShelfModal}
+        onCancel={() => {
+          setShowOffShelfModal(false);
+          setIsOffLoading(false);
+        }}
+      >
+        <Dialog.Body>
+          <span>Are you sure phase out the nft?</span>
+        </Dialog.Body>
+        <Dialog.Footer className="dialog-footer">
+          <Button
+            onClick={() => {
+              setShowOffShelfModal(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="primary"
+            style={{ opacity: isOffLoading ? 0.5 : 1 }}
+            onClick={async () => {
+              try {
+                setIsOffLoading(true);
+                let wallet = getWallet();
 
+                if (wallet) {
+                  window.web3 = new Web3(wallet);
+                  const is721Contract = datas?.contractType == 721;
+
+                  const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
+                  const myContract = new window.web3.eth.Contract(
+                    is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
+                    contractAddress
+                  );
+
+                  let offResult = await myContract.methods
+                    .off(item.orderId)
+                    .send({
+                      from: address,
+                    });
+
+                  if (offResult) {
+                    const result = await post(
+                      '/api/v1/trans/sell_back',
+                      {
+                        orderId: datas?.orderId,
+                        tokenAddress: datas?.tokenAddress
+                      },
+                      token
+                    );
+                    setShowOffShelfModal(false);
+                    // onRefresh(address, token);
+                    setIsOffLoading(false);
+                    historyBack();
+                    toast.info('Operation succeeded！', {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  }
+                }
+              } finally {
+                setIsOffLoading(false);
+              }
+            }}
+          >
+            {isOffLoading ? 'Loading...' : 'Confirm'}
+          </Button>
+        </Dialog.Footer>
+      </Dialog>
+    )
+  }, [isOffLoading, getWallet])
   let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
-  let ipfs_address = datas?.avatorUrl?.split('/')?.[datas.avatorUrl.split('/').length - 1];
   return (
     <div className={styles.marketDetail}>
       <div className={styles.main}>
@@ -434,14 +457,12 @@ const MarketDetailScreen = (props) => {
             </div>
             <div className={styles.content_box}>
               <p className={styles.descriptionTitle}>Description</p>
-              {/* <p className={`${lineFlag ? styles.description_text : styles.slider}`}>{datas?.description}</p> */}
               <div className={styles.warpperDesc}>
                 <input id="exp1" className={styles.exp} type="checkbox" />
                 <p className={`${styles.description} ${lineFlag && styles.slider}`}><label htmlFor={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
                   setLineFlag((lineFlag) => !lineFlag)
                 }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
               </div>
-              {/* <div className={styles.desc_line} /> */}
               <p className={styles.descriptionTitle}>Contract Details</p>
               <div className={styles.contract_details}>
                 <div className={styles.contract_details_item}>
@@ -500,21 +521,13 @@ const MarketDetailScreen = (props) => {
                     });
                     return;
                   }
+                  if(datas?.address === address) {
+                    setShowOffShelfModal(true);
+                    return;
+                  }
                   if(datas?.contractType === '721') clickBuyItem()
                   else setIsOpen(true)
-                }}>Buy</Button>
-              {/* <div className={styles.ipfsAddress}>
-                <span className={styles.contract}>IPFS address:
-                  <a
-                    href={datas?.avatorUrl}
-                    className={styles.tokenAddress}
-                    target='_blank'
-                    rel="noopener noreferrer"
-                  >
-                    {ipfs_address?.slice(0, 8)}...{ipfs_address?.slice(38)}
-                  </a>
-                </span>
-              </div> */}
+                }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Button>
             </div>
 
           </div>
@@ -613,6 +626,8 @@ const MarketDetailScreen = (props) => {
       <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
         setIsShowSwitchModal(false)
       }} />
+      {showOffShelfModal && renderOffShelfModal}
+
     </div>
   )
 }
@@ -667,4 +682,8 @@ const styleModalContainer = css`
     padding: 0px 22px;
     margin-bottom: 50px;
   }
+`
+const styleOffShelfModal = css`
+  max-width: 564px;
+  width: calc(100% - 40px);
 `

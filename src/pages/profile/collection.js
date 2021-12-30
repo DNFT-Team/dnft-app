@@ -118,7 +118,7 @@ const CollectionScreen = (props) => {
       {isLoading && <div className={styleLoadingIconContainer}>
         <img src={LoadingIcon} alt=""/>
       </div>}
-      {showCreateCollection && (
+      {showCreateCollection && address === state?.newAddress &&  (
         <CreateCollectionModal
           formDs={{ name: list?.name, description: list?.collectionDesc, id: state?.item.id, chainType: state?.item.chainType }}
           token={token}
@@ -133,7 +133,7 @@ const CollectionScreen = (props) => {
           }}
         />
       )}
-      {showCreateNft && address === state?.newAddress && <CreateNFTModal collectionId={state?.item?.id} onClose={(isCreate) => {
+      {showCreateNft && <CreateNFTModal collectionId={state?.item?.id} onClose={(isCreate) => {
         if (isCreate) {
           getCollectionNftList();
         }
