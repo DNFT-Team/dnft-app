@@ -26,6 +26,7 @@ import {
 } from 'utils/contract';
 import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } from 'utils/abi';
 import { getWallet } from 'utils/get-wallet';
+import { shortenAddress } from 'utils/tools'
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -239,7 +240,7 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <Tooltip label={`${datas?.createrAddress?.slice(0, 7) || ''}...${datas?.createrAddress?.slice(-6) || ''}`} hasArrow>
+                  <Tooltip label={datas?.createrAddress && shortenAddress(datas?.createrAddress)} hasArrow>
                     <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
                   </Tooltip>
                 </div>
@@ -248,7 +249,7 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
-                  <Tooltip label={`${datas?.address?.slice(0, 7)}...${datas?.address?.slice(-6)}`} hasArrow>
+                  <Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>
                     <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
                   </Tooltip>
                 </div>
@@ -283,7 +284,7 @@ const MarketDetailScreen = (props) => {
                       target='_blank'
                       rel="noopener noreferrer"
                     >
-                      {datas?.tokenAddress?.slice(0, 7)}...{datas?.tokenAddress?.slice(-6)}
+                      {datas?.tokenAddress && shortenAddress(datas?.tokenAddress)}
                     </a>
                   </div>
                 </div>

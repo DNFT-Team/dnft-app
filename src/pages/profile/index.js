@@ -42,6 +42,7 @@ import {
   TwitterShareButton,
   FacebookShareButton
 } from 'react-share';
+import { shortenAddress } from 'utils/tools'
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
@@ -319,7 +320,7 @@ const ProfileScreen = (props) => {
             }
           </div>
           <div className={styles.authorName}>{datas?.nickName || 'Unknown'}</div>
-          <div className={styles.addressBox}>{newAddress && `${newAddress?.slice(0, 7)}...${newAddress?.slice(-6)}`}
+          <div className={styles.addressBox}>{newAddress && shortenAddress(newAddress)}
             <img
               className={styles.copyAddress}
               onClick={handleCopyAddress}

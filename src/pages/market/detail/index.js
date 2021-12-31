@@ -22,7 +22,8 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
-
+import { shortenAddress } from 'utils/tools';
+import { toDecimal } from 'utils/web3Tools'
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
   const item = location?.state?.item;
@@ -410,7 +411,9 @@ const MarketDetailScreen = (props) => {
       </Dialog>
     )
   }, [isOffLoading, getWallet])
-  let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
+  // let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
+  let price = datas?.price &&  toDecimal(datas?.price);
+
   return (
     <div className={styles.marketDetail}>
       <div className={styles.main}>
@@ -440,7 +443,7 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Creater</p>
-                  <Tooltip label={`${datas?.createrAddress?.slice(0, 7)}...${datas?.createrAddress?.slice(-6)}`} hasArrow>
+                  <Tooltip label={datas?.createrAddress && shortenAddress(datas?.createrAddress)} hasArrow>
                     <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
                   </Tooltip>
                 </div>
@@ -449,7 +452,7 @@ const MarketDetailScreen = (props) => {
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <div className={styles.userInfoText}>
                   <p className={styles.owner}>Owner</p>
-                  <Tooltip label={`${datas?.address?.slice(0, 7)}...${datas?.address?.slice(-6)}`} hasArrow>
+                  <Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>
                     <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
                   </Tooltip>
                 </div>

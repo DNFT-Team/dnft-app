@@ -12,6 +12,8 @@ import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import { get, post } from 'utils/request';
 import { Tooltip } from '@chakra-ui/react';
+import { shortenAddress } from 'utils/tools'
+
 const NFTCard = (props) => {
   const { needAction, item, index, clickDetail, token, address, getMarketList, onSave, children, whetherShowPrice = true } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
@@ -76,7 +78,7 @@ const NFTCard = (props) => {
           <div className={styles.styleInfo}>
             <div className={styles.styleInfoProfile}>
               {/* <div className={styles.styleInfoProfileImg} /> */}
-              <Tooltip label={`${item?.address?.slice(0, 7)}...${item?.address?.slice(-6)}`} hasArrow>
+              <Tooltip label={item?.address && shortenAddress(item.address)} hasArrow>
                 <a onClick={(e) => {
                   e.stopPropagation()
                   handleLinkProfile(item?.address)

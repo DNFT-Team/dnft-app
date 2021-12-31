@@ -38,6 +38,7 @@ import accountSvg from 'images/common/account.svg';
 import dnft_unit from 'images/market/dnft_unit.png'
 import { getCategoryList } from 'reduxs/actions/market';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { shortenAddress } from 'utils/tools'
 
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
@@ -562,7 +563,7 @@ const GlobalHeader = (props) => {
             // ? <Tooltip label="Go Profile" hasArrow bg="red.600">
             ? <span>
               <img src={accountSvg} alt=""/>
-              {address?.slice(0, 7)}...{address?.slice(-6)}
+              {address && shortenAddress(address)}
             </span>
             // </Tooltip>
             : 'Connect wallet'}
