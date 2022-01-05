@@ -15,6 +15,8 @@ import { connect } from 'react-redux';
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
 import CropperBox from './components/cropperBox';
+import {Btn} from 'components/Button'
+
 const ProfileEditScreen = (props) => {
   const { token, datas,  onClose, onSuccess, visible, onOpen} = props;
   const [loading, setLoading] = useState(false)
@@ -221,10 +223,10 @@ const ProfileEditScreen = (props) => {
         <Dialog.Footer style={{
           textAlign: 'center'
         }} p="10px 32px">
-          <Button
+          <Btn
             loading={loading}
-            className={styleModalContainerBtn}
-            onClick={editProfile}>Save</Button>
+            // className={styleModalContainerBtn}
+            onClick={editProfile}>Save</Btn>
         </Dialog.Footer>
       </Dialog>
       <CropperBox
@@ -345,21 +347,21 @@ const styleNickName = css`
   padding: 0 10px;
 }
 `;
-const styleModalContainerBtn = css`
-  // width: 150px;
-  height: 40px;
-  margin: 0 auto;
-  background: #0057D9;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  font-size: 16px;
-  font-family: Archivo Black;
-  border-radius: 5px;
-  outline: none;
-  color: #FCFCFD;
-  border: 0;
-  &:hover {
-    color: #fff;
-    background: #0057D9;
-  }
-`
+// const styleModalContainerBtn = css`
+//   // width: 150px;
+//   height: 40px;
+//   margin: 0 auto;
+//   background: #0057D9;
+//   border-radius: 5px;
+//   margin-bottom: 20px;
+//   font-size: 16px;
+//   font-family: Archivo Black;
+//   border-radius: 5px;
+//   outline: none;
+//   color: #FCFCFD;
+//   border: 0;
+//   &:hover {
+//     color: #fff;
+//     background: #0057D9;
+//   }
+// `

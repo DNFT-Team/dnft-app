@@ -23,7 +23,8 @@ import busd_unit from 'images/market/busd.svg';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
 import { shortenAddress } from 'utils/tools';
-import { toDecimal } from 'utils/web3Tools'
+import { toDecimal } from 'utils/web3Tools';
+import {Btn} from 'components/Button'
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
   const item = location?.state?.item;
@@ -377,7 +378,7 @@ const MarketDetailScreen = (props) => {
                   );
 
                   let offResult = await myContract.methods
-                    .off(item.orderId)
+                    .off(datas?.orderId)
                     .send({
                       from: address,
                     });
@@ -513,7 +514,7 @@ const MarketDetailScreen = (props) => {
               }
             </div>
             <div className={styles.btnBox}>
-              <Button
+              <Btn
                 isLoading={loading}
                 disabled={!datas?.quantity || loading}
                 loadingText="Buy Now"
@@ -530,7 +531,7 @@ const MarketDetailScreen = (props) => {
                   }
                   if(datas?.contractType === '721') clickBuyItem()
                   else setIsOpen(true)
-                }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Button>
+                }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Btn>
             </div>
 
           </div>
