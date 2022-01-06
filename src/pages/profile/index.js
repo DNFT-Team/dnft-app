@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import { Icon } from '@iconify/react';
 import styles from './index.less';
 import copyImg from 'images/profile/copy.png';
 import { useHistory } from 'react-router';
@@ -17,32 +16,27 @@ import { noDataSvg } from 'utils/svg';
 import NFTCollectionsCard from './components/collectionsCard';
 import NFTCard from 'components/NFTCard';
 import edit_bg from 'images/profile/edit_bg.png';
-import share_bg from 'images/profile/share.svg';
 import edit_avatar from 'images/profile/edit_avatar.png';
 import ins from 'images/profile/ins.png';
 import twitter from 'images/profile/twitter.png';
-import { Upload, Popover } from 'element-react';
-import { Tooltip } from '@chakra-ui/react';
 import { post } from 'utils/request';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
+import { Box } from '@chakra-ui/react'
+
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
 import youtube from 'images/profile/youtube.png';
-import CropperBox from './components/cropperBox';
+import CropperBox from 'components/CropperBox';
 
 import u_twitter from 'images/profile/u_twitter.png';
 import u_youtube from 'images/profile/u_youtube.png';
 import u_ins from 'images/profile/u_ins.png';
 import CollectionAdd from './components/collectionAdd';
 import ChangeBg from './changeBg';
-import {
-  TelegramShareButton,
-  TwitterShareButton,
-  FacebookShareButton
-} from 'react-share';
-import { shortenAddress } from 'utils/tools'
+import { shortenAddress } from 'utils/tools';
+import SharePopover from 'components/SharePopover';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
@@ -229,96 +223,43 @@ const ProfileScreen = (props) => {
       console.log(e, 'e');
     }
   }
-  const beforeAvatarUpload = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file); // 开始读取文件
-    reader.onload = (e) => {
-      setSrcCropper(e.target.result);
-      setVisible(true)
-    };
 
-    return false;
-  }
   const cropperBtn = (dataUrl, file) => {
     setVisible(false)
     uploadFile(dataUrl, file)
   }
-  const shareUrl = window.location.href;
 
   return (
     <div className={styles.box}>
       <div className={styles.container}>
-        <div
+        <Box
           style={{
             background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
           }}
           className={styles.header}>
           {
             newAddress === address &&
-            <React.Fragment>
-              {/* <Upload
-                className="upload-demo"
-                multiple={false}
-                showFileList={false}
-                accept={'.png,.gif,.jpeg,.jpg,.svg'}
-                action=""
-                beforeUpload={(file) => beforeAvatarUpload(file)}
-                listType="picture"
-              > */}
-              {/* <Tooltip label="1800*300" hasArrow bg="red.600"> */}
+            <Box display={['none', 'none', 'flex']}>
               <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
-              {/* </Tooltip> */}
-              {/* </Upload> */}
-              <Popover placement="bottom"  style={{
-                borderRadius: 10,
-                width: 340,
-                padding: 0,
-              }} trigger="hover" content={(
-                <div className={styles.shareBoxAll}>
-                  <div className={styles.shareTitle}>Share your NFT</div>
-                  <div className={styles.shareBox}>
-                    <div className={styles.shareItem}>
-                      <Icon className={styles.shareIcon} icon="uil:link" style={{background: '#E6E8EC'}} onClick={() => {
-                        copy(`Check out the NFT collection of @${datas?.nickName || 'user'} on DNFT Protocol! | ${shareUrl}`);
-                        toast.success('The link is copied successfully!', {
-                          position: toast.POSITION.TOP_CENTER,
-                        });
-                      }
-                      }/>
-                      <label>Link</label>
-                    </div>
-                    <TelegramShareButton className={styles.shareItem} title={`Check out the NFT collection of @${datas?.nickName || 'user'} on DNFT Protocol!`} url={shareUrl}>
-                      <Icon className={styles.shareIcon} icon="uil:telegram" style={{background: '#e8eeff', color: '#233a7d'}}/>
-                      <label>Telegram</label>
-                    </TelegramShareButton>
-                    <TwitterShareButton className={styles.shareItem}
-                      title={`Check out the NFT collection of @${datas?.nickName || 'user'} on DNFT Protocol!`} url={shareUrl}
-                      via="DNFTProtocol" hashtags={['NFT']}>
-                      <Icon className={styles.shareIcon} icon="uil:twitter" style={{background: 'rgba(29, 155, 240, 0.1)', color: '#1D9BF0'}}/>
-                      <label>Twitter</label>
-                    </TwitterShareButton>
-                    <FacebookShareButton className={styles.shareItem} hashtag="#NFT" quote={`Check out the NFT collection of @${datas?.nickName || 'user'} on DNFT Protocol!`} url={shareUrl}>
-                      <Icon className={styles.shareIcon} icon="uil:facebook" style={{background: '#e8eeff', color: '#233a7d'}}/>
-                      <label>Facebook</label>
-                    </FacebookShareButton>
-                  </div>
-                </div>
-              )}>
-                <div className={styles.share_bg_header}><span className={styles.edit_bg_span}>Share</span><img className={styles.edit_bg_img} src={share_bg} /></div>
-              </Popover>
-            </React.Fragment>
+              <SharePopover datas={datas} />
+            </Box>
           }
-        </div>
+        </Box>
         <div className={styles.profile}>
-          <div className={styles.profile_avatar}>
+          <Box display={['none', 'none', 'flex', 'flex'] }>
+            <div className={styles.profile_avatar}>
+              <img className={styles.authorImg} src={avatarShow} alt=""/>
+              {
+                newAddress === address &&
+                <div onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
+                  <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
+                </div>
+              }
+            </div>
+          </Box>
+          <Box display={['flex', 'flex', 'none', 'none'] } className={styles.profile_avatar} style={{width: '80px',height: '80px'}}>
             <img className={styles.authorImg} src={avatarShow} alt=""/>
-            {
-              newAddress === address &&
-              <div onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
-                <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
-              </div>
-            }
-          </div>
+          </Box>
           <div className={styles.authorName}>{datas?.nickName || 'Unknown'}</div>
           <div className={styles.addressBox}>{newAddress && shortenAddress(newAddress)}
             <img

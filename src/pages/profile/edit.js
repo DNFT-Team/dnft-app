@@ -14,7 +14,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
-import CropperBox from './components/cropperBox';
+import CropperBox from 'components/CropperBox';
 import {Btn} from 'components/Button'
 
 const ProfileEditScreen = (props) => {
