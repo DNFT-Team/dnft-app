@@ -21,11 +21,11 @@ import UnityScreen from 'pages/gallery/unitys';
 import AssetDetailScreen from 'pages/asset/detail';
 
 //  Menu - Icon
-import homeIcon from '../images/nav/home_selected.svg';
-import miningIcon from '../images/nav/mining_selected.svg';
-import bridgeIcon from '../images/nav/bridge_selected.svg';
-import marketIcon from '../images/nav/market_selected.svg';
-import igoIcon from '../images/nav/igo_selected.svg';
+import homeIcon from 'images/menu/home.svg';
+import miningIcon from '../images/menu/mining.svg';
+import bridgeIcon from '../images/menu/bridge.svg';
+import marketIcon from '../images/menu/market.svg';
+import igoIcon from '../images/menu/igo.svg';
 import dataIcon from '../images/nav/data_selected.svg';
 import galleryIcon from '../images/nav/gallery.svg';
 

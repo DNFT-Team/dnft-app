@@ -33,12 +33,15 @@ import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 // import selectPolkadotSvg from '../../images/networks/logo_select_pk.svg'
 import Logo from '../../images/home/dnftLogo.png';
+import dnftLogo from 'images/common/dnft.png';
+
 import assetSvg from 'images/asset/asset.svg';
 import accountSvg from 'images/common/account.svg';
 import dnft_unit from 'images/market/dnft_unit.png'
 import { getCategoryList } from 'reduxs/actions/market';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { shortenAddress } from 'utils/tools'
+import DrawerMenu from 'layout/sideBar/menu';
 
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
@@ -52,6 +55,7 @@ const GlobalHeader = (props) => {
   const [isSwitchWalletVisible, setIsSwitchWalletVisible] = useState(false);
   const [currentNetIndex, setCurrentNetIndex] = useState();
   const [address, setAddress] = useState();
+  const [menuToggle, setMenuToggle] = useState(false)
   const netArray = useMemo(
     () => [
       {
@@ -579,18 +583,22 @@ const GlobalHeader = (props) => {
       </Box>
       <Box className={actionContainer} display={['flex', 'flex', 'none', 'none', 'none']} justifyContent="space-between">
         <Box display="flex" alignItems="center">
-          <Avatar src={Logo}  mr="1.5rem" width="2rem" height="2rem"/>
-          <strong>DNFT Protocol</strong>
+          <Icon onClick={() => setMenuToggle(true)} icon="dashicons:menu-alt" color="#0057d9" width="30" height="30" />
+        </Box>
+        <Box display="flex" alignItems="center">
+          <img src={dnftLogo} className={dnftLogoStyle} />
+          {/* <Avatar src={dnftLogo}  mr="1.5rem" width="2rem" height="2rem"/> */}
+          {/* <strong>DNFT Protoco</strong> */}
         </Box>
         <Box display="flex" alignItems="center">
           {
             address ? (
-              <Box bgColor="brand.600" cursor="pointer" mr="1.5rem" p=".3rem"
+              <Box bgColor="brand.600" cursor="pointer" p=".3rem"
                 borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}>
                 <img src={assetSvg} alt="asset"/>
               </Box>
             ) : (
-              <Text bgColor="brand.600" color="white" cursor="pointer" mr="1.5rem" p=".4rem .6rem"
+              <Text bgColor="brand.600" color="white" cursor="pointer" p=".4rem .6rem"
                 fontSize=".8rem" fontWeight="bolder" borderRadius="16px" onClick={async () => {
                   await connectMetaMaskWallet()
                 }}>
@@ -598,7 +606,8 @@ const GlobalHeader = (props) => {
               </Text>
             )
           }
-          <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/>
+          <DrawerMenu address={address}  skipTo={props.skipTo} isOpen={menuToggle} onClose={() => setMenuToggle(false)} />
+          {/* <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/> */}
         </Box>
       </Box>
       {renderModal}
@@ -827,11 +836,14 @@ const actionContainer  = css`
   flex: 1;
   justify-content: flex-end;
   //margin-left: 20px;
-  height: 64px;
+  height: 60px;
   box-sizing: border-box;
-  padding: 15px 50px 15px 56px;
+  padding: 0 20px;
   align-items: center;
   color: #233a7d;
+`
+const dnftLogoStyle = css`
+  width: 45px;
 `
 const priceBlock  = css`
   display: inline-flex;
