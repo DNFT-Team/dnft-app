@@ -11,6 +11,7 @@ import helper from 'config/helper';
 import { Icon } from '@iconify/react';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
+import Title from 'components/Title'
 
 const mockGameList = [
   { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
@@ -91,19 +92,12 @@ const IGOScreen = (props) => {
 
   return (
     <div className={styleIgo}>
-      <div className='styleHeader'>
-        <Heading as="h3">IGO</Heading>
-        <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
-          <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
-            display="inline-block">
-            <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.nftMagic.title}
-          </Link>
-          <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
-            display="inline-block">
-            <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
-          </Link>
-        </div>
-      </div>
+      <Title title='IGO' linkHelper={{
+        youtubeLink: helper.nftMagic.youtube,
+        youtubeTitle: helper.nftMagic.title,
+        bookLink: helper.nftMagic.book,
+        bookTitle: 'Mechanism'
+      }} />
       <Text className="describe">
       This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.
       </Text>

@@ -30,6 +30,7 @@ import { Link } from '@chakra-ui/react';
 import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
+import Title from 'components/Title'
 
 export const stakingJson = [{
   'name': 'The Spirit Of Silence',
@@ -918,7 +919,13 @@ const Mining = (props) => {
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
-        <div className="headerT">
+        <Title title='Market' linkHelper={{
+          youtubeLink: helper.mining.youtube,
+          youtubeTitle: helper.mining.title,
+          bookLink: helper.mining.book,
+          bookTitle: 'Learn How To Stake'
+        }} />
+        {/* <div className="headerT">
           <span className="headerTitle">Mining</span>
           <div style={{fontSize: '.8rem', marginTop: '.6rem', display: 'inline-block'}}>
             <Link href={helper.mining.youtube} isExternal color="#0057D9" fontStyle='italic' display="inline-block" >
@@ -929,7 +936,7 @@ const Mining = (props) => {
               <Icon icon="simple-icons:gitbook" style={{marginRight: '.6rem', color: '#1d90e6'}} /> Learn How To Stake
             </Link>
           </div>
-        </div>
+        </div> */}
         <p>Stake your asset to earn more. High-yield staking is ongoing.</p>
       </header>
       {renderAssetHeader}

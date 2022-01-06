@@ -32,7 +32,8 @@ const HomeScreen = (props) => {
   const [list, setList] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
-  const [bannerHeight, setBannerHeight] = useState(window.innerWidth / (1440 / 413) + 'px');
+  const innerWidth = window.innerWidth > 900 ? window.innerWidth / (1440 / 413) : 194;
+  const [bannerHeight, setBannerHeight] = useState(innerWidth + 'px');
   const dataTopAll = [
     {
       src: banner1,
@@ -149,7 +150,8 @@ const HomeScreen = (props) => {
   const handleResize = () => {
     let winSize  = getWindowSize();
     let  w = winSize?.innerWidth || 1140;
-    let h = w / (1140 / 413);
+    let h = w > 900 ? (w / (1140 / 413)) : 194;
+    console.log(w,h,'handleResize')
     // console.log('size', h, w);
     // getWindowSize()?.innerHeight > 900 ? '45vh' : 413
     setBannerHeight(h + 'px');

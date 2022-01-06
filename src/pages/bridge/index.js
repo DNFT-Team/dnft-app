@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import helper from 'config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
+import Title from 'components/Title'
 
 const cardData = [
   {
@@ -31,7 +32,13 @@ const BridgeScreen = (props) => {
   const { address } = props;
 
   return <div className={styleBridge}>
-    <div className='styleHeader'>
+    <Title title='Bridge' linkHelper={{
+      youtubeLink: helper.bridge.youtube,
+      youtubeTitle: helper.nftMagic.title,
+      bookLink: helper.bridge.book,
+      bookTitle: 'Mechanism'
+    }} />
+    {/* <div className='styleHeader'>
       <h3>Bridge</h3>
       <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
         <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
@@ -43,7 +50,7 @@ const BridgeScreen = (props) => {
           <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
         </Link>
       </div>
-    </div>
+    </div> */}
     <h5>
     $DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. </h5>
     <div className={styleRow}>

@@ -9,6 +9,7 @@ import { noDataSvg } from 'utils/svg';
 import NFTCard from '../../pages/market/component/item';
 import React, { useCallback, useMemo } from 'react';
 import { Loading } from 'element-react';
+import Title from 'components/Title'
 
 const NftSlider = (props) => {
   const { title, list, loading, cww, getMarketList } = props;
@@ -127,7 +128,8 @@ const NftSlider = (props) => {
   );
   return (
     <div className={styleArtContainer}>
-      <h1 className={styleTitle}>{title}</h1>
+      <Title title={title} />
+      {/* <h1 className={styleTitle}>{title}</h1> */}
       <Loading loading={loading} />
       <Slider {...settings}>
         {
@@ -157,8 +159,9 @@ const styleArtContainer = css`
   .css-1xqmw5w .slick-track {
     padding-bottom: 10px
   }
-  @media (max-width: 768px) {
-    padding: 40px 0;
+  @media (max-width: 900px) {
+    padding: 20px 0;
+    margin: 0;
   }
 `;
 const styleTitle = css`

@@ -14,7 +14,7 @@ import { Link } from '@chakra-ui/react';
 import globalConfig from '../../config/index';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
-
+import Title from 'components/Title'
 const Market = (props) => {
   let history = useHistory();
   const { dispatch, token, datas, pageAble, categoryList, pending, location, address } = props;
@@ -164,27 +164,14 @@ const Market = (props) => {
         pullDownToRefreshThreshold={50}
         hasMore={pageAble}
         height={'100%'}
-        // loader={<h4 className={styles.loading} style={{ textAlign: 'center' }}>Loading...</h4>}
-        // endMessage={
-        //   datas?.length && <p className={styles.noData} >
-        //     <b>Yay! You have seen it all</b>
-        //   </p> || null
-        // }
       >
         <div className={styles.header}>
-          <div className={styles.headerT}>
-            <span className={styles.headerTitle}>Market</span>
-            <div style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}}>
-              <Link href={helper.nftMagic.youtube} isExternal color="#0057D9" fontStyle='italic' marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
-                display="inline-block">
-                <Icon icon="logos:youtube-icon" fontSize={14} style={{marginRight: '10px'}} /> {helper.nftMagic.title}
-              </Link>
-              <Link href={helper.nftMagic.book} isExternal color="#0057D9" fontStyle='italic' style={{display: 'flex', alignItems: 'center'}}
-                display="inline-block">
-                <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
-              </Link>
-            </div>
-          </div>
+          <Title title='Market' linkHelper={{
+            youtubeLink: helper.nftMagic.youtube,
+            youtubeTitle: helper.nftMagic.title,
+            bookLink: helper.nftMagic.book,
+            bookTitle: 'Mechanism'
+          }} />
           <div className={styles.headerR}>
             <Select
               className={`${styles.selectType} ${styleSelectContainer}`}
