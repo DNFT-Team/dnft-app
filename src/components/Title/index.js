@@ -1,14 +1,14 @@
 import React from 'react';
 import { css } from 'emotion';
 import helper from '../../config/helper';
-import { Link, Flex } from '@chakra-ui/react';
+import { Link, Flex, Box, Text } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 
 const Title = (props) => {
   const { title, linkHelper } = props;
   return (
     <Flex marginBottom={'20px'} alignItems='center'>
-      <span className={headerTitle}>{title}</span>
+      <Box fontSize={['2rem', '2rem', '2rem', '3rem']} mb={[0, 0, 0, '10px']} mr={['10px', '10px', '10px', '30px']} className={headerTitle}>{title}</Box>
       {
         linkHelper &&
         <div style={{ fontSize: '.8rem', display: 'flex', alignItems: 'center' }}>
@@ -16,6 +16,7 @@ const Title = (props) => {
             href={linkHelper.youtubeLink}
             isExternal
             className={headerLink}
+            mr={['10px', '10px', '10px', '20px']}
           >
             <Icon
               icon='logos:youtube-icon'
@@ -44,29 +45,17 @@ const Title = (props) => {
 };
 export default Title;
 const headerTitle = css`
-  margin-bottom: 10px;
   font-family: Archivo Black, sans-serif;
   font-style: normal;
   font-weight: normal;
   color: #000000;
-  margin-right: 30px;
-  font-size: 3rem;
   line-height: 3rem;
   display: flex;
   align-items: center;
-  @media (max-width: 900px) {
-    font-size: 2rem;
-    margin-right: 10px;
-    margin-bottom: 0px;
-  }
 `;
 const headerLink = css`
   color: #0057D9!important;
   font-style: italic;
   display: flex;
   align-items: center;
-  margin-right: 20px;
-  @media (max-width: 900px) {
-    margin-right: 10px;
-  }
 `;

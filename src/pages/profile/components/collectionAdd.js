@@ -78,6 +78,9 @@ const styleCardContainer = css`
   flex: 1;
   min-width: 300px;
   padding: 6px;
+  @media (max-width: 992px) {
+    margin: 0 auto;
+  }
   &:hover {
     background: white;
     position: relative;

@@ -5,6 +5,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   Flex,
+  Avatar,
 } from '@chakra-ui/react';
 import { css, cx } from 'emotion';
 import Logo from 'images/home/dnftLogo.png';
@@ -48,7 +49,7 @@ const DrawerMenu = (props) => {
         <div className={styleModalContainer}>
           <div className='header'>
             <div className='left'>
-              <img className='logo' src={Logo} />
+              <Avatar className='logo' src={Logo} />
               <span>
                 DNFT
                 <br />

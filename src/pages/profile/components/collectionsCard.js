@@ -88,16 +88,11 @@ const styleCardContainer = css`
   max-width: 300px;
   display: flex;
   flex-direction: column;
-  /* cursor: pointer; */
   position: relative;
   flex: 1;
   min-width: 300px;
   padding: 6px;
-  // &:hover {
-  //   background: white;
-  //   position: relative;
-  //   top: -10px;
-  // }
+  margin: 0 auto;
 `;
 const styleInfoContainer = css`
   padding: 20px 0px 0 0px;

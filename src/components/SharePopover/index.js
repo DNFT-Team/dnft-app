@@ -1,15 +1,14 @@
-import React from 'react';
 import { Icon } from '@iconify/react';
 import copy from 'copy-to-clipboard';
-import { Upload, Popover } from 'element-react';
-import {
-  TelegramShareButton,
-  TwitterShareButton,
-  FacebookShareButton
-} from 'react-share';
-import { css, cx } from 'emotion';
-import { toast } from 'react-toastify';
+import { Popover } from 'element-react';
+import { css } from 'emotion';
 import share_bg from 'images/profile/share.svg';
+import React from 'react';
+import {
+  FacebookShareButton, TelegramShareButton,
+  TwitterShareButton
+} from 'react-share';
+import { toast } from 'react-toastify';
 
 const SharePopover = (props) => {
   const { datas } = props;
@@ -107,7 +106,7 @@ const SharePopover = (props) => {
 };
 export default SharePopover;
 const shareBoxAll = css`
-  .shareTitle{
+  .shareTitle {
     font-family: Archivo Black;
     font-style: normal;
     font-weight: normal;
@@ -116,13 +115,13 @@ const shareBoxAll = css`
     color: #000000;
     padding: 20px;
   }
-  .shareBox{
+  .shareBox {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
     justify-content: space-between;
   }
-  .shareIcon{
+  .shareIcon {
     width: 25px;
     height: 25px;
     border-radius: 100%;
@@ -135,17 +134,17 @@ const shareBoxAll = css`
       font-size: 14px;
       line-height: 14px;
       margin-top: 10px;
-      color: #4E5C7E;
+      color: #4e5c7e;
     }
   }
-  .shareIcon{
+  .shareIcon {
     width: 25px;
     height: 25px;
     border-radius: 100%;
     padding: 10px;
     cursor: pointer;
   }
-  .shareItem{
+  .shareItem {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
@@ -154,29 +153,29 @@ const shareBoxAll = css`
   }
 `;
 const share_bg_header = css`
-    display: flex;
-    align-items: center;
-    height: 40px;
-    justify-content: center;
-    border: 2px solid #777e91;
-    box-sizing: border-box;
-    border-radius: 6px;
-    position: absolute;
-    bottom: 22px;
-    cursor: pointer;
-    background: linear-gradient(60deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
-    backdrop-filter: blur(4px);
-    padding: 0 14px;
-    right: 256px;
-    span {
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 16px;
-      color: #fcfcfd;
-    }
-    img {
-      width: 18px;
-      height: 18px;
-      margin-left: 10px;
-    }
-`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  justify-content: center;
+  border: 2px solid #777e91;
+  box-sizing: border-box;
+  border-radius: 6px;
+  position: absolute;
+  bottom: 22px;
+  cursor: pointer;
+  background: linear-gradient(60deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+  backdrop-filter: blur(4px);
+  padding: 0 14px;
+  right: 256px;
+  span {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #fcfcfd;
+  }
+  img {
+    width: 18px;
+    height: 18px;
+    margin-left: 10px;
+  }
+`;

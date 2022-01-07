@@ -22,8 +22,8 @@ import twitter from 'images/profile/twitter.png';
 import { post } from 'utils/request';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
-import { Box } from '@chakra-ui/react'
-
+import { Box, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Icon } from '@iconify/react';
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
 import camera from 'images/profile/camera.png';
@@ -37,6 +37,7 @@ import CollectionAdd from './components/collectionAdd';
 import ChangeBg from './changeBg';
 import { shortenAddress } from 'utils/tools';
 import SharePopover from 'components/SharePopover';
+import BotDrawer from './components/botDrawer';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } = props;
@@ -44,8 +45,7 @@ const ProfileScreen = (props) => {
   const readUrl = datas?.avatorUrl
   const nullFlag = !readUrl || readUrl.indexOf('undefined') > -1 || readUrl.indexOf('null') > -1
   const avatarShow = nullFlag ? camera : readUrl;
-  const tabArray = ['Collections', 'Owned', 'Created'];
-  const [selectedTab, setSelectedTab] = useState('Collections');
+  const [selectedTab, setSelectedTab] = useState(0);
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [showBgScreen, setShowBgScreen] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -53,8 +53,38 @@ const ProfileScreen = (props) => {
   _newAddress = _newAddress[_newAddress.length - 1]
   const [newAddress, setNewAddress] = useState(_newAddress);
   const [srcCropper, setSrcCropper] = useState('');
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
+  const [bottomDrawerVisible, setBottomDrawerVisible] = useState(false);
   let history = useHistory();
+  const shareUrl = window.location.href;
+  const tabArray = [{label: 'Collections', value: 0},{label: 'Owned', value: 1,},{label: 'Created', value: 2}];
+
+  const profileAvatarSettings = {
+    w: ['80px', '80px', '80px', '130px'],
+    h: ['80px', '80px', '80px', '130px'],
+    mt: ['-40px', '-40px', '-40px', '-67px'],
+    position: 'relative',
+    bg: 'white',
+    borderRadius: '50%'
+  }
+  const contactList = [
+    {
+      href: datas?.twitterAddress,
+      selIcon: twitter,
+      unSelIcon: u_twitter
+    },
+    {
+      href: datas?.facebookAddress,
+      selIcon: ins,
+      unSelIcon: u_ins
+    },
+    {
+      href: datas?.youtubeAddress,
+      selIcon: youtube,
+      unSelIcon: u_youtube,
+      style: {width: 28}
+    },
+  ]
   useEffect(() => {
     if (address === newAddress || state) {
       setIsOwner(true)
@@ -224,43 +254,74 @@ const ProfileScreen = (props) => {
     }
   }
 
+  const handleLink = (value) => {
+    switch(value) {
+    case 'background': setShowBgScreen(true); break;
+    case 'profile': setShowEditScreen(true); break;
+    case 'copy': copyLink(true); break;
+
+    case 'cancel': setBottomDrawerVisible(false); break;
+    default: return null
+    }
+  }
+  const copyLink = () => {
+    copy(
+      `Check out the NFT collection of @${
+        datas?.nickName || 'user'
+      } on DNFT Protocol! | ${shareUrl}`
+    );
+    toast.success('The link is copied successfully!', {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  }
+
   const cropperBtn = (dataUrl, file) => {
     setVisible(false)
     uploadFile(dataUrl, file)
+  }
+
+  const handleChangeTab = (i) => {
+    setSelectedTab(i);
+    let currentlabel = tabArray.filter((obj) => obj.value == i)?.[0]?.label
+    renderActionDispatch(currentlabel)
   }
 
   return (
     <div className={styles.box}>
       <div className={styles.container}>
         <Box
+          h={['142px', '142px', '142px', 0]}
+          pb={'16.7%'}
+          position='relative'
+          borderRadius={[0, 0, 0, '10px']}
           style={{
             background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
-          }}
-          className={styles.header}>
+          }}>
           {
             newAddress === address &&
-            <Box display={['none', 'none', 'flex']}>
+            <Box display={['none', 'none', 'none', 'flex']}>
               <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
               <SharePopover datas={datas} />
             </Box>
           }
         </Box>
         <div className={styles.profile}>
-          <Box display={['none', 'none', 'flex', 'flex'] }>
-            <div className={styles.profile_avatar}>
-              <img className={styles.authorImg} src={avatarShow} alt=""/>
-              {
-                newAddress === address &&
-                <div onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
-                  <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
-                </div>
-              }
-            </div>
-          </Box>
-          <Box display={['flex', 'flex', 'none', 'none'] } className={styles.profile_avatar} style={{width: '80px',height: '80px'}}>
+          <Box {...profileAvatarSettings}>
             <img className={styles.authorImg} src={avatarShow} alt=""/>
+            {
+              newAddress === address &&
+              <Box display={['none', 'none', 'none', 'flex']} onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
+                <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
+              </Box>
+            }
           </Box>
-          <div className={styles.authorName}>{datas?.nickName || 'Unknown'}</div>
+          {
+            newAddress === address &&
+            <Box onClick={() => {setBottomDrawerVisible(true)}} position='absolute' top='6px' right='32px' display={['flex', 'flex', 'flex', 'none']}>
+              <Icon width="24" height="24" icon="akar-icons:more-horizontal-fill" color="#777e90" />
+            </Box>
+          }
+          <Box mt={['10px','10px','10px','20px']} className={styles.authorName}>{datas?.nickName || 'Unknown'}</Box>
           <div className={styles.addressBox}>{newAddress && shortenAddress(newAddress)}
             <img
               className={styles.copyAddress}
@@ -269,25 +330,42 @@ const ProfileScreen = (props) => {
             />
           </div>
           <div className={styles.contact}>
-            <a style={{
-              pointerEvents: !isUrl(datas?.twitterAddress) && 'none'
-            }} href={datas?.twitterAddress} target='_blank' rel="noopener noreferrer">
-              <img className={styles.contact_img} src={isUrl(datas?.twitterAddress) ? twitter : u_twitter} />
-            </a>
-            <a style={{
-              pointerEvents: !isUrl(datas?.facebookAddress) && 'none'
-            }} href={datas?.facebookAddress} target='_blank' rel="noopener noreferrer">
-              <img className={styles.contact_img} src={isUrl(datas?.facebookAddress) ? ins : u_ins} />
-            </a>
-            <a style={{
-              pointerEvents: !isUrl(datas?.youtubeAddress) && 'none'
-            }}  href={datas?.youtubeAddress} target='_blank' rel="noopener noreferrer">
-              <img style={{width: 28}} className={styles.contact_img} src={isUrl(datas?.youtubeAddress) ? youtube : u_youtube} />
-            </a>
+            {
+              contactList.map((obj, i) => (
+                <a style={{
+                  pointerEvents: !isUrl(obj.href) && 'none'
+                }} href={obj.href} target='_blank' rel="noopener noreferrer">
+                  <img style={obj.style || {}} className={styles.contact_img} src={isUrl(obj.href) ? obj.selIcon : obj.unSelIcon} />
+                </a>
+              ))
+            }
           </div>
         </div>
         {/* DATA */}
-        <div className={styles.tabs}>{renderTabList}</div>
+        <Tabs onChange={(i) => handleChangeTab(i)} defaultIndex={selectedTab} variant='unstyled'>
+          <TabList  className={styles.tabs}>
+            {
+              tabArray.map((obj) => (
+                <Tab key={obj.value} className={cx(
+                  styleTabButton,
+                  selectedTab === obj.value && styleActiveTabButton
+                )} style={{outline: '0!important'}}>{obj.label}</Tab>
+              ))
+            }
+          </TabList>
+          <TabPanels>
+            <TabPanel key={0}>
+              {batch?.map((item, index) => (renderCard(item, index)))}
+            </TabPanel>
+            <TabPanel  key={1}>
+              {owned?.map((item, index) => (renderCard(item, index)))}
+            </TabPanel>
+            <TabPanel  key={2}>
+              {created?.map((item, index) => (renderCard(item, index)))}
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        {/* <div className={styles.tabs}>{renderTabList}</div>
         <div className={renderAction(selectedTab)?.length > 0 ? selectedTab === 'Collections' ? styleCollections : styleCardList : styleCardListEmpty}>
           {renderAction(selectedTab)?.length > 0
             ? renderAction(selectedTab)?.map((item, index) => (
@@ -298,7 +376,7 @@ const ProfileScreen = (props) => {
             selectedTab === 'Collections' && address === newAddress &&
             <CollectionAdd />
           }
-        </div>
+        </div> */}
       </div>
       <ChangeBg
         visible={showBgScreen}
@@ -336,6 +414,14 @@ const ProfileScreen = (props) => {
         aspectRatio={1800 / 300}
         cropperBtn={cropperBtn}
       />
+      <BotDrawer
+        onClose={() => {setBottomDrawerVisible(false)}}
+        isOpen={bottomDrawerVisible}
+        handleLink={(value) => {
+          handleLink(value);
+          setBottomDrawerVisible(false)
+        }}
+      />
     </div>
   );
 };
@@ -363,6 +449,13 @@ const styleTabButton = css`
   margin-right: 30px;
   color: #AAAAAA;
   font-family: Archivo Black;
+  outline: 0;
+  outline-offset: 0px;
+  background: #fff;
+  &:hover {
+    outline: 0;
+    outline-offset: 0px;
+  }
 `;
 
 const styleActiveTabButton = css`
