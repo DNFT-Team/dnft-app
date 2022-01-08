@@ -22,7 +22,7 @@ import twitter from 'images/profile/twitter.png';
 import { post } from 'utils/request';
 import { ipfs_post } from 'utils/ipfs-request';
 import { toast } from 'react-toastify';
-import { Box, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Box, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
 import { Icon } from '@iconify/react';
 import ProfileEditScreen from './edit';
 import globalConf from 'config/index';
@@ -40,24 +40,32 @@ import SharePopover from 'components/SharePopover';
 import BotDrawer from './components/botDrawer';
 
 const ProfileScreen = (props) => {
-  const { dispatch, address, datas, token, batch, owned, created, location } = props;
+  const { dispatch, address, datas, token, batch, owned, created, location } =
+    props;
   const state = location?.state;
-  const readUrl = datas?.avatorUrl
-  const nullFlag = !readUrl || readUrl.indexOf('undefined') > -1 || readUrl.indexOf('null') > -1
+  const readUrl = datas?.avatorUrl;
+  const nullFlag =
+    !readUrl ||
+    readUrl.indexOf('undefined') > -1 ||
+    readUrl.indexOf('null') > -1;
   const avatarShow = nullFlag ? camera : readUrl;
   const [selectedTab, setSelectedTab] = useState(0);
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [showBgScreen, setShowBgScreen] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   let _newAddress = location?.pathname?.split('/') || [];
-  _newAddress = _newAddress[_newAddress.length - 1]
+  _newAddress = _newAddress[_newAddress.length - 1];
   const [newAddress, setNewAddress] = useState(_newAddress);
   const [srcCropper, setSrcCropper] = useState('');
   const [visible, setVisible] = useState(false);
   const [bottomDrawerVisible, setBottomDrawerVisible] = useState(false);
   let history = useHistory();
   const shareUrl = window.location.href;
-  const tabArray = [{label: 'Collections', value: 0},{label: 'Owned', value: 1,},{label: 'Created', value: 2}];
+  const tabArray = [
+    { label: 'Collections', value: 0 },
+    { label: 'Owned', value: 1 },
+    { label: 'Created', value: 2 },
+  ];
 
   const profileAvatarSettings = {
     w: ['80px', '80px', '80px', '130px'],
@@ -65,37 +73,37 @@ const ProfileScreen = (props) => {
     mt: ['-40px', '-40px', '-40px', '-67px'],
     position: 'relative',
     bg: 'white',
-    borderRadius: '50%'
-  }
+    borderRadius: '50%',
+  };
   const contactList = [
     {
       href: datas?.twitterAddress,
       selIcon: twitter,
-      unSelIcon: u_twitter
+      unSelIcon: u_twitter,
     },
     {
       href: datas?.facebookAddress,
       selIcon: ins,
-      unSelIcon: u_ins
+      unSelIcon: u_ins,
     },
     {
       href: datas?.youtubeAddress,
       selIcon: youtube,
       unSelIcon: u_youtube,
-      style: {width: 28}
+      style: { width: 28 },
     },
-  ]
+  ];
   useEffect(() => {
     if (address === newAddress || state) {
-      setIsOwner(true)
+      setIsOwner(true);
     }
-  }, [address, state])
+  }, [address, state]);
   useEffect(() => {
     if (isOwner) {
-      setNewAddress(address)
+      setNewAddress(address);
       history.push(address);
     }
-  }, [address, _newAddress, isOwner])
+  }, [address, _newAddress, isOwner]);
   useEffect(() => {
     if (token) {
       getProfileInfo();
@@ -117,8 +125,8 @@ const ProfileScreen = (props) => {
   }, [token, newAddress]);
 
   const getProfileInfo = () => {
-    dispatch(getMyProfileList({userId: newAddress}, token));
-  }
+    dispatch(getMyProfileList({ userId: newAddress }, token));
+  };
   const handleCopyAddress = () => {
     copy(newAddress);
     toast.success('The address is copied successfully!', {
@@ -141,21 +149,27 @@ const ProfileScreen = (props) => {
         )
       );
     case 'Owned':
-      return dispatch(getMyProfileOwned({ address: newAddress, page: 0, size: 100 }, token));
+      return dispatch(
+        getMyProfileOwned({ address: newAddress, page: 0, size: 100 }, token)
+      );
     case 'Created':
-      return dispatch(getMyProfileCreated({ address: newAddress, page: 0, size: 100 }, token));
+      return dispatch(
+        getMyProfileCreated(
+          { address: newAddress, page: 0, size: 100 },
+          token
+        )
+      );
     default:
       return null;
     }
   };
   const renderAction = (item) => {
     switch (item) {
-    case 'Collections':
-
+    case 0:
       return batch;
-    case 'Owned':
+    case 1:
       return owned;
-    case 'Created':
+    case 2:
       return created;
     default:
       return null;
@@ -171,7 +185,7 @@ const ProfileScreen = (props) => {
           )}
           onClick={() => {
             setSelectedTab(item);
-            renderActionDispatch(item)
+            renderActionDispatch(item);
           }}
         >
           {item}
@@ -180,7 +194,7 @@ const ProfileScreen = (props) => {
     [selectedTab, newAddress]
   );
   function isUrl (url) {
-    return /^https?:\/\/.+/.test(url)
+    return /^https?:\/\/.+/.test(url);
   }
   const renderNoData = useMemo(
     () => (
@@ -192,7 +206,7 @@ const ProfileScreen = (props) => {
   );
   const renderCard = useCallback(
     (item, index) => {
-      if (selectedTab === 'Collections') {
+      if (selectedTab == 0) {
         return (
           <NFTCollectionsCard
             key={`${item.id}_${selectedTab}`}
@@ -212,24 +226,24 @@ const ProfileScreen = (props) => {
             currentStatus={selectedTab}
             newAddress={newAddress}
             handleDetail={() => {
-              history.push('/asset/detail', {item})
+              history.push('/asset/detail', { item });
             }}
           />
         );
       }
     },
-    [selectedTab, newAddress]
+    [selectedTab,batch,owned,created, newAddress]
   );
   const uploadFile = async (dataUrl, file) => {
     try {
       const fileData = new FormData();
       fileData.append('file', file);
-      const data  = await ipfs_post('/v0/add', fileData);
-      const ipfsHash = data?.data?.['Hash']
+      const data = await ipfs_post('/v0/add', fileData);
+      const ipfsHash = data?.data?.['Hash'];
 
       if (!ipfsHash) {
         toast.error('IPFS upload failed!');
-        return
+        return;
       }
       if (ipfsHash) {
         toast.success('IPFS Upload Success', {
@@ -241,29 +255,38 @@ const ProfileScreen = (props) => {
             address: newAddress,
             bannerUrl: globalConf.ipfsDown + ipfsHash,
           },
-          token,
+          token
         );
-        data1 &&  toast.success('User Banner Update Success', {
-          position: toast.POSITION.TOP_CENTER,
-        });
-        dispatch(getMyProfileList({userId: newAddress}, token));
+        data1 &&
+          toast.success('User Banner Update Success', {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        dispatch(getMyProfileList({ userId: newAddress }, token));
       }
-      setShowBgScreen(false)
+      setShowBgScreen(false);
     } catch (e) {
       console.log(e, 'e');
     }
-  }
+  };
 
   const handleLink = (value) => {
-    switch(value) {
-    case 'background': setShowBgScreen(true); break;
-    case 'profile': setShowEditScreen(true); break;
-    case 'copy': copyLink(true); break;
-
-    case 'cancel': setBottomDrawerVisible(false); break;
-    default: return null
+    switch (value) {
+    case 'background':
+      setShowBgScreen(true);
+      break;
+    case 'profile':
+      setShowEditScreen(true);
+      break;
+    case 'copy':
+      copyLink(true);
+      break;
+    case 'cancel':
+      setBottomDrawerVisible(false);
+      break;
+    default:
+      return null;
     }
-  }
+  };
   const copyLink = () => {
     copy(
       `Check out the NFT collection of @${
@@ -273,19 +296,19 @@ const ProfileScreen = (props) => {
     toast.success('The link is copied successfully!', {
       position: toast.POSITION.TOP_CENTER,
     });
-  }
+  };
 
   const cropperBtn = (dataUrl, file) => {
-    setVisible(false)
-    uploadFile(dataUrl, file)
-  }
+    setVisible(false);
+    uploadFile(dataUrl, file);
+  };
 
   const handleChangeTab = (i) => {
     setSelectedTab(i);
-    let currentlabel = tabArray.filter((obj) => obj.value == i)?.[0]?.label
-    renderActionDispatch(currentlabel)
-  }
-
+    let currentlabel = tabArray.filter((obj) => obj.value == i)?.[0]?.label;
+    renderActionDispatch(currentlabel);
+  };
+  console.log(batch, 'batch');
   return (
     <div className={styles.box}>
       <div className={styles.container}>
@@ -296,33 +319,64 @@ const ProfileScreen = (props) => {
           borderRadius={[0, 0, 0, '10px']}
           style={{
             background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
-          }}>
-          {
-            newAddress === address &&
+          }}
+        >
+          {newAddress === address && (
             <Box display={['none', 'none', 'none', 'flex']}>
-              <div onClick={() => setShowBgScreen(true)} className={styles.edit_bg_header}><span className={styles.edit_bg_span}>Change Background</span><img className={styles.edit_bg_img} src={edit_bg} /></div>
+              <div
+                onClick={() => setShowBgScreen(true)}
+                className={styles.edit_bg_header}
+              >
+                <span className={styles.edit_bg_span}>Change Background</span>
+                <img className={styles.edit_bg_img} src={edit_bg} />
+              </div>
               <SharePopover datas={datas} />
             </Box>
-          }
+          )}
         </Box>
         <div className={styles.profile}>
           <Box {...profileAvatarSettings}>
-            <img className={styles.authorImg} src={avatarShow} alt=""/>
-            {
-              newAddress === address &&
-              <Box display={['none', 'none', 'none', 'flex']} onClick={() => setShowEditScreen(true)} className={styles.edit_avatar}>
-                <img className={styles.edit_avatar_img} src={edit_avatar} alt=""/>
+            <img className={styles.authorImg} src={avatarShow} alt='' />
+            {newAddress === address && (
+              <Box
+                display={['none', 'none', 'none', 'flex']}
+                onClick={() => setShowEditScreen(true)}
+                className={styles.edit_avatar}
+              >
+                <img
+                  className={styles.edit_avatar_img}
+                  src={edit_avatar}
+                  alt=''
+                />
               </Box>
-            }
+            )}
           </Box>
-          {
-            newAddress === address &&
-            <Box onClick={() => {setBottomDrawerVisible(true)}} position='absolute' top='6px' right='32px' display={['flex', 'flex', 'flex', 'none']}>
-              <Icon width="24" height="24" icon="akar-icons:more-horizontal-fill" color="#777e90" />
+          {newAddress === address && (
+            <Box
+              onClick={() => {
+                setBottomDrawerVisible(true);
+              }}
+              position='absolute'
+              top='6px'
+              right='32px'
+              display={['flex', 'flex', 'flex', 'none']}
+            >
+              <Icon
+                width='24'
+                height='24'
+                icon='akar-icons:more-horizontal-fill'
+                color='#777e90'
+              />
             </Box>
-          }
-          <Box mt={['10px','10px','10px','20px']} className={styles.authorName}>{datas?.nickName || 'Unknown'}</Box>
-          <div className={styles.addressBox}>{newAddress && shortenAddress(newAddress)}
+          )}
+          <Box
+            mt={['10px', '10px', '10px', '20px']}
+            className={styles.authorName}
+          >
+            {datas?.nickName || 'Unknown'}
+          </Box>
+          <div className={styles.addressBox}>
+            {newAddress && shortenAddress(newAddress)}
             <img
               className={styles.copyAddress}
               onClick={handleCopyAddress}
@@ -330,53 +384,58 @@ const ProfileScreen = (props) => {
             />
           </div>
           <div className={styles.contact}>
-            {
-              contactList.map((obj, i) => (
-                <a style={{
-                  pointerEvents: !isUrl(obj.href) && 'none'
-                }} href={obj.href} target='_blank' rel="noopener noreferrer">
-                  <img style={obj.style || {}} className={styles.contact_img} src={isUrl(obj.href) ? obj.selIcon : obj.unSelIcon} />
-                </a>
-              ))
-            }
+            {contactList.map((obj, i) => (
+              <a
+                style={{
+                  pointerEvents: !isUrl(obj.href) && 'none',
+                }}
+                href={obj.href}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <img
+                  style={obj.style || {}}
+                  className={styles.contact_img}
+                  src={isUrl(obj.href) ? obj.selIcon : obj.unSelIcon}
+                />
+              </a>
+            ))}
           </div>
         </div>
-        {/* DATA */}
-        <Tabs onChange={(i) => handleChangeTab(i)} defaultIndex={selectedTab} variant='unstyled'>
-          <TabList  className={styles.tabs}>
-            {
-              tabArray.map((obj) => (
-                <Tab key={obj.value} className={cx(
+        <Tabs
+          onChange={(i) => handleChangeTab(i)}
+          defaultIndex={0}
+          index={selectedTab}
+          variant='unstyled'
+          style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+        >
+          <TabList display='flex' justifyContent='center' className={styles.tabs}>
+            {tabArray.map((obj) => (
+              <Tab
+                key={obj.value}
+                className={cx(
                   styleTabButton,
                   selectedTab === obj.value && styleActiveTabButton
-                )} style={{outline: '0!important'}}>{obj.label}</Tab>
-              ))
-            }
+                )}
+                style={{ outline: '0!important' }}
+                mr={['4px', '4px', '4px', '30px']}
+              >
+                {obj.label}
+              </Tab>
+            ))}
           </TabList>
-          <TabPanels>
-            <TabPanel key={0}>
-              {batch?.map((item, index) => (renderCard(item, index)))}
-            </TabPanel>
-            <TabPanel  key={1}>
-              {owned?.map((item, index) => (renderCard(item, index)))}
-            </TabPanel>
-            <TabPanel  key={2}>
-              {created?.map((item, index) => (renderCard(item, index)))}
-            </TabPanel>
-          </TabPanels>
         </Tabs>
-        {/* <div className={styles.tabs}>{renderTabList}</div>
-        <div className={renderAction(selectedTab)?.length > 0 ? selectedTab === 'Collections' ? styleCollections : styleCardList : styleCardListEmpty}>
+        <div className={renderAction(selectedTab)?.length > 0 ? selectedTab == 0 ? styleCollections : styleCardList : styleCardListEmpty}>
           {renderAction(selectedTab)?.length > 0
             ? renderAction(selectedTab)?.map((item, index) => (
               renderCard(item, index)
             ))
-            : selectedTab !== 'Collections' && renderNoData}
+            : selectedTab != 0 && renderNoData}
           {
-            selectedTab === 'Collections' && address === newAddress &&
+            selectedTab == 0 && address === newAddress &&
             <CollectionAdd />
           }
-        </div> */}
+        </div>
       </div>
       <ChangeBg
         visible={showBgScreen}
@@ -395,7 +454,7 @@ const ProfileScreen = (props) => {
         visible={showEditScreen}
         onSuccess={() => {
           setShowEditScreen(false);
-          getProfileInfo()
+          getProfileInfo();
         }}
         onOpen={() => {
           setShowEditScreen(true);
@@ -415,11 +474,13 @@ const ProfileScreen = (props) => {
         cropperBtn={cropperBtn}
       />
       <BotDrawer
-        onClose={() => {setBottomDrawerVisible(false)}}
+        onClose={() => {
+          setBottomDrawerVisible(false);
+        }}
         isOpen={bottomDrawerVisible}
         handleLink={(value) => {
           handleLink(value);
-          setBottomDrawerVisible(false)
+          setBottomDrawerVisible(false);
         }}
       />
     </div>
@@ -445,9 +506,9 @@ const styleTabButton = css`
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #dddddd;
   margin-right: 30px;
-  color: #AAAAAA;
+  color: #aaaaaa;
   font-family: Archivo Black;
   outline: 0;
   outline-offset: 0px;
@@ -459,18 +520,18 @@ const styleTabButton = css`
 `;
 
 const styleActiveTabButton = css`
-  border: 1px solid #417ED9;
-  color: #FFFFFF;
-  background: #417ED9;
+  border: 1px solid #417ed9;
+  color: #ffffff;
+  background: #417ed9;
 `;
 
 const styleCardList = css`
   display: grid;
   gap: 20px 19px;
-  grid-template-columns: repeat(5,  minmax(250px, 1fr));
-    @media (max-width: 1650px) {
-      grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
-    }
+  grid-template-columns: repeat(5, minmax(250px, 1fr));
+  @media (max-width: 1650px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
 `;
 const styleCollections = css`
   display: grid;
@@ -481,7 +542,6 @@ const styleCardListEmpty = css`
   display: grid;
   gap: 20px 19px;
   // grid-template-columns: repeat(auto-fill);
- 
 `;
 
 const styleNoDataContainer = css`
