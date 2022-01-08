@@ -99,9 +99,9 @@ const GlobalHeader = (props) => {
       setAddress(curAccount);
       dispatch(setProfileAddress(curAccount))
       const currentIndex = netArray.findIndex(
-        (item) => Number(item.netWorkId) === Number(ethereum.networkVersion)
+        (item) => Number(item.netWorkId) === Number(ethereum.networkVersion || ethereum.chainId)
       );
-      let defaultparams = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+      let defaultparams = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
       setCurrentNetIndex(currentIndex)
       dispatch(setProfileToken(defaultparams))
 
@@ -114,21 +114,21 @@ const GlobalHeader = (props) => {
         const currentIndex = netArray.findIndex(
           (item) => Number(item.netWorkId) === Number(networkIDstring)
         );
-        let params = {address: ethereum?.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+        let params = {address: ethereum?.selectedAddress, chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
         // 存储address
         dispatch(setProfileAddress(params))
         dispatch(setProfileToken(params))
 
         setCurrentNetIndex(currentIndex);
       });
-      let params = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+      let params = {address: curAccount, chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
       // 存储address
       dispatch(setProfileAddress(params))
       dispatch(setProfileToken(params))
       // 监听账号切换
       ethereum.on('accountsChanged', (accounts) => {
         setAddress(accounts[0]);
-        let params = {address: accounts[0], chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+        let params = {address: accounts[0], chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
 
         dispatch(setProfileAddress(params))
         dispatch(setProfileToken(params))
@@ -283,9 +283,9 @@ const GlobalHeader = (props) => {
       const account = accounts[0];
       const currentIndex = netArray.findIndex(
         (item) =>
-          Number(item.netWorkId) === Number(ethereum.networkVersion)
+          Number(item.netWorkId) === Number(ethereum.networkVersion || ethereum.chainId)
       );
-      let params = {address: account, chainType: NET_WORK_VERSION[ethereum.networkVersion]}
+      let params = {address: account, chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
 
       setCurrentNetIndex(currentIndex);
       setAddress(account);
