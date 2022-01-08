@@ -8,4 +8,7 @@ export const getWallet = () => {
   if (window.onto?.isConnected) {
     return window.onto;
   }
+  if (window.ethereum?.isONTO) {
+    return window.ethereum
+  }
 }
