@@ -43,12 +43,7 @@ const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } =
     props;
   const state = location?.state;
-  const readUrl = datas?.avatorUrl;
-  const nullFlag =
-    !readUrl ||
-    readUrl.indexOf('undefined') > -1 ||
-    readUrl.indexOf('null') > -1;
-  const avatarShow = nullFlag ? camera : readUrl;
+
   const [selectedTab, setSelectedTab] = useState(0);
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [showBgScreen, setShowBgScreen] = useState(false);
@@ -103,24 +98,13 @@ const ProfileScreen = (props) => {
       setNewAddress(address);
       history.push(address);
     }
-  }, [address, _newAddress, isOwner]);
+  }, [address, _newAddress, isOwner,]);
   useEffect(() => {
-    if (token) {
+    if (token && newAddress) {
       getProfileInfo();
-      dispatch(
-        getMyProfileBatch(
-          {
-            address: newAddress,
-            page: 0,
-            size: 100,
-            sortOrder: 'ASC',
-            sortTag: 'createTime',
-          },
-          token
-        )
-      );
-      dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
-      dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
+      dispatch(getMyProfileBatch({address: newAddress, page: 0, size: 100, sortOrder: 'ASC', sortTag: 'createTime'}, token));
+      // dispatch(getMyProfileCreated({ address, page: 0, size: 100 }, token));
+      // dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
     }
   }, [token, newAddress]);
 
@@ -136,18 +120,7 @@ const ProfileScreen = (props) => {
   const renderActionDispatch = (item) => {
     switch (item) {
     case 'Collections':
-      return dispatch(
-        getMyProfileBatch(
-          {
-            address: newAddress,
-            page: 0,
-            size: 100,
-            sortOrder: 'ASC',
-            sortTag: 'createTime',
-          },
-          token
-        )
-      );
+      return dispatch(getMyProfileBatch({address: newAddress, page: 0, size: 100, sortOrder: 'ASC', sortTag: 'createTime'}, token));
     case 'Owned':
       return dispatch(
         getMyProfileOwned({ address: newAddress, page: 0, size: 100 }, token)
@@ -175,24 +148,7 @@ const ProfileScreen = (props) => {
       return null;
     }
   };
-  const renderTabList = useMemo(
-    () =>
-      tabArray.map((item) => (
-        <div
-          className={cx(
-            styleTabButton,
-            item === selectedTab && styleActiveTabButton
-          )}
-          onClick={() => {
-            setSelectedTab(item);
-            renderActionDispatch(item);
-          }}
-        >
-          {item}
-        </div>
-      )),
-    [selectedTab, newAddress]
-  );
+
   function isUrl (url) {
     return /^https?:\/\/.+/.test(url);
   }
@@ -335,7 +291,7 @@ const ProfileScreen = (props) => {
         </Box>
         <div className={styles.profile}>
           <Box {...profileAvatarSettings}>
-            <img className={styles.authorImg} src={avatarShow} alt='' />
+            <img className={styles.authorImg} src={datas?.avatorUrl} alt='' />
             {newAddress === address && (
               <Box
                 display={['none', 'none', 'none', 'flex']}
@@ -540,6 +496,9 @@ const styleCollections = css`
 const styleCardListEmpty = css`
   display: grid;
   gap: 20px 19px;
+  @media (max-width: 900px) {
+    justify-content: center
+  }
   // grid-template-columns: repeat(auto-fill);
 `;
 

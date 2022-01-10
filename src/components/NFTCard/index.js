@@ -431,34 +431,6 @@ const mapStateToProps = ({ profile }) => ({
 });
 export default withRouter(connect(mapStateToProps)(NFTCard));
 
-const styleActionContainer = css`
-  margin-top: 14px;
-`;
-
-const styleButtonContainer = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-`;
-
-const styleBorderButton = css`
-  border: 1px solid #e6e8ec;
-  border-radius: 8px;
-  color: #000000;
-  font-weight: 500;
-`;
-
-const styleConfirmOff = css`
-  .circular {
-    width: 20px !important;
-    height: 20px !important;
-    left: -45px !important;
-    position: relative;
-    top: 24px !important;
-  }
-`;
 
 const styleButton = css`
   display: flex;
@@ -481,45 +453,15 @@ const styleButton = css`
   margin: 0 auto 12px auto;
 `;
 
-const stylePrice = css`
-  color: #ff313c;
-  font-size: 20px;
-  font-weight: 900;
-`;
-
-const styleText = css`
-  font-size: 14px;
-  color: #8f9bba;
-`;
-
-const styleSoldOutBanner = css`
-  position: absolute;
-  width: 74px;
-  height: 47px;
-  background: #ff313c;
-  border-radius: 0 0 20px 20px;
-  font-weight: bold;
-  font-size: 14px;
-  left: 24px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const styleCardContainer = css`
-  ${'' /* background: #ffffff; */}
   border-radius: 10px;
-  ${'' /* max-width: 300px; */}
   display: flex;
   flex-direction: column;
-  /* cursor: pointer; */
   position: relative;
   flex: 1;
-  ${'' /* min-width: 300px; */}
   &:hover {
     position: relative;
-    ${'' /* top: -10px; */}
   }
   .shortPic{
     min-height: 300px;
@@ -546,43 +488,6 @@ const styleCardCollection = css`
     top: 0px;
   }
 `
-const styleInfoContainer = css`
-  padding: 18px 14px 0 14px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  color: rgba(117, 129, 154, 1);
-  font-size: 12px;
-`;
-
-const styleCardHeader = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-`;
-
-const styleInfo = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-  .headLine{
-    width: 80%;
-    .title {
-      font-family: Archivo Black,sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 16px;
-      line-height: 16px;
-      letter-spacing: -0.01em;
-      color: #000000;
-    }
-  }
-`;
 
 const styleCreateNFT = css`
   background-color: #0049c6;
@@ -639,26 +544,3 @@ const styleOffShelfModal = css`
   max-width: 564px;
   width: calc(100% - 40px);
 `
-
-const styleNickNameContainer = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 8px;
-  font-family: Judson,sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: -0.01em;
-  color: #75819A;
-  .dot {
-    background: #45B36B;
-    width: 8px;
-    height: 8px;
-    border-radius: 8px;
-    margin-right: 6px;
-  }
-`;
-
-

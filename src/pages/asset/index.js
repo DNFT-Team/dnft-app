@@ -2,6 +2,7 @@ import { Dialog, Button, Select } from 'element-react';
 import { css, cx } from 'emotion';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router';
+import { Box, Tab, Tabs, TabList, TabPanels, TabPanel, Flex } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi';
 import { noDataSvg } from 'utils/svg';
@@ -20,6 +21,7 @@ import LoadingIcon from 'images/asset/loading.gif'
 import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
+import { Btn } from 'components/Button';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
@@ -232,30 +234,48 @@ const AssetScreen = (props) => {
 
   const renderAssetHeader = useMemo(
     () => (
-      <div
-        style={{
-          background: `#b7b7b7 center center / cover no-repeat url(${bannerUrl})`,
-          // height: '236px',
-          height: 0,
-          paddingBottom: '16.67%',
-          borderRadius: '10px',
-          position: 'relative',
-          marginBottom: '90px',
-          // marginBottom: '8.34%',
-        }}>
-        <div className={styleHeader}>
+      <>
+        <Box
+          h={['147px', '147px', '147px', 0]}
+          pb={'16.7%'}
+          mb={[0, 0, 0, '90px']}
+          position='relative'
+          borderRadius={[0, 0, 0, '10px']}
+          style={{
+            background: `#b7b7b7 center center / cover no-repeat url(${bannerUrl})`,
+          }}>
+          <Box display={['none', 'none', 'none', 'flex']} className={styleHeader}>
+            <div className={styleAssetAccountContainer}>
+              <p>Balance</p>
+              <div className={styleACBalance}>
+                <img src={dnft_unit} alt=""/>
+                <span>{balance} DNF</span>
+              </div>
+            </div>
 
+            {currentNetEnv !== 'otherNet' &&
+              <div
+                className={styleCreateNFT}
+                onClick={() => {
+                  setShowCreateNft(true)
+                }}
+              >
+                Create NFT
+              </div>
+            }
+          </Box>
+        </Box>
+        <Box display={['flex', 'flex', 'flex', 'none']} alignContent='center' justifyContent='center' flexDirection='column' className={styleHeaderMp}>
           <div className={styleAssetAccountContainer}>
-            <p>Balance</p>
             <div className={styleACBalance}>
               <img src={dnft_unit} alt=""/>
               <span>{balance} DNF</span>
             </div>
+            <p>Balance</p>
           </div>
-
           {currentNetEnv !== 'otherNet' &&
             <div
-              className={styleCreateNFT}
+              className={cx(styleCreateNFT, styleCreateNftMp)}
               onClick={() => {
                 setShowCreateNft(true)
               }}
@@ -263,8 +283,8 @@ const AssetScreen = (props) => {
               Create NFT
             </div>
           }
-        </div>
-      </div>
+        </Box>
+      </>
     ),
     [balance, bannerUrl, avatorUrl]
   );
@@ -370,7 +390,7 @@ const AssetScreen = (props) => {
               loading={isLoading}
               style={{ position: 'fixed', width: 'calc(100% - 76px)', zIndex: 10000 }}
             /> */}
-            <div>
+            <Box flexDirection={['column!important','column!important','column!important', 'row!important']}>
               <Select
                 value={category}
                 className={styleSelectContainer}
@@ -402,7 +422,7 @@ const AssetScreen = (props) => {
                   ))}
                 </Select>
               )}
-            </div>
+            </Box>
           </div>
 
           <div
@@ -462,7 +482,7 @@ const styleContainer = css`
   padding: 0 50px 30px 50px;
   box-sizing: border-box;
   @media (max-width: 900px) {
-    padding: 0 15px 15px 15px;
+    padding: 0;
   }
   & > div {
     &:first-child {
@@ -507,7 +527,15 @@ const styleHeader = css`
     width: 80%;
   }
 `;
+
 const styleSelectContainer = css`
+  @media (max-width: 900px)  {
+    width: 100%!important;
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0
+    }
+  }
   .el-select-dropdown__list {
     padding: 0;
     border-radius: 10px;
@@ -625,7 +653,7 @@ const styleBody = css`
     height: 100px;
   }
   @media (max-width: 900px) {
-    padding: 24px 12px 80px 12px;
+    padding: 24px 20px 80px 20px;
   }
 `;
 
@@ -635,7 +663,7 @@ const styleTabContainer = css`
   flex: 1;
   justify-content: space-between;
   flex-wrap: wrap;
-
+  margin-bottom: 30px;
   & > div {
     display: flex;
     flex-direction: row;
@@ -704,16 +732,17 @@ const styleCardList = css`
   flex-direction: row;
   height: 100%;
   gap: 30px 16px; */}
-  margin-top: 50px;
   display: grid;
   gap: 20px 20px;
   grid-template-columns: repeat(5,  minmax(250px, 1fr));
   @media (max-width: 1950px) {
     grid-template-columns: repeat(auto-fill,  minmax(250px, 1fr));
   }
-  ${'' /* @media (max-width: 900px) {
+  @media (max-width: 900px) {
     justify-content: center;
-  } */}
+    margin-top: 0px;
+
+  }
 `;
 
 const styleModalContainer = css`
@@ -793,6 +822,39 @@ const styleNoDataContainer = css`
   span {
     margin-top: 20px;
   }
-
-  
+`;
+const styleHeaderMp = css`
+  display: flex;
+  flexDirection: column;
+  justify-content: center;
+  margin-top: 20px;
+  &>div {
+    margin: 0 auto;
+  }
+  img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  span {
+    color: #00327F;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+  }
+  p {
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 140%;
+    color: #00327F;
+    padding-bottom: 16px;
+    text-align: center;
+  }
+`;
+const styleCreateNftMp = css`
+  width: calc(100% - 40px)!important;
+  height: 48px;
 `;

@@ -15,7 +15,7 @@ import { Tooltip } from '@chakra-ui/react';
 import { shortenAddress } from 'utils/tools'
 
 const NFTCard = (props) => {
-  const { needAction, item, index, clickDetail, token, address, getMarketList, onSave, children, whetherShowPrice = true } = props;
+  const { fromHot, item, index, clickDetail, token, address, getMarketList, onSave, children, whetherShowPrice = true } = props;
   let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether');
   let history = useHistory();
 
@@ -56,7 +56,7 @@ const NFTCard = (props) => {
     if(flag) getMarketList && getMarketList(item.id, !item?.isSaved);
   }
   return (
-    <div key={`title-${index}`} className={styles.styleCardContainer}>
+    <div key={`title-${index}`} style={fromHot && { margin: '0 0.6rem'}} className={styles.styleCardContainer}>
       <div
         noDataText="No Data"
         onClick={clickDetail}
