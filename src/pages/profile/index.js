@@ -308,7 +308,6 @@ const ProfileScreen = (props) => {
     let currentlabel = tabArray.filter((obj) => obj.value == i)?.[0]?.label;
     renderActionDispatch(currentlabel);
   };
-  console.log(batch, 'batch');
   return (
     <div className={styles.box}>
       <div className={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Divider,
   Drawer,
@@ -18,13 +18,18 @@ import { contactData } from 'config/helper';
 import { Btn } from 'components/Button';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { get, post } from 'utils/request';
+
 const DrawerMenu = (props) => {
   const { isOpen, dispatch, skipTo, location, onClose, token, address, datas } =
     props;
-  useEffect(() => {
-    console.log('address', address);
+  const [profile, setprofile] = useState({})
+  useEffect(async () => {
     if (address && token) {
-      dispatch(getMyProfileList({ userId: address }, token));
+      // dispatch(getMyProfileList({ userId: address }, token));
+      const data = await post(`/api/v1/users/address/${address}`, {}, token);
+      setprofile(data?.data?.data || {})
+      console.log(data,'data')
     }
   }, [address, token]);
   const menuNav = [
@@ -84,9 +89,9 @@ const DrawerMenu = (props) => {
                     <Flex alignItems='center'>
                       {item.navName === 'Profile' ? (
                         <>
-                          <img src={datas?.avatorUrl} className='userLogo' />
+                          <img src={profile?.avatorUrl} className='userLogo' />
                           <div className='user'>
-                            <span className='menuSpan'>{datas?.nickName}</span>
+                            <span className='menuSpan'>{profile?.nickName}</span>
                             <span>{address && shortenAddress(address)}</span>
                           </div>
                         </>

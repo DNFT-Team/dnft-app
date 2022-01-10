@@ -919,7 +919,7 @@ const Mining = (props) => {
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
-        <Title title='Market' linkHelper={{
+        <Title title='Mining' linkHelper={{
           youtubeLink: helper.mining.youtube,
           youtubeTitle: helper.mining.title,
           bookLink: helper.mining.book,
