@@ -16,7 +16,6 @@ import SwitchModal from 'components/SwitchModal';
 import banner1 from 'images/home/banner/marketplace2.png'
 import banner2 from 'images/home/banner/mintNft2.png'
 import banner3 from 'images/home/banner/mining2.png'
-import banner4 from 'images/home/banner/festival.png'
 import { getWallet } from 'utils/get-wallet';
 
 
@@ -39,11 +38,6 @@ const HomeScreen = (props) => {
       src: banner1,
       title: 'NFT MARKET',
       route: '/market'
-    },
-    {
-      src: banner4,
-      title: 'NFT Mint',
-      route: '/asset'
     },
     {
       src: banner2,
