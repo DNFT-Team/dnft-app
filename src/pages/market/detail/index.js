@@ -470,7 +470,7 @@ const MarketDetailScreen = (props) => {
                   isLoading={loading}
                   disabled={!datas?.quantity || loading}
                   loadingText="Buy Now"
-                  bgColor={datas?.address === address && '#FF2E2E'}
+                  bgColor={datas?.address === address && '#FF2E2E!important'}
                   w={['100%', '100%', '100%', '153px']}
                   m={0}
                   onClick={() => {

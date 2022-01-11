@@ -12,7 +12,7 @@ export const Btn = (props) => {
       sx={{
         '&': {
           color: 'white',
-          background: bgColor || '#0057D9',
+          background: bgColor || '#0057D9!important',
         },
       }}
       fontSize={'16px'}
