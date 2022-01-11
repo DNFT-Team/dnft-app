@@ -9,7 +9,7 @@ import helper from 'config/helper';
 import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import Title from 'components/Title'
-
+import {Box} from '@chakra-ui/react';
 const cardData = [
   {
     key: 'b2e',
@@ -31,7 +31,7 @@ const BridgeScreen = (props) => {
   let history = useHistory();
   const { address } = props;
 
-  return <div className={styleBridge}>
+  return <Box p={['20px', '20px', '20px', '50px']} className={styleBridge}>
     <Title title='Bridge' linkHelper={{
       youtubeLink: helper.bridge.youtube,
       youtubeTitle: helper.nftMagic.title,
@@ -75,7 +75,7 @@ const BridgeScreen = (props) => {
         ))
       }
     </div>
-  </div>
+  </Box>
 }
 
 const mapStateToProps = ({ profile }) => ({
@@ -86,7 +86,6 @@ export default withRouter(connect(mapStateToProps)(BridgeScreen));
 
 const styleBridge = css`
   position: relative;
-  padding: 50px 50px;
   .styleHeader {
     display: flex;
     align-items: center;

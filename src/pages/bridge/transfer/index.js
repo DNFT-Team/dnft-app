@@ -28,7 +28,7 @@ import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools';
  */
 import {
   Text, Input, InputGroup, Link, InputRightAddon,
-  AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay
+  AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogOverlay, Box
 } from '@chakra-ui/react';
 import { Dialog, Button } from 'element-react';
 import { toast } from 'react-toastify';
@@ -47,6 +47,8 @@ import IconBsc from 'images/networks/logo_select_bsc.svg';
  */
 import helper from 'config/helper';
 import globalConf from 'config';
+
+import Title from 'components/Title'
 
 
 /**
@@ -388,9 +390,17 @@ const TransferView = (props) => {
   };
 
   //  render Dom
-  return <div className={styleWrapper}>
+  return <Box p={['20px', '20px', '20px', '50px']} className={styleWrapper}>
     <div className='styleHeader'>
-      <span className={styleTitleH3}>{frNet.key} Bridge to {toNet.key}</span>
+      <Title title={`Bridge to ${toNet.key}`}
+        // linkHelper={{
+        //   youtubeLink: helper.bridge.youtube,
+        //   youtubeTitle: helper.nftMagic.title,
+        //   bookLink: helper.bridge.book,
+        //   bookTitle: 'Mechanism'
+        // }}
+      />
+      {/* <span className={styleTitleH3}>{frNet.key} Bridge to {toNet.key}</span>
       <div  style={{fontSize: '.8rem',  display: 'flex', alignItems: 'center'}} className={styleLinks}>
         <Link href={helper.bridge.youtube} isExternal color="#0057D9" fontStyle="italic" marginRight="20px" style={{display: 'flex', alignItems: 'center'}}
           display="inline-block">
@@ -400,12 +410,12 @@ const TransferView = (props) => {
           display="inline-block">
           <Icon icon="simple-icons:gitbook" fontSize={18} style={{marginRight: '10px', color: '#1d90e6'}} /> Mechanism
         </Link>
-      </div>
+      </div> */}
     </div>
     <h5>
       Bridge your $DNF from {ChainNodes[fr]?.title} to {ChainNodes[to]?.title}
     </h5>
-    <div className={styleTransferBox}>
+    <Box p={['20px', '20px', '20px', '40px']} className={styleTransferBox}>
       <div className={styleFormItem}>
         <label>Send</label>
         <InputGroup my="10px">
@@ -456,7 +466,7 @@ const TransferView = (props) => {
       <div>
         <button className={styleBtn} onClick={submitCross}>Confirm</button>
       </div>
-    </div>
+    </Box>
     <div>
       <h4>
         Transaction History
@@ -495,7 +505,7 @@ const TransferView = (props) => {
     <SwitchModal visible={isShowSwitchModal} networkName={frNet.key} goToRightNetwork={goToRightNetwork} onClose={() => {
       setIsShowSwitchModal(false)
     }} />
-  </div>
+  </Box>
 }
 const mapStateToProps = ({ profile }) => ({
   address: profile.address,
@@ -508,7 +518,7 @@ export default withRouter(connect(mapStateToProps)(TransferView));
  * */
 const styleWrapper = css`
   position: relative;
-  padding: 50px 50px;
+  ${'' /* padding: 50px 50px; */}
   .styleHeader {
     display: flex
   }
@@ -596,7 +606,7 @@ const styleBtn = css`
 const styleTransferBox = css`
   background: #FFFFFF;
   border-radius: 10px;
-  padding: 40px;
+  //padding: 40px;
 
 `
 const styleFormItem = css`
