@@ -381,7 +381,7 @@ const MarketDetailScreen = (props) => {
                 <Flex flexDirection='column'>
                   <Text className={styles.owner}>Creater</Text>
                   <Tooltip label={datas?.createrAddress && shortenAddress(datas?.createrAddress)} hasArrow>
-                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.createrName ?? 'Unknown', 10)}</a>
+                    <a onClick={() => handleLinkProfile(datas?.createrAddress)} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.createrName ?? 'Unknown', 10)}</a>
                   </Tooltip>
                 </Flex>
               </Flex>
@@ -390,7 +390,7 @@ const MarketDetailScreen = (props) => {
                 <Flex flexDirection='column'>
                   <Text className={styles.owner}>Owner</Text>
                   <Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>
-                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.nickName ?? 'Unknown', 10)}</a>
+                    <a onClick={() => handleLinkProfile(datas?.address)} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.nickName ?? 'Unknown', 10)}</a>
                   </Tooltip>
                 </Flex>
               </Flex>
@@ -470,7 +470,10 @@ const MarketDetailScreen = (props) => {
                   isLoading={loading}
                   disabled={!datas?.quantity || loading}
                   loadingText="Buy Now"
-                  className={styles.buyBtn} onClick={() => {
+                  bgColor={datas?.address === address && '#FF2E2E'}
+                  w={['100%', '100%', '100%', '153px']}
+                  m={0}
+                  onClick={() => {
                     if (!address) {
                       toast.warn('Please link wallet', {
                         position: toast.POSITION.TOP_CENTER,
@@ -563,22 +566,6 @@ const mapStateToProps = ({ profile, market }) => ({
   address: profile.address
 });
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen));
-const styleCollection = css`  
-  .el-select-dropdown__empty {
-    width: 0;
-    overflow: hidden;
-    &:before {
-      content: "No Data";
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-    }
-  }
-`
 const styleModalContainer = css`
   max-width: 484px;
   width: calc(100% - 40px);
@@ -606,8 +593,4 @@ const styleModalContainer = css`
     padding: 0px 22px;
     margin-bottom: 50px;
   }
-`
-const styleOffShelfModal = css`
-  max-width: 564px;
-  width: calc(100% - 40px);
 `

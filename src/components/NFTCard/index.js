@@ -13,6 +13,7 @@ import {
   tradableNFTContract721,
 } from '../../utils/contract';
 import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } from '../../utils/abi';
+import { Box } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import globalConfig from '../../config';
 import noImg from 'images/common/noImg.svg'
@@ -381,7 +382,8 @@ const NFTCard = (props) => {
         clickDetail={(e) => {handleDetail && handleDetail()}}
       >
         {
-          currentStatus.value === 'INWALLET' && <div
+          currentStatus.value === 'INWALLET' && <Box
+            w={['calc(100% - 88px)', 'calc(100% - 88px)', 'calc(100% - 88px)', '144px']}
             className={cx(styleButton)}
             style={{
               opacity: isEmpty ? 0.5 : 1,
@@ -402,10 +404,11 @@ const NFTCard = (props) => {
             }}
           >
               Sell
-          </div>
+          </Box>
         }
         {
-          currentStatus.value === 'ONSALE' && <div
+          currentStatus.value === 'ONSALE' && <Box
+            w={['calc(100% - 88px)', 'calc(100% - 88px)', 'calc(100% - 88px)', '144px']}
             className={cx(styleButton)}
             style={{
               opacity: isEmpty ? 0.5 : 1,
@@ -417,7 +420,7 @@ const NFTCard = (props) => {
             }}
           >
             Unsell
-          </div>
+          </Box>
         }
       </NFTCardItem>
       {showSellModal && renderSellModal}
@@ -437,7 +440,7 @@ const styleButton = css`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background: #ed6160;
+  background: #FF2E2E;
   border-radius: 10px;
   font-family: Archivo Black,sans-serif;
   font-style: normal;
