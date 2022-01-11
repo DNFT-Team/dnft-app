@@ -27,6 +27,7 @@ import {
 import { createNFTAbi1155, createNFTAbi721, tradableNFTAbi, tradableNFTAbi721 } from 'utils/abi';
 import { getWallet } from 'utils/get-wallet';
 import { shortenAddress } from 'utils/tools'
+import RenderOffShelfModal from 'components/RenderOffShelfModal';
 
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
@@ -329,7 +330,15 @@ const MarketDetailScreen = (props) => {
           </div>
         </div>
       </div>
-      {showOffShelfModal && renderOffShelfModal}
+      {/* {showOffShelfModal && renderOffShelfModal} */}
+      <RenderOffShelfModal
+        showOffShelfModal={showOffShelfModal}
+        setShowOffShelfModal={() => setShowOffShelfModal(false)}
+        datas={datas}
+        address={address}
+        token={token}
+        historyBack={() => history.goBack()}
+      />
     </div>
   )
 }

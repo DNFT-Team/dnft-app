@@ -71,7 +71,7 @@ const CollectionScreen = (props) => {
         currentStatus={''}
         getList={getList}
         handleDetail={() => {
-          history.push('/asset/detail', {item})
+          history.push('/asset/detail', {item, fromAsset: true})
         }}
       />
     ),

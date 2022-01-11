@@ -18,7 +18,7 @@ import ProfileEditScreen from 'pages/profile/edit';
 import CreateNFT from 'pages/asset/create';
 import GalleryScreen from 'pages/gallery';
 import UnityScreen from 'pages/gallery/unitys';
-import AssetDetailScreen from 'pages/asset/detail';
+import AssetDetailScreen from 'pages/market/detail';
 
 //  Menu - Icon
 import homeIcon from 'images/menu/home.svg';

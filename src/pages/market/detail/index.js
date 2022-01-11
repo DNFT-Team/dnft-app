@@ -30,6 +30,7 @@ import {shortenNameString} from 'utils/tools'
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
   const item = location?.state?.item;
+  const fromAsset = location?.state?.fromAsset;
   const category = location?.state?.category;
   const sortTag = location?.state?.sortTag;
   let history = useHistory();
@@ -62,12 +63,21 @@ const MarketDetailScreen = (props) => {
   }, [token])
   const getMarketInfo = async () => {
     try {
-      const { data } = await get(
-        `/api/v1/trans/market/${item?.contractType}/${item?.orderId}`,
-        '',
-        token
-      )
-      setDatas(data?.data?.content?.[0])
+      if(fromAsset) {
+        const { data } = await get(
+          `/api/v1/trans/asset/${item?.address}/${item?.status}/${item?.nftId}`,
+          '',
+          token
+        )
+        setDatas(data?.data?.content)
+      }else {
+        const { data } = await get(
+          `/api/v1/trans/market/${item?.contractType}/${item?.orderId}`,
+          '',
+          token
+        )
+        setDatas(data?.data?.content?.[0])
+      }
     } catch (e) {
       console.log(e, 'e');
     }
@@ -423,56 +433,60 @@ const MarketDetailScreen = (props) => {
               </Flex>
             </Flex>
           </Box>
-          <Box
-            w={['100vw', '100vw', '100vw', '400px']}
-            boxSizing={'border-box'}
-            ml={['-20px', '-20px', '-20px', 0]}
-            py={['15px', '15px', '15px', 0]}
-            px={['20px', '20px', '20px', 0]}
-            position={['sticky', 'sticky', 'sticky', 'relative']}
-            background={['white', 'white', 'white', 'transparent']}
-            bottom={0}
-          >
-            <Flex display={'flex'}
-              flexDirection={['row-reverse', 'row-reverse', 'row-reverse', 'initial']}
-              justifyContent={['space-between','space-between','space-between','flex-start']}
-              mb={['13px','13px', '13px', '30px']}
-              className={styles.priceBox}>
-              <Flex alignSelf={['flex-end', 'flex-end', 'flex-end', '']} alignItems='flex-end'>
-                <img  src={datas?.type === 'DNF' ? dnft_unit : busd_unit} />
-                <Text ml={'10px'} className={styles.priceAmount}>{transPrice(price)}</Text>
-                <div className={styles.worth}>≈ $
-                  {transPrice(datas?.amount * price)}
-                </div>
+          {
+            (!fromAsset || datas?.status === 'ONSALE') &&
+            <Box
+              w={['100vw', '100vw', '100vw', '400px']}
+              boxSizing={'border-box'}
+              ml={['-20px', '-20px', '-20px', 0]}
+              py={['15px', '15px', '15px', 0]}
+              px={['20px', '20px', '20px', 0]}
+              position={['sticky', 'sticky', 'sticky', 'relative']}
+              background={['white', 'white', 'white', 'transparent']}
+              bottom={0}
+              boxShadow={['0px -8px 40px rgba(0, 0, 0, 0.1)', '0px -8px 40px rgba(0, 0, 0, 0.1)', '0px -8px 40px rgba(0, 0, 0, 0.1)', 'none']}
+            >
+              <Flex display={'flex'}
+                flexDirection={['row-reverse', 'row-reverse', 'row-reverse', 'initial']}
+                justifyContent={['space-between','space-between','space-between','flex-start']}
+                mb={['13px','13px', '13px', '30px']}
+                className={styles.priceBox}>
+                <Flex alignSelf={['flex-end', 'flex-end', 'flex-end', '']} alignItems='flex-end'>
+                  <img  src={datas?.type === 'DNF' ? dnft_unit : busd_unit} />
+                  <Text ml={'10px'} className={styles.priceAmount}>{transPrice(price)}</Text>
+                  <div className={styles.worth}>≈ $
+                    {transPrice(datas?.amount * price)}
+                  </div>
+                </Flex>
+                {
+                  datas?.contractType == 1155 &&
+                  <Box ml={[0,0,0,'30px']} alignSelf={['flex-start', 'flex-start', 'flex-start', '']} className={styles.stock}>
+                    {datas?.quantity} Available
+                  </Box>
+                }
               </Flex>
-              {
-                datas?.contractType == 1155 &&
-                <Box ml={[0,0,0,'30px']} alignSelf={['flex-start', 'flex-start', 'flex-start', '']} className={styles.stock}>
-                  {datas?.quantity} Available
-                </Box>
-              }
-            </Flex>
-            <div className={styles.btnBox}>
-              <Btn
-                isLoading={loading}
-                disabled={!datas?.quantity || loading}
-                loadingText="Buy Now"
-                className={styles.buyBtn} onClick={() => {
-                  if (!address) {
-                    toast.warn('Please link wallet', {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                    return;
-                  }
-                  if(datas?.address === address) {
-                    setShowOffShelfModal(true);
-                    return;
-                  }
-                  if(datas?.contractType === '721') clickBuyItem()
-                  else setIsOpen(true)
-                }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Btn>
-            </div>
-          </Box>
+              <div className={styles.btnBox}>
+                <Btn
+                  isLoading={loading}
+                  disabled={!datas?.quantity || loading}
+                  loadingText="Buy Now"
+                  className={styles.buyBtn} onClick={() => {
+                    if (!address) {
+                      toast.warn('Please link wallet', {
+                        position: toast.POSITION.TOP_CENTER,
+                      });
+                      return;
+                    }
+                    if(datas?.address === address) {
+                      setShowOffShelfModal(true);
+                      return;
+                    }
+                    if(datas?.contractType === '721') clickBuyItem()
+                    else setIsOpen(true)
+                  }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Btn>
+              </div>
+            </Box>
+          }
         </Box>
       </Flex>
       <Box display={['none', 'none', 'none', 'initial']}>

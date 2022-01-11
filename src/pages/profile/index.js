@@ -182,7 +182,7 @@ const ProfileScreen = (props) => {
             currentStatus={selectedTab}
             newAddress={newAddress}
             handleDetail={() => {
-              history.push('/asset/detail', { item });
+              history.push('/asset/detail', { item, fromAsset: true });
             }}
           />
         );
@@ -487,6 +487,10 @@ const styleCardList = css`
   grid-template-columns: repeat(5, minmax(250px, 1fr));
   @media (max-width: 1650px) {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  @media (max-width: 900px) {
+    margin-left: 20px;
+    margin-right: 20px
   }
 `;
 const styleCollections = css`
