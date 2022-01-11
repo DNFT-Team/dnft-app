@@ -1,26 +1,11 @@
-.marketDetail {
-  padding: 50px;
-  position: relative;
-}
-.main {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  box-sizing: border-box;
-}
 .mainL {
   background-color: white;
   border-radius: 10px;
-  float: left;
   padding-bottom: 40%;
-  width: calc(50% - 25px);
-  margin-right: 50px;
-  //height: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: auto 100%;;
   box-sizing: border-box;
-  margin-bottom: 6px;
 }
 .imgFlow{
   background-size: cover;
@@ -38,16 +23,6 @@
 .detail_img {
   max-width: 100%;
   max-height: 100%;
-}
-.mainR {
-  //flex: 1;
-  width: calc(50% - 25px);
-  //margin-left: 20px;
-  box-sizing: border-box;
-  //background: #fff;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
 }
 .star {
   min-height: 24px;
@@ -84,11 +59,6 @@
   filter: drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.25));
   cursor: pointer;
 }
-.product {
-  //padding-left: 80px;
-  width: 100%;
-  box-sizing: border-box;
-}
 .proName {
   box-sizing: border-box;
   //margin: 0px 0px 24px;
@@ -111,11 +81,12 @@
   font-family: Archivo Black;
   font-style: normal;
   font-weight: normal;
-  font-size: 36px;
-  line-height: 36px;
+  //font-size: 36px;
+  //line-height: 36px;
 }
 .proNameType {
-  box-sizing: border-box;
+  margin: 0;
+  //box-sizing: border-box;
   display: inline-block;
   background: rgba(0, 75, 255, 0.1);
   border-radius: 3px;
@@ -124,6 +95,7 @@
   padding: 5px 10px;
   font-size: 14px;
   line-height: 14px;
+  height: 14px;
   color: #112df2;
   font-family: Helvetica;
   
@@ -231,6 +203,7 @@
 .contract_details_item {
   margin-bottom: 30px;
   text-align: left;
+  justify-content: space-between;
 }
 .contract_details_item div:first-child {
   font-size: 14px;
@@ -246,17 +219,6 @@
   text-decoration: none;
 }
 
-
-.userInfo {
-  box-sizing: border-box;
-  margin: 30px 0px 50px;
-  min-width: 0px;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
 .proPriceBox {
   display: flex;
   align-items: center;
@@ -267,7 +229,7 @@
 }
 .priceBox {
   box-sizing: border-box;
-  margin: 0px 0px 30px;
+  //margin: 0px 0px 30px;
   min-width: 0px;
   display: flex;
   align-items: center;
@@ -306,10 +268,9 @@
   flex-direction: row;
   align-items: flex-end;
 }
-.priceAll img {
+.priceBox img {
   width: 36px;
   height: 36px;
-  margin-right: 10px;
 }
 .priceAmount {
   box-sizing: border-box;
@@ -605,7 +566,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-
 }
 .buyBtn {
   width: 153px !important;
@@ -719,25 +679,13 @@ img {
   background: #0057D9;
   border-radius: 5px;
   width: 100%!important;
-  //margin: 0px 8px;
 }
 @media (max-width: 900px) {
-  .main {
-    padding: 0px;
+  .contract_details_item{
+    margin-bottom: 0;
   }
-  .mainL {
-    width: 80vw;
-    height: 80vw;
-    margin: 1rem auto;
-
-  }
-  .mainR {
-    width: 100%;
-    margin: 0;
-  }
-  .product {
-    padding: 10px;
-    width: 100%;
+  .contract_details_item div {
+    line-height: 34px!important;
   }
   .buyBtn {
     width: 100% !important;

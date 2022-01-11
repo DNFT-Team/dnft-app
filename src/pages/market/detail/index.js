@@ -11,7 +11,7 @@ import {
   Select, InputNumber, Dialog, Button
 } from 'element-react';
 import {
-  Tooltip
+  Tooltip, Box, Flex, Text
 } from '@chakra-ui/react';
 import { get, post } from 'utils/request';
 import CreateCollectionModal from '../../../components/CreateCollectionModal';
@@ -24,7 +24,9 @@ import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
 import { shortenAddress } from 'utils/tools';
 import { toDecimal } from 'utils/web3Tools';
-import {Btn} from 'components/Button'
+import {Btn} from 'components/Button';
+import RenderOffShelfModal from 'components/RenderOffShelfModal';
+import {shortenNameString} from 'utils/tools'
 const MarketDetailScreen = (props) => {
   const {location, address, token, chainType} = props;
   const item = location?.state?.item;
@@ -45,7 +47,6 @@ const MarketDetailScreen = (props) => {
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const [lineFlag, setLineFlag] = useState(false);
   const [showOffShelfModal, setShowOffShelfModal] = useState(false);
-  const [isOffLoading, setIsOffLoading] = useState(false);
 
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
@@ -334,185 +335,123 @@ const MarketDetailScreen = (props) => {
     return _amount;
   };
 
-  const renderOffShelfModal = useMemo(() => {
-    console.log('off');
-    return (
-      <Dialog
-        title="Tips"
-        size="tiny"
-        visible
-        closeOnClickModal={false}
-        customClass={styleOffShelfModal}
-        onCancel={() => {
-          setShowOffShelfModal(false);
-          setIsOffLoading(false);
-        }}
-      >
-        <Dialog.Body>
-          <span>Are you sure phase out the nft?</span>
-        </Dialog.Body>
-        <Dialog.Footer className="dialog-footer">
-          <Button
-            onClick={() => {
-              setShowOffShelfModal(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="primary"
-            style={{ opacity: isOffLoading ? 0.5 : 1 }}
-            onClick={async () => {
-              try {
-                setIsOffLoading(true);
-                let wallet = getWallet();
-
-                if (wallet) {
-                  window.web3 = new Web3(wallet);
-                  const is721Contract = datas?.contractType == 721;
-
-                  const contractAddress = is721Contract ? tradableNFTContract721[currentNetName] : tradableNFTContract[currentNetName];
-                  const myContract = new window.web3.eth.Contract(
-                    is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
-                    contractAddress
-                  );
-
-                  let offResult = await myContract.methods
-                    .off(datas?.orderId)
-                    .send({
-                      from: address,
-                    });
-
-                  if (offResult) {
-                    const result = await post(
-                      '/api/v1/trans/sell_back',
-                      {
-                        orderId: datas?.orderId,
-                        tokenAddress: datas?.tokenAddress
-                      },
-                      token
-                    );
-                    setShowOffShelfModal(false);
-                    // onRefresh(address, token);
-                    setIsOffLoading(false);
-                    historyBack();
-                    toast.info('Operation succeeded！', {
-                      position: toast.POSITION.TOP_CENTER,
-                    });
-                  }
-                }
-              } finally {
-                setIsOffLoading(false);
-              }
-            }}
-          >
-            {isOffLoading ? 'Loading...' : 'Confirm'}
-          </Button>
-        </Dialog.Footer>
-      </Dialog>
-    )
-  }, [isOffLoading, getWallet])
-  // let price = datas?.price > 0 && Web3.utils.fromWei(String(datas.price), 'ether');
   let price = datas?.price &&  toDecimal(datas?.price);
 
   return (
-    <div className={styles.marketDetail}>
-      <div className={styles.main}>
-        <div className={styles.mainL} style={{ backgroundImage: `url(${datas?.avatorUrl})`}}>
-        </div>
-        <div className={styles.mainR}>
-          <div className={styles.product}>
-            <div className={styles.proName}>
-              <div className={styles.proNameText}>{datas?.name}</div>
-            </div>
-            <div className={styles.collectionBox}>
-              <div className={styles.proNameType}>{datas?.category}</div>
+    <Box p={['20px','20px','20px','50px']} pb={[0,0,0,'20px']}>
+      <Flex flexWrap='wrap'>
+        <Box
+          mr={[0,0,0,'50px']}
+          mb={['30px', '30px', '30px', 0]}
+          h={['80vw','80vw','80vw',0]}
+          w={['100%', '100%', '100%', 'calc(50% - 25px)']}
+          className={styles.mainL}
+          style={{ backgroundImage: `url(${datas?.avatorUrl})`}}
+        />
+        <Box w={['100%', '100%', '100%', 'calc(50% - 25px)']} boxSizing='border-box' >
+          <Flex flexDirection={['row', 'row', 'row', 'column']} justifyContent={['space-between', 'space-between', 'space-between']}>
+            <Text mr='35px' fontSize={['24px', '24px', '24px', '36px']} className={styles.proNameText}>{datas?.name}</Text>
+            <Flex alignItems='center' >
+              <Text m='0' className={styles.proNameType}>{datas?.category}</Text>
               <Icon className={styles.star} icon={datas?.isSaved ? 'flat-color-icons:like' : 'icon-park-outline:like'} onClick={handleStar}/>
-              <span style={{color: datas?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{datas?.saveCount}</span>
-            </div>
-            <div className={styles.userInfo}>
-              <div className={styles.user}>
-                <div className={styles.userInfoText}>
-                  <p className={styles.owner}>Collection</p>
-                  <p onClick={() => history.push('/profile/collection', {item: {
-                    id: datas?.collectionId,
-                    flag: true,
-                  }, newAddress: datas?.address})} className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.collectionName?.length > 10 ? `${datas?.collectionName?.slice(0, 10)}...` : datas?.collectionName}</p>
-                </div>
-              </div>
-              <div className={styles.user} onClick={() => handleLinkProfile(datas?.createrAddress)}>
+              <Text m='0' ml='5px' style={{color: datas?.isSaved ? '#FF4242' : '#B8BECC'}} className={styles.saveCount}>{datas?.saveCount}</Text>
+            </Flex>
+          </Flex>
+          <Flex mt='30px' mb={['5px', '5px', '5px', '50px']} flexDirection={['column', 'column', 'column', 'row']} >
+            <Flex flex='1' flexDirection={['row', 'row', 'row', 'column']}>
+              <Text m='0' mr='5px' className={styles.owner}>Collection</Text>
+              <p onClick={() => history.push('/profile/collection', {item: {
+                id: datas?.collectionId,
+                flag: true,
+              }, newAddress: datas?.address})} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.collectionName)}</p>
+            </Flex>
+            <Flex flex='2' mt={['30px', '30px', '30px', 0]}>
+              <Flex flex='1' alignItems='center' cursor='pointer'>
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
-                <div className={styles.userInfoText}>
-                  <p className={styles.owner}>Creater</p>
+                <Flex flexDirection='column'>
+                  <Text className={styles.owner}>Creater</Text>
                   <Tooltip label={datas?.createrAddress && shortenAddress(datas?.createrAddress)} hasArrow>
-                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.createrName?.length > 10 ? `${datas?.createrName?.slice(0, 10)}...` : datas?.createrName || 'Unknown'}</a>
+                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.createrName ?? 'Unknown', 10)}</a>
                   </Tooltip>
-                </div>
-              </div>
-              <div className={styles.user} onClick={() => handleLinkProfile(datas?.address)}>
+                </Flex>
+              </Flex>
+              <Flex flex='1' alignItems='center' cursor='pointer'>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
-                <div className={styles.userInfoText}>
-                  <p className={styles.owner}>Owner</p>
+                <Flex flexDirection='column'>
+                  <Text className={styles.owner}>Owner</Text>
                   <Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>
-                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{datas?.nickName?.length > 10 ? `${datas?.nickName?.slice(0, 10)}...` : datas?.nickName || 'Unknown'}</a>
+                    <a className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.nickName ?? 'Unknown', 10)}</a>
                   </Tooltip>
-                </div>
-              </div>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+          <Box bg={[null,null,null,'white']} px={[0,0,0,'25px']} borderRadius={'10px'} mb='50px'>
+            <Text className={styles.descriptionTitle}>Description</Text>
+            <div className={styles.warpperDesc}>
+              <input id="exp1" className={styles.exp} type="checkbox" />
+              <p className={`${styles.description} ${lineFlag && styles.slider}`}><label htmlFor={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
+                setLineFlag((lineFlag) => !lineFlag)
+              }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
             </div>
-            <div className={styles.content_box}>
-              <p className={styles.descriptionTitle}>Description</p>
-              <div className={styles.warpperDesc}>
-                <input id="exp1" className={styles.exp} type="checkbox" />
-                <p className={`${styles.description} ${lineFlag && styles.slider}`}><label htmlFor={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
-                  setLineFlag((lineFlag) => !lineFlag)
-                }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
-              </div>
-              <p className={styles.descriptionTitle}>Contract Details</p>
-              <div className={styles.contract_details}>
-                <div className={styles.contract_details_item}>
-                  <div>Blockchain</div>
-                  <div>{datas?.chainType}</div>
+            <Text className={styles.descriptionTitle}>Contract Details</Text>
+            <Flex borderWidth={[1,1,1,0]} borderRadius={10} py={['14px', '14px', '14px', '0']} px={['25px', '25px', '25px', 0]} borderStyle='solid' borderColor='#EAEDF0' justifyContent='space-between' flexWrap='wrap' flexDirection={['column', 'column', 'column', 'row']}>
+              <Flex flexDirection={['row', 'row', 'row', 'column']} className={styles.contract_details_item}>
+                <div>Blockchain</div>
+                <div>{datas?.chainType}</div>
+              </Flex>
+              <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
+                <div>Token Standard</div>
+                <div>ERC-{datas?.contractType}</div>
+              </Flex>
+              <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
+                <div>Contract Address</div>
+                <div>
+                  <a
+                    href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
+                    className={styles.tokenAddress}
+                    target='_blank'
+                    rel="noopener noreferrer"
+                  >
+                    {datas?.tokenAddress && shortenAddress(datas?.tokenAddress)}
+                  </a>
                 </div>
-                <div className={styles.contract_details_item}>
-                  <div>Token Standard</div>
-                  <div>ERC-{datas?.contractType}</div>
+              </Flex>
+              <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
+                <div>Token Id</div>
+                <div>{datas?.tokenId}</div>
+              </Flex>
+            </Flex>
+          </Box>
+          <Box
+            w={['100vw', '100vw', '100vw', '400px']}
+            boxSizing={'border-box'}
+            ml={['-20px', '-20px', '-20px', 0]}
+            py={['15px', '15px', '15px', 0]}
+            px={['20px', '20px', '20px', 0]}
+            position={['sticky', 'sticky', 'sticky', 'relative']}
+            background={['white', 'white', 'white', 'transparent']}
+            bottom={0}
+          >
+            <Flex display={'flex'}
+              flexDirection={['row-reverse', 'row-reverse', 'row-reverse', 'initial']}
+              justifyContent={['space-between','space-between','space-between','flex-start']}
+              mb={['13px','13px', '13px', '30px']}
+              className={styles.priceBox}>
+              <Flex alignSelf={['flex-end', 'flex-end', 'flex-end', '']} alignItems='flex-end'>
+                <img  src={datas?.type === 'DNF' ? dnft_unit : busd_unit} />
+                <Text ml={'10px'} className={styles.priceAmount}>{transPrice(price)}</Text>
+                <div className={styles.worth}>≈ $
+                  {transPrice(datas?.amount * price)}
                 </div>
-                <div className={styles.contract_details_item}>
-                  <div>Contract Address</div>
-                  <div>
-                    <a
-                      href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
-                      className={styles.tokenAddress}
-                      target='_blank'
-                      rel="noopener noreferrer"
-                    >
-                      {datas?.tokenAddress?.slice(0, 7)}...{datas?.tokenAddress?.slice(-6)}
-                    </a>
-                  </div>
-                </div>
-                <div className={styles.contract_details_item}>
-                  <div>Token Id</div>
-                  <div>{datas?.tokenId}</div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.priceBox}>
-              <div className={styles.currentPrice}>
-                <div className={styles.priceAll}>
-                  {datas?.type === 'DNF' ? <img src={dnft_unit} /> :  <img src={busd_unit} />}
-                  <h4 className={styles.priceAmount}>{transPrice(price)}</h4>
-                  <div className={styles.worth}>≈ $
-                    {transPrice(datas?.amount * price)}
-                  </div>
-                </div>
-              </div>
+              </Flex>
               {
                 datas?.contractType == 1155 &&
-                <div className={styles.stock}>
+                <Box ml={[0,0,0,'30px']} alignSelf={['flex-start', 'flex-start', 'flex-start', '']} className={styles.stock}>
                   {datas?.quantity} Available
-                </div>
+                </Box>
               }
-            </div>
+            </Flex>
             <div className={styles.btnBox}>
               <Btn
                 isLoading={loading}
@@ -533,18 +472,18 @@ const MarketDetailScreen = (props) => {
                   else setIsOpen(true)
                 }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Btn>
             </div>
-
-          </div>
-        </div>
-      </div>
-      {renderHotList('Hot NFTs')}
+          </Box>
+        </Box>
+      </Flex>
+      <Box display={['none', 'none', 'none', 'initial']}>
+        {renderHotList('Hot NFTs')}
+      </Box>
       {
         isOpen &&
         <Dialog
           title={'Buy NFT'}
           visible
           customClass={styleModalContainer}
-
           onCancel={onClose}>
           <Dialog.Body p="0 32px">
             {renderFormItem(`Quantity/${datas?.quantity || 0}`, <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
@@ -554,39 +493,6 @@ const MarketDetailScreen = (props) => {
               })
             }}
             />)}
-            {
-              1 === 0 &&
-                renderFormItem(
-                  'Collection',
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginTop: 20,
-                  }}>
-                    <Select
-                      placeholder='Please choose'
-                      defaultValue={form.collectionId}
-                      value={form.collectionId}
-                      style={{flex: 1, marginRight: '28px'}}
-                      className={styleCollection}
-                      onChange={(value) => {
-                        setForm({
-                          ...form,
-                          collectionId: value,
-                        });
-                      }}
-                    >
-                      {options.map((el) => (
-                        <Select.Option key={el.value} label={el.label} value={el.value} />
-                      ))}
-                    </Select>
-                    <Button
-                      onClick={() => {
-                        setShowCreateCollection(true);
-                      }}>+ Add</Button>
-                  </div>
-                )
-            }
           </Dialog.Body>
           <Dialog.Footer justifyContent="flex-start">
             <Button
@@ -602,12 +508,6 @@ const MarketDetailScreen = (props) => {
                   });
                   return;
                 }
-                // if (!form.collectionId) {
-                //   toast.warn('Please select collection！', {
-                //     position: toast.POSITION.TOP_CENTER,
-                //   });
-                //   return;
-                // }
                 clickBuyItem()
               }}>Submit</Button>
           </Dialog.Footer>
@@ -630,9 +530,15 @@ const MarketDetailScreen = (props) => {
       <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
         setIsShowSwitchModal(false)
       }} />
-      {showOffShelfModal && renderOffShelfModal}
-
-    </div>
+      <RenderOffShelfModal
+        showOffShelfModal={showOffShelfModal}
+        setShowOffShelfModal={() => setShowOffShelfModal(false)}
+        datas={datas}
+        address={address}
+        token={token}
+        historyBack={historyBack}
+      />
+    </Box>
   )
 }
 const mapStateToProps = ({ profile, market }) => ({

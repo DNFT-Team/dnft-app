@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react';
 import assetSvg from 'images/menu/asset.svg';
 import { getMyProfileList } from 'reduxs/actions/profile';
 import { MENU_MAP } from 'routers/config';
-import { shortenAddress } from 'utils/tools';
+import { shortenAddress, shortenNameString } from 'utils/tools';
 import { contactData } from 'config/helper';
 import { Btn } from 'components/Button';
 import { connect } from 'react-redux';
@@ -91,7 +91,7 @@ const DrawerMenu = (props) => {
                         <>
                           <img src={profile?.avatorUrl} className='userLogo' />
                           <div className='user'>
-                            <span className='menuSpan'>{profile?.nickName}</span>
+                            <span className='menuSpan'>{shortenNameString(profile?.nickName)}</span>
                             <span>{address && shortenAddress(address)}</span>
                           </div>
                         </>

@@ -14,6 +14,9 @@ export const getObjectURL = (file) => {
 export function shortenString (str) {
   return !str ? '' : str.length <= 11 ? str : str.substring(0, 6) + '...' + str.substring(str.length - 4)
 }
+export function shortenNameString (str, len = 20) {
+  return !str ? '' : str.length <= len ? str : str.substring(0, len) + '...'
+}
 export function shortenAddress (address, chars = 6) {
   const parsed = isAddress(address);
   if(!parsed) {

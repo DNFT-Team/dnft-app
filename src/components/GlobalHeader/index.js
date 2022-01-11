@@ -594,7 +594,7 @@ const GlobalHeader = (props) => {
           {
             address ? (
               <Box bgColor="brand.600" cursor="pointer" p=".3rem"
-                borderRadius="10px" width="2rem" height="2rem" onClick={() => {history.push('/asset')}}>
+                borderRadius="10px" width="25px" height="25px" onClick={() => {history.push('/asset')}}>
                 <img src={assetSvg} alt="asset"/>
               </Box>
             ) : (

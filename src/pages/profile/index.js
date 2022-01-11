@@ -35,7 +35,7 @@ import u_youtube from 'images/profile/u_youtube.png';
 import u_ins from 'images/profile/u_ins.png';
 import CollectionAdd from './components/collectionAdd';
 import ChangeBg from './changeBg';
-import { shortenAddress } from 'utils/tools';
+import { shortenAddress, shortenNameString } from 'utils/tools';
 import SharePopover from 'components/SharePopover';
 import BotDrawer from './components/botDrawer';
 
@@ -328,7 +328,8 @@ const ProfileScreen = (props) => {
             mt={['10px', '10px', '10px', '20px']}
             className={styles.authorName}
           >
-            {datas?.nickName || 'Unknown'}
+            <Box display={['flex', 'flex', 'flex', 'none']}>{shortenNameString(datas?.nickName || 'Unknown')}</Box>
+            <Box display={['none', 'none', 'none', 'flex']}>{datas?.nickName || 'Unknown'}</Box>
           </Box>
           <div className={styles.addressBox}>
             {newAddress && shortenAddress(newAddress)}
