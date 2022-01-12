@@ -134,7 +134,7 @@ const styleCard = css`
   img{
     border-radius: 20px 20px 0 0;
     width: 100%;
-    height: fit-content;
+    //height: fit-content;
   }
   p{
     margin: 40px 0;

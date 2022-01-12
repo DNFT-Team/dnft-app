@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import {
   Divider,
   Drawer,
@@ -23,6 +24,7 @@ import { get, post } from 'utils/request';
 const DrawerMenu = (props) => {
   const { isOpen, dispatch, skipTo, location, onClose, token, address, datas } =
     props;
+  let history = useHistory();
   const [profile, setprofile] = useState({})
   useEffect(async () => {
     if (address && token) {
@@ -48,12 +50,12 @@ const DrawerMenu = (props) => {
     ...MENU_MAP,
   ];
   return (
-    <Drawer placement='left' isOpen={isOpen} onClose={onClose} size={'sm'}>
+    <Drawer placement='left' isOpen={isOpen} onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent className={styleModalContainer}>
         <div className={styleModalContainer}>
           <div className='header'>
-            <div className='left'>
+            <div onClick={() => history.push('/')} className='left'>
               <Avatar className='logo' src={Logo} />
               <span>
                 DNFT
@@ -117,8 +119,8 @@ const DrawerMenu = (props) => {
                 <Divider
                   bg='rgba(255, 255, 255, 0.25)'
                   width='calc(100% - 52px)'
-                  mt='25px'
-                  mb='25px'
+                  mt='20px'
+                  mb='20px'
                 />
               )}
             </>
@@ -152,6 +154,7 @@ const DrawerMenu = (props) => {
                 fontFamily: 'Helvetica',
                 fontWeight: 'bold',
               }}
+              bgColor='#fff'
             >
               DOCUMENTATION
             </Btn>
@@ -168,12 +171,13 @@ const mapStateToProps = ({ profile }) => ({
 export default withRouter(connect(mapStateToProps)(DrawerMenu));
 const styleModalContainer = css`
   min-height: 100vh;
-  overflow: auto;
+  width: 85vw;
+  overflow: inherit; 
   box-sizing: border-box;
   background: #00398d;
   .header {
     display: flex;
-    padding: 39px 26px 0;
+    padding: 10px 26px 0;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 7px;
@@ -198,7 +202,7 @@ const styleModalContainer = css`
 `;
 const styleMenuLi = css`
   padding: 10px 0;
-  margin: 19px 33px 0 34px;
+  margin: 15px 33px 0 34px;
   .menuLeft {
     .menuLogo {
       height: 22px;
@@ -249,8 +253,8 @@ const styleMenuActive = css`
 const styleContactUs = css`
   display: flex;
   flex-direction: row;
-  gap: 25px;
-  margin-top: 111px;
+  gap: 50px;
+  margin-top: 30px;
   justify-content: center;
   .item {
     text-decoration: none;
@@ -266,7 +270,7 @@ const styleContactUs = css`
 const styleFootDoc = css`
   cursor: pointer;
   display: flex;
-  margin: 40px;
+  margin: 20px;
   align-items: center;
   justify-content: center;
   text-decoration: none;

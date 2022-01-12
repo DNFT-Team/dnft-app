@@ -348,7 +348,7 @@ const MarketDetailScreen = (props) => {
   let price = datas?.price &&  toDecimal(datas?.price);
 
   return (
-    <Box p={['20px','20px','20px','50px']} pb={[0,0,0,'20px']}>
+    <Box bg={'white'} p={['20px','20px','20px','50px']} pb={[0,0,0,'20px']}>
       <Flex flexWrap='wrap'>
         <Box
           mr={[0,0,0,'50px']}

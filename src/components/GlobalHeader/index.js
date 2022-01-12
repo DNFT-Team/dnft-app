@@ -586,7 +586,7 @@ const GlobalHeader = (props) => {
           <Icon onClick={() => setMenuToggle(true)} icon="dashicons:menu-alt" color="#0057d9" width="30" height="30" />
         </Box>
         <Box display="flex" alignItems="center">
-          <img src={dnftLogo} className={dnftLogoStyle} />
+          <img src={dnftLogo} onClick={() => history.push('/')} className={dnftLogoStyle} />
           {/* <Avatar src={dnftLogo}  mr="1.5rem" width="2rem" height="2rem"/> */}
           {/* <strong>DNFT Protoco</strong> */}
         </Box>

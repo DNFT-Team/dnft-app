@@ -5,6 +5,7 @@ import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import styles from  '../index.less';
 import noImg from 'images/common/collection_noImg.svg'
+import { Box } from '@chakra-ui/react';
 
 const NFTCard = (props) => {
   const {
@@ -19,7 +20,7 @@ const NFTCard = (props) => {
   let history = useHistory();
   let len = item?.nftAvatorUrls?.length;
   return (
-    <div key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item, newAddress})}>
+    <Box w={['calc(100% - 40px)', 'calc(100% - 40px)', 'calc(100% - 40px)', '300px']} key={`title-${index}`} className={styleCardContainer} onClick={() => history.push('/profile/collection', {item, newAddress})}>
       <div
         style={{
           backgroundImage: `url(${viewUrl})`,
@@ -47,7 +48,7 @@ const NFTCard = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 const mapStateToProps = ({ profile }) => ({
@@ -85,12 +86,12 @@ const styleInfoAvatarUrl = css`
 const styleCardContainer = css`
   background: #ffffff;
   border-radius: 10px;
-  max-width: 300px;
+  ${'' /* max-width: 300px; */}
   display: flex;
   flex-direction: column;
   position: relative;
   flex: 1;
-  min-width: 300px;
+  ${'' /* min-width: 300px; */}
   padding: 6px;
   margin: 0 auto;
 `;

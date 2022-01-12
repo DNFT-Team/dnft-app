@@ -7,6 +7,7 @@ import {
   getMyProfileBatch,
 } from 'reduxs/actions/profile';
 import add from 'images/profile/add.png';
+import { Box } from '@chakra-ui/react';
 
 const CollectionAdd = (props) => {
   const {
@@ -34,10 +35,10 @@ const CollectionAdd = (props) => {
   }
   return (
     <>
-      <div style={style}  className={styleCardContainer}>
+      <Box m={['0 auto', '0 auto','0 auto','']} w={['calc(100vw - 40px)', 'calc(100vw - 40px)', 'calc(100vw - 40px)', '300px']}  style={style}  className={styleCardContainer}>
         <img src={add} />
         <div onClick={() => setShowCreateCollection(true)} >Create Collection</div>
-      </div>
+      </Box>
       {showCreateCollection && (
         <CreateCollectionModal
           formDs={{ chainType }}
@@ -70,13 +71,11 @@ export default withRouter(connect(mapStateToProps)(CollectionAdd));
 const styleCardContainer = css`
   background: #ffffff;
   border-radius: 10px;
-  max-width: 300px;
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
   flex: 1;
-  min-width: 300px;
   padding: 6px;
   &:hover {
     background: white;
