@@ -11,7 +11,7 @@ const initialState = {
 const _lng = (state = initialState, { type, payload }) => {
   switch (type) {
   case SET_LNG:
-    const value = _.isEqual(state.lng, LNG.ZH) ? LNG.EN : LNG.ZH;
+    const value = _.isEqual(state.lng, LNG.ZH) ? LNG.ZH : LNG.EN;
     i18n.changeLanguage(value.value);
     return {
       ...state,

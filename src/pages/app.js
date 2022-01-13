@@ -23,8 +23,7 @@ const App = (props) => {
   let history = useHistory();
   useEffect(() => {
     try {
-      console.log('store.getState().lng.lng.value',store.getState().lng.lng)
-      i18n.changeLanguage(store.getState().lng.lng.value);
+      i18n.changeLanguage('en');
     } catch (e) {
       i18n.changeLanguage('en');
       console.log('getLngFromState error : ', e);
