@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import { fromJS, is } from 'immutable';
 import _ from 'lodash'
 const initialState = {
-  lng: LNG.ZH,
+  lng: LNG.EN,
 }
 const _lng = (state = initialState, { type, payload }) => {
   switch (type) {

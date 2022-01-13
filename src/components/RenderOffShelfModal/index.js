@@ -11,15 +11,17 @@ import { getWallet } from 'utils/get-wallet';
 import { post } from 'utils/request';
 import Web3 from 'web3';
 import globalConfig from 'config/index'
+import { useTranslation } from 'react-i18next';
 
 const RenderOffShelfModal = (props) => {
   const { showOffShelfModal, address, token, setShowOffShelfModal, datas, historyBack } = props;
   const [isOffLoading, setIsOffLoading] = useState(false);
   const currentNetName = globalConfig.net_name;
+  const { t } = useTranslation();
 
   return (
     <Dialog
-      title='Tips'
+      title={t('tips')}
       size='tiny'
       visible={showOffShelfModal}
       closeOnClickModal={false}
@@ -30,7 +32,7 @@ const RenderOffShelfModal = (props) => {
       }}
     >
       <Dialog.Body>
-        <span>Are you sure phase out the nft?</span>
+        <span>{t('tips.phase.out')}</span>
       </Dialog.Body>
       <Dialog.Footer className='dialog-footer'>
         <Button
@@ -38,7 +40,7 @@ const RenderOffShelfModal = (props) => {
             setShowOffShelfModal(false);
           }}
         >
-          Cancel
+          {t('cancel')}
         </Button>
         <Button
           type='primary'
@@ -78,7 +80,7 @@ const RenderOffShelfModal = (props) => {
                   setShowOffShelfModal(false);
                   setIsOffLoading(false);
                   historyBack();
-                  toast.info('Operation succeeded！', {
+                  toast.info(t('toast.operation.success'), {
                     position: toast.POSITION.TOP_CENTER,
                   });
                 }
@@ -88,7 +90,7 @@ const RenderOffShelfModal = (props) => {
             }
           }}
         >
-          {isOffLoading ? 'Loading...' : 'Confirm'}
+          {isOffLoading ? t('loading') : t('confirm')}
         </Button>
       </Dialog.Footer>
     </Dialog>

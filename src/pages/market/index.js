@@ -22,16 +22,17 @@ const Market = (props) => {
   const sortTagBack = location?.state?.sortTag;
   const [category, setCategory] = useState(categoryBack || 'All');
   const [sortTag, setSortTag] = useState(sortTagBack || 'save_count');
-  const [sortOrder, setSortOrder] = useState('DESC');
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
 
   const domRef = useRef(null);
   const sortTagType = [
+    // { label: 'Most Popular', value: 'save_count' },
+    { label: 'Recently Listed', value: 'create_time' },
     { label: 'Most Likes', value: 'save_count' },
-    { label: 'Price: High to Low', value: 'DESC-price' },
-    { label: 'Price: Low to High', value: 'ASC-price' },
+    { label: 'Price: High to Low', value: 'total_price-DESC' },
+    { label: 'Price: Low to High', value: 'total_price-ASC' },
   ];
 
   const currentNetEnv = globalConfig.net_env;
@@ -41,26 +42,17 @@ const Market = (props) => {
 
   useEffect(() => {
     if (token) {
-      let _sortTag = sortTag
-      if (sortTag?.includes('price')) {
-        _sortTag = 'total_price'
-      }
       fetchData(true);
     }
   }, [token, category, sortTag, address]);
-  let reachBottom = domRef?.current?.getBoundingClientRect()?.bottom;
 
   const fetchData =  (tag) => {
-    let _sortTag = sortTag
-    if (sortTag?.includes('price')) {
-      _sortTag = 'total_price'
-    }
     dispatch(
       getMarketList(
         {
           category: category,
-          sortOrder: sortOrder,
-          sortTag: _sortTag,
+          sortOrder: sortTag?.split('-')?.[1] ?? 'DESC',
+          sortTag: sortTag?.split('-')?.[0],
           page: tag ? 1 :  page + 1,
           size,
         },
@@ -176,7 +168,7 @@ const Market = (props) => {
             <Select
               className={`${styles.selectType} ${styleSelectContainer}`}
               value={category}
-              placeholder='please choose'
+              placeholder='Category'
               onChange={(value) => {
                 setCategory(value);
               }}
@@ -188,16 +180,8 @@ const Market = (props) => {
             <Select
               value={sortTag}
               className={`${styles.selectType} ${styleSelectContainer}`}
-              placeholder='please choose'
-              onChange={(value) => {
-                setSortTag(value);
-                if (value.includes('price')) {
-                  // setSortTag('price');
-                  setSortOrder(value.split('-')[0]);
-                } else {
-                  setSortTag(value);
-                }
-              }}
+              placeholder='Sort By'
+              onChange={(value) => setSortTag(value)}
             >
               {sortTagType.map((el) => (
                 <Select.Option key={el.value} label={el.label} value={el.value} />

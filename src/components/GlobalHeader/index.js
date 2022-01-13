@@ -42,12 +42,15 @@ import { getCategoryList } from 'reduxs/actions/market';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { shortenAddress } from 'utils/tools'
 import DrawerMenu from 'layout/sideBar/menu';
+import { useTranslation } from 'react-i18next';
 
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
 
 const GlobalHeader = (props) => {
   let history = useHistory();
+  const { t } = useTranslation();
+
   const { dispatch, chainType, token } = props;
   const ref = useRef();
 
@@ -349,7 +352,7 @@ const GlobalHeader = (props) => {
         `/gift/${address}?assetId=${assetId}&chainId=${chainId}&giftMode=${giftMode}`,
         {baseURL: globalConf.faucetApi, withCredentials: false}
       ).then(() => {
-        toast.success('Request Send Successfully!', {position: toast.POSITION.TOP_CENTER})
+        toast.success(t('toast.send.success'), {position: toast.POSITION.TOP_CENTER})
       })
         .catch((err) => {
           const msg = err?.response?.data?.message || err.message
@@ -448,7 +451,7 @@ const GlobalHeader = (props) => {
     () => (
       <Dialog
         customClass={styleModalContainer}
-        title='Switch to'
+        title={t('switch.to')}
         visible={isNetListVisible}
         onCancel={() => {
           setIsNetListVisible(false);
@@ -483,7 +486,7 @@ const GlobalHeader = (props) => {
     () => (
       <Dialog
         customClass={styleModalContainer}
-        title='Switch to'
+        title={t('switch.to')}
         visible={isSwitchWalletVisible}
         onCancel={() => {
           setIsSwitchWalletVisible(false);
@@ -550,7 +553,7 @@ const GlobalHeader = (props) => {
             }}
           >
             <img src={assetSvg} alt="assetIcon"/>
-            <span>Asset</span>
+            <span>{t('menu.asset')}</span>
           </div>
         )}
         <div
@@ -570,14 +573,14 @@ const GlobalHeader = (props) => {
               {address && shortenAddress(address)}
             </span>
             // </Tooltip>
-            : 'Connect wallet'}
+            : t('connect.wallet')}
         </div>
         {address && <div className={styleActionContainer}
           onClick={() => {
             setIsNetListVisible(true);
           }}>
           <img src={netArray[currentNetIndex]?.shortIcon} alt=""/>
-          <span> {netArray[currentNetIndex]?.shortName[1] || 'Network'}</span>
+          <span> {netArray[currentNetIndex]?.shortName[1] || t('network')}</span>
         </div>}
         {/* <a ref={ref} href={mvpUrl} target="_blank" rel="noreferrer"/>*/}
       </Box>
@@ -602,7 +605,7 @@ const GlobalHeader = (props) => {
                 fontSize=".8rem" fontWeight="bolder" borderRadius="16px" onClick={async () => {
                   await connectMetaMaskWallet()
                 }}>
-                Connect
+                {t('connect')}
               </Text>
             )
           }
@@ -616,7 +619,7 @@ const GlobalHeader = (props) => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">
-            Faucet Board
+            {t('faucet.title')}
             <IconButton onClick={() => {setIsDrawer(false)}} aria-label="Close Modal" colorScheme="custom" fontSize="24px" variant="ghost"
               icon={<Icon icon="mdi:close"/>}/>
           </DrawerHeader>
@@ -624,27 +627,27 @@ const GlobalHeader = (props) => {
             <Box>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Stat>
-                  <StatLabel>TDNF</StatLabel>
+                  <StatLabel>{t('faucet.TDNF')}</StatLabel>
                   <StatNumber>{healthData?.tdnf?.balance || 0}</StatNumber>
-                  <StatHelpText>Count:{healthData?.tdnf?.count || 0} / Tol:{healthData?.tdnf?.total || 0}</StatHelpText>
+                  <StatHelpText>{t('faucet.Count')}:{healthData?.tdnf?.count || 0} / Tol:{healthData?.tdnf?.total || 0}</StatHelpText>
                 </Stat>
                 <Stat>
-                  <StatLabel>TBUSD</StatLabel>
+                  <StatLabel>{t('faucet.TBUSD')}</StatLabel>
                   <StatNumber>{healthData?.tbusd?.balance || 0}</StatNumber>
-                  <StatHelpText>Count:{healthData?.tbusd?.count || 0} / Tol:{healthData?.tbusd?.total || 0}</StatHelpText>
+                  <StatHelpText>{t('faucet.Count')}:{healthData?.tbusd?.count || 0} / Tol:{healthData?.tbusd?.total || 0}</StatHelpText>
                 </Stat>
               </Box>
               <Box>
                 {
                   healthData.list.map((l) => (
                     <Text border="1px solid" p="1rem" color="brand.100" my=".2rem">
-                      <label>ChainId:</label>{l.chainId} |
-                      <label>AssetId:</label>{l.assetId} |
-                      <label>Address:</label>{l.address} |
-                      <label>Amount:</label>{l.amount} |
-                      <label>UpdatedAt:</label>{l.updatedAt} |
-                      <label>Expired_at:</label>{l.expired_at} |
-                      <label>Txhash:</label>
+                      <label>{t('faucet.ChainId')}:</label>{l.chainId} |
+                      <label>{t('faucet.AssetId')}:</label>{l.assetId} |
+                      <label>{t('faucet.Address')}:</label>{l.address} |
+                      <label>{t('faucet.Amount')}:</label>{l.amount} |
+                      <label>{t('faucet.UpdatedAt')}:</label>{l.updatedAt} |
+                      <label>{t('faucet.Expired_at')}:</label>{l.expired_at} |
+                      <label>{t('faucet.Txhash')}:</label>
                       <Link href={`https://testnet.bscscan.com/tx/${l.txhash}`} color="brand.600" isExternal>{l.txhash}</Link>
                     </Text>
                   ))

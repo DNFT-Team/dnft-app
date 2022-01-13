@@ -9,10 +9,12 @@ import {
   TwitterShareButton
 } from 'react-share';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const SharePopover = (props) => {
   const { datas } = props;
   const shareUrl = window.location.href;
+  const { t } = useTranslation();
 
   return (
     <Popover
@@ -25,7 +27,7 @@ const SharePopover = (props) => {
       trigger='hover'
       content={
         <div className={shareBoxAll}>
-          <div className='shareTitle'>Share your NFT</div>
+          <div className='shareTitle'>{t('share.title')}</div>
           <div className='shareBox'>
             <div className='shareItem'>
               <Icon
@@ -38,12 +40,12 @@ const SharePopover = (props) => {
                       datas?.nickName || 'user'
                     } on DNFT Protocol! | ${shareUrl}`
                   );
-                  toast.success('The link is copied successfully!', {
+                  toast.success(t('toast.link.copy'), {
                     position: toast.POSITION.TOP_CENTER,
                   });
                 }}
               />
-              <label>Link</label>
+              <label>{t('share.link')}</label>
             </div>
             <TelegramShareButton
               className='shareItem'
@@ -57,7 +59,7 @@ const SharePopover = (props) => {
                 icon='uil:telegram'
                 style={{ background: '#e8eeff', color: '#233a7d' }}
               />
-              <label>Telegram</label>
+              <label>{t('share.telegram')}</label>
             </TelegramShareButton>
             <TwitterShareButton
               className='shareItem'
@@ -76,7 +78,7 @@ const SharePopover = (props) => {
                   color: '#1D9BF0',
                 }}
               />
-              <label>Twitter</label>
+              <label>{t('share.twitter')}</label>
             </TwitterShareButton>
             <FacebookShareButton
               className='shareItem'
@@ -91,14 +93,14 @@ const SharePopover = (props) => {
                 icon='uil:facebook'
                 style={{ background: '#e8eeff', color: '#233a7d' }}
               />
-              <label>Facebook</label>
+              <label>{t('share.facebook')}</label>
             </FacebookShareButton>
           </div>
         </div>
       }
     >
       <div className={share_bg_header}>
-        <span>Share</span>
+        <span>{t('share.name')}</span>
         <img src={share_bg} />
       </div>
     </Popover>

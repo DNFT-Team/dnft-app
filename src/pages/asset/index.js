@@ -22,9 +22,12 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
 import { Btn } from 'components/Button';
+import { useTranslation } from 'react-i18next';
 
 const AssetScreen = (props) => {
   const { dispatch, location, address, chainType, token, categoryList } = props;
+  const { t } = useTranslation();
+
   const currentNetEnv = globalConfig.net_env;
   const isTestNet = currentNetEnv === 'testnet';
 
@@ -59,8 +62,8 @@ const AssetScreen = (props) => {
     ];
 
   const sortTagType = [
-    { label: 'Price:high to low', value: 'ASC-price' },
-    { label: 'Price:low to high', value: 'DESC-price' },
+    { label: t('sortTag.price.to.low'), value: 'ASC-price' },
+    { label: t('sortTag.price.to.high'), value: 'DESC-price' },
   ];
   const [selectedTab, setSelectedTab] = useState({
     label: 'In Wallet',
@@ -128,7 +131,7 @@ const AssetScreen = (props) => {
       );
       setList(data?.data?.content || []);
       if(callback) {
-        toast.info('Operation succeeded！', {
+        toast.info(t('toast.operation.success'), {
           position: toast.POSITION.TOP_CENTER,
         });
       }
@@ -246,7 +249,7 @@ const AssetScreen = (props) => {
           }}>
           <Box display={['none', 'none', 'none', 'flex']} className={styleHeader}>
             <div className={styleAssetAccountContainer}>
-              <p>Balance</p>
+              <p>{t('balance')}</p>
               <div className={styleACBalance}>
                 <img src={dnft_unit} alt=""/>
                 <span>{balance} DNF</span>
@@ -260,7 +263,7 @@ const AssetScreen = (props) => {
                   setShowCreateNft(true)
                 }}
               >
-                Create NFT
+                {t('nftCard.create')}
               </div>
             }
           </Box>
@@ -271,7 +274,7 @@ const AssetScreen = (props) => {
               <img src={dnft_unit} alt=""/>
               <span>{balance} DNF</span>
             </div>
-            <p>Balance</p>
+            <p>{t('balance')}</p>
           </div>
           {currentNetEnv !== 'otherNet' &&
             <div
@@ -280,7 +283,7 @@ const AssetScreen = (props) => {
                 setShowCreateNft(true)
               }}
             >
-              Create NFT
+              {t('nftCard.create')}
             </div>
           }
         </Box>
@@ -394,7 +397,7 @@ const AssetScreen = (props) => {
               <Select
                 value={category}
                 className={styleSelectContainer}
-                placeholder="please choose"
+                placeholder={t('please.choose')}
                 onChange={(value) => {
                   setCategory(value);
                 }}
@@ -407,7 +410,7 @@ const AssetScreen = (props) => {
                 <Select
                   value={sortTag}
                   className={styleSelectContainer}
-                  placeholder="please choose"
+                  placeholder={t('please.choose')}
                   onChange={(value) => {
                     setSortTag(value);
                     setSortOrder(value.split('-')[0]);

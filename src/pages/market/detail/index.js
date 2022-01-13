@@ -493,7 +493,7 @@ const MarketDetailScreen = (props) => {
         </Box>
       </Flex>
       <Box display={['none', 'none', 'none', 'initial']}>
-        {renderHotList('Hot NFTs')}
+        {renderHotList('Recommendations')}
       </Box>
       {
         isOpen &&

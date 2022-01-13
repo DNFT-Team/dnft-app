@@ -1,4 +1,113 @@
 {
-    "home": "Home",
-    "assets": "assets"
+    "menu": {
+        "home": "Home",
+        "asset": "Asset",
+        "market": "Market",
+        "mining": "Mining",
+        "bridge": "Bridge",
+        "data": "Data",
+        "igo": "IGO",
+        "gallery": "Gallery",
+        "profile": "Profile",
+        "transfer": "Transfer"
+    },
+    "doc": {
+        "btn.link": "DOCUMENTATION"
+    },
+    "toast": {
+        "wrong.network": "Wrong network",
+        "name.required": "Name is required",
+        "desc.required": "Description is required",
+        "send.success": "Request Send Successfully!",
+        "operation.success": "Operation succeeded！",
+        "link.copy": "The link is copied successfully!",
+        "upload.step1": "Step 1. Upload NFT To IPFS...",
+        "upload.nft.failed": "NFT upload failed!",
+        "upload.nft.success": "NFT upload success!",
+        "upload.step2": "Step 2. Mint NFT via contract...",
+        "upload.nft": "please upload NFT"
+
+    },
+    "collection": {
+        "edit": "Edit Collection",
+        "create": "Create Collection",
+        "name": "Collection Name",
+        "title": "Collection",
+        "desc": "Description",
+        "placeholder": {
+            "name": "e. g. David (Maximum 20 char)",
+            "desc": "Description (Maximum 500 char)",
+            "name30": "e. g. David (Maximum 30 char)"
+        }
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "switch.to": "Switch to",
+    "connect": "Connect",
+    "connect.wallet": "Connect wallet",
+    "network": "Network",
+    "please.choose": "please choose",
+    "please.input": "please input",
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "balance": "Balance",
+    "create": "Create",
+    "faucet": {
+        "title": "Faucet Board",
+        "TDNF": "TDNF",
+        "Count": "Count",
+        "TBUSD": "TBUSD",
+        "ChainId": "ChainId",
+        "AssetId": "AssetId",
+        "Address": "Address",
+        "Amount": "Amount",
+        "UpdatedAt": "UpdatedAt",
+        "Expired_at": "Expired_at",
+        "Txhash": "Txhash"
+    },
+    "cropImg": {
+        "title": "Crop Image",
+        "banner.file.limit": "The size of the uploaded banner image cannot exceed 2MB!",
+        "avatar.file.limit": "The size of the uploaded avatar image cannot exceed 2MB!",
+        "uploaded.nft.limit": "The size of the uploaded NFT image cannot exceed 10MB!"
+
+    },
+    "nftCard" : {
+        "title": "Launch",
+        "quantity": "Quantity",
+        "type": "Type",
+        "price": "Price",
+        "eth": "Ethereum",
+        "approve": "Approve",
+        "tips": "Tips",
+        "tips.phase.out": "Are you sure phase out the nft?",
+        "not.allowed.sell": "This nft is not allowed to sell",
+        "sell": "Sell",
+        "unsell": "Unsell",
+        "create": "Create NFT",
+        "name": "Name",
+        "desc": "Description",
+        "add": "Add",
+        "category": "Category",
+        "contract.type": "Contract Type",
+        "supply": "Supply"
+    },
+    "share": {
+        "name": "Share",
+        "title": "Share your NFT",
+        "link": "Link",
+        "telegram": "Telegram",
+        "twitter": "Twitter",
+        "facebook": "Facebook"
+
+    },
+    "network": {
+        "switch": "Switch Network",
+        "disconnect": "Disconnect"
+    },
+    "sortTag": {
+        "price.to.low": "Price:high to low",
+        "price.to.high": "Price:low to high"
+
+    }
 }

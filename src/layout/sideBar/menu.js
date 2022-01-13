@@ -20,10 +20,13 @@ import { Btn } from 'components/Button';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { get, post } from 'utils/request';
+import { useTranslation } from 'react-i18next';
 
 const DrawerMenu = (props) => {
   const { isOpen, dispatch, skipTo, location, onClose, token, address, datas } =
     props;
+  const { t } = useTranslation();
+
   let history = useHistory();
   const [profile, setprofile] = useState({})
   useEffect(async () => {
@@ -37,13 +40,13 @@ const DrawerMenu = (props) => {
   const menuNav = [
     {
       style: { marginTop: 0 },
-      navName: 'Profile',
+      navName: t('menu.profile'),
       path: `/profile/address/${address}`,
     },
     {
       icon: assetSvg,
       style: { marginTop: 5 },
-      navName: 'Asset',
+      navName: t('menu.asset'),
       path: '/asset',
       divider: true,
     },
@@ -78,7 +81,7 @@ const DrawerMenu = (props) => {
                 style={item.style || {}}
                 onClick={() => {
                   onClose();
-                  if(address || item.navName !== 'Profile')
+                  if(address || item.navName !== t('menu.profile'))
                     skipTo(item);
                 }}
                 className={cx(
@@ -156,7 +159,7 @@ const DrawerMenu = (props) => {
               }}
               bgColor='#fff'
             >
-              DOCUMENTATION
+              {t('doc.btn.link')}
             </Btn>
           </a>
         </div>

@@ -23,9 +23,10 @@ const App = (props) => {
   let history = useHistory();
   useEffect(() => {
     try {
+      console.log('store.getState().lng.lng.value',store.getState().lng.lng)
       i18n.changeLanguage(store.getState().lng.lng.value);
     } catch (e) {
-      i18n.changeLanguage('zh');
+      i18n.changeLanguage('en');
       console.log('getLngFromState error : ', e);
     }
   }, []);
@@ -39,7 +40,7 @@ const App = (props) => {
   return (
     <section className={styles.container}>
       <Box className={cx(styleLeftNav, shrink && styleLeftFull)} display={['none', 'none', 'flex', 'flex', 'flex']}>
-        <div className={styleTop}>
+        <div onClick={() => history.push('/')} className={styleTop}>
           <img src={Logo} alt='' />
           <span>DNFT PROTOCOL</span>
         </div>
@@ -56,7 +57,7 @@ const App = (props) => {
                 } ${shrink ? styles.navRt : styles.navBot} styleNavContainer`}
               >
                 <div className={styles.navImg}>
-                  {<img src={obj.icon} style={{ width: 25 }} alt={obj.navName}/>}
+                  {<img src={obj.icon} style={{ width: 18 }} alt={obj.navName}/>}
                 </div>
                 <span
                   className={`${styles.navDeText} ${
@@ -83,10 +84,10 @@ const App = (props) => {
               </a>
             ))}
           </div>
-          <a className={styleFootDoc} target="_blank" href="https://dnft.gitbook.io" rel="noreferrer">DOCUMENTATION</a>
-          <div className={styleFootNote}>
+          <a className={styleFootDoc} target="_blank" href="https://dnft.gitbook.io" rel="noreferrer">{t('doc.btn.link')}</a>
+          <a target="_blank"  rel="noreferrer" href="https://dnft.world" className={styleFootNote}>
             <label>© 2021 DNFT Protocol</label>
-          </div>
+          </a>
         </section>
       </Box>
       <section id="mainContainer" className={styleRightContainer}>
@@ -122,6 +123,7 @@ const styleFootNote = css`
   white-space: nowrap;
   font-family: SF Pro Display,sans-serif;
   font-style: normal;
+  text-decoration: none;
   label{
     font-family: Helvetica,sans-serif;
     font-style: normal;
@@ -131,6 +133,7 @@ const styleFootNote = css`
     display: flex;
     align-items: center;
     color: #FFFFFF;
+    cursor: pointer;
   }
 `;
 const styleFootDoc = css`
@@ -145,7 +148,7 @@ const styleFootDoc = css`
   justify-content: center;
   color: #2D3748;
   background: #FFFFFF;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 6px 0;
   margin: 14px 0;
   text-decoration: none;
@@ -211,6 +214,7 @@ const styleTop = css`
   height: 30px;
   width: 100%;
   color: #EDF3FF;
+  cursor: pointer;
   img{
     width: 30px;
   }

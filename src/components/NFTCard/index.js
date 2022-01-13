@@ -20,6 +20,8 @@ import noImg from 'images/common/noImg.svg'
 import _ from 'lodash';
 import NFTCardItem from 'pages/market/component/item';
 import { getWallet } from 'utils/get-wallet';
+import { useTranslation } from 'react-i18next';
+
 const gasLimit = 3000000;
 const NFTCard = (props) => {
   const {
@@ -37,6 +39,7 @@ const NFTCard = (props) => {
     handleDetail,
     getList
   } = props;
+  const { t } = useTranslation();
   const url = item.avatorUrl
   const flag = !url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1
   const viewUrl = !flag ? url : noImg
@@ -80,7 +83,7 @@ const NFTCard = (props) => {
     return (
       <Dialog
         customClass={styleModalContainer}
-        title="Launch"
+        title={t('nftCard.title')}
         visible
         closeOnClickModal={false}
         onCancel={() => {
@@ -92,7 +95,7 @@ const NFTCard = (props) => {
       >
         <Dialog.Body>
           {renderFormItem(
-            `Quantity/${item.quantity || 0}`,
+            `${t('nftCard.quantity')}/${item.quantity || 0}`,
             <InputNumber
               disabled={item.contractType == 721}
               min={1}
@@ -107,11 +110,11 @@ const NFTCard = (props) => {
             />
           )}
           {renderFormItem(
-            'Type',
+            t('nftCard.type'),
             <Select
               style={{ width: '100%' }}
               value={sellForm.type}
-              placeholder="please choose"
+              placeholder={t('please.choose')}
               onChange={(value) => {
                 setSellForm({
                   ...sellForm,
@@ -124,10 +127,10 @@ const NFTCard = (props) => {
             </Select>
           )}
           {renderFormItem(
-            'Price',
+            t('nftCard.price'),
             <InputNumber
               controls={false}
-              placeholder="Ethereum"
+              placeholder={t('nftCard.eth')}
               value={sellForm.price}
               onChange={(value) => {
                 setSellForm({
@@ -285,7 +288,7 @@ const NFTCard = (props) => {
             }}
           >
             <Loading loading={isApproveLoading || isOnLoading} />
-            {isApproved ? 'Confirm' : 'Approve'}
+            {isApproved ? t('confirm') : t('nftCard.approve')}
           </div>
         </Dialog.Body>
       </Dialog>
@@ -296,7 +299,7 @@ const NFTCard = (props) => {
     console.log('off');
     return (
       <Dialog
-        title="Tips"
+        title={t('nftCard.tips')}
         size="tiny"
         visible
         closeOnClickModal={false}
@@ -307,7 +310,7 @@ const NFTCard = (props) => {
         }}
       >
         <Dialog.Body>
-          <span>Are you sure phase out the nft?</span>
+          <span>{t('nftCard.tips.phase.out')}</span>
         </Dialog.Body>
         <Dialog.Footer className="dialog-footer">
           <Button
@@ -315,7 +318,7 @@ const NFTCard = (props) => {
               setShowOffShelfModal(false);
             }}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             type="primary"
@@ -364,7 +367,7 @@ const NFTCard = (props) => {
               }
             }}
           >
-            {isOffLoading ? 'Loading...' : 'Confirm'}
+            {isOffLoading ? t('loading') : t('confirm')}
           </Button>
         </Dialog.Footer>
       </Dialog>
@@ -395,7 +398,7 @@ const NFTCard = (props) => {
                 return;
               }
               if(item?.sellable === false) {
-                toast.warn('This nft is not allowed to sell', {
+                toast.warn(t('nftCard.not.allowed.sell'), {
                   position: toast.POSITION.TOP_CENTER,
                 });
                 return
@@ -403,7 +406,7 @@ const NFTCard = (props) => {
               onShowSellModal();
             }}
           >
-              Sell
+            {t('sell')}
           </Box>
         }
         {
@@ -419,7 +422,7 @@ const NFTCard = (props) => {
               onShowOffShelfModal();
             }}
           >
-            Unsell
+            {t('unsell')}
           </Box>
         }
       </NFTCardItem>

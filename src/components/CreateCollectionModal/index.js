@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import { css } from 'emotion';
 import { post } from 'utils/request';
+import { useTranslation } from 'react-i18next';
 
 const COLL_SCHEMA = {
   chainType: '',
@@ -14,6 +15,8 @@ const COLL_SCHEMA = {
 };
 
 const CreateCollectionModal = (props) => {
+  const { t } = useTranslation();
+
   // console.log('CreateCollectionModal', props);
   const {
     onClose,
@@ -45,7 +48,7 @@ const CreateCollectionModal = (props) => {
         return;
       }
       if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
-        toast.warning('Wrong network', {
+        toast.warning(t('toast.wrong.network'), {
           position: toast.POSITION.TOP_CENTER,
         });
         return;
@@ -53,14 +56,14 @@ const CreateCollectionModal = (props) => {
     }
     colData.name = colData.name?.trim();
     if (!colData.name) {
-      toast.warning('Name is required', {
+      toast.warning(t('toast.name.required'), {
         position: toast.POSITION.TOP_CENTER,
       });
       setLoading(false)
       return;
     }
     if (!colData.description) {
-      toast.warning('Description is required', {
+      toast.warning(t('toast.desc.required'), {
         position: toast.POSITION.TOP_CENTER,
       });
       setLoading(false)
@@ -93,16 +96,16 @@ const CreateCollectionModal = (props) => {
     <Dialog
       customClass={styleCollectionModalContainer}
       style={isProfile && {height: 'auto'}}
-      title={`${!isNew ? 'Edit' : 'Create'} Collection`}
+      title={t(`collection.${!isNew ? 'edit' : 'create'}`)}
       visible
       closeOnClickModal={false}
       onCancel={onClose}
     >
       <Dialog.Body>
         {renderFormItem(
-          'Collection Name',
+          t('collection.name'),
           <Input
-            placeholder='e. g. David (Maximum 20 char)'
+            placeholder={t('collection.placeholder.name')}
             maxLength={20}
             value={colData.name}
             onChange={(value) => {
@@ -114,10 +117,10 @@ const CreateCollectionModal = (props) => {
           />, true
         )}
         {renderFormItem(
-          'Description',
+          t('collection.desc'),
           <Input
             type='textarea'
-            placeholder='Description (Maximum 500 char)'
+            placeholder={t('collection.placeholder.name')}
             maxLength={500}
             style={{
               background: '#fff'
@@ -137,7 +140,7 @@ const CreateCollectionModal = (props) => {
           className={styleCreateCollection}
           onClick={submitColl}
         >
-          Save
+          {t('save')}
         </Button>
       </Dialog.Body>
     </Dialog>

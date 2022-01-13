@@ -1,9 +1,11 @@
 import React from 'react';
 import { Dialog, Button } from 'element-react';
 import { css, cx } from 'emotion';
+import { useTranslation } from 'react-i18next';
 
 const SwitchModal = (props) => {
   const { networkName, goToRightNetwork, onClose, visible } = props;
+  const { t } = useTranslation();
 
   const getTipsByWallet = () => {
     if (window.ethereum?.selectedAddress) {
@@ -21,13 +23,13 @@ const SwitchModal = (props) => {
     if (window.ethereum?.selectedAddress) {
       return <Button onClick={async () => {
         goToRightNetwork(window.ethereum);
-      }}>Switch Network</Button>
+      }}>{t('network.switch')}</Button>
     }
     if (window.walletProvider?.connected) {
       return <Button onClick={async () => {
         window.walletProvider.disconnect();
         onClose();
-      }}>Disconnect</Button>
+      }}>{t('network.disconnect')}</Button>
     }
     if (window.onto?.isConnected) {
       return null

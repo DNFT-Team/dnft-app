@@ -23,9 +23,13 @@ import Web3 from 'web3';
 import globalConfig from '../../../config';
 import LoadingIcon from '../../../images/asset/loading.gif'
 import { getWallet } from 'utils/get-wallet';
+import { useTranslation } from 'react-i18next';
+
 const CreateNFTModal = (props) => {
   const { dispatch, datas, collectionId, location, address, chainType, token, categoryList, onClose } =
     props;
+  const { t } = useTranslation();
+
   const [options, setOptions] = useState([]);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const [form, setForm] = useState({
@@ -33,7 +37,6 @@ const CreateNFTModal = (props) => {
     contractType: '721',
     collectionId: collectionId,
   });
-  console.log(form,'collectionIdcollectionIdcollectionIdcollectionId')
   const [nftUrl, setNftUrl] = useState();
   const [nftFile, setNftFile] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +76,7 @@ const CreateNFTModal = (props) => {
   const beforeUpload = (file) => {
     const isLt10M = file.size / 1024 / 1024 < 10;
     if (!isLt10M) {
-      toast.warn('The size of the uploaded NFT image cannot exceed 10MB!', {
+      toast.warn(t('cropImg.uploaded.nft.limit'), {
         position: toast.POSITION.TOP_CENTER,
       });
       return false;
@@ -166,14 +169,14 @@ const CreateNFTModal = (props) => {
     });
 
     if (!nftFile) {
-      toast.dark('please upload NFT', {
+      toast.dark(t('toast.upload.nft'), {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
     }
 
     if (inValidParam) {
-      toast.dark(`please input ${inValidParam[1]}`, {
+      toast.dark(`${t('please.input')} ${inValidParam[1]}`, {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
@@ -182,18 +185,18 @@ const CreateNFTModal = (props) => {
     try {
       setIsLoading(true);
       //  upload ipfs
-      toast.info('Step 1. Upload NFT To IPFS...');
+      toast.info(t('toast.upload.step1'));
       const fileData = new FormData();
       fileData.append('file', nftFile);
       const { data } = await ipfs_post('/v0/add', fileData);
       const ipfsHash = data?.['Hash']
       console.log('ipfsHash', ipfsHash);
       if (!ipfsHash) {
-        toast.error('NFT upload failed!');
+        toast.error(t('toast.upload.nft.failed'));
         return
       }
-      toast.success('NFT upload success!');
-      toast.info('Step 2. Mint NFT via contract...');
+      toast.success(t('toast.upload.nft.success'));
+      toast.info(t('toast.upload.step2'));
       //  mint nft
       let wallet = getWallet();
       if (wallet) {
@@ -297,7 +300,7 @@ const CreateNFTModal = (props) => {
     <React.Fragment>
       <Dialog
         customClass={styleModalContainer}
-        title='Create NFT'
+        title={t('nftCard.create')}
         visible
         closeOnClickModal={false}
         onCancel={() => {
@@ -343,9 +346,9 @@ const CreateNFTModal = (props) => {
               )}
             </Upload>
             {renderFormItem(
-              'Name',
+              t('nftCard.name'),
               <Input
-                placeholder='e. g. David (Maximum 30 char)'
+                placeholder={t('collection.placeholder.name30')}
                 maxLength={30}
                 onChange={(value) => {
                   setForm({
@@ -356,10 +359,10 @@ const CreateNFTModal = (props) => {
               />, true
             )}
             {renderFormItem(
-              'Description',
+              t('nftCard.desc'),
               <Input
                 type='textarea'
-                placeholder='Description (Maximum 500 char)'
+                placeholder={t('collection.placeholder.desc')}
                 maxLength={500}
                 autosize={{ minRows: 4, maxRows: 4 }}
                 onChange={(value) => {
@@ -371,10 +374,10 @@ const CreateNFTModal = (props) => {
               />
             )}
             {renderFormItem(
-              'Collection',
+              t('collection.title'),
               <div style={{ display: 'flex' }}>
                 <Select
-                  placeholder='Please choose'
+                  placeholder={t('please.choose')}
                   defaultValue={form.collectionId}
                   value={form.collectionId}
                   className={styleCollection}
@@ -399,14 +402,14 @@ const CreateNFTModal = (props) => {
                     setShowCreateCollection(true);
                   }}
                 >
-                  + Add
+                  + {t('nftCard.add')}
                 </Button>
               </div>, true
             )}
             {renderFormItem(
-              'Category',
+              t('nftCard.category'),
               <Select
-                placeholder='Please choose'
+                placeholder={t('please.choose')}
                 onChange={(value) => {
                   setForm({
                     ...form,
@@ -421,10 +424,10 @@ const CreateNFTModal = (props) => {
             )}
             <div style={{display: 'flex', gap: '20px'}}>
               {renderFormItem(
-                'Contract Type',
+                t('nftCard.contract.type'),
                 <Select
                   value={form.contractType}
-                  placeholder='Please choose'
+                  placeholder={t('please.choose')}
                   onChange={(value) => {
                     setForm({
                       ...form,
@@ -443,7 +446,7 @@ const CreateNFTModal = (props) => {
               )}
               {form.contractType != '721' &&
                 renderFormItem(
-                  'Supply',
+                  t('nftCard.supply'),
                   <InputNumber
                     defaultValue={1}
                     min={1}
@@ -463,7 +466,7 @@ const CreateNFTModal = (props) => {
               onClick={createNFT}
             >
               <Loading loading={isLoading} />
-              Create
+              {t('create')}
             </div>
           </div>
         </Dialog.Body>
