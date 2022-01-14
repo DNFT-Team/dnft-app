@@ -38,10 +38,13 @@ import ChangeBg from './changeBg';
 import { shortenAddress, shortenNameString } from 'utils/tools';
 import SharePopover from 'components/SharePopover';
 import BotDrawer from './components/botDrawer';
+import  { useTranslation } from 'react-i18next';
 
 const ProfileScreen = (props) => {
   const { dispatch, address, datas, token, batch, owned, created, location } =
     props;
+  const { t } = useTranslation();
+
   const state = location?.state;
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -113,7 +116,7 @@ const ProfileScreen = (props) => {
   };
   const handleCopyAddress = () => {
     copy(newAddress);
-    toast.success('The address is copied successfully!', {
+    toast.success(t('toast.address.copied'), {
       position: toast.POSITION.TOP_CENTER,
     });
   };
@@ -249,7 +252,7 @@ const ProfileScreen = (props) => {
         datas?.nickName || 'user'
       } on DNFT Protocol! | ${shareUrl}`
     );
-    toast.success('The link is copied successfully!', {
+    toast.success(t('toast.link.copy'), {
       position: toast.POSITION.TOP_CENTER,
     });
   };
@@ -282,7 +285,7 @@ const ProfileScreen = (props) => {
                 onClick={() => setShowBgScreen(true)}
                 className={styles.edit_bg_header}
               >
-                <span className={styles.edit_bg_span}>Change Background</span>
+                <span className={styles.edit_bg_span}>{t('profile.setting.background')}</span>
                 <img className={styles.edit_bg_img} src={edit_bg} />
               </div>
               <SharePopover datas={datas} />

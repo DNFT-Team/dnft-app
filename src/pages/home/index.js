@@ -17,11 +17,13 @@ import banner1 from 'images/home/banner/marketplace2.png'
 import banner2 from 'images/home/banner/mintNft2.png'
 import banner3 from 'images/home/banner/mining2.png'
 import { getWallet } from 'utils/get-wallet';
+import  { useTranslation } from 'react-i18next';
 
 
 const HomeScreen = (props) => {
   const { token, address } = props;
   let history = useHistory();
+  const { t } = useTranslation();
 
   const currentNetEnv = globalConf.net_env;
   const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
@@ -113,7 +115,7 @@ const HomeScreen = (props) => {
       })
       return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+      console.error(t('toast.fail.setup.in.metamask'), error)
       return false
     }
   }, []);
@@ -171,7 +173,7 @@ const HomeScreen = (props) => {
           </Carousel.Item>
         ))}
       </Carousel>
-      {renderHotList('Hot NFTs')}
+      {renderHotList(t('hot.nfts'))}
       <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
         setIsShowSwitchModal(false)
       }} />

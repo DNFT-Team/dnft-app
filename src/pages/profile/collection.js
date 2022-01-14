@@ -15,6 +15,7 @@ import add from 'images/profile/add.png';
 import CreateNFTModal from '../asset/create/index';
 
 import { get, post } from 'utils/request';
+import  { useTranslation } from 'react-i18next';
 
 const CollectionScreen = (props) => {
   const {
@@ -23,6 +24,8 @@ const CollectionScreen = (props) => {
     dispatch,
     token
   } = props;
+  const { t } = useTranslation();
+
   const [list, setList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showCreateCollection, setShowCreateCollection] = useState(false);
@@ -102,7 +105,7 @@ const CollectionScreen = (props) => {
               setShowCreateCollection(true)
             }}
           >
-            Edit Collection
+            {t('collection.edit')}
           </div>
         }
       </header>
@@ -112,7 +115,7 @@ const CollectionScreen = (props) => {
           : null}
         <div className={styleCardContainerNFT}>
           <img src={add} />
-          <div onClick={() => setShowCreateNft(true)} >Create NFT</div>
+          <div onClick={() => setShowCreateNft(true)} >{t('nftCard.create')}</div>
         </div>
       </div>
       {isLoading && <div className={styleLoadingIconContainer}>

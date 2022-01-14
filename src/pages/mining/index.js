@@ -31,27 +31,28 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
 import Title from 'components/Title'
-
-export const stakingJson = [{
-  'name': 'The Spirit Of Silence',
-  'description': 'There is a lost story about a mysterious, magical and pure soul woman who lives in the forest, hidden in the roots of a tree. Her beauty is unmatched and her mystery invisible, since she cannot be seen so easily. It could only be present before you, if you connect with the spirit of silence.',
-  'image': 'https://www.dnft.world/staking/pool1.png'
-}, {
-  'name': 'FRIDA\'S TEARS',
-  'description': 'I drank to drown my sorrows, but the damned things learned how to swim.',
-  'image': 'https://www.dnft.world/staking/pool2.png',
-}, {
-  'name': 'THERE ARE NO STRANGE LANDS',
-  'description': 'There are no strange lands. It is the traveler who is the only stranger.',
-  'image': 'https://www.dnft.world/staking/pool3.png',
-}]
+import  { useTranslation } from 'react-i18next';
 
 // const gasLimit = 3000000;
 
 const Mining = (props) => {
   let history = useHistory();
   const { token, address } = props;
+  const { t } = useTranslation();
 
+  const stakingJson = [{
+    'name': t('mining.staking.name1'),
+    'description': t('mining.staking.desc1'),
+    'image': 'https://www.dnft.world/staking/pool1.png'
+  }, {
+    'name': t('mining.staking.name2'),
+    'description': t('mining.staking.desc2'),
+    'image': 'https://www.dnft.world/staking/pool2.png',
+  }, {
+    'name': t('mining.staking.name3'),
+    'description': t('mining.staking.desc3'),
+    'image': 'https://www.dnft.world/staking/pool3.png',
+  }]
   const initState = useMemo(
     () => ({
       0: {
@@ -290,7 +291,7 @@ const Mining = (props) => {
       }
       return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+      console.error(t('toast.fail.setup.in.metamask'), error)
       return false
     }
   }, []);
@@ -325,7 +326,7 @@ const Mining = (props) => {
               <img src={dnft_unit} alt=""/>
               <span>{balance}</span>
             </div>
-            <p>Available balance</p>
+            <p>{t('mining.available.balance')}</p>
             {/* <div className={styleIcon}>
               <img src={defaultHeadSvg} />
             </div>
@@ -352,7 +353,7 @@ const Mining = (props) => {
             setSelectedTab('Ongoing');
           }}
         >
-          Ongoing
+          {t('igo.ongoing')}
         </div>
         <div
           className={cx(
@@ -363,7 +364,7 @@ const Mining = (props) => {
             setSelectedTab('Ended');
           }}
         >
-          Ended
+          {t('igo.ended')}
         </div>
       </div>
     ),
@@ -397,17 +398,17 @@ const Mining = (props) => {
           <div className={styleCardTitle}>
             <div>
               <img src={dnft_unit} />
-              <span>DNF Staking Pool</span>
+              <span>{t('mining.staking.pool')}</span>
             </div>
             {/* <span>{(stakeInfo?.duration / 30) || 0} Months</span> */}
           </div>
           <div className={styleCardInfo}>
             <div className={styleItemContainer}>
-              <div className={styleText}>Total DNF Reward</div>
+              <div className={styleText}>{t('mining.totalreward')}</div>
               <div className={styleDollar}>{stakeInfo?.totalReward || 0.0}</div>
             </div>
             <div className={styleItemContainer}>
-              <div className={styleText}>Total DNF Staked</div>
+              <div className={styleText}>{t('mining.totalstaked')}</div>
               <div className={styleDollar}>
                 {Number(stakeInfo?.totalStaked || 0).toFixed(
                   2
@@ -421,14 +422,14 @@ const Mining = (props) => {
                 (stakeInfo?.totalStaked / stakeInfo?.totalLocked) * 100 || 0
               ).toFixed(2)}
                 %</div>
-              <div>Current Progress</div>
+              <div>{t('mining.current.progress')}</div>
             </div>
-            <div className={styleCardButton}>Stake</div>
+            <div className={styleCardButton}>{t('mining.stake')}</div>
           </div>
         </div>
         <div className={styleLabelContainer}>
           <div className='percent'>{stakeInfo?.rewardRate || 0.0}</div>
-          <div>APR(%)</div>
+          <div>{t('mining.arp')}</div>
         </div>
       </div>
     ),
@@ -445,7 +446,7 @@ const Mining = (props) => {
             setStakeValue(undefined);
           }}
         >
-          Stake
+          {t('mining.stake')}
         </span>
         <span
           className={cx(styleTab, stakeTab === 'unstake' && activeTab)}
@@ -454,7 +455,7 @@ const Mining = (props) => {
             setStakeValue(undefined);
           }}
         >
-          Unstake
+          {t('mining.unstake')}
         </span>
         <span
           className={cx(styleTab, stakeTab === 'claim' && activeTab)}
@@ -463,7 +464,7 @@ const Mining = (props) => {
             setStakeValue(undefined);
           }}
         >
-          Claim NFT
+          {t('mining.claim.nft')}
         </span>
       </div>
     ),
@@ -482,23 +483,23 @@ const Mining = (props) => {
       return (
         <div>
           <div className={styleTableHeader}>
-            <span>Token</span>
-            <span>APR(%)</span>
-            <span>Staking Period(Pays)</span>
+            <span>{t('mining.token')}</span>
+            <span>{t('mining.arp')}</span>
+            <span>{t('mining.staking.period')}</span>
           </div>
           <div className={styleTableBody}>
-            <span>DNF</span>
+            <span>{t('mining.DNF')}</span>
             <span>{stakeInfo?.rewardRate}</span>
-            <span>{Math.round(stakeInfo?.duration)}days</span>
+            <span>{t('mining.stake.days', {d: Math.round(stakeInfo?.duration)})}</span>
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
               <div className={styleStakeBalance}>
-                <span>Stake</span>
-                <span>Balance: <span style={{color: '#FF313C', fontSize: '17px', fontWeight: 'bold'}}>{balance}</span></span>
+                <span>{t('mining.stake')}</span>
+                <span>{t('balance')}: <span style={{color: '#FF313C', fontSize: '17px', fontWeight: 'bold'}}>{balance}</span></span>
               </div>
               <div className={styleInputContainer}>
-                <div className={styleStakeDNF}>DNF</div>
+                <div className={styleStakeDNF}>{t('mining.DNF')}</div>
                 <InputNumber
                   controls={false}
                   placeholder={0}
@@ -511,8 +512,7 @@ const Mining = (props) => {
             </div>
           )}
           <div className={styleStakeTips}>
-            Note：you will not be able to Unstake your DNF or claim your rewards
-            before the staking period has ended
+            {t('mining.note')}
           </div>
           <div
             style={{
@@ -563,7 +563,7 @@ const Mining = (props) => {
                         amount: Web3.utils.toWei(String(stakeValue), 'ether'),
                         from: stakeInfo.account
                       });
-                    toast.info('Operation succeeded！', {
+                    toast.info(t('toast.operation.success'), {
                       position: toast.POSITION.TOP_CENTER,
                     });
                   } finally {
@@ -613,7 +613,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={isApproveLoading || isStakeLoading} />
-              {isApproveLoading || isStakeLoading ? 'loading...' : stateData[stakeIndex].isApprove ? 'Stake' : 'Approve DNF'}
+              {isApproveLoading || isStakeLoading ? t('loading') : stateData[stakeIndex].isApprove ? t('mining.stake') : t('mining.approve.dnf')}
             </div>
           </div>
         </div>
@@ -625,8 +625,7 @@ const Mining = (props) => {
   const renderNoData = useMemo(
     () => (
       <div className={styleNoDataContainer}>
-        {/* <div>{noDataSvg}</div> */}
-        <span>No content</span>
+        <span>{t('no.content')}</span>
       </div>
     ),
     []
@@ -636,10 +635,10 @@ const Mining = (props) => {
     (stakeInfo) => (
       <div className={styleUnstakeContainer}>
         <div className={styleTableHeader}>
-          <span>Staked (DNF)</span>
-          <span>Reward (DNF)</span>
-          <span>Total（DNF）</span>
-          <span>Status</span>
+          <span>{t('mining.staked')} (DNF)</span>
+          <span>{t('mining.reward')} (DNF)</span>
+          <span>{t('mining.total')}（DNF）</span>
+          <span>{t('mining.status')}</span>
         </div>
         <Loading
           loading={isUnStakeLoading}
@@ -707,7 +706,7 @@ const Mining = (props) => {
                           from: stakeInfo.account,
                           idx: index
                         });
-                        toast.info('Operation succeeded！', {
+                        toast.info(t('toast.operation.success'), {
                           position: toast.POSITION.TOP_CENTER,
                         });
                       } finally {
@@ -739,7 +738,7 @@ const Mining = (props) => {
                           styleDisableButton
                       )}
                     >
-                      {unstakeLoadingIndexArray.includes(index) ? 'loading...' : 'Unstake'}
+                      {unstakeLoadingIndexArray.includes(index) ? t('loading') : t('mining.unstake')}
                     </div>
                   </span>
                 )}
@@ -792,9 +791,9 @@ const Mining = (props) => {
                 }}
               >
                 <img style={{width: 18, height: 18, marginRight: '8px'}} src={contractSvg} />
-                <span  style={{ fontFamily: 'Helvetica' }}>Contract</span>
+                <span  style={{ fontFamily: 'Helvetica' }}>{t('mining.contract')}</span>
               </span>
-              <span  style={{ fontFamily: 'Helvetica' }}>Description ：</span>
+              <span  style={{ fontFamily: 'Helvetica' }}>{t('collection.desc')} ：</span>
               <span style={{ color: '#8F9BBA', fontFamily: 'Helvetica' }}>
                 {stakingJson[stakeIndex].description}
               </span>
@@ -838,7 +837,7 @@ const Mining = (props) => {
                     from: stakeInfo.account
                   });
 
-                  toast.info('Operation succeeded！', {
+                  toast.info(t('toast.operation.success'), {
                     position: toast.POSITION.TOP_CENTER,
                   });
 
@@ -873,7 +872,7 @@ const Mining = (props) => {
               }}
             >
               <Loading loading={stateData[stakeIndex].isClaiming} />
-              {stateData[stakeIndex].isClaiming ? 'loading...' : 'Claim'}
+              {stateData[stakeIndex].isClaiming ? t('loading') : t('igo.claim')}
             </div>
           </div>
         </div>
@@ -897,15 +896,16 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            DNF Staking（{Math.round(stakeInfo?.duration)}days）
+            {t('dnf.staking.days', {d: Math.round(stakeInfo?.duration)})}
+            {/* DNF Staking（{Math.round(stakeInfo?.duration)}days） */}
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
-              'StakeDNF for DNF under a  fixed APR（Annual percent yield）'}
+              t('mining.stake.tip1')}
             {stakeTab === 'unstake' &&
-              'Click “Unstake” button to get your staked DNF and the rewards back'}
+              t('mining.stake.tip2')}
             {stakeTab === 'claim' &&
-              'If your have staked more than 200 DNF in a single staking，you will be eligible to claim the reward DNF.'}
+              t('mining.stake.tip3')}
           </div>
           {stakeTab === 'stake' && renderStake(stakeInfo)}
           {stakeTab === 'unstake' && renderUnstake(stakeInfo)}
@@ -919,11 +919,11 @@ const Mining = (props) => {
   return (
     <div className={styleContainer}>
       <header className={styleContainerTitle}>
-        <Title title='Mining' linkHelper={{
+        <Title title={t('menu.mining')} linkHelper={{
           youtubeLink: helper.mining.youtube,
           youtubeTitle: helper.mining.title,
           bookLink: helper.mining.book,
-          bookTitle: 'Learn How To Stake'
+          bookTitle: t('book.stake')
         }} />
         {/* <div className="headerT">
           <span className="headerTitle">Mining</span>
@@ -937,7 +937,7 @@ const Mining = (props) => {
             </Link>
           </div>
         </div> */}
-        <p>Stake your asset to earn more. High-yield staking is ongoing.</p>
+        <p>{t('mining.stake.note1')}</p>
       </header>
       {renderAssetHeader}
       <div className={styleBody}>

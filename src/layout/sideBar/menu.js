@@ -103,7 +103,7 @@ const DrawerMenu = (props) => {
                       ) : (
                         <>
                           <img src={item.icon} className='menuLogo' />
-                          <span className='navName'>{item.navName}</span>
+                          <span className='navName'>{t(`menu.${item.navName.toLocaleLowerCase()}`)}</span>
                         </>
                       )}
                     </Flex>

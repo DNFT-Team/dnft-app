@@ -12,7 +12,6 @@ import { get, post } from 'utils/request';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../config';
-import { stakingJson } from 'pages/mining';
 import { busdAbi, tokenAbi } from '../../utils/abi';
 import { bscTestTokenContact, busdContract } from '../../utils/contract';
 // import { getCategoryList } from 'reduxs/actions/market';

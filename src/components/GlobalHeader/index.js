@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
 // import { useCoingeckoPrice } from '@usedapp/coingecko'
-import { Dialog, Input } from 'element-react';
+import { Dialog, Select } from 'element-react';
 import {
   Box, Avatar, Link,
   Button, Text,
@@ -12,7 +12,7 @@ import {
   MenuItem, MenuDivider, Tooltip,
   Drawer, DrawerOverlay, DrawerContent,
   DrawerHeader, IconButton, DrawerBody,
-  Stat, StatLabel, StatNumber, StatHelpText
+  Stat, StatLabel, StatNumber, StatHelpText,
 } from '@chakra-ui/react';
 import { SideBar } from 'layout/sideBar';
 import { toast } from 'react-toastify';
@@ -20,7 +20,7 @@ import { Icon } from '@iconify/react';
 import { css } from 'emotion';
 import axios from 'axios';
 import Web3 from 'web3';
-
+import {LNG} from 'utils/constant'
 import { NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
 // import styles from './index.less';
@@ -43,13 +43,13 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { shortenAddress } from 'utils/tools'
 import DrawerMenu from 'layout/sideBar/menu';
 import { useTranslation } from 'react-i18next';
-
+import {_setLng} from 'reduxs/actions/lng'
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
 
 const GlobalHeader = (props) => {
   let history = useHistory();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { dispatch, chainType, token } = props;
   const ref = useRef();
@@ -544,6 +544,13 @@ const GlobalHeader = (props) => {
         {/*      <span>$ {Number(dnftPrice).toFixed(2)}</span>*/}
         {/*    </div>)*/}
         {/* }*/}
+        <Select onChange={(e) => {
+          dispatch(_setLng(e))
+        }}>
+          {
+            Object.values(LNG).map((obj) => <Select.Option value={obj.value} key={obj.value}>{obj.label}</Select.Option>)
+          }
+        </Select>
         {address && (
           <div
             className={styleAssetTarget}

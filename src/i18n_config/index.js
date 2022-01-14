@@ -6,7 +6,7 @@ import zh from './zh.json';
 i18n
   .use(initReactI18next)
   .init({
-    debug: true,
+    // debug: true,
     resources: {
       zh: {
         translation: zh,

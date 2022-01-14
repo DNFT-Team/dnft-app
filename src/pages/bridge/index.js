@@ -10,33 +10,39 @@ import { Icon } from '@iconify/react';
 import { Link } from '@chakra-ui/react';
 import Title from 'components/Title'
 import {Box} from '@chakra-ui/react';
-const cardData = [
-  {
-    key: 'b2e',
-    skipTo: '/bridge/transfer?fr=bsc&to=eth',
-    isActive: true,
-    avatar: Tb2e,
-    txt: 'To transfer your BEP-20 DNF to ERC-20 DNF, you need to connect your wallet and switch to BSC Network!'
-  },
-  {
-    key: 'e2b',
-    skipTo: '/bridge/transfer?fr=eth&to=bsc',
-    isActive: true,
-    avatar: Te2b,
-    txt: 'To transfer your ERC-20 DNF to BEP-20 DNF, you need to connect your wallet and switch to ETH Network!'
-  },
-]
+import  { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
+
 
 const BridgeScreen = (props) => {
+  const { t } = useTranslation();
+  const cardData = [
+    {
+      key: 'b2e',
+      skipTo: '/bridge/transfer?fr=bsc&to=eth',
+      isActive: true,
+      avatar: Tb2e,
+      txt: i18n.t('bridge.b2e')
+      // txt: 'To transfer your BEP-20 DNF to ERC-20 DNF, you need to connect your wallet and switch to BSC Network!'
+    },
+    {
+      key: 'e2b',
+      skipTo: '/bridge/transfer?fr=eth&to=bsc',
+      isActive: true,
+      avatar: Te2b,
+      txt: i18n.t('bridge.e2b')
+      // txt: 'To transfer your ERC-20 DNF to BEP-20 DNF, you need to connect your wallet and switch to ETH Network!'
+    },
+  ]
   let history = useHistory();
   const { address } = props;
 
   return <Box p={['20px', '20px', '20px', '50px']} className={styleBridge}>
-    <Title title='Bridge' linkHelper={{
+    <Title title={t('menu.bridge')} linkHelper={{
       youtubeLink: helper.bridge.youtube,
       youtubeTitle: helper.nftMagic.title,
       bookLink: helper.bridge.book,
-      bookTitle: 'Mechanism'
+      bookTitle: t('book.title')
     }} />
     {/* <div className='styleHeader'>
       <h3>Bridge</h3>
@@ -52,7 +58,7 @@ const BridgeScreen = (props) => {
       </div>
     </div> */}
     <h5>
-    $DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. </h5>
+      {t('bridge.title')}</h5>
     <div className={styleRow}>
       {
         cardData.map((item, i) => (
@@ -61,16 +67,16 @@ const BridgeScreen = (props) => {
             <p>{item.txt}</p>
             <button onClick={() => {
               if (!address) {
-                toast.warn('Please link wallet');
+                toast.warn(t('toast.link.wallet'));
                 return;
               }
 
               if (item.isActive && item.skipTo) {
                 history.push(item.skipTo)
               } else {
-                toast('Coming soon!')
+                toast.warn(t('toast.come.soon'));
               }
-            }}>Bridging</button>
+            }}>{t('bridge.ing')}</button>
           </div>
         ))
       }

@@ -23,9 +23,9 @@ const App = (props) => {
   let history = useHistory();
   useEffect(() => {
     try {
-      i18n.changeLanguage('en');
+      // i18n.changeLanguage('en');
     } catch (e) {
-      i18n.changeLanguage('en');
+      // i18n.changeLanguage('en');
       console.log('getLngFromState error : ', e);
     }
   }, []);
@@ -63,7 +63,7 @@ const App = (props) => {
                     isActive && styles.navDeActive
                   } styleNavText`}
                 >
-                  {obj.navName}
+                  {t(`menu.${obj.navName.toLocaleLowerCase()}`)}
                 </span>
               </nav>
             );

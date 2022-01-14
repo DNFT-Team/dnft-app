@@ -9,13 +9,13 @@ const SwitchModal = (props) => {
 
   const getTipsByWallet = () => {
     if (window.ethereum?.selectedAddress) {
-      return <span>You’ve connected to unsupported networks, please switch to {networkName} network.</span>
+      return <span>{t('toast.selected.ethereum', {networkName})}</span>
     }
     if (window.walletProvider?.connected) {
-      return <span>You’ve connected to unsupported networks, please switch to {networkName} network and reconnect wallet.</span>
+      return <span>{t('toast.selected.walletProvider', {networkName})}</span>
     }
     if (window.onto?.isConnected) {
-      return <span>You’ve connected to unsupported networks, please switch to {networkName} network and reconnect wallet.</span>
+      return <span>{t('toast.selected.onto', {networkName})}</span>
     }
   };
 

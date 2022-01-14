@@ -7,46 +7,50 @@ import {
   FacebookShareButton, TelegramShareButton,
   TwitterShareButton
 } from 'react-share';
+import  { useTranslation } from 'react-i18next';
+
 const BotDrawer = (props) => {
   const { isOpen, datas, handleLink, onClose } =
     props;
   const shareUrl = window.location.href;
+  const { t } = useTranslation();
 
   const list = [
     {
-      label: 'Change Background',
+      label: t('profile.setting.background'),
       value: 'background',
     },
     {
-      label: 'Edit Profile',
+      label: t('profile.setting.profile'),
       value: 'profile',
     },
     {
-      label: 'Share to Telegram',
+      label: t('profile.setting.telegram'),
       value: 'telegram',
     },
     {
-      label: 'Share to Twitter',
+      label: t('profile.setting.twitter'),
       value: 'twitter',
     },
     {
-      label: 'Share to Facebook',
+      label: t('profile.setting.facebook'),
       value: 'facebook',
     },
     {
-      label: 'Copy Link',
+      label: t('profile.setting.copy'),
       value: 'copy',
     },
     {
-      label: 'Cancel',
+      label: t('profile.setting.cancel'),
       value: 'cancel',
     },
   ];
   const config = {
     className: 'shareItem',
-    title: `Check out the NFT collection of @${
-      datas?.nickName || 'user'
-    } on DNFT Protocol!`,
+    title: t('profile.share.nickName', {name: datas?.nickName || 'user'}),
+    // title: `Check out the NFT collection of @${
+    //   datas?.nickName || 'user'
+    // } on DNFT Protocol!`,
     url: shareUrl,
     hashtags: ['NFT'],
   };

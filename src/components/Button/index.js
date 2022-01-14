@@ -1,9 +1,12 @@
 import React from 'react';
 import { css } from 'emotion';
 import { Button } from '@chakra-ui/react';
+import  { useTranslation } from 'react-i18next';
 
 export const Btn = (props) => {
-  const { children, bgColor } = props;
+  const { children, loadingText, bgColor } = props;
+  const { t } = useTranslation();
+
   return (
     <Button
       className={styleBtn}
@@ -18,6 +21,8 @@ export const Btn = (props) => {
       fontSize={'16px'}
       borderRadius={'10px'}
       {...props}
+      // loadingText={loadingText && t(loadingText)}
+
     >
       {children}
     </Button>

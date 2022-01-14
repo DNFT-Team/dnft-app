@@ -16,11 +16,13 @@ import { ipfs_post } from 'utils/ipfs-request';
 import globalConf from 'config/index';
 import CropperBox from 'components/CropperBox';
 import {Btn} from 'components/Button'
+import  { useTranslation } from 'react-i18next';
 
 const ProfileEditScreen = (props) => {
   const { token, datas,  onClose, onSuccess, visible, onOpen} = props;
   const [loading, setLoading] = useState(false)
   const [profileFile, setProfileFile] = useState(null);
+  const { t } = useTranslation();
 
   const [srcCropper, setSrcCropper] = useState('');
   const [cropperVisible, setCropperVisible] = useState(false)
@@ -39,7 +41,7 @@ const ProfileEditScreen = (props) => {
     console.log(label, 'label');
     return (
       <div className={styles.styleFormItemContainer}>
-        <div className={`${styles.label} ${label === 'Name' && styles.name_before}`}>{label}</div>
+        <div className={`${styles.label} ${label === 'Name' && styles.name_before}`}>{t(`profile.${label}`)}</div>
         {item}
       </div>
     );
@@ -49,7 +51,7 @@ const ProfileEditScreen = (props) => {
     const reader = new FileReader();
     const isLt15M = file.size / 1024 / 1024 < 15;
     if (!isLt15M) {
-      toast.warn('Upload image size cannot exceed 15MB!');
+      toast.warn(t('cropImg.unpoaded.size.limit15'));
       return
     }
     reader.readAsDataURL(file);
@@ -63,14 +65,14 @@ const ProfileEditScreen = (props) => {
   const editProfile = async () => {
     setLoading(true)
     if (!form?.nickName) {
-      toast.warn('nickName cannot be empty', {
+      toast.warn(t('toast.nickName.not.empty'), {
         position: toast.POSITION.TOP_CENTER,
       });
       setLoading(false)
       return true;
     }
     if (!profileFile && !datas?.avatorUrl) {
-      toast.dark('please upload Profile Photo', {
+      toast.dark(t('toast.upload.photo'), {
         position: toast.POSITION.TOP_CENTER,
       });
       setLoading(false)
@@ -87,11 +89,11 @@ const ProfileEditScreen = (props) => {
         ipfsHash = ipfsData?.data?.['Hash']
         console.log('Hash,HashHash',ipfsData,ipfsData?.data,ipfsHash)
         if (!ipfsHash) {
-          toast.error('IPFS upload failed!');
+          toast.error(t('toast.ipfs.upload.failed'));
           setLoading(false)
           return
         }
-        toast.success('IPFS upload success!');
+        toast.success(t('toast.ipfs.upload.success'));
       }
 
       let avatorUrl = ipfsHash ?  (globalConf.ipfsDown + ipfsHash) : datas?.avatorUrl;
@@ -110,7 +112,7 @@ const ProfileEditScreen = (props) => {
         token,
       );
       if (data?.success === true) {
-        toast.success('Successfully modified', {
+        toast.success(t('toast.success.modify'), {
           position: toast.POSITION.TOP_CENTER,
         });
         onSuccess()
@@ -139,12 +141,12 @@ const ProfileEditScreen = (props) => {
   return (
     <React.Fragment>
       <Dialog
-        title='Edit profile'
+        title={t('profile.setting.profile')}
         visible={visible}
         customClass={styleModalContainer}
         onCancel={onClose}>
         <Dialog.Body style={{paddingBottom: 0}}>
-          <div className={styles.profile_phone}>Profile Photo<i>*</i><span>Maximum 2MB</span></div>
+          <div className={styles.profile_phone}>{t('profile.photo')}<i>*</i><span>{t('profile.max.2mb')}</span></div>
           <Upload
             className={styleUploadContainer1}
             multiple={false}
@@ -166,7 +168,7 @@ const ProfileEditScreen = (props) => {
             'Name',
             <Input
               maxLength={30}
-              placeholder='Name'
+              placeholder={t('profile.Name')}
               value={form?.nickName}
               className={styleNickName}
               onChange={(value) => {
@@ -221,12 +223,13 @@ const ProfileEditScreen = (props) => {
           )}
         </Dialog.Body>
         <Dialog.Footer style={{
-          textAlign: 'center'
+          textAlign: 'center',
+          marginBottom: '20px'
         }} p="10px 32px">
           <Btn
             loading={loading}
             // className={styleModalContainerBtn}
-            onClick={editProfile}>Save</Btn>
+            onClick={editProfile}>{t('save')}</Btn>
         </Dialog.Footer>
       </Dialog>
       <CropperBox

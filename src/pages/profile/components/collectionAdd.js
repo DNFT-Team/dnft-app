@@ -8,6 +8,7 @@ import {
 } from 'reduxs/actions/profile';
 import add from 'images/profile/add.png';
 import { Box } from '@chakra-ui/react';
+import  { useTranslation } from 'react-i18next';
 
 const CollectionAdd = (props) => {
   const {
@@ -18,6 +19,8 @@ const CollectionAdd = (props) => {
     style  = {},
     handleCollect,
   } = props;
+  const { t } = useTranslation();
+
   const [showCreateCollection, setShowCreateCollection] = useState(false);
   const getCollectionNftList = () => {
     dispatch(
@@ -37,7 +40,7 @@ const CollectionAdd = (props) => {
     <>
       <Box m={['0 auto', '0 auto','0 auto','']} w={['calc(100vw - 40px)', 'calc(100vw - 40px)', 'calc(100vw - 40px)', '300px']}  style={style}  className={styleCardContainer}>
         <img src={add} />
-        <div onClick={() => setShowCreateCollection(true)} >Create Collection</div>
+        <div onClick={() => setShowCreateCollection(true)} >{t('collection.create')}</div>
       </Box>
       {showCreateCollection && (
         <CreateCollectionModal

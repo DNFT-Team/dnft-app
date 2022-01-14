@@ -14,9 +14,12 @@ import { Link } from '@chakra-ui/react';
 import globalConfig from '../../config/index';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
-import Title from 'components/Title'
+import Title from 'components/Title';
+import  { useTranslation } from 'react-i18next';
+
 const Market = (props) => {
   let history = useHistory();
+  const { t } = useTranslation();
   const { dispatch, token, datas, pageAble, categoryList, pending, location, address } = props;
   const categoryBack = location?.state?.category;
   const sortTagBack = location?.state?.sortTag;
@@ -28,11 +31,11 @@ const Market = (props) => {
 
   const domRef = useRef(null);
   const sortTagType = [
-    // { label: 'Most Popular', value: 'save_count' },
-    { label: 'Recently Listed', value: 'create_time' },
-    { label: 'Most Likes', value: 'save_count' },
-    { label: 'Price: High to Low', value: 'total_price-DESC' },
-    { label: 'Price: Low to High', value: 'total_price-ASC' },
+    // { label: t('market.sort.label1'), value: 'save_count' },
+    { label: t('market.sort.label2'), value: 'create_time' },
+    { label: t('market.sort.label3'), value: 'save_count' },
+    { label: t('market.sort.label4'), value: 'total_price-DESC' },
+    { label: t('market.sort.label5'), value: 'total_price-ASC' }
   ];
 
   const currentNetEnv = globalConfig.net_env;
@@ -125,7 +128,7 @@ const Market = (props) => {
       })
       return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+      console.error(t('toast.fail.setup.in.metamask'), error)
       return false
     }
   }, []);
@@ -158,17 +161,17 @@ const Market = (props) => {
         height={'100%'}
       >
         <div className={styles.header}>
-          <Title title='Market' linkHelper={{
+          <Title title={t('menu.market')} linkHelper={{
             youtubeLink: helper.nftMagic.youtube,
             youtubeTitle: helper.nftMagic.title,
             bookLink: helper.nftMagic.book,
-            bookTitle: 'Mechanism'
+            bookTitle: t('book.title')
           }} />
           <div className={styles.headerR}>
             <Select
               className={`${styles.selectType} ${styleSelectContainer}`}
               value={category}
-              placeholder='Category'
+              placeholder={t('nftCard.category')}
               onChange={(value) => {
                 setCategory(value);
               }}
@@ -180,7 +183,7 @@ const Market = (props) => {
             <Select
               value={sortTag}
               className={`${styles.selectType} ${styleSelectContainer}`}
-              placeholder='Sort By'
+              placeholder={t('nftCard.sort.by')}
               onChange={(value) => setSortTag(value)}
             >
               {sortTagType.map((el) => (
@@ -198,7 +201,7 @@ const Market = (props) => {
         </div>
         {
           pageAble && <div className={stylesNextPage} >
-            <Button onClick={handleMore} loading={pending}>{pending ? 'Loading' : 'Next page'}</Button>
+            <Button onClick={handleMore} loading={pending}>{pending ? t('loading') : t('next.page')}</Button>
           </div>
         }
       </InfiniteScroll>

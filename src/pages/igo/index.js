@@ -12,15 +12,18 @@ import { Icon } from '@iconify/react';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
 import Title from 'components/Title'
+import  { useTranslation } from 'react-i18next';
 
-const mockGameList = [
-  { title: 'Olympic BTC Synthesis', description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
-  // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
-]
+
 const IGOScreen = (props) => {
   let history = useHistory();
+  const { t } = useTranslation();
 
-  const tabList = [[0, 'Ongoing'], [1, 'Ended']];
+  const mockGameList = [
+    { title: t('igo.mockGamelist.title'), description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
+    // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
+  ]
+  const tabList = [[0, t('igo.ongoing')], [1, t('igo.ended')]];
 
   const currentNetEnv = globalConfig.net_env;
   const rightChainId =  currentNetEnv === 'testnet' ? 97 : 56;
@@ -37,13 +40,13 @@ const IGOScreen = (props) => {
   }
   const handlePlay = (item) => {
     if (tab === 1) {
-      toast('Sorry, The game is ended!')
+      toast(t('toast.game.ended'))
       return
     }
     if (!item.isComing && item.skipTo) {
       history.push(item.skipTo)
     } else {
-      toast('Coming soon!')
+      toast(t('toast.come.soon'))
     }
   }
 
@@ -71,7 +74,7 @@ const IGOScreen = (props) => {
       })
       return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+      console.error(t('toast.fail.setup.in.metamask'), error)
       return false
     }
   }, []);
@@ -92,14 +95,14 @@ const IGOScreen = (props) => {
 
   return (
     <div className={styleIgo}>
-      <Title title='IGO' linkHelper={{
+      <Title title={t('menu.IGO')} linkHelper={{
         youtubeLink: helper.nftMagic.youtube,
         youtubeTitle: helper.nftMagic.title,
         bookLink: helper.nftMagic.book,
-        bookTitle: 'Mechanism'
+        bookTitle: t('book.title')
       }} />
       <Text className="describe">
-      This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.
+        {t('igo.title')}
       </Text>
       <div className={tabRow}>
         {
@@ -115,7 +118,7 @@ const IGOScreen = (props) => {
               <img className="avatar" src={g.avatarUrl} alt=""/>
               {g.title && <Text className="title">{g.title}</Text>}
               {g.description && <Text className="desc">{g.description}</Text>}
-              <div className="play" onClick={() => {handlePlay(g)}}>Play</div>
+              <div className="play" onClick={() => {handlePlay(g)}}>{t('igo.play')}</div>
             </Box>
           )) : <div className={styleNoDataContainer}>{noDataSvg}</div>
         }

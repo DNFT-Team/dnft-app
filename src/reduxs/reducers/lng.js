@@ -8,14 +8,14 @@ import _ from 'lodash'
 const initialState = {
   lng: LNG.EN,
 }
-const _lng = (state = initialState, { type, payload }) => {
+const _lng = (state = initialState, { type, payload = 'en' }) => {
   switch (type) {
   case SET_LNG:
     const value = _.isEqual(state.lng, LNG.ZH) ? LNG.ZH : LNG.EN;
-    i18n.changeLanguage(value.value);
+    i18n.changeLanguage(payload);
     return {
       ...state,
-      lng: value
+      lng: payload
     }
   default:
     return state;

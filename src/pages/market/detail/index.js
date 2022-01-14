@@ -26,8 +26,11 @@ import { shortenAddress } from 'utils/tools';
 import { toDecimal } from 'utils/web3Tools';
 import {Btn} from 'components/Button';
 import RenderOffShelfModal from 'components/RenderOffShelfModal';
-import {shortenNameString} from 'utils/tools'
+import {shortenNameString} from 'utils/tools';
+import  { useTranslation } from 'react-i18next';
+
 const MarketDetailScreen = (props) => {
+  const { t } = useTranslation();
   const {location, address, token, chainType} = props;
   const item = location?.state?.item;
   const fromAsset = location?.state?.fromAsset;
@@ -165,7 +168,7 @@ const MarketDetailScreen = (props) => {
       }
       return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+      console.error(t('toast.fail.setup.in.metamask'), error)
       return false
     }
   }, []);
@@ -255,7 +258,7 @@ const MarketDetailScreen = (props) => {
               },
               token
             );
-            toast[data?.success ? 'success' : 'error'](data?.success ? 'Buy success' : 'Buy failed', {
+            toast[data?.success ? 'success' : 'error'](data?.success ? t('market.success') : t('market.failed'), {
               position: toast.POSITION.TOP_CENTER,
             });
             console.log('交易状态：', receipt.status)
@@ -278,7 +281,7 @@ const MarketDetailScreen = (props) => {
   }
   const handleStar = async () => {
     if (!address) {
-      toast.warn('Please link wallet', {
+      toast.warn(t('toast.link.wallet'), {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
@@ -293,14 +296,14 @@ const MarketDetailScreen = (props) => {
       token
     );
     const flag = data?.success;
-    const msg = flag ? `${datas?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message;
+    const msg = flag ? `${datas?.isSaved ? t('market.unmarked') : t('market.marked')}` : data?.message;
     toast[flag ? 'success' : 'error'](msg, { position: toast.POSITION.TOP_CENTER});
     getMarketInfo();
 
   }
   const handleLinkProfile = (address) => {
     if (!token) {
-      toast.warn('Please link wallet', {
+      toast.warn(t('toast.link.wallet'), {
         position: toast.POSITION.TOP_CENTER,
       });
       return;
@@ -369,7 +372,7 @@ const MarketDetailScreen = (props) => {
           </Flex>
           <Flex mt='30px' mb={['5px', '5px', '5px', '50px']} flexDirection={['column', 'column', 'column', 'row']} >
             <Flex flex='1' flexDirection={['row', 'row', 'row', 'column']}>
-              <Text m='0' mr='5px' className={styles.owner}>Collection</Text>
+              <Text m='0' mr='5px' className={styles.owner}>{t('collection.title')}</Text>
               <p onClick={() => history.push('/profile/collection', {item: {
                 id: datas?.collectionId,
                 flag: true,
@@ -379,7 +382,7 @@ const MarketDetailScreen = (props) => {
               <Flex flex='1' alignItems='center' cursor='pointer'>
                 <img src={datas?.createrAvatorUrl} className={styles.avatar}/>
                 <Flex flexDirection='column'>
-                  <Text className={styles.owner}>Creater</Text>
+                  <Text className={styles.owner}>{t('market.creater')}</Text>
                   <Tooltip label={datas?.createrAddress && shortenAddress(datas?.createrAddress)} hasArrow>
                     <a onClick={() => handleLinkProfile(datas?.createrAddress)} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.createrName ?? 'Unknown', 10)}</a>
                   </Tooltip>
@@ -388,7 +391,7 @@ const MarketDetailScreen = (props) => {
               <Flex flex='1' alignItems='center' cursor='pointer'>
                 <img src={datas?.userAvatorUrl} className={styles.avatar}/>
                 <Flex flexDirection='column'>
-                  <Text className={styles.owner}>Owner</Text>
+                  <Text className={styles.owner}>{t('market.owner')}</Text>
                   <Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>
                     <a onClick={() => handleLinkProfile(datas?.address)} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.nickName ?? 'Unknown', 10)}</a>
                   </Tooltip>
@@ -397,25 +400,25 @@ const MarketDetailScreen = (props) => {
             </Flex>
           </Flex>
           <Box bg={[null,null,null,'white']} px={[0,0,0,'25px']} borderRadius={'10px'} mb='50px'>
-            <Text className={styles.descriptionTitle}>Description</Text>
+            <Text className={styles.descriptionTitle}>{t('collection.desc')}</Text>
             <div className={styles.warpperDesc}>
               <input id="exp1" className={styles.exp} type="checkbox" />
               <p className={`${styles.description} ${lineFlag && styles.slider}`}><label htmlFor={'exp1'}><Icon  className={styles.icon}  color='#75819A' onClick={() => {
                 setLineFlag((lineFlag) => !lineFlag)
               }} icon={`akar-icons:chevron-${lineFlag ? 'up' : 'down'}`} /></label>{datas?.description}</p>
             </div>
-            <Text className={styles.descriptionTitle}>Contract Details</Text>
+            <Text className={styles.descriptionTitle}>{t('market.contract.detail')}</Text>
             <Flex borderWidth={[1,1,1,0]} borderRadius={10} py={['14px', '14px', '14px', '0']} px={['25px', '25px', '25px', 0]} borderStyle='solid' borderColor='#EAEDF0' justifyContent='space-between' flexWrap='wrap' flexDirection={['column', 'column', 'column', 'row']}>
               <Flex flexDirection={['row', 'row', 'row', 'column']} className={styles.contract_details_item}>
-                <div>Blockchain</div>
+                <div>{t('market.blockchain')}</div>
                 <div>{datas?.chainType}</div>
               </Flex>
               <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
-                <div>Token Standard</div>
+                <div>{t('market.token.standard')}</div>
                 <div>ERC-{datas?.contractType}</div>
               </Flex>
               <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
-                <div>Contract Address</div>
+                <div>{t('market.contract.address')}</div>
                 <div>
                   <a
                     href={`https://${currentNetName === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${datas?.tokenAddress}`}
@@ -428,7 +431,7 @@ const MarketDetailScreen = (props) => {
                 </div>
               </Flex>
               <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
-                <div>Token Id</div>
+                <div>{t('token.id')}</div>
                 <div>{datas?.tokenId}</div>
               </Flex>
             </Flex>
@@ -461,7 +464,7 @@ const MarketDetailScreen = (props) => {
                 {
                   datas?.contractType == 1155 &&
                   <Box ml={[0,0,0,'30px']} alignSelf={['flex-start', 'flex-start', 'flex-start', '']} className={styles.stock}>
-                    {datas?.quantity} Available
+                    {t('market.available', {qty: datas?.quantity})}
                   </Box>
                 }
               </Flex>
@@ -469,13 +472,13 @@ const MarketDetailScreen = (props) => {
                 <Btn
                   isLoading={loading}
                   disabled={!datas?.quantity || loading}
-                  loadingText="Buy Now"
+                  loadingText={t('market.buynow')}
                   bgColor={datas?.address === address && '#FF2E2E!important'}
                   w={['100%', '100%', '100%', '153px']}
                   m={0}
                   onClick={() => {
                     if (!address) {
-                      toast.warn('Please link wallet', {
+                      toast.warn(t('toast.link.wallet'), {
                         position: toast.POSITION.TOP_CENTER,
                       });
                       return;
@@ -486,24 +489,24 @@ const MarketDetailScreen = (props) => {
                     }
                     if(datas?.contractType === '721') clickBuyItem()
                     else setIsOpen(true)
-                  }}>{ datas?.address === address ? 'Unsell' : 'Buy'}</Btn>
+                  }}>{ datas?.address === address ? t('nftCard.unsell') : t('market.buy')}</Btn>
               </div>
             </Box>
           }
         </Box>
       </Flex>
       <Box display={['none', 'none', 'none', 'initial']}>
-        {renderHotList('Recommendations')}
+        {renderHotList(t('market.recommendations'))}
       </Box>
       {
         isOpen &&
         <Dialog
-          title={'Buy NFT'}
+          title={t('market.buy.nft')}
           visible
           customClass={styleModalContainer}
           onCancel={onClose}>
           <Dialog.Body p="0 32px">
-            {renderFormItem(`Quantity/${datas?.quantity || 0}`, <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
+            {renderFormItem(t('market.qty', {qty: datas?.quantity || 0}), <InputNumber style={{width: '100%', marginTop: 20, }} min={0} max={datas?.quantity} onChange={(value) => {
               setForm({
                 ...form,
                 quantity: value > datas?.quantity ? datas?.quantity : value
@@ -514,19 +517,19 @@ const MarketDetailScreen = (props) => {
           <Dialog.Footer justifyContent="flex-start">
             <Button
               isLoading={approveLoading}
-              loadingText="Submit"
+              loadingText={t('market.submit')}
               disabled={!datas?.quantity || loading}
               colorScheme="custom"
               className={styles.submitBtn}
               onClick={() => {
                 if (!form.quantity) {
-                  toast.warn('Please enter the purchase quantity！', {
+                  toast.warn(t('toast.enter.qty'), {
                     position: toast.POSITION.TOP_CENTER,
                   });
                   return;
                 }
                 clickBuyItem()
-              }}>Submit</Button>
+              }}>{t('market.submit')}</Button>
           </Dialog.Footer>
         </Dialog>
       }

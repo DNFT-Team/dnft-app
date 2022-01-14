@@ -24,11 +24,14 @@ import { connect } from 'react-redux';
 import globalConfig from '../../../config/index';
 import SwitchModal from 'components/SwitchModal';
 import { getWallet } from 'utils/get-wallet';
+import  { useTranslation } from 'react-i18next';
 
 const iframeUrl = `https://fun.dnft.world/${globalConfig.net_env === 'mainnet' ? 'syncbtc' : 'test_syncbtc'}/`
 
 const SyncBtcScreen = (props) => {
   let history = useHistory();
+  const { t } = useTranslation();
+
   const { token } = props;
 
   const [address, setAddress] = useState();
@@ -75,7 +78,7 @@ const SyncBtcScreen = (props) => {
         setAddress(accounts[0]);
       });
     } else {
-      alert('Please install wallet');
+      alert(t('toast.install.wallet'));
     }
   };
 
@@ -363,7 +366,7 @@ const SyncBtcScreen = (props) => {
           src={playButton}
           onClick={async () => {
             if (!isTestnet) {
-              toast.info('Ended!', {
+              toast.info(t('igo.ended'), {
                 position: toast.POSITION.TOP_CENTER,
               });
               return;
@@ -371,7 +374,7 @@ const SyncBtcScreen = (props) => {
             let wallet = getWallet();
 
             if (medalData.Total.isNotEnough) {
-              toast.info('Ended', {
+              toast.info(t('igo.ended'), {
                 position: toast.POSITION.TOP_CENTER,
               });
               return;
@@ -394,14 +397,14 @@ const SyncBtcScreen = (props) => {
             }
 
             if (!hasAmount) {
-              toast.info('Not Enough BUSD', {
+              toast.info(t('toast.not.enough.busd'), {
                 position: toast.POSITION.TOP_CENTER,
               });
               return;
             }
 
             if (isReward) {
-              toast.info('You Have Been Rewarded', {
+              toast.info(t('toast.been.rewarded'), {
                 position: toast.POSITION.TOP_CENTER,
               });
               return;
@@ -421,7 +424,7 @@ const SyncBtcScreen = (props) => {
           setShowRuleModal(true);
         }}
       >
-        GAME RULES
+        {t('igo.game.rules')}
       </span>
       <img className={stylePodium} src={podium} alt="img" />
       <img className={stylePeople} src={people} alt="img" />
@@ -433,43 +436,41 @@ const SyncBtcScreen = (props) => {
       <div className={styleBottomContainer}>
         <div>
           <div className={styleInfoContainer}>
-            <span className='title'>Gold Medal NFT</span>
-            <span className='goal'>Supply：{medalData.Gold.total}</span>
-            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Gold.mintedTotal}</div>
+            <span className='title'>{t('igo.gold.nft')}</span>
+            <span className='goal'>{t('nftCard.supply')}：{medalData.Gold.total}</span>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>{t('igo.minted')}：{medalData.Gold.mintedTotal}</div>
           </div>
           <div className={styleInfoContainer}>
-            <span className='title'>Silver Medal NFT</span>
-            <span className='goal'>Supply：{medalData.Silver.total}</span>
+            <span className='title'>{t('igo.silver.nft')}</span>
+            <span className='goal'>{t('nftCard.supply')}：{medalData.Silver.total}</span>
             <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
-              Minted：
+              {t('igo.minted')}：
               {medalData.Silver.mintedTotal}
             </div>
           </div>
         </div>
         <div>
           <div className={styleInfoContainer}>
-            <span className='title'>Bronze Medal NFT</span>
-            <span className='goal'>Supply：{medalData.Bronze.total}</span>
+            <span className='title'>{t('igo.bronze.nft')}</span>
+            <span className='goal'>{t('nftCard.supply')}：{medalData.Bronze.total}</span>
             <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>
-              Minted：
+              {t('igo.minted')}：
               {medalData.Bronze.mintedTotal}
             </div>
           </div>
           <div className={styleInfoContainer}>
-            <span className='title'>All Medal’s NFT</span>
-            <span className='goal'>Supply：{medalData.Total.total}</span>
-            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>Minted：{medalData.Total.mintedTotal}</div>
+            <span className='title'>{t('igo.all.nft')}</span>
+            <span className='goal'>{t('nftCard.supply')}：{medalData.Total.total}</span>
+            <div className='raised' style={{visibility: !isTestnet && 'hidden', height: !isTestnet && '16px' }}>{t('igo.minted')}：{medalData.Total.mintedTotal}</div>
           </div>
         </div>
       </div>
 
       {showSuccess && (
         <div className={styleChampionModal}>
-          <span>Claim Your Prize</span>
+          <span>{t('igo.claim.prize')}</span>
           <span>
-            It will cost you 20 BUSD to claim a DNFT Medal NFT. You will
-            randomly get a Gold/Silver/Bronze Medal NFT for further airdop
-            benefit.
+            {t('igo.claim.prize.desc')}
           </span>
           {!isApproved && (
             <div
@@ -494,7 +495,7 @@ const SyncBtcScreen = (props) => {
                 }
               }}
             >
-              {isLoading ? 'loading...' : 'Approve'}
+              {isLoading ? t('loading') : t('nftCard.approve')}
             </div>
           )}
           {isApproved && (
@@ -505,7 +506,7 @@ const SyncBtcScreen = (props) => {
                 await handleRaffle();
               }}
             >
-              {isLoading ? 'loading...' : 'Claim'}
+              {isLoading ? t('loading') : t('igo.claim')}
             </div>
           )}
           {nftId > 0}
@@ -522,7 +523,7 @@ const SyncBtcScreen = (props) => {
             }}
           />
           <span>
-            Congratulations! Click the button below to check you DNFT Medal NFT.
+            {t('igo.click.check.nft')}
           </span>
         </div>
       )}
@@ -539,36 +540,29 @@ const SyncBtcScreen = (props) => {
           visibility: showRuleModal ? 'visible' : 'hidden',
         }}
       >
-        <h1>Olympic BTC Synthesis Game</h1>
-        <b>Goal: </b>
-        <p>Try to synthesize a Bitcoin</p>
-        <b>Rules: </b>
+        <h1>{t('igo.olympic.game')}</h1>
+        <b>{t('igo.goal')} </b>
+        <p>{t('igo.try.synthesize')}</p>
+        <b>{t('igo.rules')} </b>
         <p>
-          1. 100% Winning a Medal NFT once you have synthesized into BNB, you
-          can get your Medal NFT by claiming it.
+          {t('igo.rules.tip1')}
         </p>
-        <p>2.The Medal NFT claiming will cost you 20 BUSD.</p>
+        <p>{t('igo.rules.tip2')}</p>
         <p>
-          {
-            '3.The Synthetic path: DNF--> EOS--> HT--> DOT--> UNI--> FIL--> LTC--> BNB--> BCH--> ETH-->BTC.'
-          }
+          {t('igo.rules.tip3')}
         </p>
         <p>
-          4.The total amount of Gold/Silver/Bronze medal NFT are 50/450/2500.
+          {t('igo.rules.tip4')}
         </p>
-        <p>5.Each address is only allowed to participate once.</p>
-        {!isTestnet && <p>6.Start Date: 2021-08-08, End Date: 2021-08-28.</p>}
+        <p>{t('igo.rules.tip5')}</p>
+        {!isTestnet && <p>{t('igo.rules.tip6')}</p>}
 
-        <b>Rewards:</b>
+        <b>{t('igo.rewards')}</b>
         <p>
-          1.Gold/Silver/Bronze medal NFT holders will get an airdrop of
-          100/50/25 DNF when TGE.
+          {t('igo.rewards.tip1')}
         </p>
         <p>
-          2.Gold/Silver/Bronze medal NFT holders will have the right of
-          generation rights of DNFT Protocol, which includes continuous
-          activity/airdrop white list, old friends rights, test product
-          experience, etc.
+          {t('igo.rewards.tip2')}
         </p>
         <div
           className={styleClose}
@@ -581,15 +575,15 @@ const SyncBtcScreen = (props) => {
       </div>
       {showConfirmSuccess && (
         <div className={styleConfirmSuccessModal}>
-          <span>Congratulations on your success!</span>
-          <span>Do you wanna get your reward now?</span>
+          <span>{t('igo.success')}</span>
+          <span>{t('igo.get.reward')}</span>
           <div>
             <div
               onClick={() => {
                 setShowConfirmSuccess(false);
               }}
             >
-              No
+              {t('no')}
             </div>
             <div
               onClick={() => {
@@ -597,7 +591,7 @@ const SyncBtcScreen = (props) => {
                 setShowConfirmSuccess(false);
               }}
             >
-              Yes
+              {t('yes')}
             </div>
           </div>
         </div>

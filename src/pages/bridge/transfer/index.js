@@ -49,6 +49,7 @@ import helper from 'config/helper';
 import globalConf from 'config';
 
 import Title from 'components/Title'
+import  { useTranslation } from 'react-i18next';
 
 
 /**
@@ -121,6 +122,8 @@ const TransferView = (props) => {
   const {location, address, chainType} = props;
   const fr = getQueryString(location?.search, 'fr')
   const to = getQueryString(location?.search, 'to')
+  const { t } = useTranslation();
+
   if (!fr || !to || fr === to || !ChainNodes[fr] || !ChainNodes[to]) {
     useHistory().push('/bridge')
   }
@@ -253,16 +256,16 @@ const TransferView = (props) => {
       await dnfContract.methods['approve'](nerveContractAddress, WEB3_MAX_NUM).send({ from: address, gasLimit });
     } catch (err) {
       console.error('approveDnfToNerve', err);
-      err.code === 4001 && toast.error('You denied the approve');
+      err.code === 4001 && toast.error(t('toast.denied.approve'));
     }
   }
   const submitCross = async () => {
     if (amount <= 0) {
-      toast.warning('Please Input active number.');
+      toast.warning(t('toast.active.number'));
       return
     }
     if (amount < 5) {
-      toast.warning('Quantity is at least 5.');
+      toast.warning(t('toast.quantity.least5'));
       return
     }
 
@@ -271,7 +274,7 @@ const TransferView = (props) => {
     console.log('chainSuit', chainSuit);
     if (chainSuit.netOk && chainSuit.address) {
       if (chainSuit.balance < Number(amount)) {
-        toast.warning('Your balance is not enough.');
+        toast.warning(t('toast.balance.not.enough'));
         setLoading(false)
         return
       }
@@ -295,7 +298,7 @@ const TransferView = (props) => {
           if (err) {
             toast.error(err.message)
           } else {
-            toast.success('Cross out success.')
+            toast.success(t('toast.cross.out'))
             const param = {
               amount: Number(amount), // 提现数额
               to_address: address, // 提现地址
@@ -309,10 +312,10 @@ const TransferView = (props) => {
               .post('/monitor', param, {baseURL: globalConf.bridgeApi})
               .then(() => {
                 if (isEth) {
-                  toast.success('Step2.Transfer withdraw fee.')
+                  toast.success(t('toast.transfer.fee'))
                   sendWithdrawFee(hash)
                 } else {
-                  toast.success('Please wait for the withdraw.')
+                  toast.success(t('toast.wait.withdraw'))
                 }
               })
               .finally(getHistory)
@@ -340,7 +343,7 @@ const TransferView = (props) => {
               fee_hash, // 手续费哈希
             }, {baseURL: globalConf.bridgeApi})
               .then(() => {
-                toast.success('Withdraw fee sent.')
+                toast.success(t('toast.withdraw.fee.sent'))
               })
               .finally(getHistory)
           }
@@ -358,7 +361,7 @@ const TransferView = (props) => {
       .then((res) => {list = res.data.data})
       .finally(() => {
         setHistoryList(list)
-        list.length <= 0 && toast('No record has been found yet!')
+        list.length <= 0 && toast(t('toast.no.record.found'))
       })
       .catch(() => {
         setHistoryList([])
@@ -413,17 +416,18 @@ const TransferView = (props) => {
       </div> */}
     </div>
     <h5>
-      Bridge your $DNF from {ChainNodes[fr]?.title} to {ChainNodes[to]?.title}
+      {t('bridge.dnf.trans', {fr: ChainNodes[fr]?.title, to: ChainNodes[to]?.title})}
+      {/* Bridge your $DNF from {ChainNodes[fr]?.title} to {ChainNodes[to]?.title} */}
     </h5>
     <Box p={['20px', '20px', '20px', '40px']} className={styleTransferBox}>
       <div className={styleFormItem}>
-        <label>Send</label>
+        <label>{t('bridge.send')}</label>
         <InputGroup my="10px">
           <Input
             className={styleInput}
             is-full-width="true"
             focusBorderColor="#ddd"
-            placeholder="Amount"
+            placeholder={t('faucet.Amount')}
             autoFocus
             isInvalid={amount < 0}
             type="number"
@@ -438,10 +442,10 @@ const TransferView = (props) => {
             <span> {frNet.protocol} ${TargetToken} </span>
           </InputRightAddon>
         </InputGroup>
-        <p>Available balance : {balance} {TargetToken}</p>
+        <p>{t('bridge.available')} {balance} {TargetToken}</p>
       </div>
       <div className={styleFormItem}>
-        <label>For</label>
+        <label>{t('bridge.for')}</label>
         <InputGroup my="10px">
           <Input
             className={styleInput}
@@ -459,17 +463,17 @@ const TransferView = (props) => {
         </InputGroup>
         {
           to === 'eth'
-            ? <p>Fees 1000 {TargetToken}</p>
-            : <p>By now, You will received 100% {TargetToken}</p>
+            ? <p>{t('bridge.fees.1000')} {TargetToken}</p>
+            : <p>{t('bridge.received.tip')} {TargetToken}</p>
         }
       </div>
       <div>
-        <button className={styleBtn} onClick={submitCross}>Confirm</button>
+        <button className={styleBtn} onClick={submitCross}>{t('confirm')}</button>
       </div>
     </Box>
     <div>
       <h4>
-        Transaction History
+        {t('bridge.transaction.history')}
         <button className={styleBtnIcon} onClick={getHistory}>
           <Icon icon="zmdi:refresh" className={tableLoad && spinIcon}/>
         </button>
@@ -486,18 +490,18 @@ const TransferView = (props) => {
       <AlertDialogOverlay>
         <AlertDialogContent w="max-content" borderRadius="10px">
           <AlertDialogBody p="2.5rem 2rem" textAlign="center" justifyContent="center">
-            <h6 className={styleTitle}>Approve first!</h6>
+            <h6 className={styleTitle}>{t('bridge.approve.first')}</h6>
             <Text
               color="brand.100"  my="2.14rem"
               fontSize="1rem" lineHeight="1.43rem"
-            >You may need to approve first!</Text>
-            <button style={{margin: '0 auto'}} className={styleBtn} onClick={approveDnfToNerve} >OK</button>
+            >{t('bridge.approve.first.tip')}</Text>
+            <button style={{margin: '0 auto'}} className={styleBtn} onClick={approveDnfToNerve} >{t('ok')}</button>
             <Text
               color="brand.100" mt="2.14rem" cursor="pointer"
               fontSize="1rem" lineHeight="1.43rem"
               _hover={{textDecoration: 'underline'}}
               onClick={onClose}
-            >Skip for now</Text>
+            >{t('skip.now')}</Text>
           </AlertDialogBody>
         </AlertDialogContent>
       </AlertDialogOverlay>

@@ -22,11 +22,13 @@ import {
   getMyProfileCreated,
   getMyProfileOwned,
 } from 'reduxs/actions/profile';
+import  { useTranslation } from 'react-i18next';
 
 const ProfileByScreen = (props) => {
   const { token, datas,  onClose, onSuccess, visible, newAddress,dispatch, onOpen} = props;
   const [loading, setLoading] = useState(false)
   const [profileFile, setProfileFile] = useState(null);
+  const { t } = useTranslation();
 
   const [srcCropper, setSrcCropper] = useState('');
   const [cropperVisible, setCropperVisible] = useState(false)
@@ -43,7 +45,7 @@ const ProfileByScreen = (props) => {
     const reader = new FileReader();
     const isLt15M = file.size / 1024 / 1024 < 15;
     if (!isLt15M) {
-      toast.warn('Upload image size cannot exceed 15MB!');
+      toast.warn(t('cropImg.unpoaded.size.limit15'));
       return
     }
     reader.readAsDataURL(file);
@@ -71,12 +73,12 @@ const ProfileByScreen = (props) => {
         const data  = await ipfs_post('/v0/add', fileData);
         ipfsHash = globalConf.ipfsDown +  data?.data?.['Hash']
         if (!ipfsHash) {
-          toast.error('IPFS upload failed!');
+          toast.error(t('toast.ipfs.upload.failed'));
           setLoading(false)
           return
         }
         if (ipfsHash) {
-          toast.success('IPFS Upload Success', {
+          toast.success(t('toast.ipfs.upload.success'), {
             position: toast.POSITION.TOP_CENTER,
           });
         }
@@ -92,7 +94,7 @@ const ProfileByScreen = (props) => {
         },
         token,
       );
-      data1 &&  toast.success('User Banner Update Success', {
+      data1 &&  toast.success(t('toast.banner.update.success'), {
         position: toast.POSITION.TOP_CENTER,
       });
       setLoading(false)
@@ -109,15 +111,15 @@ const ProfileByScreen = (props) => {
   return (
     <React.Fragment>
       <Dialog
-        title='Change Background'
+        title={t('profile.setting.background')}
         visible={visible}
         customClass={styleModalContainer}
         onCancel={onClose}>
         <Dialog.Body style={{paddingBottom: 0,}}>
           <div className='limit'>
-            <i>Upload Image</i>
-            <span>Suggest Size 1800 x 300</span>
-            <span>Maximum 2MB</span>
+            <i>{t('profile.upload.img')}</i>
+            <span>{t('profile.suggest.size')}</span>
+            <span>{t('profile.max.2mb')}</span>
           </div>
           <Upload
             className={styleUploadContainer1}
@@ -143,7 +145,7 @@ const ProfileByScreen = (props) => {
           <Button
             loading={loading}
             className={styleModalContainerBtn}
-            onClick={onSubmit}>Save</Button>
+            onClick={onSubmit}>{t('save')}</Button>
         </Dialog.Footer>
       </Dialog>
       <CropperBox
