@@ -1,3 +1,5 @@
+import './i18n_config';
+
 import 'element-theme-default';
 import App from 'pages/app';
 import React from 'react';
@@ -6,7 +8,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from 'reduxs/store';
-import './i18n_config';
 import './index.less';
 //  global-Toast
 import { ToastContainer } from 'react-toastify';

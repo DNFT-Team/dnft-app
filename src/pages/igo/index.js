@@ -95,7 +95,7 @@ const IGOScreen = (props) => {
 
   return (
     <div className={styleIgo}>
-      <Title title={t('menu.IGO')} linkHelper={{
+      <Title title={t('menu.igo')} linkHelper={{
         youtubeLink: helper.nftMagic.youtube,
         youtubeTitle: helper.nftMagic.title,
         bookLink: helper.nftMagic.book,

@@ -8,11 +8,11 @@ i18n
   .init({
     // debug: true,
     resources: {
-      zh: {
-        translation: zh,
-      },
       en: {
         translation: en
+      },
+      zh: {
+        translation: zh,
       },
       lng: 'en',
       fallbackLng: 'en',

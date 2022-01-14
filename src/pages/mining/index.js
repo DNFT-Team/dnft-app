@@ -896,7 +896,7 @@ const Mining = (props) => {
       >
         <Dialog.Body>
           <div className={styleBodyTitle}>
-            {t('dnf.staking.days', {d: Math.round(stakeInfo?.duration)})}
+            {t('mining.dnf.staking.days', {d: Math.round(stakeInfo?.duration)})}
             {/* DNF Staking（{Math.round(stakeInfo?.duration)}days） */}
           </div>
           <div className={styleBodyTips}>

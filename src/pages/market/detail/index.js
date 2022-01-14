@@ -431,7 +431,7 @@ const MarketDetailScreen = (props) => {
                 </div>
               </Flex>
               <Flex flexDirection={['row', 'row', 'row', 'column']}  className={styles.contract_details_item}>
-                <div>{t('token.id')}</div>
+                <div>{t('market.token.id')}</div>
                 <div>{datas?.tokenId}</div>
               </Flex>
             </Flex>
