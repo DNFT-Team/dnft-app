@@ -24,6 +24,7 @@ import globalConfig from '../../../config';
 import LoadingIcon from '../../../images/asset/loading.gif'
 import { getWallet } from 'utils/get-wallet';
 import { useTranslation } from 'react-i18next';
+import SwitchModal from 'components/SwitchModal';
 
 const CreateNFTModal = (props) => {
   const { dispatch, datas, collectionId, location, address, chainType, token, categoryList, onClose } =
@@ -41,6 +42,7 @@ const CreateNFTModal = (props) => {
   const [nftFile, setNftFile] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadLoading, setIsUploadLoading] = useState(false);
+  const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const currentNetEnv = globalConfig.net_env;
   const currentNetName = globalConfig.net_name;
 
@@ -157,7 +159,7 @@ const CreateNFTModal = (props) => {
 
   const createNFT = async () => {
     if (!['BSC'].includes(chainType)) {
-      goToRightNetwork(window.ethereum);
+      setIsShowSwitchModal(true);
       return;
     }
 
@@ -488,6 +490,9 @@ const CreateNFTModal = (props) => {
       {isLoading && <div className={styleLoadingIconContainer}>
         <img src={LoadingIcon}/>
       </div>}
+      <SwitchModal visible={isShowSwitchModal} networkName={'BSC'} goToRightNetwork={goToRightNetwork} onClose={() => {
+        setIsShowSwitchModal(false)
+      }} />
     </React.Fragment>
   );
 };
