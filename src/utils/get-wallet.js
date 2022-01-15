@@ -5,7 +5,7 @@ export const getWallet = () => {
   if (window.walletProvider?.connected) {
     return window.walletProvider;
   }
-  if (window.onto?.isConnected) {
+  if (window.onto?.selectedAddress) {
     return window.onto;
   }
   if (window.ethereum?.isONTO) {

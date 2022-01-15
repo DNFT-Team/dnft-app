@@ -102,6 +102,7 @@ const Mining = (props) => {
       setBalanceIsLoading(true);
 
       let wallet = getWallet();
+      console.log(wallet, 'wallet')
       if (wallet) {
         window.web3 = new Web3(wallet);
         if (!address) {

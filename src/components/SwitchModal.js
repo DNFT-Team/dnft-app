@@ -14,7 +14,7 @@ const SwitchModal = (props) => {
     if (window.walletProvider?.connected) {
       return <span>{t('toast.selected.walletProvider', {networkName})}</span>
     }
-    if (window.onto?.isConnected) {
+    if (window.onto?.selectedAddress) {
       return <span>{t('toast.selected.onto', {networkName})}</span>
     }
   };
@@ -31,7 +31,7 @@ const SwitchModal = (props) => {
         onClose();
       }}>{t('network.disconnect')}</Button>
     }
-    if (window.onto?.isConnected) {
+    if (window.onto?.selectedAddress) {
       return null
     }
   }

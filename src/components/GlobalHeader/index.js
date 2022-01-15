@@ -172,13 +172,12 @@ const GlobalHeader = (props) => {
 
   const injectOntoConnect = useCallback(async () => {
     const onto = window.onto;
-    console.log(onto, 'onto inject')
     const currentIndex = netArray.findIndex(
-      (item) => Number(item.netWorkId) === Number(onto.chainId)
+      (item) => Number(item.netWorkId) === Number(onto.networkVersion)
     );
-    let params = {address: onto.accounts[0], chainType: NET_WORK_VERSION[onto.chainId]}
+    let params = {address: onto.selectedAddress, chainType: NET_WORK_VERSION[onto.networkVersion]}
     setCurrentNetIndex(currentIndex)
-    setAddress(onto.accounts[0]);
+    setAddress(onto.selectedAddress);
     dispatch(setProfileAddress(params))
     dispatch(setProfileToken(params))
     window.onto.on('disconnect', (payload) => {
@@ -217,7 +216,7 @@ const GlobalHeader = (props) => {
       injectWallet();
     } else if (window.walletProvider?.connected) {
       injectWalletConnect()
-    } else if (window.onto?.isConnected) {
+    } else if (window.onto?.selectedAddress) {
       injectOntoConnect()
     } else {
       getWalletConnectFromStorage()
