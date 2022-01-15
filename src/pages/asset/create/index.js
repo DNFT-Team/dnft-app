@@ -1,50 +1,52 @@
-import {
-  Dialog, Button,
-  Input, InputNumber,
-  Select, Upload, Loading,
-} from 'element-react';
-import { css } from 'emotion';
-import React, { useEffect, useState, useCallback } from 'react';
-import globalConf from 'config/index';
-import CreateCollectionModal from '../../../components/CreateCollectionModal';
-import { post } from 'utils/request';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router';
-import { ipfs_post } from 'utils/ipfs-request';
-import { getObjectURL } from 'utils/tools';
-import { toast } from 'react-toastify';
-import {
-  createNFTContract1155,
-  createNFTContract721,
-} from '../../../utils/contract';
-import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi';
-import Web3 from 'web3';
-import globalConfig from '../../../config';
+import { Dialog, Button, Input, InputNumber, Select, Upload, Loading } from 'element-react'
+import { css } from 'emotion'
+import React, { useEffect, useState, useCallback } from 'react'
+import globalConf from 'config/index'
+import CreateCollectionModal from '../../../components/CreateCollectionModal'
+import { post } from 'utils/request'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { useHistory } from 'react-router'
+import { ipfs_post } from 'utils/ipfs-request'
+import { getObjectURL } from 'utils/tools'
+import { toast } from 'react-toastify'
+import { createNFTContract1155, createNFTContract721 } from '../../../utils/contract'
+import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi'
+import Web3 from 'web3'
+import globalConfig from '../../../config'
 import LoadingIcon from '../../../images/asset/loading.gif'
-import { getWallet } from 'utils/get-wallet';
-import { useTranslation } from 'react-i18next';
+import { getWallet } from 'utils/get-wallet'
+import { useTranslation } from 'react-i18next'
 
 const CreateNFTModal = (props) => {
-  const { dispatch, datas, collectionId, location, address, chainType, token, categoryList, onClose } =
-    props;
-  const { t } = useTranslation();
+  const {
+    dispatch,
+    datas,
+    collectionId,
+    location,
+    address,
+    chainType,
+    token,
+    categoryList,
+    onClose,
+  } = props
+  const { t } = useTranslation()
 
-  const [options, setOptions] = useState([]);
-  const [showCreateCollection, setShowCreateCollection] = useState(false);
+  const [options, setOptions] = useState([])
+  const [showCreateCollection, setShowCreateCollection] = useState(false)
   const [form, setForm] = useState({
     supply: 1,
     contractType: '721',
     collectionId: collectionId,
-  });
-  const [nftUrl, setNftUrl] = useState();
-  const [nftFile, setNftFile] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isUploadLoading, setIsUploadLoading] = useState(false);
-  const currentNetEnv = globalConfig.net_env;
-  const currentNetName = globalConfig.net_name;
+  })
+  const [nftUrl, setNftUrl] = useState()
+  const [nftFile, setNftFile] = useState()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isUploadLoading, setIsUploadLoading] = useState(false)
+  const currentNetEnv = globalConfig.net_env
+  const currentNetName = globalConfig.net_name
 
-  let history = useHistory();
+  let history = useHistory()
 
   const paramsMap = {
     name: 'name',
@@ -52,34 +54,34 @@ const CreateNFTModal = (props) => {
     category: 'category',
     contractType: 'contract type',
     supply: 'supply',
-  };
+  }
 
   const contractType = [
     { label: '1155', value: '1155' },
     { label: '721', value: '721' },
-  ];
+  ]
   const uploadFile = async (file) => {
     setNftUrl('')
     setNftFile(null)
-    setIsUploadLoading(true);
+    setIsUploadLoading(true)
     try {
       const imgUrl = getObjectURL(file)
       imgUrl && setNftFile(file)
       return imgUrl
     } catch (e) {
-      console.log(e, 'e');
+      console.log(e, 'e')
     } finally {
-      setIsUploadLoading(false);
+      setIsUploadLoading(false)
     }
-  };
+  }
 
   const beforeUpload = (file) => {
-    const isLt10M = file.size / 1024 / 1024 < 10;
+    const isLt10M = file.size / 1024 / 1024 < 10
     if (!isLt10M) {
       toast.warn(t('cropImg.uploaded.nft.limit'), {
         position: toast.POSITION.TOP_CENTER,
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -94,24 +96,24 @@ const CreateNFTModal = (props) => {
           page: 0,
           size: 100,
         },
-        token
-      );
-      let list = data?.data?.content || [];
+        token,
+      )
+      let list = data?.data?.content || []
       setOptions(
         list.map((item) => ({
           label: item.name,
           value: item.id,
-        }))
-      );
+        })),
+      )
     } catch (e) {
-      console.log(e, 'e');
-      setOptions([]);
+      console.log(e, 'e')
+      setOptions([])
     }
-  };
+  }
 
   const goToRightNetwork = useCallback(async (ethereum) => {
     if (history.location.pathname !== '/asset') {
-      return;
+      return
     }
     try {
       if (currentNetEnv === 'testnet') {
@@ -129,7 +131,7 @@ const CreateNFTModal = (props) => {
               rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
             },
           ],
-        });
+        })
       } else {
         await ethereum.request({
           method: 'wallet_addEthereumChain',
@@ -145,88 +147,85 @@ const CreateNFTModal = (props) => {
               rpcUrls: ['https://bsc-dataseed.binance.org/'],
             },
           ],
-        });
+        })
       }
 
-      return true;
+      return true
     } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error);
-      return false;
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
     }
-  }, []);
+  }, [])
 
   const createNFT = async () => {
     if (!['BSC'].includes(chainType)) {
-      goToRightNetwork(window.ethereum);
-      return;
+      goToRightNetwork(window.ethereum)
+      return
     }
 
     let inValidParam = Object.entries(paramsMap).find((item) => {
       if (item[0] === 'supply' && form.contractType == '721') {
-        return false;
+        return false
       }
-      return form[item[0]] === undefined;
-    });
+      return form[item[0]] === undefined
+    })
 
     if (!nftFile) {
       toast.dark(t('toast.upload.nft'), {
         position: toast.POSITION.TOP_CENTER,
-      });
-      return;
+      })
+      return
     }
 
     if (inValidParam) {
       toast.dark(`${t('please.input')} ${inValidParam[1]}`, {
         position: toast.POSITION.TOP_CENTER,
-      });
-      return;
+      })
+      return
     }
 
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       //  upload ipfs
-      toast.info(t('toast.upload.step1'));
-      const fileData = new FormData();
-      fileData.append('file', nftFile);
-      const { data } = await ipfs_post('/v0/add', fileData);
+      toast.info(t('toast.upload.step1'))
+      const fileData = new FormData()
+      fileData.append('file', nftFile)
+      const { data } = await ipfs_post('/v0/add', fileData)
       const ipfsHash = data?.['Hash']
-      console.log('ipfsHash', ipfsHash);
+      console.log('ipfsHash', ipfsHash)
       if (!ipfsHash) {
-        toast.error(t('toast.upload.nft.failed'));
+        toast.error(t('toast.upload.nft.failed'))
         return
       }
-      toast.success(t('toast.upload.nft.success'));
-      toast.info(t('toast.upload.step2'));
+      toast.success(t('toast.upload.nft.success'))
+      toast.info(t('toast.upload.step2'))
       //  mint nft
-      let wallet = getWallet();
+      let wallet = getWallet()
       if (wallet) {
-        window.web3 = new Web3(wallet);
+        window.web3 = new Web3(wallet)
         await window.web3.eth.requestAccounts()
 
-        let createNFTResult;
+        let createNFTResult
         let contractAddress =
           form.contractType == 1155
             ? createNFTContract1155[currentNetName]
-            : createNFTContract721[currentNetName];
+            : createNFTContract721[currentNetName]
 
         if (form.contractType == 1155) {
-          const myContract = new window.web3.eth.Contract(
-            createNFTAbi1155,
-            contractAddress
-          );
-          const fee = await myContract.methods.bnbFee().call();
+          const myContract = new window.web3.eth.Contract(createNFTAbi1155, contractAddress)
+          const fee = await myContract.methods.bnbFee().call()
 
           createNFTResult = await myContract.methods
             .create(
               address,
               form.supply,
               `${globalConf.ipfsDown}${ipfsHash}`,
-              '0x0000000000000000000000000000000000000000000000000000000000000000'
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
             )
             .send({
               from: address,
               value: fee,
-            });
+            })
           if (createNFTResult.transactionHash) {
             const result = await post(
               '/api/v1/nft/',
@@ -239,23 +238,20 @@ const CreateNFTModal = (props) => {
                 tokenAddress: contractAddress,
                 avatorUrl: `${globalConf.ipfsDown}${ipfsHash}`,
               },
-              token
-            );
-            onClose(true);
+              token,
+            )
+            onClose(true)
           }
         } else {
-          const myContract = new window.web3.eth.Contract(
-            createNFTAbi721,
-            contractAddress
-          );
-          const fee = await myContract.methods.bnbFee().call();
+          const myContract = new window.web3.eth.Contract(createNFTAbi721, contractAddress)
+          const fee = await myContract.methods.bnbFee().call()
 
           createNFTResult = await myContract.methods
             .create(address, `${globalConf.ipfsDown}${ipfsHash}`)
             .send({
               from: address,
               value: fee,
-            });
+            })
 
           if (createNFTResult.transactionHash) {
             const result = await post(
@@ -270,31 +266,34 @@ const CreateNFTModal = (props) => {
                 tokenAddress: contractAddress,
                 avatorUrl: `${globalConf.ipfsDown}${ipfsHash}`,
               },
-              token
-            );
-            onClose(true);
+              token,
+            )
+            onClose(true)
           }
         }
       }
     } catch (e) {
       console.log(e, 'e')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (token) {
-      getCollectionList();
+      getCollectionList()
     }
-  }, [token]);
+  }, [token])
 
   const renderFormItem = (label, item, isRequired) => (
     <div className={styleFormItemContainer}>
-      <div className='label'>{label}<span style={{color: '#FF2E2E'}}>{isRequired && '*'}</span></div>
+      <div className="label">
+        {label}
+        <span style={{ color: '#FF2E2E' }}>{isRequired && '*'}</span>
+      </div>
       {item}
     </div>
-  );
+  )
 
   return (
     <React.Fragment>
@@ -304,7 +303,7 @@ const CreateNFTModal = (props) => {
         visible
         closeOnClickModal={false}
         onCancel={() => {
-          onClose();
+          onClose()
         }}
       >
         <Dialog.Body>
@@ -315,14 +314,14 @@ const CreateNFTModal = (props) => {
               multiple={false}
               withCredentials
               showFileList={false}
-              action=''
+              action=""
               beforeUpload={(file) => beforeUpload(file)}
               httpRequest={async (e) => {
-                let result = await uploadFile(e.file);
-                setNftUrl(result);
+                let result = await uploadFile(e.file)
+                setNftUrl(result)
               }}
               onRemove={() => {
-                setNftUrl(undefined);
+                setNftUrl(undefined)
               }}
             >
               {isUploadLoading ? (
@@ -330,13 +329,11 @@ const CreateNFTModal = (props) => {
               ) : (
                 <React.Fragment>
                   {nftUrl ? (
-                    <img style={{ marginBottom: '.6rem' }} src={nftUrl} alt='' />
+                    <img style={{ marginBottom: '.6rem' }} src={nftUrl} alt="" />
                   ) : (
                     <React.Fragment>
-                      <i className='el-icon-upload2' />
-                      <div className='el-upload__text'>
-                        PNG, GIF
-                      </div>
+                      <i className="el-icon-upload2" />
+                      <div className="el-upload__text">PNG, GIF</div>
                       {/* <div className='el-upload__text'>
                         Recommended size: 300 (W) X 300 (H)
                       </div> */}
@@ -354,14 +351,15 @@ const CreateNFTModal = (props) => {
                   setForm({
                     ...form,
                     name: value,
-                  });
+                  })
                 }}
-              />, true
+              />,
+              true,
             )}
             {renderFormItem(
               t('nftCard.desc'),
               <Input
-                type='textarea'
+                type="textarea"
                 placeholder={t('collection.placeholder.desc')}
                 maxLength={500}
                 autosize={{ minRows: 4, maxRows: 4 }}
@@ -369,9 +367,9 @@ const CreateNFTModal = (props) => {
                   setForm({
                     ...form,
                     description: value,
-                  });
+                  })
                 }}
-              />
+              />,
             )}
             {renderFormItem(
               t('collection.title'),
@@ -386,25 +384,22 @@ const CreateNFTModal = (props) => {
                     setForm({
                       ...form,
                       collectionId: value,
-                    });
+                    })
                   }}
                 >
                   {options.map((el) => (
-                    <Select.Option
-                      key={el.value}
-                      label={el.label}
-                      value={el.value}
-                    />
+                    <Select.Option key={el.value} label={el.label} value={el.value} />
                   ))}
                 </Select>
                 <Button
                   onClick={() => {
-                    setShowCreateCollection(true);
+                    setShowCreateCollection(true)
                   }}
                 >
                   + {t('nftCard.add')}
                 </Button>
-              </div>, true
+              </div>,
+              true,
             )}
             {renderFormItem(
               t('nftCard.category'),
@@ -414,15 +409,16 @@ const CreateNFTModal = (props) => {
                   setForm({
                     ...form,
                     category: value,
-                  });
+                  })
                 }}
               >
                 {categoryList?.slice(1)?.map((el) => (
                   <Select.Option key={el} label={el} value={el} />
                 ))}
-              </Select>, true
+              </Select>,
+              true,
             )}
-            <div style={{display: 'flex', gap: '20px'}}>
+            <div style={{ display: 'flex', gap: '20px' }}>
               {renderFormItem(
                 t('nftCard.contract.type'),
                 <Select
@@ -432,17 +428,14 @@ const CreateNFTModal = (props) => {
                     setForm({
                       ...form,
                       contractType: value,
-                    });
+                    })
                   }}
                 >
                   {contractType.map((el) => (
-                    <Select.Option
-                      key={el.value}
-                      label={el.label}
-                      value={el.value}
-                    />
+                    <Select.Option key={el.value} label={el.label} value={el.value} />
                   ))}
-                </Select>, true
+                </Select>,
+                true,
               )}
               {form.contractType != '721' &&
                 renderFormItem(
@@ -455,9 +448,10 @@ const CreateNFTModal = (props) => {
                       setForm({
                         ...form,
                         supply: value,
-                      });
+                      })
                     }}
-                  />, true
+                  />,
+                  true,
                 )}
             </div>
             <div
@@ -477,29 +471,30 @@ const CreateNFTModal = (props) => {
           token={token}
           isNew
           onSuccess={(res) => {
-            setShowCreateCollection(false);
-            getCollectionList();
+            setShowCreateCollection(false)
+            getCollectionList()
           }}
           onClose={() => {
-            setShowCreateCollection(false);
+            setShowCreateCollection(false)
           }}
         />
       )}
-      {isLoading && <div className={styleLoadingIconContainer}>
-        <img src={LoadingIcon}/>
-      </div>}
+      {isLoading && (
+        <div className={styleLoadingIconContainer}>
+          <img src={LoadingIcon} />
+        </div>
+      )}
     </React.Fragment>
-  );
-};
+  )
+}
 
 const mapStateToProps = ({ profile, market }) => ({
   address: profile.address,
   chainType: profile.chainType,
   categoryList: market.category,
   token: profile.token,
-});
-export default withRouter(connect(mapStateToProps)(CreateNFTModal));
-
+})
+export default withRouter(connect(mapStateToProps)(CreateNFTModal))
 
 const styleLoadingIconContainer = css`
   position: absolute;
@@ -526,15 +521,28 @@ const styleModalContainer = css`
   height: 80vh;
   overflow: auto;
 
+  .el-input + .el-button,
+  .el-select + .el-button,
+  .el-textarea__inner,
+  .el-input__inner {
+    border: 2px solid #e1e6ff;
+    border-radius: 6px;
+    color: #75819a;
+    min-height: 40px;
+    font-family: Helvetica;
+  }
+
   .el-dialog__headerbtn .el-dialog__close {
     color: #233a7d;
     font-size: 12px;
   }
   .el-dialog__title {
-    color: #11142d;
-    font-size: 18px;
-    font-weight: 500;
-    font-family: Poppins;
+    font-family: Archivo Black;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 24px;
+    color: #000000;
   }
   .el-dialog__header {
     padding: 20px 32px 12px 32px;
@@ -545,18 +553,13 @@ const styleModalContainer = css`
   .el-input-number {
     width: 100%;
   }
-`;
+`
 
 const styleContainer = css`
   display: flex;
   flex-direction: column;
   background: #ffffff;
   border-radius: 12px;
-  .el-textarea__inner {
-    font-family: Arial;
-    background: #F4F5F6;
-    border: none;
-  }
   @media (max-width: 900px) {
     margin: 16px 0;
   }
@@ -577,7 +580,7 @@ const styleContainer = css`
     padding: 0;
     margin: 0 0 40px 0;
   }
-`;
+`
 
 const styleUploadContainer = css`
   margin-bottom: 18px;
@@ -605,27 +608,50 @@ const styleUploadContainer = css`
       }
     }
   }
-`;
+`
 
 const styleFormItemContainer = css`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-  flex: 1;
   .label {
     margin-bottom: 10px;
-    font-family: Inter;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 14px;
+    color: #000000;
+    i {
+      font-size: 18px;
+      padding-left: 4px;
+      font-style: normal;
+      color: #ff4242;
+    }
   }
-`;
+`
 
 const styleCreateNFT = css`
-  background-color: rgba(17, 45, 242, 1);
-  color: white;
-  padding: 12px;
+  background-color: #0057d9;
+  font-family: Archivo Black;
+  font-style: normal;
+  font-weight: normal;
   font-size: 16px;
+  color: #fcfcfd;
+  width: 150px;
+  height: 40px;
+  margin: 0 auto;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  &:hover {
+    color: #fff;
+    background: #0057d9;
+  }
   .circular {
     width: 24px;
     height: 24px;
@@ -633,7 +659,7 @@ const styleCreateNFT = css`
     position: relative;
     top: 24px;
   }
-`;
+`
 
 const styleCollection = css`
   .el-select-dropdown__empty {
@@ -650,4 +676,4 @@ const styleCollection = css`
       overflow: hidden;
     }
   }
-`;
+`
