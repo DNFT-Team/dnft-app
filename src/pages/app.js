@@ -56,7 +56,7 @@ const App = (props) => {
                 } ${shrink ? styles.navRt : styles.navBot} styleNavContainer`}
               >
                 <div className={styles.navImg}>
-                  {<img src={obj.icon} style={{ width: 18 }} alt={obj.navName}/>}
+                  {<img src={isActive ? obj.icon_Select : obj.icon} style={{ width: 18 }} alt={obj.navName}/>}
                 </div>
                 <span
                   className={`${styles.navDeText} ${

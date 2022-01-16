@@ -543,13 +543,13 @@ const GlobalHeader = (props) => {
         {/*      <span>$ {Number(dnftPrice).toFixed(2)}</span>*/}
         {/*    </div>)*/}
         {/* }*/}
-        <Select onChange={(e) => {
+        {/* <Select onChange={(e) => {
           dispatch(_setLng(e))
         }}>
           {
             Object.values(LNG).map((obj) => <Select.Option value={obj.value} key={obj.value}>{obj.label}</Select.Option>)
           }
-        </Select>
+        </Select> */}
         {address && (
           <div
             className={styleAssetTarget}
