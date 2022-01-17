@@ -22,43 +22,45 @@ import bscSvg from '../../images/networks/logo_bsc.svg'
 import selectEthSvg from '../../images/networks/logo_select_eth.svg'
 import selectBscSvg from '../../images/networks/logo_select_bsc.svg'
 import { NET_WORK_VERSION } from 'utils/constant'
-import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile';
+import { setProfileAddress, setProfileToken } from 'reduxs/actions/profile'
 import globalConf from 'config/index'
 
 const DrawerMenu = (props) => {
 	const { isOpen, dispatch, skipTo, location, onClose, token, address, datas } = props
 	const { t } = useTranslation()
-  const netArray = useMemo(
-    () => [
-      {
-        name: 'Ethereum Mainnet',
-        icon: selectEthSvg,
-        shortName: ['ETH', 'Ethereum'],
-        shortIcon: ethSvg,
-        netWorkId: 1,
-      },
-      // {
-      //   name: 'Polkadot Mainnet',
-      //   icon: selectPolkadotSvg,
-      //   shortName: ['DOT', 'Polkadot'],
-      //   shortIcon: polkadotSvg,
-      // },
-      globalConf.net_env === 'mainnet' ? {
-        name: 'BSC Mainnet',
-        icon: selectBscSvg,
-        shortName: ['BSC', 'BSC'],
-        shortIcon: bscSvg,
-        netWorkId: 56,
-      } : {
-        name: 'BSC Testnet',
-        icon: selectBscSvg,
-        shortName: ['BSC', 'BSC Test'],
-        shortIcon: bscSvg,
-        netWorkId: 97,
-      },
-    ],
-    []
-  );
+	const netArray = useMemo(
+		() => [
+			{
+				name: 'Ethereum Mainnet',
+				icon: selectEthSvg,
+				shortName: ['ETH', 'Ethereum'],
+				shortIcon: ethSvg,
+				netWorkId: 1,
+			},
+			// {
+			//   name: 'Polkadot Mainnet',
+			//   icon: selectPolkadotSvg,
+			//   shortName: ['DOT', 'Polkadot'],
+			//   shortIcon: polkadotSvg,
+			// },
+			globalConf.net_env === 'mainnet'
+				? {
+						name: 'BSC Mainnet',
+						icon: selectBscSvg,
+						shortName: ['BSC', 'BSC'],
+						shortIcon: bscSvg,
+						netWorkId: 56,
+				  }
+				: {
+						name: 'BSC Testnet',
+						icon: selectBscSvg,
+						shortName: ['BSC', 'BSC Test'],
+						shortIcon: bscSvg,
+						netWorkId: 97,
+				  },
+		],
+		[],
+	)
 	let history = useHistory()
 	const [profile, setprofile] = useState({})
 	useEffect(async () => {
@@ -85,26 +87,28 @@ const DrawerMenu = (props) => {
 		},
 		...MENU_MAP,
 	]
-  const connectMetaMaskWallet = async () => {
-    try {
-      let ethereum = window.ethereum;
-      await ethereum.enable();
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts',
-      });
-      const account = accounts[0];
-      const currentIndex = netArray.findIndex(
-        (item) =>
-          Number(item.netWorkId) === Number(ethereum.networkVersion || ethereum.chainId)
-      );
-      let params = {address: account, chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId]}
+	const connectMetaMaskWallet = async () => {
+		try {
+			let ethereum = window.ethereum
+			await ethereum.enable()
+			const accounts = await ethereum.request({
+				method: 'eth_requestAccounts',
+			})
+			const account = accounts[0]
+			const currentIndex = netArray.findIndex(
+				(item) => Number(item.netWorkId) === Number(ethereum.networkVersion || ethereum.chainId),
+			)
+			let params = {
+				address: account,
+				chainType: NET_WORK_VERSION[ethereum.networkVersion || ethereum.chainId],
+			}
 
-      dispatch(setProfileAddress(params))
-      dispatch(setProfileToken(params))
-    } catch (e) {
-      console.log(e, 'e')
-    }
-  };
+			dispatch(setProfileAddress(params))
+			dispatch(setProfileToken(params))
+		} catch (e) {
+			console.log(e, 'e')
+		}
+	}
 	return (
 		<Drawer placement="left" isOpen={isOpen} onClose={onClose}>
 			<DrawerOverlay />
@@ -187,7 +191,7 @@ const DrawerMenu = (props) => {
 										<div className="menuRight">
 											<Icon
 												icon="akar-icons:chevron-right"
-												color="#c0beff"
+												color={isActive ? '#FFFFFF' : '#c0beff'}
 												width="19"
 												height="19"
 											/>
