@@ -4,6 +4,7 @@ import { css } from 'emotion';
 import { Heading, Text, Box, Grid, Link } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import igoAvatar from 'images/igo/igoAvatar.png';
+import igoPokeAvatar from 'images/igo/poke-list-bg.png'
 import {noDataSvg} from '../../utils/svg';
 import globalConfig from '../../config/index';
 import { Dialog, Button } from 'element-react';
@@ -21,7 +22,9 @@ const IGOScreen = (props) => {
 
   const mockGameList = [
     { title: t('igo.mockGamelist.title'), description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
-    // { title: '', description: 'DNFT provides gamers with a chance to win Gold, Silver or Bronze upon completion.', avatarUrl: comingSoon, isComing: true }
+  ];
+  const onGoingGameList = [
+    { title: t('igo.pokeGameList.title'), description: '', avatarUrl: igoPokeAvatar, skipTo: '/igo/poke' },
   ]
   const tabList = [[0, t('igo.ongoing')], [1, t('igo.ended')]];
 
@@ -32,11 +35,15 @@ const IGOScreen = (props) => {
 
   const [tab, setTab] = useState(0)
 
-  const [gameList, setGameList] = useState([])
+  const [gameList, setGameList] = useState(onGoingGameList)
   const [isShowSwitchModal, setIsShowSwitchModal] = useState(false);
   const handleTab = (tab) => {
     setTab(tab)
-    setGameList(tab === 1 ? mockGameList : [])
+    if (tab === 0) {
+      setGameList(onGoingGameList)
+    } else if (tab === 1) {
+      setGameList(mockGameList)
+    }
   }
   const handlePlay = (item) => {
     if (tab === 1) {

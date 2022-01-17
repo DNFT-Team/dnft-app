@@ -175,6 +175,7 @@
 	},
 	"igo": {
 		"mockGamelist.title": "Olympic BTC Synthesis",
+    "pokeGameList.title": "Pokemine on Game",
 		"ongoing": "Ongoing",
 		"ended": "Ended",
 		"title": "This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.",
