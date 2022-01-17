@@ -373,7 +373,7 @@ const MarketDetailScreen = (props) => {
           <Flex mt='30px' mb={['5px', '5px', '5px', '50px']} flexDirection={['column', 'column', 'column', 'row']} >
             <Flex flex='1' flexDirection={['row', 'row', 'row', 'column']}>
               <Text m='0' mr='5px' className={styles.owner}>{t('collection.title')}</Text>
-              <p onClick={() => history.push('/profile/collection', {item: {
+              <p onClick={() => history.push(`/profile/collection?collectionId=${datas?.collectionId}`, {item: {
                 id: datas?.collectionId,
                 flag: true,
               }, newAddress: datas?.address})} className={`${styles.userName} ${styles.tokenAddress}`}>{shortenNameString(datas?.collectionName)}</p>
