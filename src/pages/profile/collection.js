@@ -1,23 +1,24 @@
-import { css } from 'emotion'
-import React, { useState, useCallback, useEffect } from 'react'
-import { useHistory } from 'react-router'
-
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import LoadingIcon from 'images/asset/loading.gif'
-import NFTCard from '../../components/NFTCard'
+import { Flex } from '@chakra-ui/react'
+import { Btn } from 'components/Button'
 import CreateCollectionModal from 'components/CreateCollectionModal'
+import { css } from 'emotion'
+import LoadingIcon from 'images/asset/loading.gif'
 import add from 'images/profile/add.png'
-import CreateNFTModal from '../asset/create/index'
-
-import { get } from 'utils/request'
+import share_bg from 'images/profile/share.svg'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { connect } from 'react-redux'
+import { useHistory } from 'react-router'
+import { withRouter } from 'react-router-dom'
+import { get } from 'utils/request'
+import NFTCard from '../../components/NFTCard'
+import CreateNFTModal from '../asset/create/index'
+import SharePopover from 'components/SharePopover'
+import { queryParse } from 'utils/tools'
 const CollectionScreen = (props) => {
 	const {
 		address,
 		location: { state },
-		dispatch,
 		token,
 	} = props
 	const { t } = useTranslation()
@@ -27,6 +28,8 @@ const CollectionScreen = (props) => {
 	const [showCreateCollection, setShowCreateCollection] = useState(false)
 	const [showCreateNft, setShowCreateNft] = useState(false)
 	let history = useHistory()
+	const shareUrl = window.location.href;
+	let url = queryParse(shareUrl)
 
 	useEffect(() => {
 		getCollectionNftList()
@@ -35,7 +38,7 @@ const CollectionScreen = (props) => {
 		if (token) {
 			try {
 				setIsLoading(true)
-				const { data } = await get(`/api/v1/collection/detail/${state?.item?.id}`, '', token)
+				const { data } = await get(`/api/v1/collection/detail/${url?.collectionId}`, '', token)
 				setList(data?.data)
 				setIsLoading(false)
 			} catch (e) {
@@ -78,16 +81,19 @@ const CollectionScreen = (props) => {
 					<h4>{list?.name}</h4>
 					<div>{list?.collectionDesc}</div>
 				</div>
-				{address === state?.newAddress && (
-					<div
-						className={styleEditCollection}
-						onClick={() => {
-							setShowCreateCollection(true)
-						}}
-					>
-						{t('collection.edit')}
-					</div>
-				)}
+				<Flex>
+					<SharePopover datas={list} typeName='collection' />
+					{address === state?.newAddress && (
+						<Btn
+							style={{
+								fontWeight: 'normal',
+							}}
+							onClick={() => setShowCreateCollection(true)}
+						>
+							{t('collection.edit')}
+						</Btn>
+					)}
+				</Flex>
 			</header>
 			<div className={styleInfoContainer}>
 				{list?.content?.length > 0
@@ -108,13 +114,13 @@ const CollectionScreen = (props) => {
 					formDs={{
 						name: list?.name,
 						description: list?.collectionDesc,
-						id: state?.item.id,
+						id: url?.collectionId,
 						chainType: state?.item.chainType,
 					}}
 					token={token}
 					isNew={false}
 					isProfile
-					onSuccess={(res) => {
+					onSuccess={() => {
 						setShowCreateCollection(false)
 						getCollectionNftList()
 					}}
@@ -125,7 +131,7 @@ const CollectionScreen = (props) => {
 			)}
 			{showCreateNft && (
 				<CreateNFTModal
-					collectionId={state?.item?.id}
+					collectionId={Number(url?.collectionId)}
 					onClose={(isCreate) => {
 						if (isCreate) {
 							getCollectionNftList()
@@ -214,41 +220,6 @@ const styleInfoContainer = css`
 	}
 `
 
-const styleEditCollection = css`
-	padding: 0px 20px;
-	border-radius: 10px;
-	cursor: pointer;
-	font-weight: bold;
-	height: 40px;
-	background: #0057d9;
-	border-radius: 10px;
-	font-family: Archivo Black;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 14px;
-	line-height: 40px;
-	text-align: center;
-	color: #ffffff;
-	@media (max-width: 900px) {
-		width: 100%;
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		margin-top: 20px;
-	}
-`
-const styleNoDataContainer = css`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: 1;
-	flex-direction: column;
-	color: #233a7d;
-	min-height: calc(100vh - 400px);
-	span {
-		margin-top: 20px;
-	}
-`
 const styleCardContainerNFT = css`
 	background: #ffffff;
 	border-radius: 10px;

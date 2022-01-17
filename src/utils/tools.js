@@ -43,3 +43,15 @@ export const getImgLink = (url) => {
 	}
 	return url
 }
+
+export const queryParse = (query) => {
+	query = query.substring(query.indexOf('?') + 1)
+	let arry = query.split('&')
+	let params = {}
+	arry.forEach((item) => {
+		let key = item.substring(0, item.indexOf('='))
+		let val = item.substring(item.indexOf('=') + 1)
+		params[key] = val
+	})
+	return params
+}

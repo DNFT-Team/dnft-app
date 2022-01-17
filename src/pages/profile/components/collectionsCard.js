@@ -19,7 +19,7 @@ const NFTCard = (props) => {
 			w={['calc(100% - 40px)', 'calc(100% - 40px)', 'calc(100% - 40px)', '300px']}
 			key={`title-${index}`}
 			className={styleCardContainer}
-			onClick={() => history.push('/profile/collection', { item, newAddress })}
+			onClick={() => history.push(`/profile/collection?collectionId=${item?.id}`, { item, newAddress })}
 		>
 			<div
 				style={{

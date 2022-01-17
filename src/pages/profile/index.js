@@ -288,7 +288,7 @@ const ProfileScreen = (props) => {
                 <span className={styles.edit_bg_span}>{t('profile.setting.background')}</span>
                 <img className={styles.edit_bg_img} src={edit_bg} />
               </div>
-              <SharePopover datas={datas} />
+              <SharePopover datas={datas} typeFrom='profile' />
             </Box>
           )}
         </Box>

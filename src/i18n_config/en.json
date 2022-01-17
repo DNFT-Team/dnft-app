@@ -140,6 +140,7 @@
 	"share": {
 		"name": "Share",
 		"title": "Share your NFT",
+		"collection": "Share your collection",
 		"link": "Link",
 		"telegram": "Telegram",
 		"twitter": "Twitter",
