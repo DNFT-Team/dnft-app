@@ -44,6 +44,10 @@ import { shortenAddress } from 'utils/tools'
 import DrawerMenu from 'layout/sideBar/menu';
 import { useTranslation } from 'react-i18next';
 import {_setLng} from 'reduxs/actions/lng'
+import metamaskIcon from '../../images/networks/metamask.png'
+import walletConnectIcon from '../../images/networks/wallet-connect.svg'
+import ontoIcon from '../../images/networks/onto.png'
+
 // const mvpUrl = 'http://mvp.dnft.world';
 const DEFAULT_STAT = {count: 0, balance: 0, total: 0 }
 
@@ -501,6 +505,7 @@ const GlobalHeader = (props) => {
             }}
           >
             <span>Metamask</span>
+            <img src={metamaskIcon} alt="metamaskIcon"/>
           </div>
           <div
             key={'Wallet Connect'}
@@ -511,6 +516,7 @@ const GlobalHeader = (props) => {
             }}
           >
             <span>Wallet Connect</span>
+            <img src={walletConnectIcon} alt="walletConnectIcon"/>
           </div>
           <div
             key={'ONTO'}
@@ -521,6 +527,7 @@ const GlobalHeader = (props) => {
             }}
           >
             <span>ONTO Wallet</span>
+            <img src={ontoIcon} alt="ontoIcon"/>
           </div>
         </Dialog.Body>
       </Dialog>
@@ -744,6 +751,10 @@ const styleNetItem = css`
   font-weight: bold;
   padding: 0 20px 0 16px;
   cursor: pointer;
+  justify-content: space-between;
+  img {
+    width: 24px;
+  }
   &:hover {
     background: #f6f7f9;
   }
