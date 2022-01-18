@@ -55,3 +55,11 @@ export const queryParse = (query) => {
 	})
 	return params
 }
+export const json2File = (json, fileName) => {
+	const content = JSON.stringify(json)
+	const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+	const jsonFile = new File([blob], fileName, {
+		lastModified: Date.now(),
+	})
+	return jsonFile
+}
