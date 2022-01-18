@@ -185,7 +185,7 @@ const ProfileScreen = (props) => {
             currentStatus={selectedTab}
             newAddress={newAddress}
             handleDetail={() => {
-              history.push('/asset/detail', { item, fromAsset: true });
+              history.push(`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`, { item, fromAsset: true });
             }}
           />
         );

@@ -119,7 +119,7 @@ const NftSlider = (props) => {
   );
   const clickDetail = (item) => {
     console.log(item, 'item');
-    history.push('/market/detail', {item, category: item.category, sortTag: item.sortTag})
+    history.push(`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`, {item, category: item.category, sortTag: item.sortTag})
   }
   const renderCard = useCallback(
     (item, index) => <NFTCard fromHot={true} key={index} item={item} getMarketList={getMarketList} index={index} needAction

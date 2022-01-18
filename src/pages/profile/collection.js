@@ -68,7 +68,7 @@ const CollectionScreen = (props) => {
 				currentStatus={''}
 				getList={getList}
 				handleDetail={() => {
-					history.push('/asset/detail', { item, fromAsset: true })
+					history.push(`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`, { item, fromAsset: true })
 				}}
 			/>
 		),

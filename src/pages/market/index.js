@@ -81,7 +81,7 @@ const Market = (props) => {
   );
   const clickDetail = (item) => {
     // if(pending) return;
-    history.push('/market/detail', {item, category, sortTag})
+    history.push(`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`, {item, category, sortTag})
   }
   const getMarketStarList = (id, isSave) => {
     let data = datas.slice();

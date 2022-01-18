@@ -2,7 +2,8 @@ import { Icon } from '@iconify/react'
 import copy from 'copy-to-clipboard'
 import { Popover } from 'element-react'
 import { css } from 'emotion'
-import share_bg from 'images/profile/share.svg'
+import share_bg from 'images/profile/share.svg';
+import share_icon from 'images/market/share.svg'
 import React from 'react'
 import { FacebookShareButton, TelegramShareButton, TwitterShareButton } from 'react-share'
 import { toast } from 'react-toastify'
@@ -99,14 +100,16 @@ const SharePopover = (props) => {
 		>
 			<div
 				style={
-					typeFrom !== 'common' ? {
-						position: 'absolute',
-						bottom: '22px',
-						right: '256px'
-					} : {}
+					typeFrom === 'profile'
+						? {
+								position: 'absolute',
+								bottom: '22px',
+								right: '256px',
+						  }
+						: {}
 				}
 			>
-				{typeFrom === 'common' ? (
+				{typeFrom === 'common' && (
 					<Btn
 						style={{
 							fontWeight: 'normal',
@@ -116,12 +119,14 @@ const SharePopover = (props) => {
 						{t('share.name')}
 						<img style={{ marginLeft: 10 }} src={share_bg} />
 					</Btn>
-				) : (
+				)}
+				{typeFrom === 'profile' && (
 					<div className={share_bg_header}>
 						<span>{t('share.name')}</span>
-						<img src={share_bg} />
+						<img  src={share_icon} />
 					</div>
 				)}
+				{typeFrom === 'nft' && <img  style={{ marginLeft: 20, width: 24 }} src={share_icon} />}
 			</div>
 		</Popover>
 	)
