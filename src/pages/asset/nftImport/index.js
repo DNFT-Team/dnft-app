@@ -202,17 +202,6 @@ const NFTImportModal = (props) => {
 						true,
 					)}
 					{renderFormItem(
-						'OWNER',
-						<Input
-							placeholder="OWNER"
-							value={nftInput.owner}
-							onChange={(v) => {
-								setNftInput({ ...nftInput, owner: v })
-							}}
-						/>,
-						true,
-					)}
-					{renderFormItem(
 						t('market.contract.address'),
 						<div style={{ display: 'flex' }}>
 							<Input

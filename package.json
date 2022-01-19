@@ -38,6 +38,7 @@
 		"element-theme-default": "^1.4.13",
 		"emotion": "^10.0.23",
 		"framer-motion": "^4.1.17",
+		"is-ipfs": "6.0.2",
 		"i18next": "^20.6.1",
 		"identity-obj-proxy": "3.0.0",
 		"immutable": "^4.0.0-rc.12",

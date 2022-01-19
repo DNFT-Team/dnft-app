@@ -169,7 +169,7 @@ const StepStyle = {
 		}
 		button {
 			background: #0057d9;
-			display: flex;
+			display: inline-flex;
 			align-items: center;
 			justify-content: center;
 			box-sizing: border-box;

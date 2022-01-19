@@ -1,4 +1,5 @@
 import { isAddress } from 'web3-utils'
+import isIPFS from 'is-ipfs'
 import globalConf from './../config/index.js'
 import noImg from 'images/common/collection_noImg.svg'
 
@@ -31,17 +32,72 @@ export const shortenAddress = (address, chars = 6) => {
 	return `${address?.substring(0, chars + 1)}...${address?.substring(42 - chars)}`
 }
 
+const containsCID = (url) => {
+	if (typeof url !== 'string') {
+		throw new Error('url is not string')
+	}
+	const splitUrl = url.split('/')
+	for (const split of splitUrl) {
+		if (isIPFS.cid(split)) {
+			return {
+				containsCid: true,
+				cid: split,
+			}
+		}
+	}
+	return {
+		containsCid: false,
+		cid: null,
+	}
+}
+
+const convertToDesiredGateway = (sourceUrl, desiredGatewayPrefix) => {
+	try {
+		const results = containsCID(sourceUrl)
+		if (results.containsCid !== true) {
+			throw new Error('url does not contain CID')
+		}
+
+		const splitUrl = sourceUrl.split(results.cid)
+		// case 1 - the ipfs://cid path
+		if (sourceUrl.includes(`ipfs://${results.cid}`)) {
+			return `${desiredGatewayPrefix}/ipfs/${results.cid}${splitUrl[1]}${splitUrl?.[2] || ''}`
+		}
+
+		// case 2 - the /ipfs/cid path (this should cover ipfs://ipfs/cid as well
+		if (sourceUrl.includes(`/ipfs/${results.cid}`)) {
+			return `${desiredGatewayPrefix}/ipfs/${results.cid}${splitUrl[1]}${splitUrl?.[2] || ''}`
+		}
+
+		// case 3 - the /ipns/cid path
+		if (sourceUrl.includes(`/ipns/${results.cid}`)) {
+			return `${desiredGatewayPrefix}/ipns/${results.cid}${splitUrl[1]}${splitUrl?.[2] || ''}`
+		}
+	} catch {
+		return false
+	}
+}
+
 export const getImgLink = (url) => {
+	//	Case noImg
 	if (!url || url.indexOf('undefined') > -1 || url.indexOf('null') > -1) {
 		return noImg
 	}
-	if (url.indexOf('http') > -1) {
+
+	// Case inner url : ipfsGet/cid | /ipfsGet/cid
+	if (/ipfsGet\//.test(url)) {
 		return url
 	}
-	if (url.indexOf('ipfs://') > -1) {
-		return url.replace('ipfs://', '/ipfsGet/')
+
+	// Case outer url : http:// | https:// | data:image:
+	if (/^http:\/\/|https:\/\/|data:image:/.test(url)) {
+		return url
 	}
-	return url
+
+	// Case ipfs
+	const checkIpfsUrl = convertToDesiredGateway(url, globalConf.ipfsGateway)
+
+	return checkIpfsUrl || noImg
 }
 
 export const queryParse = (query) => {
