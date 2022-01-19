@@ -1,4 +1,4 @@
-import { Dialog, Button, Input, InputNumber, Select, Upload, Loading } from 'element-react'
+import { Dialog, Button, Input, InputNumber, Select, Upload } from 'element-react'
 import { css } from 'emotion'
 import React, { useEffect, useState, useCallback } from 'react'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
@@ -6,17 +6,17 @@ import { post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
-import { ipfs_post } from 'utils/ipfs-request'
-import { getObjectURL } from 'utils/tools'
+import { ipfs_add } from 'utils/ipfs-request'
+import { getObjectURL, json2File } from 'utils/tools'
 import { toast } from 'react-toastify'
 import { createNFTContract1155, createNFTContract721 } from '../../../utils/contract'
 import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi'
 import Web3 from 'web3'
 import globalConfig from '../../../config'
-import LoadingIcon from '../../../images/asset/loading.gif'
 import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
 import SwitchModal from 'components/SwitchModal'
+import StepCard, { STEP_ENUM } from './step'
 
 const CreateNFTModal = (props) => {
 	const {
@@ -41,9 +41,9 @@ const CreateNFTModal = (props) => {
 	})
 	const [nftUrl, setNftUrl] = useState()
 	const [nftFile, setNftFile] = useState()
-	const [isLoading, setIsLoading] = useState(false)
-	const [isUploadLoading, setIsUploadLoading] = useState(false)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
+	const [step, setStep] = useState(STEP_ENUM.INITIAL)
+	const [stepErr, setStepErr] = useState('')
 	const currentNetEnv = globalConfig.net_env
 	const currentNetName = globalConfig.net_name
 
@@ -64,15 +64,12 @@ const CreateNFTModal = (props) => {
 	const uploadFile = async (file) => {
 		setNftUrl('')
 		setNftFile(null)
-		setIsUploadLoading(true)
 		try {
 			const imgUrl = getObjectURL(file)
 			imgUrl && setNftFile(file)
 			return imgUrl
 		} catch (e) {
 			console.log(e, 'e')
-		} finally {
-			setIsUploadLoading(false)
 		}
 	}
 
@@ -158,125 +155,150 @@ const CreateNFTModal = (props) => {
 		}
 	}, [])
 
+	const checkSensi = async (file) => {
+		try {
+			const fileData = new FormData()
+			fileData.append('content', file)
+			const res = await post('/sensi/single/multipart-form', fileData)
+			return res.data.prediction.some(
+				(e) => e.probability > 0.5 && ['Sexy', 'Porn'].includes(e.className),
+			)
+		} catch {
+			return false
+		}
+	}
+
+	const mintNFTInBlock = async (form, imageCid, jsonCid) => {
+		try {
+			let wallet = getWallet()
+			if (!wallet) {
+				return null
+			} else {
+				window.web3 = new Web3(wallet)
+				await window.web3.eth.requestAccounts()
+				const is1155 = form.contractType == 1155
+
+				const contractAddress = is1155
+					? createNFTContract1155[currentNetName]
+					: createNFTContract721[currentNetName]
+				const myContract = new window.web3.eth.Contract(
+					is1155 ? createNFTAbi1155 : createNFTAbi721,
+					contractAddress,
+				)
+
+				const fee = await myContract.methods.bnbFee().call()
+
+				const payloads = is1155
+					? [
+							address,
+							form.supply,
+							`ipfs://${jsonCid}`,
+							'0x0000000000000000000000000000000000000000000000000000000000000000',
+					  ]
+					: [address, `ipfs://${jsonCid}`]
+
+				const createNFTResult = await myContract.methods
+					.create(...payloads)
+					.send({ from: address, value: fee })
+
+				if (createNFTResult.transactionHash) {
+					const tokenId = is1155
+						? createNFTResult.events.TransferSingle.returnValues.id
+						: createNFTResult.events.Transfer.returnValues.tokenId
+					await post(
+						'/api/v1/nft/',
+						{
+							...form,
+							tokenId,
+							address: address,
+							chainType: chainType,
+							hash: createNFTResult.transactionHash,
+							tokenAddress: contractAddress,
+							avatorUrl: `ipfs://${imageCid}`,
+						},
+						token,
+					)
+					return createNFTResult.transactionHash
+				} else {
+					return null
+				}
+			}
+		} catch (err) {
+			if (4001 === err?.code) {
+				setStepErr('User denied transaction signature.')
+			} else {
+				setStepErr('Mint transaction failed.')
+			}
+			return null
+		}
+	}
+
 	const createNFT = async () => {
+		// check network
 		if (!['BSC'].includes(chainType)) {
 			setIsShowSwitchModal(true)
 			return
 		}
-
-		let inValidParam = Object.entries(paramsMap).find((item) => {
+		//	check file import
+		if (!nftFile) {
+			toast.dark(t('toast.upload.nft'))
+			return
+		}
+		// validate form
+		const inValidParam = Object.entries(paramsMap).find((item) => {
 			if (item[0] === 'supply' && form.contractType == '721') {
 				return false
 			}
 			return form[item[0]] === undefined
 		})
-
-		if (!nftFile) {
-			toast.dark(t('toast.upload.nft'), {
-				position: toast.POSITION.TOP_CENTER,
-			})
-			return
-		}
-
 		if (inValidParam) {
-			toast.dark(`${t('please.input')} ${inValidParam[1]}`, {
-				position: toast.POSITION.TOP_CENTER,
-			})
+			toast.dark(`${t('please.input')} ${inValidParam[1]}`)
 			return
 		}
-
+		//	execute create
 		try {
-			setIsLoading(true)
-			//  upload ipfs
-			toast.info(t('toast.upload.step1'))
-			const fileData = new FormData()
-			fileData.append('file', nftFile)
-			const { data } = await ipfs_post('/v0/add', fileData)
-			const ipfsHash = data?.['Hash']
-			console.log('ipfsHash', ipfsHash)
-			if (!ipfsHash) {
-				toast.error(t('toast.upload.nft.failed'))
+			//	1.check Sensi
+			setStep(STEP_ENUM.SENSI_PENDING)
+			const isSensi = await checkSensi(nftFile)
+			if (isSensi) {
+				setStep(STEP_ENUM.SENSI_FAILED)
+				setStepErr('Warning! Your media resource is too sensitive!')
 				return
 			}
-			toast.success(t('toast.upload.nft.success'))
-			toast.info(t('toast.upload.step2'))
-			//  mint nft
-			let wallet = getWallet()
-			if (wallet) {
-				window.web3 = new Web3(wallet)
-				await window.web3.eth.requestAccounts()
-
-				let createNFTResult
-				let contractAddress =
-					form.contractType == 1155
-						? createNFTContract1155[currentNetName]
-						: createNFTContract721[currentNetName]
-
-				if (form.contractType == 1155) {
-					const myContract = new window.web3.eth.Contract(createNFTAbi1155, contractAddress)
-					const fee = await myContract.methods.bnbFee().call()
-
-					createNFTResult = await myContract.methods
-						.create(
-							address,
-							form.supply,
-							`${globalConfig.ipfsDown}${ipfsHash}`,
-							'0x0000000000000000000000000000000000000000000000000000000000000000',
-						)
-						.send({
-							from: address,
-							value: fee,
-						})
-					if (createNFTResult.transactionHash) {
-						const result = await post(
-							'/api/v1/nft/',
-							{
-								...form,
-								address: address,
-								chainType: chainType,
-								hash: createNFTResult.transactionHash,
-								tokenId: createNFTResult.events.TransferSingle.returnValues.id,
-								tokenAddress: contractAddress,
-								avatorUrl: `${globalConfig.ipfsDown}${ipfsHash}`,
-							},
-							token,
-						)
-						onClose(true)
-					}
-				} else {
-					const myContract = new window.web3.eth.Contract(createNFTAbi721, contractAddress)
-					const fee = await myContract.methods.bnbFee().call()
-
-					createNFTResult = await myContract.methods
-						.create(address, `${globalConfig.ipfsDown}${ipfsHash}`)
-						.send({
-							from: address,
-							value: fee,
-						})
-
-					if (createNFTResult.transactionHash) {
-						const result = await post(
-							'/api/v1/nft/',
-							{
-								...form,
-								address: address,
-								supply: 1,
-								chainType: chainType,
-								hash: createNFTResult.transactionHash,
-								tokenId: createNFTResult.events.Transfer.returnValues.tokenId,
-								tokenAddress: contractAddress,
-								avatorUrl: `${globalConfig.ipfsDown}${ipfsHash}`,
-							},
-							token,
-						)
-						onClose(true)
-					}
-				}
+			// 2.upload media file
+			setStep(STEP_ENUM.IMAGE_PENDING)
+			const imageCid = await ipfs_add('/v0/add', nftFile)
+			if (!imageCid) {
+				setStep(STEP_ENUM.IMAGE_FAILED)
+				setStepErr('Network congestion when uploading files.')
+				return
 			}
+			// 3.upload metadata json
+			setStep(STEP_ENUM.JSON_PENDING)
+			const metaFile = json2File(
+				{
+					name: form.name,
+					description: form.description,
+					image: 'ipfs://' + imageCid,
+				},
+				`DNFT_${form.contractType}_${Date.now()}.json`,
+			)
+			const jsonCid = await ipfs_add('/v0/add', metaFile)
+			if (!jsonCid) {
+				setStep(STEP_ENUM.JSON_FAILED)
+				setStepErr('Network congestion when uploading files.')
+				return
+			}
+			//  4.mint nft
+			setStep(STEP_ENUM.MINT_PENDING)
+			const transactionHash = await mintNFTInBlock(form, imageCid, jsonCid)
+			if (!transactionHash) {
+				setStep(STEP_ENUM.MINT_FAILED)
+				return
+			}
+			setStep(STEP_ENUM.END)
 		} catch (e) {
 			console.log(e, 'e')
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
@@ -308,7 +330,20 @@ const CreateNFTModal = (props) => {
 				}}
 			>
 				<Dialog.Body>
-					<div className={styleContainer}>
+					{step !== STEP_ENUM.INITIAL && (
+						<StepCard
+							step={step}
+							errMsg={stepErr}
+							onBack={() => {
+								setStep(STEP_ENUM.INITIAL)
+							}}
+							onClose={onClose}
+						/>
+					)}
+					<div
+						className={styleContainer}
+						style={{ display: step !== STEP_ENUM.INITIAL ? 'none' : 'block' }}
+					>
 						<Upload
 							className={styleUploadContainer}
 							drag
@@ -325,21 +360,12 @@ const CreateNFTModal = (props) => {
 								setNftUrl(undefined)
 							}}
 						>
-							{isUploadLoading ? (
-								<Loading />
+							{nftUrl ? (
+								<img style={{ marginBottom: '.6rem' }} src={nftUrl} alt="" />
 							) : (
 								<React.Fragment>
-									{nftUrl ? (
-										<img style={{ marginBottom: '.6rem' }} src={nftUrl} alt="" />
-									) : (
-										<React.Fragment>
-											<i className="el-icon-upload2" />
-											<div className="el-upload__text">PNG, GIF</div>
-											{/* <div className='el-upload__text'>
-                        Recommended size: 300 (W) X 300 (H)
-                      </div> */}
-										</React.Fragment>
-									)}
+									<i className="el-icon-upload2" />
+									<div className="el-upload__text">PNG, GIF</div>
 								</React.Fragment>
 							)}
 						</Upload>
@@ -455,12 +481,7 @@ const CreateNFTModal = (props) => {
 									true,
 								)}
 						</div>
-						<div
-							style={{ opacity: isLoading ? 0.5 : 1 }}
-							className={styleCreateNFT}
-							onClick={createNFT}
-						>
-							<Loading loading={isLoading} />
+						<div className={styleCreateNFT} onClick={createNFT}>
 							{t('create')}
 						</div>
 					</div>
@@ -479,11 +500,6 @@ const CreateNFTModal = (props) => {
 						setShowCreateCollection(false)
 					}}
 				/>
-			)}
-			{isLoading && (
-				<div className={styleLoadingIconContainer}>
-					<img src={LoadingIcon} />
-				</div>
 			)}
 			<SwitchModal
 				visible={isShowSwitchModal}
@@ -505,24 +521,6 @@ const mapStateToProps = ({ profile, market }) => ({
 })
 export default withRouter(connect(mapStateToProps)(CreateNFTModal))
 
-const styleLoadingIconContainer = css`
-	position: absolute;
-	width: 100vw;
-	height: 100vh;
-	background: rgba(0, 0, 0, 0.5);
-	top: 0;
-	left: 0;
-	z-index: 1000000000;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	img {
-		width: 158px;
-		height: 145px;
-		overflow: hidden;
-		border-radius: 20px;
-	}
-`
 const styleModalContainer = css`
 	max-width: 564px;
 	width: calc(100% - 40px);
@@ -590,7 +588,12 @@ const styleContainer = css`
 		margin: 0 0 40px 0;
 	}
 `
-
+const styleContainerWithStep = css`
+	height: 40vh;
+	overflow: hidden;
+	position: relative;
+	border-radius: 0;
+`
 const styleUploadContainer = css`
 	margin-bottom: 18px;
 	.el-upload {

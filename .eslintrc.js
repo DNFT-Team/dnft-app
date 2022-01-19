@@ -248,7 +248,7 @@ module.exports = {
 		// 强制在块之前使用一致的空格
 		'space-before-blocks': [2, 'always'],
 		// 强制在 function的左括号之前使用一致的空格
-		'space-before-function-paren': [2, 'always'],
+		'space-before-function-paren': 0,
 		// 强制在圆括号内使用一致的空格
 		'space-in-parens': [2, 'never'],
 		// 要求操作符周围有空格

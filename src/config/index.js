@@ -1,43 +1,20 @@
-/*Tag shows on the left sidebar*/
-const net_name = process.env.REACT_APP_ENV_NAME
-/*Vol decides the env*/
-const net_env = process.env.REACT_APP_NET_ENV
-/*Fixed Urls*/
-// const baseUrl_main = "https://bkapi.dnft.world"
-// const baseUrl_test = "https://testbkapi.dnft.world"
-
-/*runtime baseUrl*/
-// const baseUrl = process.env.REACT_APP_BK_API
-// const baseUrl = baseUrl_main
-
 export default {
-  net_name,
-  net_env,
-  // baseUrl,
-  // /*java-core-api*/
-  // backendApi: baseUrl + `/api`,
-  // /*static-file-data  fixed in main*/
-  // staticApi: baseUrl_main + `/data/`,
-  // /*bridge-api  fixed in main*/
-  // bridgeApi: baseUrl_main + `/bridgeApi`,
-  // /*faucet-api  fixed in test*/
-  // faucetApi: baseUrl_test + `/faucet`,
-  // /*ipfs-api  fixed in main*/
-  // ipfsUp: `/ipfsApi`,
-  // // ipfsUp: baseUrl_main + `/ipfsApi`,
-  // /*ipfs-get  fixed in main*/
-  // ipfsDown: baseUrl_main + `/ipfsGet/`,
-  baseUrl:'',
-  /*java-core-api*/
-  backendApi: `/api`,
-  /*static-file-data  fixed in main*/
-  staticApi: `/data/`,
-  /*bridge-api  fixed in main*/
-  bridgeApi: `https://mainnervetrx.dnft.world/transaction`,
-  /*faucet-api  fixed in test*/
-  faucetApi: `/faucet`,
-  /*ipfs-api  fixed in main*/
-  ipfsUp: `/ipfsApi`,
-  /*ipfs-get  fixed in main*/
-  ipfsDown: `/ipfsGet/`,
+	net_name: process.env.REACT_APP_ENV_NAME,
+	net_env: process.env.REACT_APP_NET_ENV,
+	baseUrl: '',
+	backendApi: `/api`,
+	staticApi: `/data/`,
+	bridgeApi: 'https://mainnervetrx.dnft.world/transaction',
+	faucetApi: `/faucet`,
+	ipfsUp: `/ipfsApi`,
+	ipfsDown: `/ipfsGet/`,
+	ipfsGateway: 'https://dnft.mypinata.cloud',
+
+	// backendApi: process.env.REACT_APP_CORE_ENDPOINT,
+	// aiApi: process.env.REACT_APP_AI_ENDPOINT,
+	// bridgeApi: process.env.REACT_APP_BRIDGE_ENDPOINT,
+	// faucetApi: process.env.REACT_APP_FAUCET_ENDPOINT,
+	// ipfsUp: process.env.REACT_APP_IPFS_UPLOAD,
+	// ipfsDown: process.env.REACT_APP_IPFS_PREVIEW,
+	// ipfsGateway: process.env.REACT_APP_IPFS_GATEWAY,
 }

@@ -150,15 +150,18 @@ const DrawerMenu = (props) => {
 						let isActive =
 							(location?.pathname.includes(item.path) && item.path !== '/') ||
 							(location.pathname === '/' && item.path === '/')
-						if (!address && (item.navName === 'Profile' || item.navName === 'Asset')) return
+						if (!address && (item.navName === 'Profile' || item.navName === 'Asset')) {
+							return null
+						}
 						return (
-							<>
+							<React.Fragment key={item.navName}>
 								<div
-									key={item.navName}
 									style={item.style || {}}
 									onClick={() => {
 										onClose()
-										if (address || item.navName !== t('menu.profile')) skipTo(item)
+										if (address || item.navName !== t('menu.profile')) {
+											skipTo(item)
+										}
 									}}
 									className={cx(styleMenuLi, isActive && styleMenuActive)}
 								>
@@ -206,7 +209,7 @@ const DrawerMenu = (props) => {
 										mb="20px"
 									/>
 								)}
-							</>
+							</React.Fragment>
 						)
 					})}
 					<div className={styleContactUs}>
