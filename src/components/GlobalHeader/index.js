@@ -31,8 +31,7 @@ import { Icon } from '@iconify/react'
 import { css } from 'emotion'
 import axios from 'axios'
 import Web3 from 'web3'
-import { LNG } from 'utils/constant'
-import { NET_WORK_VERSION } from 'utils/constant'
+import { LNG, NET_WORK_VERSION } from 'utils/constant'
 import globalConf from 'config/index'
 // import styles from './index.less';
 
@@ -603,10 +602,6 @@ const GlobalHeader = (props) => {
 
 	return (
 		<header className={styleHeader}>
-			{/* <div className={styleSearchContainer}>*/}
-			{/*  <i className='el-icon-search' />*/}
-			{/*  <Input placeholder={'Search Art,Game or Fun'} />*/}
-			{/* </div>*/}
 			<Box className={actionContainer} display={['none', 'none', 'flex', 'flex', 'flex']}>
 				{renderFaucet()}
 				{/* {*/}
@@ -720,7 +715,6 @@ const GlobalHeader = (props) => {
 						isOpen={menuToggle}
 						onClose={() => setMenuToggle(false)}
 					/>
-					{/* <SideBar address={address} location={props.curPath} skipTo={props.skipTo}/> */}
 				</Box>
 			</Box>
 			{renderModal}
@@ -769,8 +763,8 @@ const GlobalHeader = (props) => {
 								</Stat>
 							</Box>
 							<Box>
-								{healthData.list.map((l) => (
-									<Text border="1px solid" p="1rem" color="brand.100" my=".2rem">
+								{healthData.list.map((l, li) => (
+									<Text key={li} border="1px solid" p="1rem" color="brand.100" my=".2rem">
 										<label>{t('faucet.ChainId')}:</label>
 										{l.chainId} |<label>{t('faucet.AssetId')}:</label>
 										{l.assetId} |<label>{t('faucet.Address')}:</label>

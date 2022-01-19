@@ -28,7 +28,7 @@ const CollectionScreen = (props) => {
 	const [showCreateCollection, setShowCreateCollection] = useState(false)
 	const [showCreateNft, setShowCreateNft] = useState(false)
 	let history = useHistory()
-	const shareUrl = window.location.href;
+	const shareUrl = window.location.href
 	let url = queryParse(shareUrl)
 
 	useEffect(() => {
@@ -64,7 +64,7 @@ const CollectionScreen = (props) => {
 			<NFTCard
 				item={item}
 				index={index}
-				fromCollection={true}
+				fromCollection
 				currentStatus={''}
 				getList={getList}
 				handleDetail={() => {
@@ -82,7 +82,7 @@ const CollectionScreen = (props) => {
 					<div>{list?.collectionDesc}</div>
 				</div>
 				<Flex>
-					<SharePopover datas={list} typeName='collection' />
+					<SharePopover datas={list} typeName="collection" />
 					{address === state?.newAddress && (
 						<Btn
 							style={{
