@@ -35,7 +35,7 @@ const getItemStyle = (i, step) =>
 		: false
 
 const StepCard = (props) => {
-	const { step, onBack, onClose } = props
+	const { step, errMsg, onBack, onClose } = props
 
 	console.log('[ props.step ]', step)
 
@@ -49,20 +49,24 @@ const StepCard = (props) => {
 							<i />
 						</div>
 					))}
-					{step % 2 === 0 && (
+					{errMsg && (
 						<div className={StepStyle.ActionLine}>
+							<p>{errMsg}</p>
 							<button onClick={onBack}>Back</button>
 						</div>
 					)}
 				</div>
 			</section>
 		),
-		[step],
+		[step, errMsg],
 	)
 
 	const renderCaseCelabrate = useMemo(() => (
-		<section className={StepStyle.Wrapper}>
-			<p>Create NFT Success!</p>
+		<section className={StepStyle.EndWrapper}>
+			<h3>
+				Success! <br />
+				See this NFT in your wallet.
+			</h3>
 			<div className={StepStyle.ActionLine}>
 				<button onClick={onClose}>CLose</button>
 			</div>
@@ -80,6 +84,22 @@ export default StepCard
 const StepStyle = {
 	Wrapper: css`
 		background: #fff;
+	`,
+	EndWrapper: css`
+		background: #fff;
+		height: 40vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+		h3 {
+			text-align: center;
+			font-family: Helvetica;
+			font-style: normal;
+			font-weight: bold;
+			font-size: 20px;
+			line-height: 30px;
+		}
 	`,
 	Steps: css`
 		display: flex;
@@ -138,6 +158,37 @@ const StepStyle = {
 		}
 	`,
 	ActionLine: css`
-		text-align: right;
+		text-align: center;
+		p {
+			font-family: Helvetica;
+			font-style: normal;
+			font-weight: bold;
+			font-size: 18px;
+			color: #ff4949;
+			margin-bottom: 1.4rem;
+		}
+		button {
+			background: #0057d9;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-sizing: border-box;
+			height: 40px;
+			padding: 10px 8px;
+			min-width: 120px;
+			border-radius: 10px;
+			font-family: Archivo Black, sans-serif;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 14px;
+			line-height: 14px;
+			color: #fcfcfd;
+			cursor: pointer;
+			user-select: none;
+			@media (max-width: 900px) {
+				width: 100%;
+				margin-top: 20px;
+			}
+		}
 	`,
 }

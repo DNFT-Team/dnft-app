@@ -1,5 +1,5 @@
-import { Dialog, Button, Input, InputNumber, Select, Upload, Loading } from 'element-react'
-import { css, cx } from 'emotion'
+import { Dialog, Button, Input, InputNumber, Select, Upload } from 'element-react'
+import { css } from 'emotion'
 import React, { useEffect, useState, useCallback } from 'react'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
 import { post } from 'utils/request'
@@ -13,7 +13,6 @@ import { createNFTContract1155, createNFTContract721 } from '../../../utils/cont
 import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi'
 import Web3 from 'web3'
 import globalConfig from '../../../config'
-import LoadingIcon from '../../../images/asset/loading.gif'
 import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
 import SwitchModal from 'components/SwitchModal'
@@ -42,9 +41,9 @@ const CreateNFTModal = (props) => {
 	})
 	const [nftUrl, setNftUrl] = useState()
 	const [nftFile, setNftFile] = useState()
-	const [isLoading, setIsLoading] = useState(false)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
 	const [step, setStep] = useState(STEP_ENUM.INITIAL)
+	const [stepErr, setStepErr] = useState('')
 	const currentNetEnv = globalConfig.net_env
 	const currentNetName = globalConfig.net_name
 
@@ -224,7 +223,12 @@ const CreateNFTModal = (props) => {
 					return null
 				}
 			}
-		} catch {
+		} catch (err) {
+			if (4001 === err?.code) {
+				setStepErr('User denied transaction signature.')
+			} else {
+				setStepErr('Mint transaction failed.')
+			}
 			return null
 		}
 	}
@@ -253,12 +257,12 @@ const CreateNFTModal = (props) => {
 		}
 		//	execute create
 		try {
-			setIsLoading(true)
 			//	1.check Sensi
 			setStep(STEP_ENUM.SENSI_PENDING)
 			const isSensi = await checkSensi(nftFile)
 			if (isSensi) {
 				setStep(STEP_ENUM.SENSI_FAILED)
+				setStepErr('Warning! Your media resource is too sensitive!')
 				return
 			}
 			// 2.upload media file
@@ -266,6 +270,7 @@ const CreateNFTModal = (props) => {
 			const imageCid = await ipfs_add('/v0/add', nftFile)
 			if (!imageCid) {
 				setStep(STEP_ENUM.IMAGE_FAILED)
+				setStepErr('Network congestion when uploading files.')
 				return
 			}
 			// 3.upload metadata json
@@ -281,6 +286,7 @@ const CreateNFTModal = (props) => {
 			const jsonCid = await ipfs_add('/v0/add', metaFile)
 			if (!jsonCid) {
 				setStep(STEP_ENUM.JSON_FAILED)
+				setStepErr('Network congestion when uploading files.')
 				return
 			}
 			//  4.mint nft
@@ -293,8 +299,6 @@ const CreateNFTModal = (props) => {
 			setStep(STEP_ENUM.END)
 		} catch (e) {
 			console.log(e, 'e')
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
@@ -329,9 +333,7 @@ const CreateNFTModal = (props) => {
 					{step !== STEP_ENUM.INITIAL && (
 						<StepCard
 							step={step}
-							onStep={() => {
-								setStep(step + 1)
-							}}
+							errMsg={stepErr}
 							onBack={() => {
 								setStep(STEP_ENUM.INITIAL)
 							}}
@@ -479,12 +481,7 @@ const CreateNFTModal = (props) => {
 									true,
 								)}
 						</div>
-						<div
-							style={{ opacity: isLoading ? 0.5 : 1 }}
-							className={styleCreateNFT}
-							onClick={createNFT}
-						>
-							<Loading loading={isLoading} />
+						<div className={styleCreateNFT} onClick={createNFT}>
 							{t('create')}
 						</div>
 					</div>
@@ -504,11 +501,6 @@ const CreateNFTModal = (props) => {
 					}}
 				/>
 			)}
-			{/* {isLoading && (
-				<div className={styleLoadingIconContainer}>
-					<img src={LoadingIcon} />
-				</div>
-			)} */}
 			<SwitchModal
 				visible={isShowSwitchModal}
 				networkName={'BSC'}
