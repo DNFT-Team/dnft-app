@@ -126,7 +126,7 @@ const SharePopover = (props) => {
 						<img  src={share_icon} />
 					</div>
 				)}
-				{typeFrom === 'nft' && <img  style={{ marginLeft: 20, width: 24 }} src={share_icon} />}
+				{typeFrom === 'nft' && <img  style={{ marginLeft: 20, width: 22 }} src={share_icon} />}
 			</div>
 		</Popover>
 	)
@@ -154,15 +154,6 @@ const shareBoxAll = css`
 		border-radius: 100%;
 		padding: 10px;
 		cursor: pointer;
-		.label {
-			font-family: Helvetica;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 14px;
-			line-height: 14px;
-			margin-top: 10px;
-			color: #4e5c7e;
-		}
 	}
 	.shareIcon {
 		width: 25px;
@@ -177,6 +168,15 @@ const shareBoxAll = css`
 		align-items: center;
 		justify-content: center;
 		margin: 0 15px 20px;
+		label {
+			font-family: Helvetica;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 14px;
+			line-height: 14px;
+			margin-top: 10px;
+			color: #4e5c7e;
+		}
 	}
 `
 const share_bg_header = css`

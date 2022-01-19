@@ -88,7 +88,7 @@ const ProfileScreen = (props) => {
       href: datas?.youtubeAddress,
       selIcon: youtube,
       unSelIcon: u_youtube,
-      style: { width: 28 },
+      style: { width: 24 },
     },
   ];
   useEffect(() => {
