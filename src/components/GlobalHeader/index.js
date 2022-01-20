@@ -32,7 +32,7 @@ import { css } from 'emotion'
 import axios from 'axios'
 import Web3 from 'web3'
 import { LNG, NET_WORK_VERSION } from 'utils/constant'
-import globalConf from 'config/index'
+import globalConf from './../../config/index'
 // import styles from './index.less';
 
 // import { assetSvg } from '../../utils/svg';
@@ -71,7 +71,7 @@ const GlobalHeader = (props) => {
 
 	const [isNetListVisible, setIsNetListVisible] = useState(false)
 	const [isSwitchWalletVisible, setIsSwitchWalletVisible] = useState(false)
-	const [currentNetIndex, setCurrentNetIndex] = useState()
+	const [currentNetIndex, setCurrentNetIndex] = useState(0)
 	const [address, setAddress] = useState()
 	const [menuToggle, setMenuToggle] = useState(false)
 	const netArray = useMemo(
@@ -613,13 +613,17 @@ const GlobalHeader = (props) => {
 				{/*      <span>$ {Number(dnftPrice).toFixed(2)}</span>*/}
 				{/*    </div>)*/}
 				{/* }*/}
-				{/* <Select onChange={(e) => {
-          dispatch(_setLng(e))
-        }}>
-          {
-            Object.values(LNG).map((obj) => <Select.Option value={obj.value} key={obj.value}>{obj.label}</Select.Option>)
-          }
-        </Select> */}
+				<Select
+					onChange={(e) => {
+						dispatch(_setLng(e))
+					}}
+				>
+					{Object.values(LNG).map((obj) => (
+						<Select.Option value={obj.value} key={obj.value}>
+							{obj.label}
+						</Select.Option>
+					))}
+				</Select>
 				{address && (
 					<div
 						className={styleAssetTarget}
@@ -659,7 +663,7 @@ const GlobalHeader = (props) => {
 						}}
 					>
 						<img src={netArray[currentNetIndex]?.shortIcon} alt="" />
-						<span> {netArray[currentNetIndex]?.shortName[1] || t('network')}</span>
+						<span> {netArray[currentNetIndex]?.shortName[1] || t('network.head')}</span>
 					</div>
 				)}
 			</Box>

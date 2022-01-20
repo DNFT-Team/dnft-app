@@ -22,7 +22,7 @@ import {
 } from 'utils/contract'
 import { getWallet } from 'utils/get-wallet'
 import { get, post } from 'utils/request'
-import { shortenAddress, shortenNameString, queryParse } from 'utils/tools'
+import { shortenAddress, shortenNameString, queryParse, getImgLink } from 'utils/tools'
 import { toDecimal } from 'utils/web3Tools'
 import Web3 from 'web3'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
@@ -384,7 +384,7 @@ const MarketDetailScreen = (props) => {
 					h={['80vw', '80vw', '80vw', 0]}
 					w={['100%', '100%', '100%', 'calc(50% - 25px)']}
 					className={styles.mainL}
-					style={{ backgroundImage: `url(${datas?.avatorUrl})` }}
+					style={{ backgroundImage: `url(${getImgLink(datas?.avatorUrl)})` }}
 				/>
 				<Box w={['100%', '100%', '100%', 'calc(50% - 25px)']} boxSizing="border-box">
 					<Flex
@@ -444,7 +444,7 @@ const MarketDetailScreen = (props) => {
 						</Flex>
 						<Flex flex="2" mt={['30px', '30px', '30px', 0]}>
 							<Flex flex="1" alignItems="center" cursor="pointer">
-								<img src={datas?.createrAvatorUrl} className={styles.avatar} />
+								<img src={getImgLink(datas?.createrAvatorUrl)} className={styles.avatar} />
 								<Flex flexDirection="column">
 									<Text className={styles.owner}>{t('market.creater')}</Text>
 									<Tooltip
@@ -461,7 +461,7 @@ const MarketDetailScreen = (props) => {
 								</Flex>
 							</Flex>
 							<Flex flex="1" alignItems="center" cursor="pointer">
-								<img src={datas?.userAvatorUrl} className={styles.avatar} />
+								<img src={getImgLink(datas?.userAvatorUrl)} className={styles.avatar} />
 								<Flex flexDirection="column">
 									<Text className={styles.owner}>{t('market.owner')}</Text>
 									<Tooltip label={datas?.address && shortenAddress(datas?.address)} hasArrow>

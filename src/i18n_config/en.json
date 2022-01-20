@@ -82,7 +82,6 @@
 	"switch.to": "Switch to",
 	"connect": "Connect",
 	"connect.wallet": "Connect wallet",
-	"network": "Network",
 	"please.choose": "please choose",
 	"please.input": "please input",
 	"loading": "Loading...",
@@ -147,6 +146,7 @@
 		"facebook": "Facebook"
 	},
 	"network": {
+		"head": "Network",
 		"switch": "Switch Network",
 		"disconnect": "Disconnect"
 	},
@@ -176,7 +176,7 @@
 	},
 	"igo": {
 		"mockGamelist.title": "Olympic BTC Synthesis",
-    "pokeGameList.title": "Pokemine on Game",
+		"pokeGameList.title": "Pokemine on Game",
 		"ongoing": "Ongoing",
 		"ended": "Ended",
 		"title": "This module integrates gaming and play to earn mechanism. It will allow users  to enjoy the fun game while benifit from the token gain.",

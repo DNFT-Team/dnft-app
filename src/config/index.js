@@ -1,3 +1,3 @@
 export default {
-	net_name: process.env.REACT_APP_NET_ENV,
+	net_env: process.env.REACT_APP_NET_ENV,
 }
