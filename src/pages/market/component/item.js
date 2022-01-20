@@ -57,7 +57,9 @@ const NFTCard = (props) => {
 		const msg = flag ? `${item?.isSaved ? 'Unmarked' : 'Marked'} Successfully!` : data?.message
 		toast[flag ? 'success' : 'error'](msg)
 		// getMarketInfo();
-		if (flag) getMarketList && getMarketList(item.id, !item?.isSaved)
+		if (flag) {
+			getMarketList && getMarketList(item.id, !item?.isSaved)
+		}
 	}
 	return (
 		<div

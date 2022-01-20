@@ -16,18 +16,19 @@ import { useHistory, withRouter } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { tokenAbi, tradableNFTAbi, tradableNFTAbi721 } from 'utils/abi'
 import {
-  bscTestTokenContact, busdMarketContract, tradableNFTContract,
-  tradableNFTContract721
+	bscTestTokenContact,
+	busdMarketContract,
+	tradableNFTContract,
+	tradableNFTContract721,
 } from 'utils/contract'
 import { getWallet } from 'utils/get-wallet'
 import { get, post } from 'utils/request'
-import { shortenAddress, shortenNameString } from 'utils/tools'
+import { shortenAddress, shortenNameString, queryParse } from 'utils/tools'
 import { toDecimal } from 'utils/web3Tools'
 import Web3 from 'web3'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
 import styles from './index.less'
 import SharePopover from 'components/SharePopover'
-import { queryParse } from 'utils/tools'
 
 const MarketDetailScreen = (props) => {
 	const { t } = useTranslation()
@@ -256,7 +257,7 @@ const MarketDetailScreen = (props) => {
 						},
 						function (error, transactionHash) {
 							if (!error) {
-								console.log('交易hash: ', transactionHash)
+								console.log('hash: ', transactionHash)
 							} else {
 								console.log('error', error)
 							}
@@ -283,7 +284,7 @@ const MarketDetailScreen = (props) => {
 								position: toast.POSITION.TOP_CENTER,
 							},
 						)
-						console.log('交易状态：', receipt.status)
+						console.log('[ receipt.status ]', receipt.status)
 						historyBack()
 					})
 			}
@@ -369,7 +370,9 @@ const MarketDetailScreen = (props) => {
 		let _amount
 		try {
 			_amount = Number(Number(amount).toFixed(4))
-		} catch (e) {}
+		} catch (e) {
+			console.log(e)
+		}
 		return _amount
 	}
 
@@ -415,7 +418,7 @@ const MarketDetailScreen = (props) => {
 							>
 								{datas?.saveCount}
 							</Text>
-              <SharePopover datas={datas} typeFrom='nft' />
+							<SharePopover datas={datas} typeFrom="nft" />
 						</Flex>
 					</Flex>
 					<Flex
@@ -612,8 +615,11 @@ const MarketDetailScreen = (props) => {
 											setShowOffShelfModal(true)
 											return
 										}
-										if (datas?.contractType === '721') clickBuyItem()
-										else setIsOpen(true)
+										if (datas?.contractType === '721') {
+											clickBuyItem()
+										} else {
+											setIsOpen(true)
+										}
 									}}
 								>
 									{datas?.address === address ? t('nftCard.unsell') : t('market.buy')}
