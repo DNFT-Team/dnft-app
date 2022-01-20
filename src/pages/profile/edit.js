@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Dialog, Input, Upload, Button } from 'element-react'
+import React, { useEffect, useState } from 'react'
+import { Dialog, Input, Upload } from 'element-react'
 import styles from './index.less'
 import { css } from 'emotion'
 import upload_icon from 'images/profile/upload_icon.png'
@@ -7,11 +7,11 @@ import { toast } from 'react-toastify'
 import { post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { ipfs_post } from 'utils/ipfs-request'
-import globalConf from 'config/index'
+import { ipfs_add, IPFS_PREFIX } from 'utils/ipfs-request'
 import CropperBox from 'components/CropperBox'
 import { Btn } from 'components/Button'
 import { useTranslation } from 'react-i18next'
+import { getImgLink } from 'utils/tools'
 
 const ProfileEditScreen = (props) => {
 	const { token, datas, onClose, onSuccess, visible, onOpen } = props
@@ -23,26 +23,25 @@ const ProfileEditScreen = (props) => {
 	const [cropperVisible, setCropperVisible] = useState(false)
 
 	const [form, setForm] = useState({})
+
 	useEffect(() => {
 		setForm({
-			avatorUrl: datas?.avatorUrl,
+			avatorUrl: getImgLink(datas?.avatorUrl),
 			nickName: datas?.nickName,
 			twitterAddress: datas?.twitterAddress?.replace('https://twitter.com/', ''),
 			facebookAddress: datas?.facebookAddress?.replace('https://www.instagram.com/', ''),
 			youtubeAddress: datas?.youtubeAddress?.replace('https://youtube.com/', ''),
 		})
 	}, [datas])
-	const renderFormItem = (label, item) => {
-		console.log(label, 'label')
-		return (
-			<div className={styles.styleFormItemContainer}>
-				<div className={`${styles.label} ${label === 'Name' && styles.name_before}`}>
-					{t(`profile.${label}`)}
-				</div>
-				{item}
+
+	const renderFormItem = (label, item) => (
+		<div className={styles.styleFormItemContainer}>
+			<div className={`${styles.label} ${label === 'Name' && styles.name_before}`}>
+				{t(`profile.${label}`)}
 			</div>
-		)
-	}
+			{item}
+		</div>
+	)
 
 	const beforeAvatarUpload = (file) => {
 		const reader = new FileReader()
@@ -62,16 +61,12 @@ const ProfileEditScreen = (props) => {
 	const editProfile = async () => {
 		setLoading(true)
 		if (!form?.nickName) {
-			toast.warn(t('toast.nickName.not.empty'), {
-				position: toast.POSITION.TOP_CENTER,
-			})
+			toast.warn(t('toast.nickName.not.empty'))
 			setLoading(false)
 			return true
 		}
 		if (!profileFile && !datas?.avatorUrl) {
-			toast.dark(t('toast.upload.photo'), {
-				position: toast.POSITION.TOP_CENTER,
-			})
+			toast.dark(t('toast.upload.photo'))
 			setLoading(false)
 			return
 		}
@@ -79,11 +74,7 @@ const ProfileEditScreen = (props) => {
 		try {
 			let ipfsHash = ''
 			if (profileFile) {
-				const fileData = new FormData()
-				fileData.append('file', profileFile)
-				const ipfsData = await ipfs_post('/v0/add', fileData)
-				ipfsHash = ipfsData?.data?.['Hash']
-				console.log('Hash,HashHash', ipfsData, ipfsData?.data, ipfsHash)
+				ipfsHash = await ipfs_add(profileFile)
 				if (!ipfsHash) {
 					toast.error(t('toast.ipfs.upload.failed'))
 					setLoading(false)
@@ -92,7 +83,7 @@ const ProfileEditScreen = (props) => {
 				toast.success(t('toast.ipfs.upload.success'))
 			}
 
-			let avatorUrl = ipfsHash ? globalConf.ipfsDown + ipfsHash : datas?.avatorUrl
+			let avatorUrl = ipfsHash ? IPFS_PREFIX + ipfsHash : datas?.avatorUrl
 
 			const formData = new FormData()
 			formData.append('address', datas?.address)
@@ -113,16 +104,12 @@ const ProfileEditScreen = (props) => {
 
 			const { data } = await post('/api/v1/users/updateUser', formData, token)
 			if (data?.success === true) {
-				toast.success(t('toast.success.modify'), {
-					position: toast.POSITION.TOP_CENTER,
-				})
+				toast.success(t('toast.success.modify'))
 				onSuccess()
 				setProfileFile(null)
 				setForm({})
 			} else {
-				toast.error(data?.message, {
-					position: toast.POSITION.TOP_CENTER,
-				})
+				toast.error(data?.message)
 			}
 			setLoading(false)
 		} catch (e) {

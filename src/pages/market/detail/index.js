@@ -4,7 +4,6 @@ import { Btn } from 'components/Button'
 import NftSlider from 'components/NftSlider'
 import RenderOffShelfModal from 'components/RenderOffShelfModal'
 import SwitchModal from 'components/SwitchModal'
-import globalConfig from 'config/index'
 import { Button, Dialog, InputNumber } from 'element-react'
 import { css } from 'emotion'
 import busd_unit from 'images/market/busd.svg'
@@ -32,7 +31,7 @@ import SharePopover from 'components/SharePopover'
 
 const MarketDetailScreen = (props) => {
 	const { t } = useTranslation()
-	const { location, address, token, chainType } = props
+	const { location, net_env, address, token, chainType } = props
 	const item = location?.state?.item
 	const fromAsset = location?.state?.fromAsset
 	const category = location?.state?.category
@@ -54,9 +53,7 @@ const MarketDetailScreen = (props) => {
 	const [showOffShelfModal, setShowOffShelfModal] = useState(false)
 	let url = queryParse(window.location.href)
 
-	const currentNetEnv = globalConfig.net_env
-	const currentNetName = globalConfig.net_name
-	const rightChainId = currentNetEnv === 'testnet' ? 97 : 56
+	const rightChainId = net_env === 'testnet' ? 97 : 56
 	const currentWindowWidth = useMemo(() => window.innerWidth, [])
 	useEffect(() => {
 		if (item) {
@@ -131,7 +128,7 @@ const MarketDetailScreen = (props) => {
 		}
 		try {
 			let result
-			if (currentNetEnv === 'testnet') {
+			if (net_env === 'testnet') {
 				result = await ethereum.request({
 					method: 'wallet_addEthereumChain',
 					params: [
@@ -203,11 +200,11 @@ const MarketDetailScreen = (props) => {
 		const { contractType, type } = datas || {}
 		const tradableNFTAddress = (
 			contractType == 1155 ? tradableNFTContract : tradableNFTContract721
-		)[currentNetName]
+		)[net_env]
 
 		const contract = new window.web3.eth.Contract(
 			tokenAbi,
-			(type === 'DNF' ? bscTestTokenContact : busdMarketContract)[currentNetName],
+			(type === 'DNF' ? bscTestTokenContact : busdMarketContract)[net_env],
 		)
 		const auth = await contract.methods['allowance'](address, tradableNFTAddress).call()
 		if (!(auth > 0)) {
@@ -239,7 +236,7 @@ const MarketDetailScreen = (props) => {
 				setIsOpen(false)
 				const tradableNFTAddress = (
 					contractType == 1155 ? tradableNFTContract : tradableNFTContract721
-				)[currentNetName]
+				)[net_env]
 
 				const tradableNFTAbiType = contractType == 1155 ? tradableNFTAbi : tradableNFTAbi721
 				const myContract = new window.web3.eth.Contract(tradableNFTAbiType, tradableNFTAddress)
@@ -535,9 +532,9 @@ const MarketDetailScreen = (props) => {
 								<div>{t('market.contract.address')}</div>
 								<div>
 									<a
-										href={`https://${
-											currentNetName === 'mainnet' ? '' : 'testnet.'
-										}bscscan.com/address/${datas?.tokenAddress}`}
+										href={`https://${net_env === 'mainnet' ? '' : 'testnet.'}bscscan.com/address/${
+											datas?.tokenAddress
+										}`}
 										className={styles.tokenAddress}
 										target="_blank"
 										rel="noopener noreferrer"
@@ -714,7 +711,7 @@ const mapStateToProps = ({ profile, market }) => ({
 	token: profile.token,
 	datas: market.datas,
 	chainType: profile.chainType,
-
+	net_env: profile.net_env,
 	address: profile.address,
 })
 export default withRouter(connect(mapStateToProps)(MarketDetailScreen))

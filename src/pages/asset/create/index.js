@@ -6,30 +6,19 @@ import { post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
-import { ipfs_add } from 'utils/ipfs-request'
+import { ipfs_add, sensi_post } from 'utils/ipfs-request'
 import { getObjectURL, json2File } from 'utils/tools'
 import { toast } from 'react-toastify'
 import { createNFTContract1155, createNFTContract721 } from '../../../utils/contract'
 import { createNFTAbi1155, createNFTAbi721 } from '../../../utils/abi'
 import Web3 from 'web3'
-import globalConfig from '../../../config'
 import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
 import SwitchModal from 'components/SwitchModal'
 import StepCard, { STEP_ENUM } from './step'
 
 const CreateNFTModal = (props) => {
-	const {
-		dispatch,
-		datas,
-		collectionId,
-		location,
-		address,
-		chainType,
-		token,
-		categoryList,
-		onClose,
-	} = props
+	const { collectionId, address, chainType, token, net_env, categoryList, onClose } = props
 	const { t } = useTranslation()
 
 	const [options, setOptions] = useState([])
@@ -44,8 +33,6 @@ const CreateNFTModal = (props) => {
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
 	const [step, setStep] = useState(STEP_ENUM.INITIAL)
 	const [stepErr, setStepErr] = useState('')
-	const currentNetEnv = globalConfig.net_env
-	const currentNetName = globalConfig.net_name
 
 	let history = useHistory()
 
@@ -114,7 +101,7 @@ const CreateNFTModal = (props) => {
 			return
 		}
 		try {
-			if (currentNetEnv === 'testnet') {
+			if (net_env === 'testnet') {
 				await ethereum.request({
 					method: 'wallet_addEthereumChain',
 					params: [
@@ -159,12 +146,12 @@ const CreateNFTModal = (props) => {
 		try {
 			const fileData = new FormData()
 			fileData.append('content', file)
-			const res = await post('/sensi/single/multipart-form', fileData)
+			const res = await sensi_post('/single/multipart-form', fileData)
 			return res.data.prediction.some(
 				(e) => e.probability > 0.5 && ['Sexy', 'Porn'].includes(e.className),
 			)
 		} catch {
-			return false
+			return true
 		}
 	}
 
@@ -179,8 +166,8 @@ const CreateNFTModal = (props) => {
 				const is1155 = form.contractType == 1155
 
 				const contractAddress = is1155
-					? createNFTContract1155[currentNetName]
-					: createNFTContract721[currentNetName]
+					? createNFTContract1155[net_env]
+					: createNFTContract721[net_env]
 				const myContract = new window.web3.eth.Contract(
 					is1155 ? createNFTAbi1155 : createNFTAbi721,
 					contractAddress,
@@ -205,20 +192,11 @@ const CreateNFTModal = (props) => {
 					const tokenId = is1155
 						? createNFTResult.events.TransferSingle.returnValues.id
 						: createNFTResult.events.Transfer.returnValues.tokenId
-					await post(
-						'/api/v1/nft/',
-						{
-							...form,
-							tokenId,
-							address: address,
-							chainType: chainType,
-							hash: createNFTResult.transactionHash,
-							tokenAddress: contractAddress,
-							avatorUrl: `ipfs://${imageCid}`,
-						},
-						token,
-					)
-					return createNFTResult.transactionHash
+					return {
+						tokenId,
+						hash: createNFTResult.transactionHash,
+						tokenAddress: contractAddress,
+					}
 				} else {
 					return null
 				}
@@ -267,7 +245,7 @@ const CreateNFTModal = (props) => {
 			}
 			// 2.upload media file
 			setStep(STEP_ENUM.IMAGE_PENDING)
-			const imageCid = await ipfs_add('/v0/add', nftFile)
+			const imageCid = await ipfs_add(nftFile)
 			if (!imageCid) {
 				setStep(STEP_ENUM.IMAGE_FAILED)
 				setStepErr('Network congestion when uploading files.')
@@ -280,10 +258,11 @@ const CreateNFTModal = (props) => {
 					name: form.name,
 					description: form.description,
 					image: 'ipfs://' + imageCid,
+					animation_url: 'ipfs://' + imageCid,
 				},
 				`DNFT_${form.contractType}_${Date.now()}.json`,
 			)
-			const jsonCid = await ipfs_add('/v0/add', metaFile)
+			const jsonCid = await ipfs_add(metaFile)
 			if (!jsonCid) {
 				setStep(STEP_ENUM.JSON_FAILED)
 				setStepErr('Network congestion when uploading files.')
@@ -291,11 +270,38 @@ const CreateNFTModal = (props) => {
 			}
 			//  4.mint nft
 			setStep(STEP_ENUM.MINT_PENDING)
-			const transactionHash = await mintNFTInBlock(form, imageCid, jsonCid)
-			if (!transactionHash) {
+			const txRes = await mintNFTInBlock(jsonCid)
+			if (!txRes) {
 				setStep(STEP_ENUM.MINT_FAILED)
 				return
 			}
+			//	notify api
+			const noftifyRes = await post(
+				'/api/v1/nft/',
+				{
+					...form,
+
+					address,
+					chainType,
+
+					tokenAddress: txRes.tokenAddress,
+					hash: txRes.hash,
+					tokenId: txRes.tokenId,
+
+					avatorUrl: 'ipfs://' + imageCid,
+					// animationUrl: '',
+					// itemType: nftFile.type,
+
+					ipfs_hash: jsonCid,
+				},
+				token,
+			)
+			console.log('[ noftifyRes ]', noftifyRes)
+
+			// if (!noftifyRes.data.success) {
+			// 	console.log('Notify failed')
+			// }
+
 			setStep(STEP_ENUM.END)
 		} catch (e) {
 			console.log(e, 'e')

@@ -20,13 +20,11 @@ import edit_avatar from 'images/profile/edit_avatar.png'
 import ins from 'images/profile/ins.png'
 import twitter from 'images/profile/twitter.png'
 import { post } from 'utils/request'
-import { ipfs_post } from 'utils/ipfs-request'
+import { ipfs_add, IPFS_PREFIX } from 'utils/ipfs-request'
 import { toast } from 'react-toastify'
-import { Box, Tab, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react'
+import { Box, Tab, Tabs, TabList } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import ProfileEditScreen from './edit'
-import globalConf from 'config/index'
-import camera from 'images/profile/camera.png'
 import youtube from 'images/profile/youtube.png'
 import CropperBox from 'components/CropperBox'
 
@@ -35,7 +33,7 @@ import u_youtube from 'images/profile/u_youtube.png'
 import u_ins from 'images/profile/u_ins.png'
 import CollectionAdd from './components/collectionAdd'
 import ChangeBg from './changeBg'
-import { shortenAddress, shortenNameString } from 'utils/tools'
+import { shortenAddress, shortenNameString, getImgLink } from 'utils/tools'
 import SharePopover from 'components/SharePopover'
 import BotDrawer from './components/botDrawer'
 import { useTranslation } from 'react-i18next'
@@ -53,8 +51,6 @@ const ProfileScreen = (props) => {
 	let _newAddress = location?.pathname?.split('/') || []
 	_newAddress = _newAddress[_newAddress.length - 1]
 	const [newAddress, setNewAddress] = useState(_newAddress)
-	const [srcCropper, setSrcCropper] = useState('')
-	const [visible, setVisible] = useState(false)
 	const [bottomDrawerVisible, setBottomDrawerVisible] = useState(false)
 	let history = useHistory()
 	const shareUrl = window.location.href
@@ -120,9 +116,7 @@ const ProfileScreen = (props) => {
 	}
 	const handleCopyAddress = () => {
 		copy(newAddress)
-		toast.success(t('toast.address.copied'), {
-			position: toast.POSITION.TOP_CENTER,
-		})
+		toast.success(t('toast.address.copied'))
 	}
 	const renderActionDispatch = (item) => {
 		switch (item) {
@@ -198,40 +192,6 @@ const ProfileScreen = (props) => {
 		},
 		[selectedTab, batch, owned, created, newAddress],
 	)
-	const uploadFile = async (dataUrl, file) => {
-		try {
-			const fileData = new FormData()
-			fileData.append('file', file)
-			const data = await ipfs_post('/v0/add', fileData)
-			const ipfsHash = data?.data?.['Hash']
-
-			if (!ipfsHash) {
-				toast.error('IPFS upload failed!')
-				return
-			}
-			if (ipfsHash) {
-				toast.success('IPFS Upload Success', {
-					position: toast.POSITION.TOP_CENTER,
-				})
-				const data1 = await post(
-					'/api/v1/users/updateUserBanner',
-					{
-						address: newAddress,
-						bannerUrl: globalConf.ipfsDown + ipfsHash,
-					},
-					token,
-				)
-				data1 &&
-					toast.success('User Banner Update Success', {
-						position: toast.POSITION.TOP_CENTER,
-					})
-				dispatch(getMyProfileList({ userId: newAddress }, token))
-			}
-			setShowBgScreen(false)
-		} catch (e) {
-			console.log(e, 'e')
-		}
-	}
 
 	const handleLink = (value) => {
 		switch (value) {
@@ -257,14 +217,7 @@ const ProfileScreen = (props) => {
 				datas?.nickName || 'user'
 			} on DNFT Protocol! | ${shareUrl}`,
 		)
-		toast.success(t('toast.link.copy'), {
-			position: toast.POSITION.TOP_CENTER,
-		})
-	}
-
-	const cropperBtn = (dataUrl, file) => {
-		setVisible(false)
-		uploadFile(dataUrl, file)
+		toast.success(t('toast.link.copy'))
 	}
 
 	const handleChangeTab = (i) => {
@@ -281,7 +234,9 @@ const ProfileScreen = (props) => {
 					position="relative"
 					borderRadius={[0, 0, 0, '10px']}
 					style={{
-						background: `#b7b7b7 center center / cover no-repeat url(${datas?.bannerUrl})`,
+						background: `#b7b7b7 center center / cover no-repeat url(${getImgLink(
+							datas?.bannerUrl,
+						)})`,
 					}}
 				>
 					{newAddress === address && (
@@ -296,7 +251,7 @@ const ProfileScreen = (props) => {
 				</Box>
 				<div className={styles.profile}>
 					<Box {...profileAvatarSettings}>
-						<img className={styles.authorImg} src={datas?.avatorUrl} alt="" />
+						<img className={styles.authorImg} src={getImgLink(datas?.avatorUrl)} alt="" />
 						{newAddress === address && (
 							<Box
 								display={['none', 'none', 'none', 'flex']}
@@ -409,16 +364,6 @@ const ProfileScreen = (props) => {
 				onClose={() => {
 					setShowEditScreen(false)
 				}}
-			/>
-			<CropperBox
-				srcCropper={srcCropper}
-				onCloseModal={() => {
-					setVisible(false)
-				}}
-				tip="banner"
-				visible={visible}
-				aspectRatio={1800 / 300}
-				cropperBtn={cropperBtn}
 			/>
 			<BotDrawer
 				onClose={() => {

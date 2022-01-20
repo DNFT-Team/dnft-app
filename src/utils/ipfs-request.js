@@ -1,16 +1,10 @@
-import globalConf from 'config/index'
-export const URL_CLOUD = globalConf.ipfsUp
-
-let BASE_URL = URL_CLOUD
-
+const BASE_URL = process.env.REACT_APP_IPFS_ENDPOINT
+const SENSI_URL = process.env.REACT_APP_AI_ENDPOINT
 const FETCH_TIMEOUT = 60 * 1000
-let _token = ''
 
-export function setTokenForReq(token) {
-	_token = token
-}
+export const IPFS_PREFIX = 'ipfs://'
 
-export default function request(url, options) {
+function request(url, options) {
 	if (BASE_URL.length == 0) {
 		return
 	}
@@ -25,7 +19,6 @@ export default function request(url, options) {
 			newOptions.headers = {
 				Accept: 'application/json',
 				'Content-Type': 'application/json; charset=utf-8',
-				// Authorization: _token,
 				...newOptions.headers,
 			}
 			newOptions.body = JSON.stringify(newOptions.body)
@@ -33,18 +26,16 @@ export default function request(url, options) {
 			// newOptions.body is FormData
 			newOptions.headers = {
 				Accept: 'application/json',
-				// Authorization: _token,
 				...newOptions.headers,
 			}
 		}
 	} else {
 		newOptions.headers = {
-			// Authorization: _token,
 			...newOptions.headers,
 		}
 	}
 
-	let URL = URL_CLOUD + url
+	const URL = (newOptions?.baseURL || BASE_URL) + url
 
 	const req = Promise.race([
 		fetch(URL, newOptions),
@@ -63,7 +54,6 @@ export default function request(url, options) {
 	])
 
 	return req
-		.then(checkCode)
 		.then((response) => {
 			const statusCode = response.status
 			const data = response.json()
@@ -82,21 +72,11 @@ export default function request(url, options) {
 		})
 }
 
-export const ipfs_get = (url, params, token) =>
-	request(`${url}?${stringify({ ...params })}`, {
-		method: 'GET',
-		headers: {
-			Authorization: token,
-		},
-	})
-
-export const ipfs_put = (url, params, token) =>
+export const sensi_post = (url, params) =>
 	request(url, {
-		method: 'PUT',
+		method: 'POST',
 		body: params,
-		headers: {
-			Authorization: token,
-		},
+		baseURL: SENSI_URL,
 	})
 
 export const ipfs_post = (url, params, token) =>
@@ -107,39 +87,16 @@ export const ipfs_post = (url, params, token) =>
 			Authorization: token,
 		},
 	})
-export const ipfs_add = async (url, _file) => {
+
+export const ipfs_add = async (_file) => {
 	try {
 		const fileData = new FormData()
 		fileData.append('file', _file)
-		const { data } = await request(url, { method: 'POST', body: fileData })
+		const { data } = await request('/v0/add', { method: 'POST', body: fileData })
 		return data?.Hash || null
 	} catch {
 		return null
 	}
-}
-
-export const ipfs_delete = (url, params, token) =>
-	request(`${url}?${stringify({ ...params })}`, {
-		method: 'DELETE',
-		headers: {
-			Authorization: token,
-		},
-	})
-
-function stringify(params) {
-	let tempParams = []
-	Object.keys(params).forEach((key) => {
-		let value = params[key]
-		if (value === '' || value === null || value === undefined) {
-			return
-		}
-		tempParams.push([key, encodeURIComponent(value)].join('='))
-	})
-	return tempParams.join('&')
-}
-
-function checkCode(res) {
-	return res
 }
 
 class RequestError extends Error {

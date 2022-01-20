@@ -36,8 +36,8 @@ import marketIcon_Select from '../images/menu/market_select.svg'
 import igoIcon_Select from '../images/menu/igo_select.svg'
 import dataIcon_Select from '../images/menu/data_select.svg'
 import galleryIcon_Select from '../images/menu/gallery_select.svg'
-import globalConf from 'config/index'
-const NetName = globalConf.net_name
+
+const NetName = process.env.REACT_APP_NET_ENV
 const nets = ['devnet', 'testnet', 'mainnet']
 
 const menuAll = [

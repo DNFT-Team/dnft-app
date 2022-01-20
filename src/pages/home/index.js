@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useHistory, withRouter } from 'react-router-dom'
-import { Carousel, Dialog, Button } from 'element-react'
+import { Carousel } from 'element-react'
 import { css } from 'emotion'
 import { post } from 'utils/request'
 import NftSlider from '../../components/NftSlider'
@@ -19,15 +19,16 @@ import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
 
 const HomeScreen = (props) => {
-	const { token, address } = props
+	const { token, address, net_env } = props
 	let history = useHistory()
 	const { t } = useTranslation()
 
-	const currentNetEnv = globalConf.net_env
-	const rightChainId = currentNetEnv === 'testnet' ? 97 : 56
-	const right16ChainId = currentNetEnv === 'testnet' ? '0x61' : '0x38'
+	console.info(['NET_ENV'], net_env)
+
+	const rightChainId = net_env === 'testnet' ? 97 : 56
+	const right16ChainId = net_env === 'testnet' ? '0x61' : '0x38'
 	const rightRpcUrl =
-		currentNetEnv === 'testnet'
+		net_env === 'testnet'
 			? ['https://data-seed-prebsc-1-s1.binance.org:8545/']
 			: ['https://bsc-dataseed.binance.org/']
 
@@ -56,7 +57,6 @@ const HomeScreen = (props) => {
 	]
 	const dataTop = dataTopAll.filter((e) => !e.isHide)
 
-	// const currentWindowWidth = useMemo(() => window.innerWidth, []);
 	const [currentWindowWidth, setCurWindowWidth] = useState(window.innerWidth)
 
 	const getNFTList = useCallback(async () => {
@@ -200,6 +200,7 @@ const mapStateToProps = ({ home, profile }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
 	token: profile.token,
+	net_env: profile.net_env,
 })
 export default withRouter(connect(mapStateToProps)(HomeScreen))
 

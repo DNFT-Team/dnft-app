@@ -1,9 +1,8 @@
-import axios from 'axios';
-import globalConf from 'config/index';
+import axios from 'axios'
 
-axios.defaults.baseURL =  globalConf.baseUrl + '/';
-axios.defaults.withCredentials = true;
-axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.timeout = 10000 * 3;
+axios.defaults.baseURL = process.env.REACT_APP_CORE_ENDPOINT + '/'
+axios.defaults.withCredentials = true
+axios.defaults.headers.common['Content-Type'] = 'application/json'
+axios.defaults.timeout = 10000 * 3
 
-export default axios;
+export default axios

@@ -58,6 +58,8 @@ import metamaskIcon from '../../images/networks/metamask.png'
 import walletConnectIcon from '../../images/networks/wallet-connect.svg'
 import ontoIcon from '../../images/networks/onto.png'
 
+const faucetApi = process.env.REACT_APP_FAUCET_ENDPOINT
+
 const DEFAULT_STAT = { count: 0, balance: 0, total: 0 }
 
 const GlobalHeader = (props) => {
@@ -386,15 +388,15 @@ const GlobalHeader = (props) => {
 			setGiftLoading(true)
 			axios
 				.get(`/gift/${address}?assetId=${assetId}&chainId=${chainId}&giftMode=${giftMode}`, {
-					baseURL: globalConf.faucetApi,
+					baseURL: faucetApi,
 					withCredentials: false,
 				})
 				.then(() => {
-					toast.success(t('toast.send.success'), { position: toast.POSITION.TOP_CENTER })
+					toast.success(t('toast.send.success'))
 				})
 				.catch((err) => {
 					const msg = err?.response?.data?.message || err.message
-					toast.dark(msg, { position: toast.POSITION.TOP_CENTER })
+					toast.dark(msg)
 				})
 				.finally(() => {
 					setGiftLoading(false)
@@ -407,14 +409,14 @@ const GlobalHeader = (props) => {
 		let list = []
 		Promise.allSettled([
 			axios.get('/health?chainId=97&assetId=TDNF', {
-				baseURL: globalConf.faucetApi,
+				baseURL: faucetApi,
 				withCredentials: false,
 			}),
 			axios.get('/health?chainId=97&assetId=TBUSD', {
-				baseURL: globalConf.faucetApi,
+				baseURL: faucetApi,
 				withCredentials: false,
 			}),
-			axios.get('/history', { baseURL: globalConf.faucetApi, withCredentials: false }),
+			axios.get('/history', { baseURL: faucetApi, withCredentials: false }),
 		])
 			.then((results) => {
 				if (results[0].status === 'fulfilled') {

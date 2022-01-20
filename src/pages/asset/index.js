@@ -23,6 +23,7 @@ import SwitchModal from 'components/SwitchModal'
 import { getWallet } from 'utils/get-wallet'
 import { Btn } from 'components/Button'
 import { useTranslation } from 'react-i18next'
+import { getImgLink } from 'utils/tools'
 
 const AssetScreen = (props) => {
 	const { dispatch, location, address, chainType, token, categoryList } = props
@@ -86,8 +87,8 @@ const AssetScreen = (props) => {
 
 	const getBannerUrl = async () => {
 		const result = await post(`/api/v1/users/address/${address}`, {}, token)
-		setBannerUrl(result?.data?.data?.bannerUrl)
-		setAvatorUrl(result?.data?.data?.avatorUrl)
+		setBannerUrl(getImgLink(result?.data?.data?.bannerUrl))
+		setAvatorUrl(getImgLink(result?.data?.data?.avatorUrl))
 	}
 
 	useEffect(() => {
@@ -127,11 +128,8 @@ const AssetScreen = (props) => {
 			)
 			setList(data?.data?.content || [])
 			if (callback) {
-				toast.info(t('toast.operation.success'), {
-					position: toast.POSITION.TOP_CENTER,
-				})
+				toast.info(t('toast.operation.success'))
 			}
-			// }
 		} finally {
 			setIsLoading(false)
 		}
@@ -344,7 +342,10 @@ const AssetScreen = (props) => {
 				onLike={getNFTList}
 				onSave={getNFTList}
 				handleDetail={() => {
-					history.push(`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`, { item, fromAsset: true })
+					history.push(
+						`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`,
+						{ item, fromAsset: true },
+					)
 				}}
 				onRefresh={(currentAddress, currentToken, callback) =>
 					getNFTList(currentAddress, currentToken, callback)

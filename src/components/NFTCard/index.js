@@ -19,7 +19,6 @@ import {
 } from '../../utils/abi'
 import { Box } from '@chakra-ui/react'
 import { toast } from 'react-toastify'
-import globalConfig from '../../config'
 import _ from 'lodash'
 import NFTCardItem from 'pages/market/component/item'
 import { getWallet } from 'utils/get-wallet'
@@ -28,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 const gasLimit = 3000000
 const NFTCard = (props) => {
 	const {
+		net_env,
 		needAction,
 		item,
 		index,
@@ -52,9 +52,6 @@ const NFTCard = (props) => {
 	const [isApproveLoading, setIsAprroveLoading] = useState(false)
 	const [isOnLoading, setIsOnLoading] = useState(false)
 	const [isOffLoading, setIsOffLoading] = useState(false)
-	const [showPhaseOut, setShowPhaseOut] = useState(false)
-	const currentNetEnv = globalConfig.net_env
-	const currentNetName = globalConfig.net_name
 
 	const onShowSellModal = () => {
 		setShowSellModal(true)
@@ -163,8 +160,8 @@ const NFTCard = (props) => {
 											const myContract = new window.web3.eth.Contract(
 												is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
 												is721Contract
-													? tradableNFTContract721[currentNetName]
-													: tradableNFTContract[currentNetName],
+													? tradableNFTContract721[net_env]
+													: tradableNFTContract[net_env],
 											)
 
 											let putOnResult
@@ -253,16 +250,16 @@ const NFTCard = (props) => {
 											const dnfTokenContract = new window.web3.eth.Contract(
 												is721Contract ? createNFTAbi721 : createNFTAbi1155,
 												is721Contract
-													? createNFTContract721[currentNetName]
-													: createNFTContract1155[currentNetName],
+													? createNFTContract721[net_env]
+													: createNFTContract1155[net_env],
 											)
 
 											let isApproved = await dnfTokenContract.methods
 												.isApprovedForAll(
 													address,
 													is721Contract
-														? tradableNFTContract721[currentNetName]
-														: tradableNFTContract[currentNetName],
+														? tradableNFTContract721[net_env]
+														: tradableNFTContract[net_env],
 												)
 												.call()
 
@@ -270,8 +267,8 @@ const NFTCard = (props) => {
 												let result = await dnfTokenContract.methods
 													.setApprovalForAll(
 														is721Contract
-															? tradableNFTContract721[currentNetName]
-															: tradableNFTContract[currentNetName],
+															? tradableNFTContract721[net_env]
+															: tradableNFTContract[net_env],
 														true,
 													)
 													.send({
@@ -339,8 +336,8 @@ const NFTCard = (props) => {
 									const is721Contract = item.contractType == 721
 
 									const contractAddress = is721Contract
-										? tradableNFTContract721[currentNetName]
-										: tradableNFTContract[currentNetName]
+										? tradableNFTContract721[net_env]
+										: tradableNFTContract[net_env]
 									const myContract = new window.web3.eth.Contract(
 										is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
 										contractAddress,
@@ -446,6 +443,7 @@ const NFTCard = (props) => {
 const mapStateToProps = ({ profile }) => ({
 	address: profile.address,
 	token: profile.token,
+	net_env: profile.net_env,
 })
 export default withRouter(connect(mapStateToProps)(NFTCard))
 

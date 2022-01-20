@@ -14,7 +14,7 @@ import { useHistory } from 'react-router'
 import { withRouter } from 'react-router-dom'
 import { MENU_MAP } from 'routers/config'
 import { get, post } from 'utils/request'
-import { shortenAddress, shortenNameString } from 'utils/tools'
+import { shortenAddress, shortenNameString, getImgLink } from 'utils/tools'
 // import { assetSvg } from '../../utils/svg';
 import ethSvg from '../../images/networks/logo_eth.svg'
 import bscSvg from '../../images/networks/logo_bsc.svg'
@@ -170,7 +170,7 @@ const DrawerMenu = (props) => {
 											<Flex alignItems="center">
 												{item.navName === 'Profile' ? (
 													<>
-														<img src={profile?.avatorUrl} className="userLogo" />
+														<img src={getImgLink(profile?.avatorUrl)} className="userLogo" />
 														<div className="user">
 															<span className="menuSpan">
 																{shortenNameString(profile?.nickName)}

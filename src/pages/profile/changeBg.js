@@ -1,23 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Dialog, Input, Upload, Button } from 'element-react'
-import styles from './index.less'
+import React, { useEffect, useState } from 'react'
+import { Dialog, Upload, Button } from 'element-react'
 import { css } from 'emotion'
 import { toast } from 'react-toastify'
 import { post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { ipfs_post } from 'utils/ipfs-request'
-import globalConf from 'config/index'
+import { ipfs_add, IPFS_PREFIX } from 'utils/ipfs-request'
 import CropperBox from 'components/CropperBox'
 import upload_icon from 'images/profile/upload_icon.png'
-import { file } from '@babel/types'
-import {
-	getMyProfileList,
-	getMyProfileBatch,
-	getMyProfileCreated,
-	getMyProfileOwned,
-} from 'reduxs/actions/profile'
+import { getMyProfileList } from 'reduxs/actions/profile'
 import { useTranslation } from 'react-i18next'
+import { getImgLink } from 'utils/tools'
 
 const ProfileByScreen = (props) => {
 	const { token, datas, onClose, onSuccess, visible, newAddress, dispatch, onOpen } = props
@@ -32,7 +25,7 @@ const ProfileByScreen = (props) => {
 
 	useEffect(() => {
 		setForm({
-			avatorUrl: datas?.bannerUrl,
+			avatorUrl: getImgLink(datas?.bannerUrl),
 		})
 	}, [datas])
 
@@ -63,19 +56,13 @@ const ProfileByScreen = (props) => {
 		let ipfsHash = datas?.bannerUrl
 		if (profileFile) {
 			try {
-				const fileData = new FormData()
-				fileData.append('file', profileFile)
-				const data = await ipfs_post('/v0/add', fileData)
-				ipfsHash = globalConf.ipfsDown + data?.data?.['Hash']
+				ipfsHash = await ipfs_add(profileFile)
 				if (!ipfsHash) {
 					toast.error(t('toast.ipfs.upload.failed'))
 					setLoading(false)
 					return
-				}
-				if (ipfsHash) {
-					toast.success(t('toast.ipfs.upload.success'), {
-						position: toast.POSITION.TOP_CENTER,
-					})
+				} else {
+					toast.success(t('toast.ipfs.upload.success'))
 				}
 			} catch (e) {
 				console.log(e)
@@ -87,14 +74,11 @@ const ProfileByScreen = (props) => {
 				'/api/v1/users/updateUserBanner',
 				{
 					address: newAddress,
-					bannerUrl: ipfsHash,
+					bannerUrl: IPFS_PREFIX + ipfsHash,
 				},
 				token,
 			)
-			data1 &&
-				toast.success(t('toast.banner.update.success'), {
-					position: toast.POSITION.TOP_CENTER,
-				})
+			data1 && toast.success(t('toast.banner.update.success'))
 			setLoading(false)
 			setForm({})
 			setProfileFile(null)

@@ -1,20 +1,3 @@
 export default {
-	net_name: process.env.REACT_APP_ENV_NAME,
-	net_env: process.env.REACT_APP_NET_ENV,
-	baseUrl: '',
-	backendApi: `/api`,
-	staticApi: `/data/`,
-	bridgeApi: 'https://mainnervetrx.dnft.world/transaction',
-	faucetApi: `/faucet`,
-	ipfsUp: `/ipfsApi`,
-	ipfsDown: `/ipfsGet/`,
-	ipfsGateway: 'https://dnft.mypinata.cloud',
-
-	// backendApi: process.env.REACT_APP_CORE_ENDPOINT,
-	// aiApi: process.env.REACT_APP_AI_ENDPOINT,
-	// bridgeApi: process.env.REACT_APP_BRIDGE_ENDPOINT,
-	// faucetApi: process.env.REACT_APP_FAUCET_ENDPOINT,
-	// ipfsUp: process.env.REACT_APP_IPFS_UPLOAD,
-	// ipfsDown: process.env.REACT_APP_IPFS_PREVIEW,
-	// ipfsGateway: process.env.REACT_APP_IPFS_GATEWAY,
+	net_name: process.env.REACT_APP_NET_ENV,
 }
