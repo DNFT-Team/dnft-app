@@ -63,14 +63,16 @@ const MarketDetailScreen = (props) => {
 	useEffect(() => {
 		getMarketInfo()
 	}, [token])
+	console.log(url,'url?.fromAsset')
 	const getMarketInfo = async () => {
 		try {
-			if (fromAsset) {
+			if (url?.fromAsset) {
 				const { data } = await get(
-					`/api/v1/trans/asset/${item?.address}/${item?.status}/${item?.nftId}`,
+					`/api/v1/trans/asset/${url?.address}/${url?.status}/${url?.nftId}`,
 					'',
 					token,
 				)
+				console.log(data,'data')
 				setDatas(data?.data?.content)
 			} else {
 				const { data } = await get(
@@ -552,7 +554,7 @@ const MarketDetailScreen = (props) => {
 							</Flex>
 						</Flex>
 					</Box>
-					{(!fromAsset || datas?.status === 'ONSALE') && (
+					{(!url?.fromAsset || datas?.status === 'ONSALE') && (
 						<Box
 							w={['100vw', '100vw', '100vw', '400px']}
 							boxSizing={'border-box'}

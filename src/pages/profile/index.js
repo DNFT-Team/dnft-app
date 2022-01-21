@@ -182,8 +182,9 @@ const ProfileScreen = (props) => {
 						newAddress={newAddress}
 						handleDetail={() => {
 							history.push(
-								`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`,
-								{ item, fromAsset: true },
+								`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${item?.nftId}&fromAsset=${true}`,
+								// `/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`,
+								// { item, fromAsset: true },
 							)
 						}}
 					/>

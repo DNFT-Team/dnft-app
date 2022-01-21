@@ -343,8 +343,8 @@ const AssetScreen = (props) => {
 				onSave={getNFTList}
 				handleDetail={() => {
 					history.push(
-						`/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`,
-						{ item, fromAsset: true },
+						`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${item?.nftId}&fromAsset=${true}`,
+						// { item, fromAsset: true },
 					)
 				}}
 				onRefresh={(currentAddress, currentToken, callback) =>
