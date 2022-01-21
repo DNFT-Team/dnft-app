@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import { Btn } from 'components/Button'
 import CreateCollectionModal from 'components/CreateCollectionModal'
 import { css } from 'emotion'
@@ -75,12 +75,12 @@ const CollectionScreen = (props) => {
 		[list],
 	)
 	return (
-		<div className={styleCardContainer}>
-			<header className={styleCardHeaderBox}>
-				<div className={styleCardHeader}>
+		<Box p={['20px', '20px', '20px', '50px']} className={styleCardContainer}>
+			<Box flexDirection={['column', 'column', 'column', 'row']} className={styleCardHeaderBox}>
+				<Flex pb={['25px', '25px', '25px', 0]} textAlign='center' className={styleCardHeader}>
 					<h4>{list?.name}</h4>
 					<div>{list?.collectionDesc}</div>
-				</div>
+				</Flex>
 				<Flex>
 					<SharePopover datas={list} typeName="collection" />
 					{address === state?.newAddress && (
@@ -94,7 +94,7 @@ const CollectionScreen = (props) => {
 						</Btn>
 					)}
 				</Flex>
-			</header>
+			</Box>
 			<div className={styleInfoContainer}>
 				{list?.content?.length > 0
 					? list.content.map((item, index) => renderCard(item, index))
@@ -140,7 +140,7 @@ const CollectionScreen = (props) => {
 					}}
 				/>
 			)}
-		</div>
+		</Box>
 	)
 }
 const mapStateToProps = ({ profile }) => ({
@@ -173,7 +173,7 @@ const styleCardContainer = css`
 	flex-direction: column;
 	position: relative;
 	flex: 1;
-	padding: 50px;
+
 `
 const styleCardHeaderBox = css`
 	display: flex;
