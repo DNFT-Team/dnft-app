@@ -1,10 +1,10 @@
 export const LNG = {
   EN: {
-    label: '中文',
+    label: 'English',
     value: 'en',
   },
   ZH: {
-    label: 'EN',
+    label: '中文繁體',
     value: 'zh'
   }
 }

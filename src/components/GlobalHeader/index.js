@@ -613,17 +613,6 @@ const GlobalHeader = (props) => {
 				{/*      <span>$ {Number(dnftPrice).toFixed(2)}</span>*/}
 				{/*    </div>)*/}
 				{/* }*/}
-				<Select
-					onChange={(e) => {
-						dispatch(_setLng(e))
-					}}
-				>
-					{Object.values(LNG).map((obj) => (
-						<Select.Option value={obj.value} key={obj.value}>
-							{obj.label}
-						</Select.Option>
-					))}
-				</Select>
 				{address && (
 					<div
 						className={styleAssetTarget}
@@ -666,6 +655,19 @@ const GlobalHeader = (props) => {
 						<span> {netArray[currentNetIndex]?.shortName[1] || t('network.head')}</span>
 					</div>
 				)}
+				<Select
+					className={styleSelectContainer}
+
+					onChange={(e) => {
+						dispatch(_setLng(e))
+					}}
+				>
+					{Object.values(LNG).map((obj) => (
+						<Select.Option value={obj.value} label={obj.label} key={obj.value}>
+							{obj.label}
+						</Select.Option>
+					))}
+				</Select>
 			</Box>
 			<Box
 				className={actionContainer}
@@ -1003,5 +1005,55 @@ const priceBlock = css`
 		font-family: Archivo Black, sans-serif;
 		font-style: normal;
 		font-weight: normal;
+	}
+`
+const styleSelectContainer = css`
+	margin-left: 30px;
+	.el-select-dropdown__list {
+		padding: 0;
+		border-radius: 10px;
+		overflow: hidden;
+
+	}
+	.el-select .el-input .el-input__icon {
+		color: #777e90;
+	}
+	.el-icon-caret-top:before {
+		content: \e603;
+	}
+	.el-input__inner {
+		border: 1px solid #dddddd;
+		color: #000;
+		border-radius: 10px;
+		background: transparent;
+		height: 40px;
+		font-family: Archivo Black;
+		border: 1px solid #888888;
+		width: 111px;
+	}
+	.el-select-dropdown__item {
+		height: 40px;
+	}
+	.el-input__inner:hover {
+		color: #888;
+		border: 1px solid #aaa;
+	}
+	.el-select-dropdown__item {
+		color: #888888;
+		font-family: Archivo Black;
+	}
+	.el-select-dropdown {
+		left: 0 !important;
+		border-radius: 10px;
+	}
+	.el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover,
+	.el-select-dropdown__item.hover,
+	.el-select-dropdown__item:hover {
+		background: #dddddd;
+	}
+	.el-select-dropdown__item.selected {
+		color: #ffffff;
+		font-family: Archivo Black;
+		background: #417ed9;
 	}
 `
