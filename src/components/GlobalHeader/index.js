@@ -66,7 +66,7 @@ const GlobalHeader = (props) => {
 	let history = useHistory()
 	const { t, i18n } = useTranslation()
 
-	const { dispatch, chainType, token } = props
+	const { dispatch, chainType, token, lng } = props
 	const ref = useRef()
 
 	const [isNetListVisible, setIsNetListVisible] = useState(false)
@@ -657,7 +657,7 @@ const GlobalHeader = (props) => {
 				)}
 				<Select
 					className={styleSelectContainer}
-
+					value={lng}
 					onChange={(e) => {
 						dispatch(_setLng(e))
 					}}
@@ -798,10 +798,11 @@ const GlobalHeader = (props) => {
 	)
 }
 // export default GlobalHeader;
-const mapStateToProps = ({ profile }) => ({
+const mapStateToProps = ({ profile, lng }) => ({
 	myAddress: profile.address,
 	chainType: profile.chainType,
 	token: profile.token,
+	lng: lng.lng,
 })
 export default connect(mapStateToProps)(GlobalHeader)
 const styleHeader = css`
