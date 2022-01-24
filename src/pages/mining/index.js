@@ -381,7 +381,7 @@ const Mining = (props) => {
         )}
         onClick={() => {
           if (!address) {
-            toast.warn('Please link wallet', {
+            toast.warn(t('toast.link.wallet'), {
               position: toast.POSITION.TOP_CENTER,
             });
             return;
@@ -491,7 +491,7 @@ const Mining = (props) => {
           <div className={styleTableBody}>
             <span>{t('mining.DNF')}</span>
             <span>{stakeInfo?.rewardRate}</span>
-            <span>{t('mining.stake.days', {d: Math.round(stakeInfo?.duration)})}</span>
+            <span>{t('mining.stakedays', {d: Math.round(stakeInfo?.duration)})}</span>
           </div>
           {stateData[stakeIndex].isApprove && (
             <div>
@@ -902,11 +902,11 @@ const Mining = (props) => {
           </div>
           <div className={styleBodyTips}>
             {stakeTab === 'stake' &&
-              t('mining.stake.tip1')}
+              t('mining.staketip1')}
             {stakeTab === 'unstake' &&
-              t('mining.stake.tip2')}
+              t('mining.staketip2')}
             {stakeTab === 'claim' &&
-              t('mining.stake.tip3')}
+              t('mining.staketip3')}
           </div>
           {stakeTab === 'stake' && renderStake(stakeInfo)}
           {stakeTab === 'unstake' && renderUnstake(stakeInfo)}
@@ -938,7 +938,7 @@ const Mining = (props) => {
             </Link>
           </div>
         </div> */}
-        <p>{t('mining.stake.note1')}</p>
+        <p>{t('mining.stakenote1')}</p>
       </header>
       {renderAssetHeader}
       <div className={styleBody}>

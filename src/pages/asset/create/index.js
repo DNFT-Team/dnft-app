@@ -137,7 +137,7 @@ const CreateNFTModal = (props) => {
 
 			return true
 		} catch (error) {
-			console.error('Failed to setup the network in Metamask:', error)
+			console.error(t('toast.fail.setup.in.metamask'), error)
 			return false
 		}
 	}, [])
@@ -203,9 +203,9 @@ const CreateNFTModal = (props) => {
 			}
 		} catch (err) {
 			if (4001 === err?.code) {
-				setStepErr('User denied transaction signature.')
+				setStepErr(t('toast.user.signature'))
 			} else {
-				setStepErr('Mint transaction failed.')
+				setStepErr(t('toast.mint.failed'))
 			}
 			return null
 		}
@@ -240,7 +240,7 @@ const CreateNFTModal = (props) => {
 			const isSensi = await checkSensi(nftFile)
 			if (isSensi) {
 				setStep(STEP_ENUM.SENSI_FAILED)
-				setStepErr('Warning! Your media resource is too sensitive!')
+				setStepErr(t('toast.sensitive'))
 				return
 			}
 			// 2.upload media file
@@ -248,7 +248,7 @@ const CreateNFTModal = (props) => {
 			const imageCid = await ipfs_add(nftFile)
 			if (!imageCid) {
 				setStep(STEP_ENUM.IMAGE_FAILED)
-				setStepErr('Network congestion when uploading files.')
+				setStepErr(t('toast.uploadingFiles'))
 				return
 			}
 			// 3.upload metadata json
@@ -265,7 +265,7 @@ const CreateNFTModal = (props) => {
 			const jsonCid = await ipfs_add(metaFile)
 			if (!jsonCid) {
 				setStep(STEP_ENUM.JSON_FAILED)
-				setStepErr('Network congestion when uploading files.')
+				setStepErr(t('toast.whenuploadingFiles'))
 				return
 			}
 			//  4.mint nft

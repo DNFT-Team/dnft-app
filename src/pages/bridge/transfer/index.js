@@ -151,14 +151,14 @@ const TransferView = (props) => {
 	 */
 	const TableCols = [
 		{
-			title: 'FROM',
+			title: t('bridge.from'),
 			key: 'upChain',
 			cell: (row) => (
 				<img src={row?.upChain === 'bnb' ? IconBsc : IconEth} alt="" className={tableIcon} />
 			),
 		},
 		{
-			title: 'TO',
+			title: t('bridge.to'),
 			key: 'heterogeneousChain',
 			cell: (row) => (
 				<img
@@ -168,9 +168,9 @@ const TransferView = (props) => {
 				/>
 			),
 		},
-		{ title: 'AMOUNT', key: 'amount', isNum: true },
+		{ title: t('bridge.amount'), key: 'amount', isNum: true },
 		{
-			title: 'TX HASH',
+			title: t('bridge.tx.hash'),
 			key: 'tx_hash',
 			ellipsis: true,
 			cell: (row) =>
@@ -186,7 +186,7 @@ const TransferView = (props) => {
 				),
 		},
 		{
-			title: 'FEE HASH',
+			title: t('bridge.fee.hash'),
 			key: 'fee_hash',
 			ellipsis: true,
 			cell: (row) => {
@@ -218,10 +218,10 @@ const TransferView = (props) => {
 				)
 			},
 		},
-		{ title: 'STATUS', key: 'status' },
+		{ title: t('bridge.status'), key: 'status' },
 		// {title: 'DYNAMIC INFO', key: 'dynamic_info'},
 		// {title: 'FAILED CODE', key: 'failed_code'},
-		{ title: 'UPDATED AT', key: 'updated_at' },
+		{ title: t('bridge.updated.at'), key: 'updated_at' },
 	]
 	//  networks
 	const frNet = ChainNodes[fr]
@@ -486,7 +486,8 @@ const TransferView = (props) => {
 		<Box p={['20px', '20px', '20px', '50px']} className={styleWrapper}>
 			<div className="styleHeader">
 				<Title
-					title={`Bridge to ${toNet.key}`}
+					// title={`Bridge to ${toNet.key}`}
+					title={t('bridge.bridgeTo', {toNet: toNet.key})}
 					// linkHelper={{
 					//   youtubeLink: helper.bridge.youtube,
 					//   youtubeTitle: helper.nftMagic.title,

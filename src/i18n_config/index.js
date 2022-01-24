@@ -21,6 +21,10 @@ i18n
         escapeValue: false,
       }
 
+    },
+    fallbackLng: 'en',
+    detection: {
+      caches: ['localStorage', 'sessionStorage', 'cookie'],
     }
   })
 export default i18n;
