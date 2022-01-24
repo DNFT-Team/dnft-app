@@ -278,9 +278,9 @@ const ProfileScreen = (props) => {
 					)}
 					<Box mt={['10px', '10px', '10px', '20px']} className={styles.authorName}>
 						<Box display={['flex', 'flex', 'flex', 'none']}>
-							{shortenNameString(datas?.nickName || 'Unknown')}
+							{shortenNameString(datas?.nickName || t('Unknown'))}
 						</Box>
-						<Box display={['none', 'none', 'none', 'flex']}>{datas?.nickName || 'Unknown'}</Box>
+						<Box display={['none', 'none', 'none', 'flex']}>{datas?.nickName || t('Unknown')}</Box>
 					</Box>
 					<div className={styles.addressBox}>
 						{newAddress && shortenAddress(newAddress)}
@@ -320,7 +320,7 @@ const ProfileScreen = (props) => {
 								style={{ outline: '0!important' }}
 								mr={['4px', '4px', '4px', '30px']}
 							>
-								{obj.label}
+								{t(obj.label)}
 							</Tab>
 						))}
 					</TabList>

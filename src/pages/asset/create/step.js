@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { css, cx } from 'emotion'
+import { useTranslation } from 'react-i18next'
 
 export const STEP_ENUM = {
 	INITIAL: 0,
@@ -41,6 +42,7 @@ const getItemStyle = (i, step) =>
 
 const StepCard = (props) => {
 	const { step, errMsg, onBack, onClose } = props
+	const { t } = useTranslation()
 
 	console.log('[ props.step ]', step)
 
@@ -60,7 +62,7 @@ const StepCard = (props) => {
 					{errMsg && (
 						<div className={StepStyle.ActionLine}>
 							<p>{errMsg}</p>
-							<button onClick={onBack}>Back</button>
+							<button onClick={onBack}>{t('back')}</button>
 						</div>
 					)}
 				</div>
@@ -72,11 +74,11 @@ const StepCard = (props) => {
 	const renderCaseCelabrate = useMemo(() => (
 		<section className={StepStyle.EndWrapper}>
 			<h3>
-				Success! <br />
-				See this NFT in your wallet.
+				{t('success')} <br />
+				{t('nft.wallet')}
 			</h3>
 			<div className={StepStyle.ActionLine}>
-				<button onClick={onClose}>CLose</button>
+				<button onClick={onClose}>{t('close')}</button>
 			</div>
 		</section>
 	))

@@ -17,13 +17,13 @@ import botBg from 'images/common/botBg.png';
 const App = (props) => {
   const { t, i18n } = useTranslation();
   const {
-    location: { pathname },
+    location: { pathname }, lng
   } = props;
   const [tab, setTab] = useState(pathname);
   let history = useHistory();
   useEffect(() => {
     try {
-      i18n.changeLanguage('en');
+      i18n.changeLanguage(lng);
     } catch (e) {
       // i18n.changeLanguage('en');
       console.log('getLngFromState error : ', e);
@@ -96,7 +96,10 @@ const App = (props) => {
     </section>
   );
 };
-export default withRouter(connect()(App));
+const mapStateToProps = ({ lng }) => ({
+  lng: lng.lng
+});
+export default withRouter(connect(mapStateToProps)(App));
 
 const styleContactUs = css`
   display: flex;

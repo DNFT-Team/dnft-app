@@ -34,29 +34,29 @@ const AssetScreen = (props) => {
 	const tabArray = isTestNet
 		? [
 				{
-					label: 'On Sale',
+					label: t('onsale'),
 					value: 'ONSALE',
 				},
 				{
-					label: 'In Wallet',
+					label: t('inwallet'),
 					value: 'INWALLET',
 				},
 				{
-					label: 'Sold',
-					value: 'SOLD',
+					label: t('inwallet'),
+					value: 'sold',
 				},
 		  ]
 		: [
 				{
-					label: 'On Sale',
+					label: t('onsale'),
 					value: 'ONSALE',
 				},
 				{
-					label: 'In Wallet',
+					label: t('inwallet'),
 					value: 'INWALLET',
 				},
 				{
-					label: 'Sold',
+					label: t('inwallet'),
 					value: 'SOLD',
 				},
 		  ]
