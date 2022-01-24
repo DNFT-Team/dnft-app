@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 const Market = (props) => {
 	let history = useHistory()
 	const { t } = useTranslation()
-	const { dispatch, token, datas, pageAble, categoryList, pending, location, address } = props
+	const { dispatch, token, datas, pageAble, categoryList, pending, location, address, lng } = props
 	const categoryBack = location?.state?.category
 	const sortTagBack = location?.state?.sortTag
 	const [category, setCategory] = useState(categoryBack || 'All')
@@ -194,7 +194,7 @@ const Market = (props) => {
 							}}
 						>
 							{categoryList?.map((el) => (
-								<Select.Option key={el} label={el} value={el} />
+								<Select.Option key={el.value} label={el[lng]} value={el.value} />
 							))}
 						</Select>
 						<Select
@@ -235,13 +235,14 @@ const Market = (props) => {
 		</div>
 	)
 }
-const mapStateToProps = ({ profile, market }) => ({
+const mapStateToProps = ({ profile, lng, market }) => ({
 	token: profile.token,
 	datas: market.datas,
 	pageAble: market.pageAble,
 	categoryList: market.category,
 	pending: market.pending,
 	address: profile.address,
+	lng: lng.lng
 })
 export default withRouter(connect(mapStateToProps)(Market))
 const styleNoDataContainer = css`

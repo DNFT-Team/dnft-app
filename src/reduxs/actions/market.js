@@ -41,7 +41,7 @@ export const getCategoryList =
 	(params = {}, token) =>
 	(dispatch) => {
 		dispatch({ type: GET_CATEGORY_LIST.PENDING })
-		return get('/api/v1/info/category ', null, token)
+		return get('/api/v1/info/category_mutil', null, token)
 			.then((res) => {
 				if (res && res.status == 200) {
 					dispatch({

@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next'
 import { getImgLink } from 'utils/tools'
 
 const AssetScreen = (props) => {
-	const { dispatch, location, address, chainType, token, categoryList } = props
+	const { dispatch, location, address, chainType, token, categoryList, lng } = props
 	const { t } = useTranslation()
 
 	const currentNetEnv = globalConfig.net_env
@@ -424,7 +424,7 @@ const AssetScreen = (props) => {
 								}}
 							>
 								{categoryList?.map((el) => (
-									<Select.Option key={el} label={el} value={el} />
+									<Select.Option key={el.value} label={el[lng]} value={el.value} />
 								))}
 							</Select>
 							{isTestNet && (
@@ -495,11 +495,12 @@ const AssetScreen = (props) => {
 	)
 }
 
-const mapStateToProps = ({ profile, market }) => ({
+const mapStateToProps = ({ profile, market, lng }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
 	categoryList: market.category,
 	token: profile.token,
+	lng: lng.lng
 })
 export default withRouter(connect(mapStateToProps)(AssetScreen))
 

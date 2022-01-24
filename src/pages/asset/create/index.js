@@ -18,7 +18,7 @@ import SwitchModal from 'components/SwitchModal'
 import StepCard, { STEP_ENUM } from './step'
 
 const CreateNFTModal = (props) => {
-	const { collectionId, address, chainType, token, net_env, categoryList, onClose } = props
+	const { collectionId, address, chainType, token, net_env, categoryList, onClose, lng } = props
 	const { t } = useTranslation()
 
 	const [options, setOptions] = useState([])
@@ -446,7 +446,7 @@ const CreateNFTModal = (props) => {
 								}}
 							>
 								{categoryList?.slice(1)?.map((el) => (
-									<Select.Option key={el} label={el} value={el} />
+									<Select.Option key={el.value} label={el[lng]} value={el.value} />
 								))}
 							</Select>,
 							true,
@@ -519,11 +519,12 @@ const CreateNFTModal = (props) => {
 	)
 }
 
-const mapStateToProps = ({ profile, market }) => ({
+const mapStateToProps = ({ profile, market, lng }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
 	categoryList: market.category,
 	token: profile.token,
+	lng: lng.lng
 })
 export default withRouter(connect(mapStateToProps)(CreateNFTModal))
 

@@ -3,9 +3,9 @@ export const LNG = {
     label: 'English',
     value: 'en',
   },
-  ZH: {
+  TC: {
     label: '中文繁體',
-    value: 'zh'
+    value: 'tc'
   }
 }
 export const NET_WORK_VERSION = {

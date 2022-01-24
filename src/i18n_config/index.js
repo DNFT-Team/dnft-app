@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './en.json';
-import zh from './zh.json';
+import tc from './tc.json';
 import { store } from 'reduxs/store';
 
 i18n
@@ -12,8 +12,8 @@ i18n
       en: {
         translation: en
       },
-      zh: {
-        translation: zh,
+      tc: {
+        translation: tc,
       },
       // lng: store.getState().lng.lng.value,
       // fallbackLng: 'en',

@@ -60,12 +60,11 @@
 		"selected.ethereum": "您已連線到不受支持的網路，請切換到 {{networkName}} 網絡",
 		"selected.walletProvider": "您已連線到不受支持的網路，請切換到 {{networkName}} 網路 並且重新連線錢包",
 		"selected.onto": "您已連線到不受支持的網路，請切換到 {{networkName}} 網路並且重新連線錢包",
-		"user.signature": "User denied transaction signature.",
-		"mint.failed": "Mint transaction failed.",
-		"sensitive": "Warning! Your media resource is too sensitive!",
-		"uploadingFiles": "Network congestion when uploading files.",
-		"whenuploadingFiles": "Network congestion when uploading files."
-
+		"user.signature": "用戶拒絕交易簽名",
+		"mint.failed": "鑄幣交易失敗",
+		"sensitive": "警告！您的媒體資源太敏感了！", 
+		"uploadingFiles": "上傳文件時網路擁塞",
+		"whenuploadingFiles": "上傳文件時網路擁塞"
 
 	},
 
@@ -100,19 +99,21 @@
 	"yes": "Yes",
 	"next.page": "Next page",
 	"no.content": "目前暫無內容",
-	"back": "Back",
-	"success": "Success!",
-	"nft.wallet": "See this NFT in your wallet.",
-	"close": "CLose",
-	"onsale": "On Sale",
-	"inwallet": "In Wallet",
-	"sold": "Sold",
-	"Collections": "Collections",
-	"Owned": "Owned",
-	"Created": "Created",
-	"Unknown": "Unknown",
-	"Tutorial": "Tutorial",
-	"user.manual": "DNFT Mining User Manual",
+
+	"back": "返回",
+	"success": "成功！",
+	"nft.wallet": "這個NFT在你的錢包內",
+	"close": "關閉",
+	"onsale": "出售中",
+	"inwallet": "在錢包內",
+	"sold": "已售出",
+	"Collections": "收藏",
+	"Owned": "已擁有",
+	"Created": "已創建",
+	"Unknown": "無名",
+	"Tutorial": "教程",
+	"user.manual": "DNFT挖礦使用手冊",
+
 	"faucet": {
 		"title": "Faucet Board",
 		"TDNF": "TDNF",
@@ -189,12 +190,13 @@
 		"skip.now": "暫時略過",
 		"from": "FROM",
 		"to": "TO",
-		"amount": "AMOUNT",
+		"amount": "數量",
 		"tx.hash": "TX HASH",
 		"fee.hash": "FEE HASH",
-		"status": "STATUS",
+		"status": "狀態",
 		"updated.at": "UPDATED AT",
-		"bridgeTo": "Bridge to {{toNet}}"
+		"bridgeTo": "橋連結 {{toNet}}"
+
 	},
 	"book": {
 		"title": "技巧",
@@ -202,7 +204,7 @@
 	},
 	"igo": {
 		"mockGamelist.title": "合成奧運BTC",
-		"pokeGameList.title": "Pokemine on Game",
+		"pokeGameList.title": "精靈寶可夢遊戲進行中",
 		"ongoing": "正在進行",
 		"ended": "已結束",
 		"title": "你可以通過此模塊功能，在玩遊戲的過程中獲益。讓用戶可以享受遊戲的同時獲取代幣。",
@@ -232,12 +234,13 @@
 		"rewards.top2": "2.金/銀/銅NFT持有者將擁有DNFT協議的生成權，包括持續活動/空投白名單、老友權益、測試產品體驗等。",
 		"success": "祝賀您的成功!",
 		"get.reward": "現在想要得到您的獎勵嗎?",
-		"shark.ticket": "Level-2 SHARK Ticket",
-		"shark.tickettitle": "The building of the University Centre was the first in the city by Eva Jiřičná, a world-renowned architect and designer who was born and lived in Zlín. Through the construction, the University symbolically harked back to the architecture of the city’s Bata era. Professor Jiřičná’s father worked as an architect for the Bata company, and his daughter was delighted to follow in his footsteps.",
-		"pokeGameList.content": "Here's a video guide on expanding your Pokemon collection when you enter the PokeMine Metaverse. ",
-		"pokemine.game": "Pokemine Game",
-		"pokemine.gamecontent": "Helium and Fantom have constantly displayed appreciation. Over the last 24 hours, these coins have shot up more than 13%. Bitcoin’s northbound price trajectory has caused major altcoins to soar considerably. At press time, Bitcoin was trading extremely close to the $50k level, and this constant appreciation caused many major altcoins to follow. Helium and Fantom have constantly displayed appreciation. Over the last 24 hours,",
-		"expore.more": "Explore More"
+		"shark.ticket": "2級鯊魚幣兌換劵Level-2 SHARK Ticket",
+		"shark.tickettitle": "大學中心是這座城市落成的第一建築，它是由一位出生在茲林的世界著名建築師、設計師埃娃·伊日奇娜設計而成. 此大學的建築象征性，代表城市巴塔時代建築. ·伊日奇娜教授很高興能追隨她的父親曾經的腳步在巴塔公司擔任建築師.",
+		"pokeGameList.content": "此影片是一個指導你進入精靈寶可夢元宇宙, 增加你的寶可夢收藏的指南. ",
+		"pokemine.game": "精靈寶可夢遊戲",
+		"pokemine.gamecontent": "Helium 和 Fantom 持續支持，在過去 24 小時內，加密貨幣瘋狂飆升了 13% 以上. 比特幣的上行價格軌跡導致其他主要加密貨幣大幅飆升. 截至發稿時，比特幣的交易價格非常接近 5 萬美元，這種持續升值導致許多其他主要加密貨幣緊隨其後.",
+		"expore.more": "更多探索"
+
 	},
 	"market": {
 		"sort.label1": "最受歡迎",

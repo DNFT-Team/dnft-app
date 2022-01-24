@@ -29,6 +29,7 @@ const NFTImportModal = (props) => {
 		chainType,
 		categoryList,
 		token, //  req-token
+		lng,
 	} = props
 	const [loading, setLoading] = useState(false)
 
@@ -278,7 +279,7 @@ const NFTImportModal = (props) => {
 							}}
 						>
 							{categoryList?.slice(1)?.map((el) => (
-								<Select.Option key={el} label={el} value={el} />
+								<Select.Option key={el.value} label={el[lng]} value={el.value} />
 							))}
 						</Select>,
 						true,
@@ -312,11 +313,12 @@ const NFTImportModal = (props) => {
 	)
 }
 
-const mapStateToProps = ({ profile, market }) => ({
+const mapStateToProps = ({ profile, market, lng }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
 	categoryList: market.category,
 	token: profile.token,
+	lng: lng.lng
 })
 export default withRouter(connect(mapStateToProps)(NFTImportModal))
 
