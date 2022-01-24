@@ -780,7 +780,7 @@ const Mining = (props) => {
                 >
                   {stakingJson[stakeIndex].name}
                 </span>
-                <span className={styleTag}>On sale</span>
+                <span className={styleTag}>{t('onsale')}</span>
               </div>
               <span
                 style={{

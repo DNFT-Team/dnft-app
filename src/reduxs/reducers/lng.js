@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import { fromJS, is } from 'immutable'
 import _ from 'lodash'
 const initialState = {
-	lng: LNG.EN,
+	lng: JSON.parse(localStorage.getItem('persist:lng'))?.lng ?? 'en',
 }
 const _lng = (state = initialState, { type, payload = 'en' }) => {
 	switch (type) {
