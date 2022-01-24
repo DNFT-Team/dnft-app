@@ -1014,7 +1014,6 @@ const styleSelectContainer = css`
 		padding: 0;
 		border-radius: 10px;
 		overflow: hidden;
-
 	}
 	.el-select .el-input .el-input__icon {
 		color: #777e90;

@@ -92,11 +92,11 @@ const AssetScreen = (props) => {
 	}
 
 	useEffect(() => {
-		getBannerUrl()
+		address && token && getBannerUrl()
 	}, [address, token])
 
 	useEffect(() => {
-		getBalance()
+		address && getBalance()
 	}, [address])
 
 	const getList = (id, isSave) => {
@@ -183,8 +183,10 @@ const AssetScreen = (props) => {
 	}, [])
 
 	useEffect(() => {
-		if (token) {
+		if (token && address) {
 			getNFTList()
+		} else {
+			setList([])
 		}
 	}, [token, category, selectedTab, sortTag, address, chainType])
 
@@ -343,7 +345,9 @@ const AssetScreen = (props) => {
 				onSave={getNFTList}
 				handleDetail={() => {
 					history.push(
-						`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${item?.nftId}&fromAsset=${true}`,
+						`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${
+							item?.nftId
+						}&fromAsset=${true}`,
 						// { item, fromAsset: true },
 					)
 				}}
@@ -500,7 +504,7 @@ const mapStateToProps = ({ profile, market, lng }) => ({
 	chainType: profile.chainType,
 	categoryList: market.category,
 	token: profile.token,
-	lng: lng.lng
+	lng: lng.lng,
 })
 export default withRouter(connect(mapStateToProps)(AssetScreen))
 

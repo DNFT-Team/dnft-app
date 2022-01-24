@@ -24,8 +24,8 @@ export const STEP_ENUM = {
 }
 
 const loops = [
-	// ['SENSI', 'Sensitive Detection'],
-	null,
+	['SENSI', 'Sensitive Detection'],
+	// null,
 	['IMAGE', 'Upload Media Source'],
 	['JSON', 'Upload MetaData'],
 	['MINT', 'Mint NFT'],
@@ -54,7 +54,7 @@ const StepCard = (props) => {
 						(st, i) =>
 							st && (
 								<div key={i} className={cx(StepStyle.StepItem, getItemStyle(i, step))}>
-									<span>{`${i}.${st[1]}`}</span>
+									<span>{`${i + 1}.${st[1]}`}</span>
 									<i />
 								</div>
 							),

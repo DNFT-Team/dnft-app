@@ -237,15 +237,15 @@ const CreateNFTModal = (props) => {
 		//	execute create
 		try {
 			// console.log('[ nftFile]', nftFile)
-
+			setStepErr('')
 			//	1.check Sensi
-			// setStep(STEP_ENUM.SENSI_PENDING)
-			// const isSensi = await checkSensi(nftFile)
-			// if (isSensi) {
-			// 	setStep(STEP_ENUM.SENSI_FAILED)
-			// 	setStepErr(t('toast.sensitive'))
-			// 	return
-			// }
+			setStep(STEP_ENUM.SENSI_PENDING)
+			const isSensi = await checkSensi(nftFile)
+			if (isSensi) {
+				setStep(STEP_ENUM.SENSI_FAILED)
+				setStepErr(t('toast.sensitive'))
+				return
+			}
 
 			// 2.upload media file
 			setStep(STEP_ENUM.IMAGE_PENDING)
@@ -529,7 +529,7 @@ const mapStateToProps = ({ profile, market, lng }) => ({
 	net_env: profile.net_env,
 	categoryList: market.category,
 	token: profile.token,
-	lng: lng.lng
+	lng: lng.lng,
 })
 export default withRouter(connect(mapStateToProps)(CreateNFTModal))
 

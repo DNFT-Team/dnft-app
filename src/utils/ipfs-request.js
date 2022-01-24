@@ -67,7 +67,7 @@ function request(url, options) {
 		})
 		.catch((e) => {
 			if (process.env.NODE_ENV !== 'production') {
-				console.groupCollapsed(`%c RESP error :${BASE_URL + url}`, 'background:black;color:red')
+				console.groupCollapsed(`%c RESP error :${url}`, 'background:black;color:red')
 				console.warn(e)
 				console.groupEnd(`RESP error:${url}`)
 			}
