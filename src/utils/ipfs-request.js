@@ -4,6 +4,8 @@ const FETCH_TIMEOUT = 60 * 1000
 
 export const IPFS_PREFIX = 'ipfs://'
 
+export const IpfsUrl = (cid) => (cid ? IPFS_PREFIX + cid : '')
+
 function request(url, options) {
 	if (BASE_URL.length == 0) {
 		return
@@ -96,6 +98,36 @@ export const ipfs_add = async (_file) => {
 		return data?.Hash || null
 	} catch {
 		return null
+	}
+}
+
+export const ipfs_media = async (files, isMedia) => {
+	let cidImage, cidAnimate
+	try {
+		// if (isMedia && files.length === 2) {
+		// cidImage = await ipfs_add(files[0])
+		// cidAnimate = await ipfs_add(files[1])
+		if (isMedia) {
+			cidAnimate = await ipfs_add(files[0])
+			return {
+				image: '',
+				animation_url: cidAnimate,
+				isOk: !!cidAnimate,
+			}
+		} else {
+			cidImage = await ipfs_add(files[0])
+			return {
+				image: cidImage,
+				animation_url: '',
+				isOk: !!cidImage,
+			}
+		}
+	} catch {
+		return {
+			image: '',
+			animation_url: '',
+			isOk: false,
+		}
 	}
 }
 

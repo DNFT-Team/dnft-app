@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next'
 
 export const STEP_ENUM = {
 	INITIAL: 0,
+
 	// Sensitive Detection
 	SENSI_PENDING: 1,
 	SENSI_FAILED: 2,
+
 	//  Upload Imgae Via IPFS
 	IMAGE_PENDING: 3,
 	IMAGE_FAILED: 4,
+
 	//  Upload JSON Via IPFS
 	JSON_PENDING: 5,
 	JSON_FAILED: 6,
+
 	// Mint NFT Via Contract
 	MINT_PENDING: 7,
 	MINT_FAILED: 8,
@@ -20,7 +24,8 @@ export const STEP_ENUM = {
 }
 
 const loops = [
-	['SENSI', 'Sensitive Detection'],
+	// ['SENSI', 'Sensitive Detection'],
+	null,
 	['IMAGE', 'Upload Media Source'],
 	['JSON', 'Upload MetaData'],
 	['MINT', 'Mint NFT'],
@@ -45,12 +50,15 @@ const StepCard = (props) => {
 		() => (
 			<section className={StepStyle.Wrapper}>
 				<div className={StepStyle.Steps}>
-					{loops.map((st, i) => (
-						<div key={i} className={cx(StepStyle.StepItem, getItemStyle(i, step))}>
-							<span>{`${i + 1}.${st[1]}`}</span>
-							<i />
-						</div>
-					))}
+					{loops.map(
+						(st, i) =>
+							st && (
+								<div key={i} className={cx(StepStyle.StepItem, getItemStyle(i, step))}>
+									<span>{`${i}.${st[1]}`}</span>
+									<i />
+								</div>
+							),
+					)}
 					{errMsg && (
 						<div className={StepStyle.ActionLine}>
 							<p>{errMsg}</p>

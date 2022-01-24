@@ -6,7 +6,7 @@ import { post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
-import { ipfs_add, sensi_post } from 'utils/ipfs-request'
+import { ipfs_add, ipfs_media, IpfsUrl, sensi_post } from 'utils/ipfs-request'
 import { getObjectURL, json2File } from 'utils/tools'
 import { toast } from 'react-toastify'
 import { createNFTContract1155, createNFTContract721 } from '../../../utils/contract'
@@ -179,10 +179,10 @@ const CreateNFTModal = (props) => {
 					? [
 							address,
 							form.supply,
-							`ipfs://${jsonCid}`,
+							IpfsUrl(jsonCid),
 							'0x0000000000000000000000000000000000000000000000000000000000000000',
 					  ]
-					: [address, `ipfs://${jsonCid}`]
+					: [address, IpfsUrl(jsonCid)]
 
 				const createNFTResult = await myContract.methods
 					.create(...payloads)
@@ -202,6 +202,7 @@ const CreateNFTModal = (props) => {
 				}
 			}
 		} catch (err) {
+			console.log('[ Mint Err ]', err)
 			if (4001 === err?.code) {
 				setStepErr(t('toast.user.signature'))
 			} else {
@@ -235,18 +236,21 @@ const CreateNFTModal = (props) => {
 		}
 		//	execute create
 		try {
+			// console.log('[ nftFile]', nftFile)
+
 			//	1.check Sensi
-			setStep(STEP_ENUM.SENSI_PENDING)
-			const isSensi = await checkSensi(nftFile)
-			if (isSensi) {
-				setStep(STEP_ENUM.SENSI_FAILED)
-				setStepErr(t('toast.sensitive'))
-				return
-			}
+			// setStep(STEP_ENUM.SENSI_PENDING)
+			// const isSensi = await checkSensi(nftFile)
+			// if (isSensi) {
+			// 	setStep(STEP_ENUM.SENSI_FAILED)
+			// 	setStepErr(t('toast.sensitive'))
+			// 	return
+			// }
+
 			// 2.upload media file
 			setStep(STEP_ENUM.IMAGE_PENDING)
-			const imageCid = await ipfs_add(nftFile)
-			if (!imageCid) {
+			const mediaMeta = await ipfs_media([nftFile], /video|audio/.test(nftFile.type))
+			if (!mediaMeta.isOk) {
 				setStep(STEP_ENUM.IMAGE_FAILED)
 				setStepErr(t('toast.uploadingFiles'))
 				return
@@ -257,8 +261,8 @@ const CreateNFTModal = (props) => {
 				{
 					name: form.name,
 					description: form.description,
-					image: 'ipfs://' + imageCid,
-					animation_url: 'ipfs://' + imageCid,
+					image: IpfsUrl(mediaMeta.image),
+					animation_url: IpfsUrl(mediaMeta.animation_url),
 				},
 				`DNFT_${form.contractType}_${Date.now()}.json`,
 			)
@@ -288,9 +292,9 @@ const CreateNFTModal = (props) => {
 					hash: txRes.hash,
 					tokenId: txRes.tokenId,
 
-					avatorUrl: 'ipfs://' + imageCid,
-					// animationUrl: '',
-					// itemType: nftFile.type,
+					avatorUrl: metaFile.image,
+					animationUrl: metaFile.animation_url,
+					fileType: nftFile.type,
 
 					ipfs_hash: jsonCid,
 				},
@@ -522,6 +526,7 @@ const CreateNFTModal = (props) => {
 const mapStateToProps = ({ profile, market, lng }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
+	net_env: profile.net_env,
 	categoryList: market.category,
 	token: profile.token,
 	lng: lng.lng
