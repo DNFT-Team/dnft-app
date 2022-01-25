@@ -47,10 +47,8 @@ const Market = (props) => {
 			: ['https://bsc-dataseed.binance.org/']
 
 	useEffect(() => {
-		if (token) {
-			fetchData(true)
-		}
-	}, [token, category, sortTag, address])
+		fetchData(true)
+	}, [category, sortTag, address])
 
 	const fetchData = (tag) => {
 		dispatch(

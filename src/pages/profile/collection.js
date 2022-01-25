@@ -33,17 +33,15 @@ const CollectionScreen = (props) => {
 
 	useEffect(() => {
 		getCollectionNftList()
-	}, [token])
+	}, [])
 	const getCollectionNftList = async () => {
-		if (token) {
-			try {
-				setIsLoading(true)
-				const { data } = await get(`/api/v1/collection/detail/${url?.collectionId}`, '', token)
-				setList(data?.data)
-				setIsLoading(false)
-			} catch (e) {
-				setIsLoading(true)
-			}
+		try {
+			setIsLoading(true)
+			const { data } = await get(`/api/v1/collection/detail/${url?.collectionId}`, '', token)
+			setList(data?.data)
+			setIsLoading(false)
+		} catch (e) {
+			setIsLoading(true)
 		}
 	}
 	const getList = (id, isSave) => {
@@ -68,7 +66,11 @@ const CollectionScreen = (props) => {
 				currentStatus={''}
 				getList={getList}
 				handleDetail={() => {
-					history.push(`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${item?.nftId}&fromAsset=${true}`)
+					history.push(
+						`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${
+							item?.nftId
+						}&fromAsset=${true}`,
+					)
 				}}
 			/>
 		),
@@ -77,13 +79,13 @@ const CollectionScreen = (props) => {
 	return (
 		<Box p={['20px', '20px', '20px', '50px']} className={styleCardContainer}>
 			<Box flexDirection={['column', 'column', 'column', 'row']} className={styleCardHeaderBox}>
-				<Flex pb={['25px', '25px', '25px', 0]} textAlign='center' className={styleCardHeader}>
+				<Flex pb={['25px', '25px', '25px', 0]} textAlign="center" className={styleCardHeader}>
 					<h4>{list?.name}</h4>
 					<div>{list?.collectionDesc}</div>
 				</Flex>
 				<Flex>
 					<SharePopover datas={list} typeName="collection" />
-					{address === state?.newAddress && (
+					{address && address === state?.newAddress && (
 						<Btn
 							style={{
 								fontWeight: 'normal',
@@ -99,10 +101,12 @@ const CollectionScreen = (props) => {
 				{list?.content?.length > 0
 					? list.content.map((item, index) => renderCard(item, index))
 					: null}
-				<div className={styleCardContainerNFT}>
-					<img src={add} />
-					<div onClick={() => setShowCreateNft(true)}>{t('nftCard.create')}</div>
-				</div>
+				{address && address === state?.newAddress && (
+					<div className={styleCardContainerNFT}>
+						<img src={add} />
+						<div onClick={() => setShowCreateNft(true)}>{t('nftCard.create')}</div>
+					</div>
+				)}
 			</div>
 			{isLoading && (
 				<div className={styleLoadingIconContainer}>
@@ -173,7 +177,6 @@ const styleCardContainer = css`
 	flex-direction: column;
 	position: relative;
 	flex: 1;
-
 `
 const styleCardHeaderBox = css`
 	display: flex;
