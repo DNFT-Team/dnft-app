@@ -398,15 +398,11 @@ const NFTCard = (props) => {
 	)
 
 	const auctionHandle = useCallback(async () => {
-		//	check form
-		//	getWallet
-		// send tx
-		// post nofity
 		try {
 			let wallet = getWallet()
 			if (wallet) {
 				window.web3 = new Web3(wallet)
-
+				console.log('isApproved', isApproved)
 				if (isApproved) {
 					try {
 						setIsOnLoading(true)
@@ -421,7 +417,6 @@ const NFTCard = (props) => {
 							Web3.utils.toWei(String(sellForm.bitIncrement), 'ether'),
 							sellForm.duration,
 						]
-						console.log(['Auction.PutOn.Payloads'], payloads)
 						let putOnResult = await myContract.methods[
 							`putOnBy${sellForm.type === 'DNF' ? 'Dnft' : 'Busd'}`
 						](...payloads).send({
@@ -455,17 +450,13 @@ const NFTCard = (props) => {
 				} else {
 					try {
 						setIsAprroveLoading(true)
-						const dnfTokenContract = new window.web3.eth.Contract(
-							createNFTAbi721,
-							item.tokenAddress,
-						)
-						console.log('dnfTokenContract', dnfTokenContract)
-						let isApproved = await dnfTokenContract.methods
+						const nftContract = new window.web3.eth.Contract(createNFTAbi721, item.tokenAddress)
+						let isApproved = await nftContract.methods
 							.isApprovedForAll(address, item.tokenAddress)
 							.call()
-
+						console.log('nftContract.isApproved', nftContract, isApproved)
 						if (!isApproved) {
-							let result = await dnfTokenContract.methods
+							let result = await nftContract.methods
 								.setApprovalForAll(item.tokenAddress, true)
 								.send({
 									from: address,
@@ -487,7 +478,10 @@ const NFTCard = (props) => {
 		}
 	}, [getWallet, sellForm, isApproved])
 
-	const getAuctionPutonFee = async () => {
+	const getAuctionPutonFee = useCallback(async () => {
+		if (feeLoading) {
+			return
+		}
 		try {
 			setFeeloading(true)
 			let wallet = getWallet()
@@ -496,8 +490,8 @@ const NFTCard = (props) => {
 				await window.web3.eth.requestAccounts()
 				const myContract = new window.web3.eth.Contract(auction721Abi, auction721Contract[net_env])
 				let putOnfee = await myContract.methods.putOnFee().call()
+				// console.log('[putOnfee]',putOnfee)
 				putOnfee = Web3.utils.fromWei(putOnfee, 'ether')
-				console.log(putOnfee)
 				sellForm.auctionPutOnFee = putOnfee
 			}
 		} catch {
@@ -505,7 +499,7 @@ const NFTCard = (props) => {
 		} finally {
 			setFeeloading(false)
 		}
-	}
+	}, [getWallet, sellForm, feeLoading])
 
 	const renderOffShelfModal = useMemo(() => {
 		console.log('off')
