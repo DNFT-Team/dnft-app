@@ -45,6 +45,12 @@ const CreateCollectionModal = (props) => {
 
 	const submitColl = async () => {
 		const { address, chainType } = colData
+		if (!address) {
+			toast.warn(t('toast.link.wallet'), {
+				position: toast.POSITION.TOP_CENTER,
+			})
+			return
+		}
 		setLoading(true)
 		if (!isProfile) {
 			if (!token || !address) {

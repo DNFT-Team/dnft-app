@@ -213,6 +213,12 @@ const CreateNFTModal = (props) => {
 	}
 
 	const createNFT = async () => {
+		if (!address) {
+			toast.warn(t('toast.link.wallet'), {
+				position: toast.POSITION.TOP_CENTER,
+			})
+			return
+		}
 		// check network
 		if (!['BSC'].includes(chainType)) {
 			setIsShowSwitchModal(true)
