@@ -74,14 +74,14 @@ const DrawerMenu = (props) => {
 	const menuNav = [
 		{
 			style: { marginTop: 0 },
-			navName: t('menu.profile'),
+			navName: 'Profile',
 			path: `/profile/address/${address}`,
 		},
 		{
 			icon: assetSvg,
 			icon_Select: assetSvg_Select,
 			style: { marginTop: 5 },
-			navName: t('menu.asset'),
+			navName: 'Asset',
 			path: '/asset',
 			divider: true,
 		},
