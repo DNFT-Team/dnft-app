@@ -141,7 +141,7 @@
 		"eth": "Ethereum",
 		"approve": "Approve",
 		"tips": "Tips",
-		"tips.phase.out": "Are you sure phase out the nft?",
+		"hint.phase.out": "Are you sure phase out the nft?",
 		"not.allowed.sell": "This nft is not allowed to sell",
 		"sell": "Sell",
 		"unsell": "Unsell",
@@ -261,7 +261,7 @@
 		"buy": "Buy",
 		"buynow": "Buy Now",
 		"recommendations": "Recommendations",
-		"buy.nft": "Buy NFT",
+		"buynft": "Buy NFT",
 		"qty": "Quantity/{{qty}}",
 		"submit": "Submit"
 	},

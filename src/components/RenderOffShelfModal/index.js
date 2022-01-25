@@ -17,7 +17,7 @@ const RenderOffShelfModal = (props) => {
 
 	return (
 		<Dialog
-			title={t('tips')}
+			title={t('nftCard.tips')}
 			size="tiny"
 			visible={showOffShelfModal}
 			closeOnClickModal={false}
@@ -28,7 +28,7 @@ const RenderOffShelfModal = (props) => {
 			}}
 		>
 			<Dialog.Body>
-				<span>{t('tips.phase.out')}</span>
+				<span>{t('nftCard.hint.phase.out')}</span>
 			</Dialog.Body>
 			<Dialog.Footer className="dialog-footer">
 				<Button
@@ -45,14 +45,13 @@ const RenderOffShelfModal = (props) => {
 						try {
 							setIsOffLoading(true)
 							let wallet = getWallet()
-
 							if (wallet) {
-								window.web3 = new Web3(wallet)
-								const is721Contract = datas?.contractType == 721
-
+								window.web3 = new Web3(wallet);
+								const is721Contract = datas?.contractType == 721;
 								const contractAddress = is721Contract
 									? tradableNFTContract721[net_env]
-									: tradableNFTContract[net_env]
+									: tradableNFTContract[net_env];
+
 								const myContract = new window.web3.eth.Contract(
 									is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
 									contractAddress,

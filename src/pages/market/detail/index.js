@@ -633,7 +633,7 @@ const MarketDetailScreen = (props) => {
 			</Box>
 			{isOpen && (
 				<Dialog
-					title={t('market.buy.nft')}
+					title={t('market.buynft')}
 					visible
 					customClass={styleModalContainer}
 					onCancel={onClose}
@@ -704,6 +704,7 @@ const MarketDetailScreen = (props) => {
 				datas={datas}
 				address={address}
 				token={token}
+				net_env={net_env}
 				historyBack={historyBack}
 			/>
 		</Box>

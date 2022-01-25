@@ -67,11 +67,6 @@ const Market = (props) => {
 		)
 		setPage(tag ? 1 : page + 1)
 	}
-	// useEffect(() => {
-	//   if (pageAble && datas?.length > 0) {
-	//     fetchData()
-	//   }
-	// }, [pageAble, datas?.length, category, sortTag, address])
 
 	const renderNoData = useMemo(
 		() => (

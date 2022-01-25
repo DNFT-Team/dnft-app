@@ -314,7 +314,7 @@ const NFTCard = (props) => {
 				}}
 			>
 				<Dialog.Body>
-					<span>{t('nftCard.tips.phase.out')}</span>
+					<span>{t('nftCard.hint.phase.out')}</span>
 				</Dialog.Body>
 				<Dialog.Footer className="dialog-footer">
 					<Button

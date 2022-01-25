@@ -462,7 +462,7 @@ const GlobalHeader = (props) => {
 		},
 	]
 	useEffect(() => {
-		dispatch(getCategoryList(null, token))
+		if (token) dispatch(getCategoryList(null, token))
 	}, [token])
 	const renderFaucet = () =>
 		globalConf.net_env === 'testnet' &&

@@ -42,7 +42,7 @@ const AssetScreen = (props) => {
 					value: 'INWALLET',
 				},
 				{
-					label: t('inwallet'),
+					label: t('sold'),
 					value: 'sold',
 				},
 		  ]
@@ -56,7 +56,7 @@ const AssetScreen = (props) => {
 					value: 'INWALLET',
 				},
 				{
-					label: t('inwallet'),
+					label: t('sold'),
 					value: 'SOLD',
 				},
 		  ]
