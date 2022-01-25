@@ -25,7 +25,7 @@ import _ from 'lodash'
 import NFTCardItem from 'pages/market/component/item'
 import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
-import { getImgLink } from 'utils/tools'
+import { getImgLink, numInValid } from 'utils/tools'
 import imgSaleType1 from 'images/asset/saleType_1.png'
 import imgSaleType2 from 'images/asset/saleType_2.png'
 import loadingBar from 'images/common/loadingBar.svg'
@@ -308,8 +308,13 @@ const NFTCard = (props) => {
 		)
 	}, [sellForm, isApproved, isApproveLoading, isOnLoading, getWallet])
 
-	const AuctionForm = useMemo(
-		() => (
+	const AuctionForm = useMemo(() => {
+		const isFormvalid =
+			!numInValid(Number(sellForm.startPrice), 1e10) &&
+			!numInValid(Number(sellForm.bitIncrement), 1e10) &&
+			sellForm.duration &&
+			sellForm.type
+		return (
 			<div className={styleAuction}>
 				<img className="showCard" src={getImgLink(item?.avatorUrl)} alt="" />
 				{renderFormItem(
@@ -382,20 +387,19 @@ const NFTCard = (props) => {
 				</p>
 				<div
 					style={{
-						opacity: isApproveLoading || isOnLoading ? 0.5 : 1,
+						opacity: !isFormvalid || isApproveLoading || isOnLoading ? 0.5 : 1,
 					}}
 					className={styleCreateNFT}
 					onClick={() => {
-						auctionHandle()
+						isFormvalid && auctionHandle()
 					}}
 				>
 					<Loading loading={isApproveLoading || isOnLoading} />
 					{isApproved ? t('confirm') : t('nftCard.approve')}
 				</div>
 			</div>
-		),
-		[sellForm, isApproved, isApproveLoading, isOnLoading, feeLoading, getWallet],
-	)
+		)
+	}, [sellForm, isApproved, isApproveLoading, isOnLoading, feeLoading, getWallet])
 
 	const auctionHandle = useCallback(async () => {
 		try {
@@ -479,9 +483,6 @@ const NFTCard = (props) => {
 	}, [getWallet, sellForm, isApproved])
 
 	const getAuctionPutonFee = useCallback(async () => {
-		if (feeLoading) {
-			return
-		}
 		try {
 			setFeeloading(true)
 			let wallet = getWallet()
@@ -499,7 +500,7 @@ const NFTCard = (props) => {
 		} finally {
 			setFeeloading(false)
 		}
-	}, [getWallet, sellForm, feeLoading])
+	}, [getWallet, sellForm])
 
 	const renderOffShelfModal = useMemo(() => {
 		console.log('off')

@@ -127,3 +127,9 @@ export const json2File = (json, fileName) => {
 	})
 	return jsonFile
 }
+
+export const numInValid = (num, max) =>
+	typeof num !== 'number' ||
+	num === 0 ||
+	String(num).split('.')[1]?.length > 4 ||
+	(max && num > max)
