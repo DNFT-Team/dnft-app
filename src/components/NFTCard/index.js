@@ -61,7 +61,7 @@ const NFTCard = (props) => {
 	const [sellForm, setSellForm] = useState({
 		quantity: 1,
 		type: 'DNF',
-		price: 1,
+		price: 0,
 		duration: '',
 		startPrice: 1,
 		bitIncrement: 1,
@@ -73,6 +73,7 @@ const NFTCard = (props) => {
 	const [isOffLoading, setIsOffLoading] = useState(false)
 	const [saleType, setSaleType] = useState(0)
 	const [feeLoading, setFeeloading] = useState(false)
+	const [isSuccess, setIsSuccess] = useState(false)
 
 	const onShowSellModal = () => {
 		setSaleType(0)
@@ -83,15 +84,12 @@ const NFTCard = (props) => {
 		setShowOffShelfModal(true)
 	}
 
-	const renderFormItem = (label, item) => {
-		console.log()
-		return (
-			<div className={styleFormItemContainer}>
-				<div className="label">{label}</div>
-				{item}
-			</div>
-		)
-	}
+	const renderFormItem = (label, item) => (
+		<div className={styleFormItemContainer}>
+			<div className="label">{label}</div>
+			{item}
+		</div>
+	)
 
 	const FixedForm = useMemo(() => {
 		const isPriceInvalid =
@@ -315,91 +313,102 @@ const NFTCard = (props) => {
 			sellForm.duration &&
 			sellForm.type
 		return (
-			<div className={styleAuction}>
-				<img className="showCard" src={getImgLink(item?.avatorUrl)} alt="" />
-				{renderFormItem(
-					'Duration',
-					<Select
-						style={{ width: '100%' }}
-						value={sellForm.duration}
-						placeholder={t('please.choose')}
-						onChange={(value) => {
-							setSellForm({
-								...sellForm,
-								duration: value,
-							})
-						}}
-					>
-						{DurationList.map((dl) => (
-							<Select.Option key={dl.key} label={dl.label} value={dl.key} />
-						))}
-					</Select>,
-				)}
-				{renderFormItem(
-					'Starting Price',
-					<Input
-						type="number"
-						min="0"
-						defaultValue={1}
-						onChange={(value) => {
-							setSellForm({
-								...sellForm,
-								startPrice: value,
-							})
-						}}
-						prepend={
+			<div className={isSuccess ? styleAuctionSuccess : styleAuction}>
+				<div className="showCard">
+					<img src={getImgLink(item?.avatorUrl)} alt="" />
+				</div>
+				{!isSuccess ? (
+					<React.Fragment>
+						{renderFormItem(
+							'Duration',
 							<Select
-								style={{ width: '100px', paddingRight: '10px' }}
-								value={sellForm.type}
-								defaultValue={'DNF'}
+								style={{ width: '100%' }}
+								value={sellForm.duration}
+								placeholder={t('please.choose')}
 								onChange={(value) => {
 									setSellForm({
 										...sellForm,
-										type: value,
+										duration: value,
 									})
 								}}
 							>
-								<Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
-								<Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
-							</Select>
-						}
-					/>,
+								{DurationList.map((dl) => (
+									<Select.Option key={dl.key} label={dl.label} value={dl.key} />
+								))}
+							</Select>,
+						)}
+						{renderFormItem(
+							'Starting Price',
+							<Input
+								type="number"
+								min="0"
+								value={sellForm.startPrice}
+								onChange={(value) => {
+									setSellForm({
+										...sellForm,
+										startPrice: value,
+									})
+								}}
+								prepend={
+									<Select
+										style={{ width: '100px', paddingRight: '10px' }}
+										value={sellForm.type}
+										defaultValue={'DNF'}
+										onChange={(value) => {
+											setSellForm({
+												...sellForm,
+												type: value,
+											})
+										}}
+									>
+										<Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
+										<Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
+									</Select>
+								}
+							/>,
+						)}
+						{renderFormItem(
+							'Bid Increment',
+							<Input
+								type="number"
+								min="0"
+								value={sellForm.bitIncrement}
+								onChange={(value) => {
+									setSellForm({
+										...sellForm,
+										bitIncrement: value,
+									})
+								}}
+							/>,
+						)}
+						<p className="fee-line">
+							<span>Service Fee</span>
+							<strong>
+								{feeLoading ? <img src={loadingBar} /> : sellForm.auctionPutOnFee + 'DNF'}
+							</strong>
+						</p>
+						<div
+							style={{
+								opacity: !isFormvalid || isApproveLoading || isOnLoading ? 0.6 : 1,
+							}}
+							className={styleCreateNFT}
+							onClick={() => {
+								isFormvalid && auctionHandle()
+							}}
+						>
+							<Loading loading={isApproveLoading || isOnLoading} />
+							{!isApproved ? t('nftCard.approve') : isFormvalid ? 'Complete listing' : 'List'}
+						</div>
+					</React.Fragment>
+				) : (
+					<React.Fragment>
+						<p>Success</p>
+						<div className={styleCreateNFT}>View Item</div>
+					</React.Fragment>
 				)}
-				{renderFormItem(
-					'Bid Increment',
-					<Input
-						type="number"
-						min="0"
-						defaultValue={1}
-						onChange={(value) => {
-							setSellForm({
-								...sellForm,
-								bitIncrement: value,
-							})
-						}}
-					/>,
-				)}
-				<p className="fee-line">
-					<span>Service Fee</span>
-					<strong>
-						{feeLoading ? <img src={loadingBar} /> : sellForm.auctionPutOnFee + 'DNF'}
-					</strong>
-				</p>
-				<div
-					style={{
-						opacity: !isFormvalid || isApproveLoading || isOnLoading ? 0.5 : 1,
-					}}
-					className={styleCreateNFT}
-					onClick={() => {
-						isFormvalid && auctionHandle()
-					}}
-				>
-					<Loading loading={isApproveLoading || isOnLoading} />
-					{isApproved ? t('confirm') : t('nftCard.approve')}
-				</div>
 			</div>
 		)
-	}, [sellForm, isApproved, isApproveLoading, isOnLoading, feeLoading, getWallet])
+	}, [sellForm, isApproved, isApproveLoading, isOnLoading, isSuccess, feeLoading, getWallet])
 
 	const auctionHandle = useCallback(async () => {
 		try {
@@ -442,7 +451,8 @@ const NFTCard = (props) => {
 								},
 								token,
 							)
-							setShowSellModal(false)
+							// setShowSellModal(false)
+							setIsSuccess(true)
 							setIsAprroveLoading(false)
 							setIsOnLoading(false)
 							onRefresh(address, token, true)
@@ -529,7 +539,7 @@ const NFTCard = (props) => {
 					</Button>
 					<Button
 						type="primary"
-						style={{ opacity: isOffLoading ? 0.5 : 1 }}
+						style={{ opacity: isOffLoading ? 0.6 : 1 }}
 						onClick={async () => {
 							try {
 								setIsOffLoading(true)
@@ -599,7 +609,7 @@ const NFTCard = (props) => {
 				{currentStatus.value === 'INWALLET' && (
 					<Box
 						w={['calc(100% - 88px)', 'calc(100% - 88px)', 'calc(100% - 88px)', '144px']}
-						className={cx(styleButton)}
+						className={styleButton}
 						style={{
 							opacity: isEmpty ? 0.5 : 1,
 							cursor: isEmpty ? 'not-allowed' : 'pointer',
@@ -622,7 +632,7 @@ const NFTCard = (props) => {
 				{currentStatus.value === 'ONSALE' && (
 					<Box
 						w={['calc(100% - 88px)', 'calc(100% - 88px)', 'calc(100% - 88px)', '144px']}
-						className={cx(styleButton)}
+						className={styleButton}
 						style={{
 							opacity: isEmpty ? 0.5 : 1,
 							cursor: isEmpty ? 'not-allowed' : 'pointer',
@@ -639,7 +649,9 @@ const NFTCard = (props) => {
 			<Dialog
 				customClass={styleModalContainer}
 				title={t(
-					saleType === 1
+					isSuccess
+						? ''
+						: saleType === 1
 						? 'nftCard.title'
 						: saleType === 2
 						? 'nftCard.sale.auction'
@@ -754,7 +766,10 @@ const styleCreateNFT = css`
 	font-size: 16px;
 	border-radius: 10px;
 	cursor: pointer;
-	width: fit-content;
+	user-select: none;
+	width: -webkit-fill-available;
+	text-align: center;
+	font-family: Archivo Black, sans-serif;
 	.circular {
 		width: 20px !important;
 		height: 20px !important;
@@ -883,6 +898,11 @@ const styleAuction = css`
 		max-width: fit-content;
 		height: 280px;
 		margin-bottom: 44px;
+		img {
+			width: 100%;
+			height: 100%;
+			border-radius: 10px;
+		}
 	}
 	.fee-line {
 		font-family: Helvetica;
@@ -901,5 +921,38 @@ const styleAuction = css`
 			height: 18px;
 			width: 18px;
 		}
+	}
+`
+const styleAuctionSuccess = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	.showCard {
+		height: 280px;
+		width: 280px;
+		position: relative;
+		img {
+			width: 100%;
+			height: 100%;
+			border-radius: 10px;
+			&::after {
+				font-family: Archivo Black;
+				content: '√';
+				position: absolute;
+				top: -10px;
+				right: -10px;
+				border-radius: 100%;
+				border: 2px solid #fff;
+			}
+		}
+	}
+	p {
+		font-family: Archivo Black;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 24px;
+		color: #00ce93;
+		margin: 27px 0 110px 0;
 	}
 `
