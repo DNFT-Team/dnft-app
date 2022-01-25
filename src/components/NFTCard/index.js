@@ -1,6 +1,6 @@
-import { Dialog, InputNumber, Select, Button, Loading } from 'element-react'
+import { Dialog, Input, InputNumber, Select, Button, Loading } from 'element-react'
 import { css, cx } from 'emotion'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { post } from 'utils/request'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -10,12 +10,14 @@ import {
 	createNFTContract721,
 	tradableNFTContract,
 	tradableNFTContract721,
+	auction721Contract,
 } from '../../utils/contract'
 import {
 	createNFTAbi1155,
 	createNFTAbi721,
 	tradableNFTAbi,
 	tradableNFTAbi721,
+	auction721Abi,
 } from '../../utils/abi'
 import { Box } from '@chakra-ui/react'
 import { toast } from 'react-toastify'
@@ -23,21 +25,32 @@ import _ from 'lodash'
 import NFTCardItem from 'pages/market/component/item'
 import { getWallet } from 'utils/get-wallet'
 import { useTranslation } from 'react-i18next'
+import { getImgLink } from 'utils/tools'
+import imgSaleType1 from 'images/asset/saleType_1.png'
+import imgSaleType2 from 'images/asset/saleType_2.png'
+import loadingBar from 'images/common/loadingBar.svg'
+
+const SaleList = [
+	{ key: 1, label: 'Fixed Price', banner: imgSaleType1, active: '' },
+	{ key: 2, label: 'Timed Auction', banner: imgSaleType2, active: '' },
+]
+const DurationList = [
+	{ key: 3600 * 24, label: '24 Hours' },
+	{ key: 3600 * 24 * 7, label: '1 Week' },
+	{ key: 3600 * 24 * 30, label: '1 Month' },
+	{ key: 3600 * 24 * 30 * 3, label: '2 Months' },
+]
 
 const gasLimit = 3000000
 const NFTCard = (props) => {
 	const {
 		net_env,
-		needAction,
 		item,
 		index,
 		currentStatus,
 		token,
 		address,
-		onLike,
-		onSave,
 		onRefresh,
-		isProfile,
 		fromCollection,
 		handleDetail,
 		getList,
@@ -47,13 +60,22 @@ const NFTCard = (props) => {
 	const [showOffShelfModal, setShowOffShelfModal] = useState(false)
 	const [sellForm, setSellForm] = useState({
 		quantity: 1,
+		type: 'DNF',
+		price: 1,
+		duration: '',
+		startPrice: 1,
+		bitIncrement: 1,
+		auctionPutOnFee: 0,
 	})
 	const [isApproved, setIsApproved] = useState(false)
 	const [isApproveLoading, setIsAprroveLoading] = useState(false)
 	const [isOnLoading, setIsOnLoading] = useState(false)
 	const [isOffLoading, setIsOffLoading] = useState(false)
+	const [saleType, setSaleType] = useState(0)
+	const [feeLoading, setFeeloading] = useState(false)
 
 	const onShowSellModal = () => {
+		setSaleType(0)
 		setShowSellModal(true)
 	}
 
@@ -71,233 +93,419 @@ const NFTCard = (props) => {
 		)
 	}
 
-	const renderSellModal = useMemo(() => {
+	const FixedForm = useMemo(() => {
 		const isPriceInvalid =
 			typeof sellForm.price !== 'number' ||
 			sellForm.price === 0 ||
 			String(sellForm.price).split('.')[1]?.length > 4
 
 		return (
-			<Dialog
-				customClass={styleModalContainer}
-				title={t('nftCard.title')}
-				visible
-				closeOnClickModal={false}
-				onCancel={() => {
-					setShowSellModal(false)
-					setIsAprroveLoading(false)
-					setIsOnLoading(false)
-					setIsApproved(false)
-				}}
-			>
-				<Dialog.Body>
-					{renderFormItem(
-						`${t('nftCard.quantity')}/${item.quantity || 0}`,
-						<InputNumber
-							disabled={item.contractType == 721}
-							min={1}
-							max={item.quantity}
-							defaultValue={1}
-							onChange={(value) => {
-								setSellForm({
-									...sellForm,
-									quantity: value > item.quantity ? item.quantity : value,
-								})
-							}}
-						/>,
-					)}
-					{renderFormItem(
-						t('nftCard.type'),
-						<Select
-							style={{ width: '100%' }}
-							value={sellForm.type}
-							placeholder={t('please.choose')}
-							onChange={(value) => {
-								setSellForm({
-									...sellForm,
-									type: value,
-								})
-							}}
-						>
-							<Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
-							<Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
-						</Select>,
-					)}
-					{renderFormItem(
-						t('nftCard.price'),
-						<InputNumber
-							controls={false}
-							placeholder={t('nftCard.eth')}
-							value={sellForm.price}
-							onChange={(value) => {
-								setSellForm({
-									...sellForm,
-									price: value,
-								})
-							}}
-						/>,
-					)}
-					<div
-						style={{
-							opacity: isPriceInvalid || isApproveLoading || isOnLoading ? 0.5 : 1,
+			<React.Fragment>
+				{renderFormItem(
+					`${t('nftCard.quantity')}/${item.quantity || 0}`,
+					<InputNumber
+						disabled={item.contractType == 721}
+						min={1}
+						max={item.quantity}
+						defaultValue={1}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								quantity: value > item.quantity ? item.quantity : value,
+							})
 						}}
-						className={styleCreateNFT}
-						onClick={async () => {
-							if (isPriceInvalid) {
-								return
-							}
+					/>,
+				)}
+				{renderFormItem(
+					t('nftCard.type'),
+					<Select
+						style={{ width: '100%' }}
+						value={sellForm.type}
+						placeholder={t('please.choose')}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								type: value,
+							})
+						}}
+					>
+						<Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
+						<Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
+					</Select>,
+				)}
+				{renderFormItem(
+					t('nftCard.price'),
+					<InputNumber
+						controls={false}
+						placeholder={t('nftCard.eth')}
+						value={sellForm.price}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								price: value,
+							})
+						}}
+					/>,
+				)}
+				<div
+					style={{
+						opacity: isPriceInvalid || isApproveLoading || isOnLoading ? 0.5 : 1,
+					}}
+					className={styleCreateNFT}
+					onClick={async () => {
+						if (isPriceInvalid) {
+							return
+						}
 
-							try {
-								let wallet = getWallet()
-								if (wallet) {
-									window.web3 = new Web3(wallet)
+						try {
+							let wallet = getWallet()
+							if (wallet) {
+								window.web3 = new Web3(wallet)
 
-									if (isApproved) {
-										try {
-											const is721Contract = item.contractType == 721
+								if (isApproved) {
+									try {
+										const is721Contract = item.contractType == 721
 
-											setIsOnLoading(true)
-											const myContract = new window.web3.eth.Contract(
-												is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
-												is721Contract
-													? tradableNFTContract721[net_env]
-													: tradableNFTContract[net_env],
-											)
+										setIsOnLoading(true)
+										const myContract = new window.web3.eth.Contract(
+											is721Contract ? tradableNFTAbi721 : tradableNFTAbi,
+											is721Contract
+												? tradableNFTContract721[net_env]
+												: tradableNFTContract[net_env],
+										)
 
-											let putOnResult
-											if (sellForm.type === 'DNF') {
-												if (is721Contract) {
-													putOnResult = await myContract.methods
-														.putOnByDnft(
-															item.tokenAddress,
-															item.tokenId,
-															Web3.utils.toWei(String(sellForm.price), 'ether'),
-														)
-														.send({
-															from: address,
-															gasLimit,
-														})
-												} else {
-													putOnResult = await myContract.methods
-														.putOnByDnft(
-															item.tokenAddress,
-															item.tokenId,
-															Web3.utils.toWei(String(sellForm.price), 'ether'),
-															sellForm.quantity,
-														)
-														.send({
-															from: address,
-															gasLimit,
-														})
-												}
-											} else if (sellForm.type === 'BUSD') {
-												if (is721Contract) {
-													putOnResult = await myContract.methods
-														.putOnByBusd(
-															item.tokenAddress,
-															item.tokenId,
-															Web3.utils.toWei(String(sellForm.price), 'ether'),
-														)
-														.send({
-															from: address,
-															gasLimit,
-														})
-												} else {
-													putOnResult = await myContract.methods
-														.putOnByBusd(
-															item.tokenAddress,
-															item.tokenId,
-															Web3.utils.toWei(String(sellForm.price), 'ether'),
-															sellForm.quantity,
-														)
-														.send({
-															from: address,
-															gasLimit,
-														})
-												}
-											}
-											const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId
-
-											if (orderId != undefined) {
-												const result = await post(
-													'/api/v1/trans/sell_up',
-													{
-														...sellForm,
-														price: Web3.utils.toWei(String(sellForm.price), 'ether'),
-														nftId: item.nftId,
-														orderId: orderId,
-														collectionId: item.collectionId,
-														tokenAddress: item.tokenAddress,
-													},
-													token,
-												)
-												setShowSellModal(false)
-												setIsAprroveLoading(false)
-												setIsOnLoading(false)
-												onRefresh(address, token, true)
-												setIsApproved(false)
-												// toast.info('Operation succeeded！', {
-												//   position: toast.POSITION.TOP_CENTER,
-												// });
-											}
-										} finally {
-											setIsOnLoading(false)
-										}
-									} else {
-										try {
-											const is721Contract = item.contractType == 721
-											setIsAprroveLoading(true)
-											const dnfTokenContract = new window.web3.eth.Contract(
-												is721Contract ? createNFTAbi721 : createNFTAbi1155,
-												is721Contract
-													? createNFTContract721[net_env]
-													: createNFTContract1155[net_env],
-											)
-
-											let isApproved = await dnfTokenContract.methods
-												.isApprovedForAll(
-													address,
-													is721Contract
-														? tradableNFTContract721[net_env]
-														: tradableNFTContract[net_env],
-												)
-												.call()
-
-											if (!isApproved) {
-												let result = await dnfTokenContract.methods
-													.setApprovalForAll(
-														is721Contract
-															? tradableNFTContract721[net_env]
-															: tradableNFTContract[net_env],
-														true,
+										let putOnResult
+										if (sellForm.type === 'DNF') {
+											if (is721Contract) {
+												putOnResult = await myContract.methods
+													.putOnByDnft(
+														item.tokenAddress,
+														item.tokenId,
+														Web3.utils.toWei(String(sellForm.price), 'ether'),
 													)
 													.send({
 														from: address,
 														gasLimit,
 													})
-												if (result) {
-													setIsApproved(true)
-												}
 											} else {
+												putOnResult = await myContract.methods
+													.putOnByDnft(
+														item.tokenAddress,
+														item.tokenId,
+														Web3.utils.toWei(String(sellForm.price), 'ether'),
+														sellForm.quantity,
+													)
+													.send({
+														from: address,
+														gasLimit,
+													})
+											}
+										} else if (sellForm.type === 'BUSD') {
+											if (is721Contract) {
+												putOnResult = await myContract.methods
+													.putOnByBusd(
+														item.tokenAddress,
+														item.tokenId,
+														Web3.utils.toWei(String(sellForm.price), 'ether'),
+													)
+													.send({
+														from: address,
+														gasLimit,
+													})
+											} else {
+												putOnResult = await myContract.methods
+													.putOnByBusd(
+														item.tokenAddress,
+														item.tokenId,
+														Web3.utils.toWei(String(sellForm.price), 'ether'),
+														sellForm.quantity,
+													)
+													.send({
+														from: address,
+														gasLimit,
+													})
+											}
+										}
+										const orderId = putOnResult?.events?.PutOn?.returnValues?.orderId
+
+										if (orderId != undefined) {
+											const result = await post(
+												'/api/v1/trans/sell_up',
+												{
+													...sellForm,
+													price: Web3.utils.toWei(String(sellForm.price), 'ether'),
+													nftId: item.nftId,
+													orderId: orderId,
+													collectionId: item.collectionId,
+													tokenAddress: item.tokenAddress,
+												},
+												token,
+											)
+											setShowSellModal(false)
+											setIsAprroveLoading(false)
+											setIsOnLoading(false)
+											onRefresh(address, token, true)
+											setIsApproved(false)
+											// toast.info('Operation succeeded！', {
+											//   position: toast.POSITION.TOP_CENTER,
+											// });
+										}
+									} finally {
+										setIsOnLoading(false)
+									}
+								} else {
+									try {
+										const is721Contract = item.contractType == 721
+										setIsAprroveLoading(true)
+										const dnfTokenContract = new window.web3.eth.Contract(
+											is721Contract ? createNFTAbi721 : createNFTAbi1155,
+											is721Contract
+												? createNFTContract721[net_env]
+												: createNFTContract1155[net_env],
+										)
+
+										let isApproved = await dnfTokenContract.methods
+											.isApprovedForAll(
+												address,
+												is721Contract
+													? tradableNFTContract721[net_env]
+													: tradableNFTContract[net_env],
+											)
+											.call()
+
+										if (!isApproved) {
+											let result = await dnfTokenContract.methods
+												.setApprovalForAll(
+													is721Contract
+														? tradableNFTContract721[net_env]
+														: tradableNFTContract[net_env],
+													true,
+												)
+												.send({
+													from: address,
+													gasLimit,
+												})
+											if (result) {
 												setIsApproved(true)
 											}
-										} finally {
-											setIsAprroveLoading(false)
+										} else {
+											setIsApproved(true)
 										}
+									} finally {
+										setIsAprroveLoading(false)
 									}
 								}
-							} catch (e) {
-								console.log(e, 'e')
 							}
-						}}
-					>
-						<Loading loading={isApproveLoading || isOnLoading} />
-						{isApproved ? t('confirm') : t('nftCard.approve')}
-					</div>
-				</Dialog.Body>
-			</Dialog>
+						} catch (e) {
+							console.log(e, 'e')
+						}
+					}}
+				>
+					<Loading loading={isApproveLoading || isOnLoading} />
+					{isApproved ? t('confirm') : t('nftCard.approve')}
+				</div>
+			</React.Fragment>
 		)
 	}, [sellForm, isApproved, isApproveLoading, isOnLoading, getWallet])
+
+	const AuctionForm = useMemo(
+		() => (
+			<div className={styleAuction}>
+				<img className="showCard" src={getImgLink(item?.avatorUrl)} alt="" />
+				{renderFormItem(
+					'Duration',
+					<Select
+						style={{ width: '100%' }}
+						value={sellForm.duration}
+						placeholder={t('please.choose')}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								duration: value,
+							})
+						}}
+					>
+						{DurationList.map((dl) => (
+							<Select.Option key={dl.key} label={dl.label} value={dl.key} />
+						))}
+					</Select>,
+				)}
+				{renderFormItem(
+					'Starting Price',
+					<Input
+						type="number"
+						min="0"
+						defaultValue={1}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								startPrice: value,
+							})
+						}}
+						prepend={
+							<Select
+								style={{ width: '100px', paddingRight: '10px' }}
+								value={sellForm.type}
+								defaultValue={'DNF'}
+								onChange={(value) => {
+									setSellForm({
+										...sellForm,
+										type: value,
+									})
+								}}
+							>
+								<Select.Option key={'DNF'} label={'DNF'} value={'DNF'} />
+								<Select.Option key={'BUSD'} label={'BUSD'} value={'BUSD'} />
+							</Select>
+						}
+					/>,
+				)}
+				{renderFormItem(
+					'Bid Increment',
+					<Input
+						type="number"
+						min="0"
+						defaultValue={1}
+						onChange={(value) => {
+							setSellForm({
+								...sellForm,
+								bitIncrement: value,
+							})
+						}}
+					/>,
+				)}
+				<p className="fee-line">
+					<span>Service Fee</span>
+					<strong>
+						{feeLoading ? <img src={loadingBar} /> : sellForm.auctionPutOnFee + 'DNF'}
+					</strong>
+				</p>
+				<div
+					style={{
+						opacity: isApproveLoading || isOnLoading ? 0.5 : 1,
+					}}
+					className={styleCreateNFT}
+					onClick={() => {
+						auctionHandle()
+					}}
+				>
+					<Loading loading={isApproveLoading || isOnLoading} />
+					{isApproved ? t('confirm') : t('nftCard.approve')}
+				</div>
+			</div>
+		),
+		[sellForm, isApproved, isApproveLoading, isOnLoading, feeLoading, getWallet],
+	)
+
+	const auctionHandle = useCallback(async () => {
+		//	check form
+		//	getWallet
+		// send tx
+		// post nofity
+		try {
+			let wallet = getWallet()
+			if (wallet) {
+				window.web3 = new Web3(wallet)
+
+				if (isApproved) {
+					try {
+						setIsOnLoading(true)
+						const myContract = new window.web3.eth.Contract(
+							auction721Abi,
+							auction721Contract[net_env],
+						)
+						const payloads = [
+							item.tokenAddress,
+							item.tokenId,
+							Web3.utils.toWei(String(sellForm.startPrice), 'ether'),
+							Web3.utils.toWei(String(sellForm.bitIncrement), 'ether'),
+							sellForm.duration,
+						]
+						console.log(['Auction.PutOn.Payloads'], payloads)
+						let putOnResult = await myContract.methods[
+							`putOnBy${sellForm.type === 'DNF' ? 'Dnft' : 'Busd'}`
+						](...payloads).send({
+							from: address,
+							gasLimit,
+						})
+						const lodId = putOnResult?.events?.PutOn?.returnValues?.orderId
+
+						if (lodId != undefined) {
+							await post(
+								'/api/v1/trans/sell_up',
+								{
+									...sellForm,
+									price: Web3.utils.toWei(String(sellForm.price), 'ether'),
+									nftId: item.nftId,
+									lodId: lodId,
+									collectionId: item.collectionId,
+									tokenAddress: item.tokenAddress,
+								},
+								token,
+							)
+							setShowSellModal(false)
+							setIsAprroveLoading(false)
+							setIsOnLoading(false)
+							onRefresh(address, token, true)
+							setIsApproved(false)
+						}
+					} finally {
+						setIsOnLoading(false)
+					}
+				} else {
+					try {
+						setIsAprroveLoading(true)
+						const dnfTokenContract = new window.web3.eth.Contract(
+							createNFTAbi721,
+							item.tokenAddress,
+						)
+						console.log('dnfTokenContract', dnfTokenContract)
+						let isApproved = await dnfTokenContract.methods
+							.isApprovedForAll(address, item.tokenAddress)
+							.call()
+
+						if (!isApproved) {
+							let result = await dnfTokenContract.methods
+								.setApprovalForAll(item.tokenAddress, true)
+								.send({
+									from: address,
+									gasLimit,
+								})
+							if (result) {
+								setIsApproved(true)
+							}
+						} else {
+							setIsApproved(true)
+						}
+					} finally {
+						setIsAprroveLoading(false)
+					}
+				}
+			}
+		} catch (e) {
+			console.log(e, 'e')
+		}
+	}, [getWallet, sellForm, isApproved])
+
+	const getAuctionPutonFee = async () => {
+		try {
+			setFeeloading(true)
+			let wallet = getWallet()
+			if (wallet) {
+				window.web3 = new Web3(wallet)
+				await window.web3.eth.requestAccounts()
+				const myContract = new window.web3.eth.Contract(auction721Abi, auction721Contract[net_env])
+				let putOnfee = await myContract.methods.putOnFee().call()
+				putOnfee = Web3.utils.fromWei(putOnfee, 'ether')
+				console.log(putOnfee)
+				sellForm.auctionPutOnFee = putOnfee
+			}
+		} catch {
+			sellForm.auctionPutOnFee = 0
+		} finally {
+			setFeeloading(false)
+		}
+	}
 
 	const renderOffShelfModal = useMemo(() => {
 		console.log('off')
@@ -407,10 +615,8 @@ const NFTCard = (props) => {
 								return
 							}
 							if (item?.sellable === false) {
-								toast.warn(t('nftCard.not.allowed.sell'), {
-									position: toast.POSITION.TOP_CENTER,
-								})
-								return
+								toast.warn(t('nftCard.not.allowed.sell'))
+								// return
 							}
 							onShowSellModal()
 						}}
@@ -435,7 +641,48 @@ const NFTCard = (props) => {
 					</Box>
 				)}
 			</NFTCardItem>
-			{showSellModal && renderSellModal}
+			<Dialog
+				customClass={styleModalContainer}
+				title={t(
+					saleType === 1
+						? 'nftCard.title'
+						: saleType === 2
+						? 'nftCard.sale.auction'
+						: 'nftCard.sale.saleType',
+				)}
+				visible={showSellModal}
+				closeOnClickModal={false}
+				onCancel={() => {
+					setShowSellModal(false)
+					setIsAprroveLoading(false)
+					setIsOnLoading(false)
+					setIsApproved(false)
+				}}
+			>
+				<Dialog.Body>
+					{saleType === 1 ? (
+						FixedForm
+					) : saleType === 2 ? (
+						AuctionForm
+					) : (
+						<div className={styleSaleWrapper.flexBox}>
+							{SaleList.map((e) => (
+								<div
+									className={styleSaleWrapper.box}
+									key={e.key}
+									onClick={() => {
+										setSaleType(e.key)
+										e.key === 2 && getAuctionPutonFee()
+									}}
+								>
+									<img src={e.banner} alt="" />
+									<p>{e.label}</p>
+								</div>
+							))}
+						</div>
+					)}
+				</Dialog.Body>
+			</Dialog>
 			{showOffShelfModal && renderOffShelfModal}
 		</div>
 	)
@@ -527,22 +774,43 @@ const styleModalContainer = css`
 	width: calc(100% - 40px);
 	border-radius: 10px;
 
+	.el-input + .el-button,
+	.el-select + .el-button,
+	.el-textarea__inner,
+	.el-input-group__append,
+	.el-input-group__prepend,
+	.el-input__inner {
+		border: 2px solid #e1e6ff;
+		border-radius: 6px;
+		color: #75819a;
+		min-height: 40px;
+		font-family: Helvetica;
+	}
 	.el-dialog__headerbtn .el-dialog__close {
 		color: #233a7d;
 		font-size: 12px;
 	}
-	.el-dialog__title {
-		color: #11142d;
-		font-size: 18px;
-	}
 	.el-dialog__header {
 		padding: 32px;
+	}
+	.el-dialog__title {
+		font-family: Archivo Black;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 24px;
+		line-height: 24px;
+		color: #000000;
 	}
 	.el-dialog__body {
 		padding: 0 32px 32px 32px;
 	}
 	.el-input-number {
 		width: 100%;
+		.el-input-number__decrease,
+		.el-input-number__increase {
+			height: 100%;
+			border-left: 2px solid #e1e6ff;
+		}
 	}
 `
 
@@ -552,10 +820,91 @@ const styleFormItemContainer = css`
 	margin-bottom: 30px;
 	.label {
 		margin-bottom: 10px;
+		font-family: Helvetica;
+		font-style: normal;
+		font-weight: bold;
+		font-size: 14px;
+		line-height: 14px;
+		color: #000000;
+		i {
+			font-size: 18px;
+			padding-left: 4px;
+			font-style: normal;
+			color: #ff4242;
+		}
 	}
 `
 
 const styleOffShelfModal = css`
 	max-width: 564px;
 	width: calc(100% - 40px);
+`
+
+const styleSaleWrapper = {
+	flexBox: css`
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	`,
+	box: css`
+		cursor: pointer;
+		user-select: none;
+		width: max-content;
+		background: rgba(233, 233, 233, 0.1);
+		border: 1px solid #c4c4c4;
+		box-sizing: border-box;
+		border-radius: 10px;
+		padding: 0 46px;
+		transition: all 0.2s ease-in-out;
+		img {
+			width: 124px;
+			height: 78px;
+			margin: 60px auto;
+			filter: grayscale(1);
+			transition: all 0.1s ease-in-out;
+		}
+		p {
+			font-family: Helvetica;
+			font-style: normal;
+			font-weight: bold;
+			font-size: 18px;
+			text-align: center;
+			color: #333333;
+			margin: 0 0 30px 0;
+		}
+		:hover {
+			background: rgba(0, 108, 255, 0.1);
+			border-color: #006cff;
+			img {
+				filter: grayscale(0);
+			}
+		}
+	`,
+}
+const styleAuction = css`
+	.showCard {
+		width: auto;
+		max-width: fit-content;
+		height: 280px;
+		margin-bottom: 44px;
+	}
+	.fee-line {
+		font-family: Helvetica;
+		font-style: normal;
+		font-weight: bold;
+		font-size: 14px;
+		line-height: 14px;
+		color: #000000;
+
+		display: flex;
+		justify-content: space-between;
+		strong {
+			color: #006cff;
+		}
+		img {
+			height: 18px;
+			width: 18px;
+		}
+	}
 `

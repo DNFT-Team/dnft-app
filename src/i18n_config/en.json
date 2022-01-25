@@ -134,6 +134,8 @@
 	},
 	"nftCard": {
 		"title": "Launch",
+		"sale.saleType": "Sale Type",
+		"sale.auction": "List Item Through Auction",
 		"quantity": "Quantity",
 		"type": "Type",
 		"price": "Price",

@@ -135,6 +135,8 @@
 	},
 	"nftCard": {
 		"title": "發佈",
+		"sale.saleType": "Sale Type",
+		"sale.auction": "List Item Through Auction",
 		"quantity": "數量",
 		"type": "類型",
 		"price": "價格",
