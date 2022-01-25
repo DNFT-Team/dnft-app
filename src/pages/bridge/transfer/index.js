@@ -219,7 +219,7 @@ const TransferView = (props) => {
 			},
 		},
 		{ title: t('bridge.status'), key: 'status' },
-		// {title: 'DYNAMIC INFO', key: 'dynamic_info'},
+		{title: t('bridge.info'), key: 'dynamic_info'},
 		// {title: 'FAILED CODE', key: 'failed_code'},
 		{ title: t('bridge.updated.at'), key: 'updated_at' },
 	]

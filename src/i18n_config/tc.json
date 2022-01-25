@@ -62,10 +62,9 @@
 		"selected.onto": "您已連線到不受支持的網路，請切換到 {{networkName}} 網路並且重新連線錢包",
 		"user.signature": "用戶拒絕交易簽名",
 		"mint.failed": "鑄幣交易失敗",
-		"sensitive": "警告！您的媒體資源太敏感了！", 
+		"sensitive": "警告！您的媒體資源太敏感了！",
 		"uploadingFiles": "上傳文件時網路擁塞",
 		"whenuploadingFiles": "上傳文件時網路擁塞"
-
 	},
 
 	"collection": {
@@ -195,8 +194,8 @@
 		"fee.hash": "FEE HASH",
 		"status": "狀態",
 		"updated.at": "UPDATED AT",
-		"bridgeTo": "橋連結 {{toNet}}"
-
+		"bridgeTo": "橋連結 {{toNet}}",
+		"info": "交易實時信息"
 	},
 	"book": {
 		"title": "技巧",
@@ -240,7 +239,6 @@
 		"pokemine.game": "精靈寶可夢遊戲",
 		"pokemine.gamecontent": "Helium 和 Fantom 持續支持，在過去 24 小時內，加密貨幣瘋狂飆升了 13% 以上. 比特幣的上行價格軌跡導致其他主要加密貨幣大幅飆升. 截至發稿時，比特幣的交易價格非常接近 5 萬美元，這種持續升值導致許多其他主要加密貨幣緊隨其後.",
 		"expore.more": "更多探索"
-
 	},
 	"market": {
 		"sort.label1": "最受歡迎",

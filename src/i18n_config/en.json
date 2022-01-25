@@ -67,7 +67,6 @@
 		"sensitive": "Warning! Your media resource is too sensitive!",
 		"uploadingFiles": "Network congestion when uploading files.",
 		"whenuploadingFiles": "Network congestion when uploading files."
-
 	},
 	"collection": {
 		"edit": "Edit Collection",
@@ -195,7 +194,8 @@
 		"fee.hash": "FEE HASH",
 		"status": "STATUS",
 		"updated.at": "UPDATED AT",
-		"bridgeTo": "Bridge to {{toNet}}"
+		"bridgeTo": "Bridge to {{toNet}}",
+		"info": "DYNAMIC INFO"
 	},
 	"book": {
 		"title": "Mechanism",
