@@ -3,7 +3,7 @@ import { css, cx } from 'emotion'
 import React, { useState, useMemo, useCallback } from 'react'
 import { post } from 'utils/request'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { useHistory, withRouter } from 'react-router-dom'
 import Web3 from 'web3'
 import {
 	createNFTContract1155,
@@ -29,6 +29,7 @@ import { getImgLink, numInValid } from 'utils/tools'
 import imgSaleType1 from 'images/asset/saleType_1.png'
 import imgSaleType2 from 'images/asset/saleType_2.png'
 import loadingBar from 'images/common/loadingBar.svg'
+import successIcon from 'images/asset/success.png'
 
 const SaleList = [
 	{ key: 1, label: 'Fixed Price', banner: imgSaleType1, active: '' },
@@ -56,6 +57,7 @@ const NFTCard = (props) => {
 		getList,
 	} = props
 	const { t } = useTranslation()
+	const history = useHistory()
 	const [showSellModal, setShowSellModal] = useState(false)
 	const [showOffShelfModal, setShowOffShelfModal] = useState(false)
 	const [sellForm, setSellForm] = useState({
@@ -76,7 +78,7 @@ const NFTCard = (props) => {
 	const [isSuccess, setIsSuccess] = useState(false)
 
 	const onShowSellModal = () => {
-		setSaleType(0)
+		setSaleType(net_env === 'mainnet' ? 1 : 0)
 		setShowSellModal(true)
 	}
 
@@ -313,10 +315,11 @@ const NFTCard = (props) => {
 			sellForm.duration &&
 			sellForm.type
 		return (
-			<div className={isSuccess ? styleAuctionSuccess : styleAuction}>
-				<div className="showCard">
-					<img src={getImgLink(item?.avatorUrl)} alt="" />
-				</div>
+			<div className={cx(styleAuction, isSuccess && styleAuctionSuccess)}>
+				<div
+					className="showCard"
+					style={{ backgroundImage: `url(${getImgLink(item?.avatorUrl)})` }}
+				/>
 				{!isSuccess ? (
 					<React.Fragment>
 						{renderFormItem(
@@ -393,7 +396,11 @@ const NFTCard = (props) => {
 							}}
 							className={styleCreateNFT}
 							onClick={() => {
-								isFormvalid && auctionHandle()
+								if (isFormvalid) {
+									auctionHandle()
+								} else {
+									toast.warn('Please fill out the form correctly')
+								}
 							}}
 						>
 							<Loading loading={isApproveLoading || isOnLoading} />
@@ -403,7 +410,18 @@ const NFTCard = (props) => {
 				) : (
 					<React.Fragment>
 						<p>Success</p>
-						<div className={styleCreateNFT}>View Item</div>
+						<div
+							className={styleCreateNFT}
+							onClick={() => {
+								history.push(
+									`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${
+										item?.nftId
+									}&fromAsset=${true}`,
+								)
+							}}
+						>
+							View Item
+						</div>
 					</React.Fragment>
 				)}
 			</div>
@@ -436,22 +454,21 @@ const NFTCard = (props) => {
 							from: address,
 							gasLimit,
 						})
-						const lodId = putOnResult?.events?.PutOn?.returnValues?.orderId
+						const lotId = putOnResult?.events?.PutOn?.returnValues?.lotId
 
-						if (lodId != undefined) {
+						if (lotId != undefined) {
 							await post(
-								'/api/v1/trans/sell_up',
+								'/api/v1/trans/sell_up', // TODO auction-Interface
 								{
 									...sellForm,
 									price: Web3.utils.toWei(String(sellForm.price), 'ether'),
 									nftId: item.nftId,
-									lodId: lodId,
+									lodId: lotId,
 									collectionId: item.collectionId,
 									tokenAddress: item.tokenAddress,
 								},
 								token,
 							)
-							// setShowSellModal(false)
 							setIsSuccess(true)
 							setIsAprroveLoading(false)
 							setIsOnLoading(false)
@@ -621,8 +638,11 @@ const NFTCard = (props) => {
 							}
 							if (item?.sellable === false) {
 								toast.warn(t('nftCard.not.allowed.sell'))
-								// return
+								return
 							}
+							setIsSuccess(false)
+							setFeeloading(false)
+							setIsApproved(false)
 							onShowSellModal()
 						}}
 					>
@@ -783,6 +803,8 @@ const styleModalContainer = css`
 	max-width: 564px;
 	width: calc(100% - 40px);
 	border-radius: 10px;
+	max-height: 80vh;
+	overflow: auto;
 
 	.el-input + .el-button,
 	.el-select + .el-button,
@@ -894,15 +916,14 @@ const styleSaleWrapper = {
 }
 const styleAuction = css`
 	.showCard {
-		width: auto;
-		max-width: fit-content;
-		height: 280px;
 		margin-bottom: 44px;
-		img {
-			width: 100%;
-			height: 100%;
-			border-radius: 10px;
-		}
+		height: 280px;
+		width: 280px;
+		position: relative;
+		border-radius: 10px;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 	.fee-line {
 		font-family: Helvetica;
@@ -929,22 +950,19 @@ const styleAuctionSuccess = css`
 	align-items: center;
 	flex-direction: column;
 	.showCard {
-		height: 280px;
-		width: 280px;
-		position: relative;
-		img {
-			width: 100%;
-			height: 100%;
-			border-radius: 10px;
-			&::after {
-				font-family: Archivo Black;
-				content: '√';
-				position: absolute;
-				top: -10px;
-				right: -10px;
-				border-radius: 100%;
-				border: 2px solid #fff;
-			}
+		margin-bottom: 0;
+		&::after {
+			font-family: Archivo Black;
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			border-radius: 100%;
+			background: white url(${successIcon}) no-repeat;
+			border: 6px solid #fff;
+			height: 35px;
+			width: 35px;
+			transform: translate(50%, -40%);
 		}
 	}
 	p {
@@ -953,6 +971,6 @@ const styleAuctionSuccess = css`
 		font-weight: normal;
 		font-size: 24px;
 		color: #00ce93;
-		margin: 27px 0 110px 0;
+		margin: 27px 0 70px 0;
 	}
 `
