@@ -57,6 +57,7 @@ import { _setLng } from 'reduxs/actions/lng'
 import metamaskIcon from '../../images/networks/metamask.png'
 import walletConnectIcon from '../../images/networks/wallet-connect.svg'
 import ontoIcon from '../../images/networks/onto.png'
+import bitkeepIcon from '../../images/networks/bitkeep.png'
 
 const faucetApi = process.env.REACT_APP_FAUCET_ENDPOINT
 
@@ -573,6 +574,17 @@ const GlobalHeader = (props) => {
 					>
 						<span>Metamask</span>
 						<img src={metamaskIcon} alt="metamaskIcon" />
+					</div>
+          <div
+						key={'bitkeep'}
+						className={styleNetItem}
+						onClick={async () => {
+							setIsSwitchWalletVisible(false)
+							await connectMetaMaskWallet()
+						}}
+					>
+						<span>BitKeep</span>
+						<img src={bitkeepIcon} alt="bitkeepIcon" />
 					</div>
 					<div
 						key={'Wallet Connect'}

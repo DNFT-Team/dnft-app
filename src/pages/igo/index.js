@@ -24,7 +24,7 @@ const IGOScreen = (props) => {
     { title: t('igo.mockGamelist.title'), description: '', avatarUrl: igoAvatar, skipTo: '/igo/syncBtc' },
   ];
   const onGoingGameList = [
-    { title: t('igo.pokeGameList.title'), description: '', avatarUrl: igoPokeAvatar, skipTo: '/igo/poke' },
+    // { title: t('igo.pokeGameList.title'), description: '', avatarUrl: igoPokeAvatar, skipTo: '/igo/poke' },
   ]
   const tabList = [[0, t('igo.ongoing')], [1, t('igo.ended')]];
 
