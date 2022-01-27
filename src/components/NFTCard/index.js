@@ -259,9 +259,7 @@ const NFTCard = (props) => {
 										setIsAprroveLoading(true)
 										const dnfTokenContract = new window.web3.eth.Contract(
 											is721Contract ? createNFTAbi721 : createNFTAbi1155,
-											is721Contract
-												? createNFTContract721[net_env]
-												: createNFTContract1155[net_env],
+											item.tokenAddress,
 										)
 
 										let isApproved = await dnfTokenContract.methods
