@@ -98,7 +98,7 @@ export const getImgLink = (url) => {
 	}
 
 	// Case outer url : http:// | https:// | data:image:
-	if (/^http:\/\/|https:\/\/|data:image:/.test(url)) {
+	if (/^http:\/\/|https:\/\/|data:image/.test(url)) {
 		return url
 	}
 
