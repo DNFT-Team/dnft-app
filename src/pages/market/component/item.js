@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { withRouter, useHistory } from 'react-router-dom'
 import Web3 from 'web3'
 import styles from './index.less'
-import noImg from 'images/common/noImg.svg'
 import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg'
 import { Icon } from '@iconify/react'
@@ -26,9 +25,10 @@ const NFTCard = (props) => {
 		whetherShowPrice = true,
 	} = props
 
+	// console.log('[NTF-Item]', item)
+
 	let price = item.price > 0 && Web3.utils.fromWei(String(item.price), 'ether')
 	let history = useHistory()
-	const viewUrl = getImgLink(item.avatorUrl)
 
 	const handleLinkProfile = (address) => {
 		if (!token) {
@@ -69,7 +69,7 @@ const NFTCard = (props) => {
 		>
 			<div
 				onClick={clickDetail}
-				style={{ backgroundImage: `url(${viewUrl || noImg})` }}
+				style={{ backgroundImage: `url(${getImgLink(item.avatorUrl)})` }}
 				className={styles.styleShortPicture}
 			/>
 			<div className={styles.styleInfoContainer}>

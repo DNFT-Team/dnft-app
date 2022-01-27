@@ -298,11 +298,10 @@ const CreateNFTModal = (props) => {
 					hash: txRes.hash,
 					tokenId: txRes.tokenId,
 
-					avatorUrl: mediaMeta.image,
-					animationUrl: mediaMeta.animation_url,
+					avatorUrl: IpfsUrl(mediaMeta.image),
+					animationUrl: IpfsUrl(mediaMeta.animation_url),
+					ipfsHash: IpfsUrl(jsonCid),
 					fileType: nftFile.type,
-
-					ipfs_hash: jsonCid,
 				},
 				token,
 			)
