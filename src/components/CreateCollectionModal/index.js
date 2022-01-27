@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { css } from 'emotion'
 import { post } from 'utils/request'
 import { useTranslation } from 'react-i18next'
+import { connect } from 'react-redux'
 
 const COLL_SCHEMA = {
 	chainType: '',
@@ -24,6 +25,7 @@ const CreateCollectionModal = (props) => {
 		isNew = false, // editStatus
 		formDs = COLL_SCHEMA, //  form Data
 		isProfile,
+		address
 	} = props
 	const [loading, setLoading] = useState(false)
 
@@ -44,7 +46,7 @@ const CreateCollectionModal = (props) => {
 	)
 
 	const submitColl = async () => {
-		const { address, chainType } = colData
+		const { chainType } = colData
 		if (!address) {
 			toast.warn(t('toast.link.wallet'), {
 				position: toast.POSITION.TOP_CENTER,
@@ -53,7 +55,7 @@ const CreateCollectionModal = (props) => {
 		}
 		setLoading(true)
 		if (!isProfile) {
-			if (!token || !address) {
+			if (!token) {
 				return
 			}
 			if (!['ETH', 'BSC', 'HECO'].includes(chainType)) {
@@ -152,8 +154,10 @@ const CreateCollectionModal = (props) => {
 		</Dialog>
 	)
 }
-export default CreateCollectionModal
-
+const mapStateToProps = ({ profile, lng }) => ({
+	address: profile.address,
+})
+export default connect(mapStateToProps)(CreateCollectionModal)
 const styleCollectionModalContainer = css`
 	max-width: 564px;
 	width: calc(100% - 40px);
