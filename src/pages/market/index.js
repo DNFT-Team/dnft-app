@@ -31,7 +31,7 @@ const Market = (props) => {
 
 	const domRef = useRef(null)
 	const sortTagType = [
-		// { label: t('market.sort.label1'), value: 'save_count' },
+		{ label: t('market.sort.label1'), value: 'popular' },
 		{ label: t('market.sort.label2'), value: 'create_time' },
 		{ label: t('market.sort.label3'), value: 'save_count' },
 		{ label: t('market.sort.label4'), value: 'total_price-DESC' },
