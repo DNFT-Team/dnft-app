@@ -644,7 +644,7 @@ const NFTCard = (props) => {
 							onShowSellModal()
 						}}
 					>
-						{t('sell')}
+						{t('nftCard.sell')}
 					</Box>
 				)}
 				{currentStatus.value === 'ONSALE' && (
@@ -660,7 +660,7 @@ const NFTCard = (props) => {
 							onShowOffShelfModal()
 						}}
 					>
-						{t('unsell')}
+						{t('nftCard.unsell')}
 					</Box>
 				)}
 			</NFTCardItem>

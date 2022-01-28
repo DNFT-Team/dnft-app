@@ -101,10 +101,10 @@
 
 	"back": "返回",
 	"success": "成功！",
-	"nft.wallet": "這個NFT在你的錢包內",
+	"nft.wallet": "這個NFT已經存在您的錢包",
 	"close": "關閉",
 	"onsale": "出售中",
-	"inwallet": "在錢包內",
+	"inwallet": "我的錢包",
 	"sold": "已售出",
 	"Collections": "收藏",
 	"Owned": "已擁有",
@@ -145,8 +145,8 @@
 		"tips": "提示",
 		"hint.phase.out": "你確定下架此NFT嗎?",
 		"not.allowed.sell": "此 NFT 不出售哦",
-		"sell": "出售的",
-		"unsell": "非出售",
+		"sell": "上架",
+		"unsell": "下架",
 		"create": "創建 NFT",
 		"import": "輸入 NFT",
 		"name": "名字",
@@ -178,11 +178,11 @@
 		"b2e": "如果您需要將 BEP-20 DNF 轉移到 ERC-20 DNF，請先連線您的錢包並切換到 BSC 網路！",
 		"e2b": "如果您需要將 ERC-20 DNF 轉移到 BEP-20 DNF，請先連線您的錢包並切換到 ETH 網路！",
 		"title": " $DNF 是一種多鏈代幣。Bridge（跨鏈） 功能可以讓用戶的 $DNF 在「以太坊」和「幣安智能鏈」內相互轉移.",
-		"ing": "Bridging",
+		"ing": "開始跨鏈資產轉移",
 		"dnf.trans": "從 {{fr}} 轉移你的 $DNF 到 {{to}}",
 		"send": "發送",
 		"available": "可用餘額 :",
-		"for": "For",
+		"for": "到",
 		"fees.1000": "費用1000",
 		"received.tip": "到目前為止， 你一定會收到",
 		"transaction.history": "交易歷史",
@@ -196,7 +196,7 @@
 		"fee.hash": "FEE HASH",
 		"status": "狀態",
 		"updated.at": "UPDATED AT",
-		"bridgeTo": "橋連結 {{toNet}}",
+		"bridgeTo": "跨鏈連結 {{toNet}}",
 		"info": "交易實時信息"
 	},
 	"book": {
@@ -261,7 +261,7 @@
 		"token.id": "代幣地址",
 		"available": "{{qty}} 剩餘",
 		"buy": "購買",
-		"buynow": "立即購買",
+		"buynow": "購買中",
 		"recommendations": "推薦",
 		"buynft": "買 NFT",
 		"qty": "數量/{{qty}}",
@@ -286,7 +286,7 @@
 		"staked": "已質押",
 		"reward": "獎勵",
 		"arp": "APR(%)",
-		"claim.nft": "聲明 NFT",
+		"claim.nft": "領取 NFT",
 		"token": "代幣",
 		"staking.period": "質押期",
 		"DNF": "DNF",
@@ -317,5 +317,11 @@
 		"Twitter": "Twitter",
 		"Instagram": "Instagram",
 		"Youtube": "Youtube"
+	},
+	"createNFT": {
+		"sensi": "靈敏檢測",
+		"image": "上傳媒體源",
+		"json": "上傳元數據",
+		"mint": "鑄造 NFT"
 	}
 }

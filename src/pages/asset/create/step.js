@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { css, cx } from 'emotion'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, Translation } from 'react-i18next'
 
 export const STEP_ENUM = {
 	INITIAL: 0,
@@ -23,13 +23,6 @@ export const STEP_ENUM = {
 	END: 9,
 }
 
-const loops = [
-	['SENSI', 'Sensitive Detection'],
-	// null,
-	['IMAGE', 'Upload Media Source'],
-	['JSON', 'Upload MetaData'],
-	['MINT', 'Mint NFT'],
-]
 
 const getItemStyle = (i, step) =>
 	2 * i + 1 === step
@@ -43,7 +36,13 @@ const getItemStyle = (i, step) =>
 const StepCard = (props) => {
 	const { step, errMsg, onBack, onClose } = props
 	const { t } = useTranslation()
-
+	const loops = [
+		['SENSI', t('createNFT.sensi')],
+		// null,
+		['IMAGE', t('createNFT.image')],
+		['JSON', t('createNFT.json')],
+		['MINT', t('createNFT.mint')],
+	]
 	console.log('[ props.step ]', step)
 
 	const renderCaseProcess = useMemo(

@@ -187,7 +187,7 @@ const tabRow = css`
     justify-content: center;
     align-items: center;
     padding: 6px 12px;
-    width: 80px;
+    // width: 80px;
     height: 38px;
     border: 1px solid #E6E8EC;
     box-sizing: border-box;

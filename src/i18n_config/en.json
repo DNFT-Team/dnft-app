@@ -102,7 +102,7 @@
 	"back": "Back",
 	"success": "Success!",
 	"nft.wallet": "See this NFT in your wallet.",
-	"close": "CLose",
+	"close": "Close",
 	"onsale": "On Sale",
 	"inwallet": "In Wallet",
 	"sold": "Sold",
@@ -317,5 +317,11 @@
 		"Twitter": "Twitter",
 		"Instagram": "Instagram",
 		"Youtube": "Youtube"
+	},
+	"createNFT": {
+		"sensi": "Sensitive Detection",
+		"image": "Upload Media Source",
+		"json": "Upload MetaData",
+		"mint": "Mint NFT"
 	}
 }
