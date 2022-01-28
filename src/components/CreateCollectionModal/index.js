@@ -132,7 +132,7 @@ const CreateCollectionModal = (props) => {
 					t('collection.desc'),
 					<Input
 						type="textarea"
-						placeholder={t('collection.placeholder.name')}
+						placeholder={t('collection.placeholder.desc')}
 						maxLength={500}
 						style={{
 							background: '#fff',
