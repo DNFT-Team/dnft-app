@@ -28,7 +28,6 @@ import Web3 from 'web3'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
 import styles from './index.less'
 import SharePopover from 'components/SharePopover'
-
 const MarketDetailScreen = (props) => {
 	const { t } = useTranslation()
 	const { location, net_env, address, token, chainType } = props
@@ -63,7 +62,6 @@ const MarketDetailScreen = (props) => {
 	useEffect(() => {
 		getMarketInfo()
 	}, [token])
-	console.log(url,'url?.fromAsset')
 	const getMarketInfo = async () => {
 		try {
 			if (url?.fromAsset) {
@@ -72,7 +70,6 @@ const MarketDetailScreen = (props) => {
 					'',
 					token,
 				)
-				console.log(data,'data')
 				setDatas(data?.data?.content)
 			} else {
 				const { data } = await get(
@@ -333,9 +330,12 @@ const MarketDetailScreen = (props) => {
 		}
 		history.push(`/profile/address/${address}`)
 	}
-	const renderFormItem = (label, item) => (
-		<div className={styles.styleFormItemContainer}>
-			<div className={styles.label}>{label}</div>
+	const renderFormItem = (label, item, isRequired) => (
+		<div className={styleFormItemContainer}>
+			<div className="label">
+				{label}
+				<span style={{ color: '#FF2E2E' }}>{isRequired && '*'}</span>
+			</div>
 			{item}
 		</div>
 	)
@@ -638,7 +638,7 @@ const MarketDetailScreen = (props) => {
 					customClass={styleModalContainer}
 					onCancel={onClose}
 				>
-					<Dialog.Body p="0 32px">
+					<Dialog.Body>
 						{renderFormItem(
 							t('market.qty', { qty: datas?.quantity || 0 }),
 							<InputNumber
@@ -652,14 +652,14 @@ const MarketDetailScreen = (props) => {
 									})
 								}}
 							/>,
+							true,
 						)}
 					</Dialog.Body>
 					<Dialog.Footer justifyContent="flex-start">
-						<Button
+						<Btn
 							isLoading={approveLoading}
 							loadingText={t('market.submit')}
 							disabled={!datas?.quantity || loading}
-							colorScheme="custom"
 							className={styles.submitBtn}
 							onClick={() => {
 								if (!form.quantity) {
@@ -672,7 +672,7 @@ const MarketDetailScreen = (props) => {
 							}}
 						>
 							{t('market.submit')}
-						</Button>
+						</Btn>
 					</Dialog.Footer>
 				</Dialog>
 			)}
@@ -725,11 +725,12 @@ const styleModalContainer = css`
 	// height: 50vh;
 	overflow: auto;
 	.el-dialog__title {
-		font-family: Poppins;
+		font-family: Archivo Black;
 		font-style: normal;
-		font-weight: 500;
+		font-weight: normal;
 		font-size: 24px;
-		line-height: 32px;
+		line-height: 24px;
+		color: #11142d;
 	}
 	.el-dialog__header {
 		padding: 20px 22px 0px 22px;
@@ -744,5 +745,25 @@ const styleModalContainer = css`
 	.el-dialog__footer {
 		padding: 0px 22px;
 		margin-bottom: 50px;
+	}
+`
+const styleFormItemContainer = css`
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 30px;
+	.label {
+		margin-bottom: 10px;
+		font-family: Helvetica;
+		font-style: normal;
+		font-weight: bold;
+		font-size: 14px;
+		line-height: 14px;
+		color: #000000;
+		i {
+			font-size: 18px;
+			padding-left: 4px;
+			font-style: normal;
+			color: #ff4242;
+		}
 	}
 `
