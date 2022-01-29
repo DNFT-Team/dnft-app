@@ -61,7 +61,7 @@ const MarketDetailScreen = (props) => {
 	}, [item])
 	useEffect(() => {
 		getMarketInfo()
-	}, [token])
+	}, [])
 	const getMarketInfo = async () => {
 		try {
 			if (url?.fromAsset) {
@@ -91,14 +91,11 @@ const MarketDetailScreen = (props) => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [token])
+	}, [])
 
 	useEffect(() => {
-		// if (token) {
-		//   getCollectionList();
-		// }
 		getNFTList()
-	}, [token])
+	}, [])
 
 	useEffect(() => {
 		setIsShowSwitchModal(false)
