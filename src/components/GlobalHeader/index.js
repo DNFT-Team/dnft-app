@@ -670,6 +670,7 @@ const GlobalHeader = (props) => {
 				<Select
 					className={styleSelectContainer}
 					value={lng}
+					placeholder='please select'
 					onChange={(e) => {
 						dispatch(_setLng(e))
 					}}

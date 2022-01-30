@@ -24,7 +24,7 @@ const Market = (props) => {
 	const categoryBack = location?.state?.category
 	const sortTagBack = location?.state?.sortTag
 	const [category, setCategory] = useState(categoryBack || 'All')
-	const [sortTag, setSortTag] = useState(sortTagBack || 'save_count')
+	const [sortTag, setSortTag] = useState(sortTagBack || 'popular')
 	const [page, setPage] = useState(0)
 	const [size, setSize] = useState(20)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
