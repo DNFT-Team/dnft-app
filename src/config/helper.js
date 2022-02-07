@@ -1,16 +1,19 @@
+import { Translation } from 'react-i18next';
 export default {
     bridge:{
-        title:'Tutorial',
+        // title:'Tutorial',
+        title: <Translation>{t=>t('Tutorial')}</Translation>,
         book:'https://dnft.gitbook.io/dnft/user-manual/bridge-brief-description',
         youtube:'https://www.youtube.com/watch?v=fg4fg3vfnCU',
     },
     mining:{
-        title:'DNFT Mining User Manual',
+        // title:'DNFT Mining User Manual',
+        title: <Translation>{t=>t('user.manual')}</Translation>,
         book:'https://dnft.gitbook.io/dnft/user-manual/staking-dnf-to-earn-dnf',
         youtube:'https://www.youtube.com/watch?v=32hYrdhpSfo'
     },
     nftMagic:{
-        title:'Tutorial',
+        title: <Translation>{t=>t('Tutorial')}</Translation>,
         book:'https://dnft.gitbook.io/dnft/user-manual/create-sell-buy-nft',
         youtube:'https://www.youtube.com/watch?v=uGwQNCxuheo'
     }

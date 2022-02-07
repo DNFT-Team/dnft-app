@@ -32,7 +32,9 @@ const market = (state = initialState, action) => {
     }
   case GET_CATEGORY_LIST.SUCCESS:
     let category = action.payload.data?.slice() || []
-    Array.isArray(category) && category?.unshift('All')
+    // Array.isArray(category) && category?.unshift('All')
+    Array.isArray(category) && category?.unshift({en: 'All', cn: '全部', value: 'All', tc: '全部'})
+
     return {
       ...state,
       category
