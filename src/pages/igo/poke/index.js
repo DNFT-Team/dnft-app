@@ -7,10 +7,13 @@ import { useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import globalConfig from '../../../config/index';
+import  { useTranslation } from 'react-i18next';
 
 const iframeUrl = `https://fun.dnft.world/${globalConfig.net_env === 'mainnet' ? 'syncbtc' : 'test_syncbtc'}/`
 
 const pokeScreen = (props) => {
+  const { t } = useTranslation();
+
   let history = useHistory();
   const { token } = props;
 
@@ -20,9 +23,9 @@ const pokeScreen = (props) => {
       <div className={styleItem}>
         <img src={card} alt='' />
         <div className='content'>
-          <div>Level-2 SHARK Ticket</div>
-          <p>The building of the University Centre was the first in the city by Eva Jiřičná, a world-renowned architect and designer who was born and lived in Zlín. Through the construction, the University symbolically harked back to the architecture of the city’s Bata era. Professor Jiřičná’s father worked as an architect for the Bata company, and his daughter was delighted to follow in his footsteps.</p>
-          <div className='button'>Buy</div>
+          <div>{t('igo.shark.ticket')}</div>
+          <p>{t('igo.shark.tickettitle')}</p>
+          <div className='button'>{t('market.buy')}</div>
         </div>
       </div>
     )
@@ -31,17 +34,16 @@ const pokeScreen = (props) => {
   return (
     <div className={styleContainer}>
       <div className={styleHeader}>
-        <h1>PokeMine on Game</h1>
-        <p>Here's a video guide on expanding your Pokemon collection when you enter the PokeMine Metaverse. </p>
+        <h1>{t('igo.pokeGameList.title')}</h1>
+        <p>{t('igo.pokeGameList.content')}</p>
         <div className='mask'></div>
       </div>
       <div className={styleVedioContainer}>
         <div>
           <div>
-            <h1>Pokemine Game</h1>
-            <span>Helium and Fantom have constantly displayed appreciation. Over the last 24 hours, these coins have shot up more than 13%. Bitcoin’s northbound price trajectory has caused major altcoins to soar considerably. At press time, Bitcoin was trading extremely close to the $50k level, and this constant appreciation caused many major altcoins to follow.
-  Helium and Fantom have constantly displayed appreciation. Over the last 24 hours,</span>
-            <div className='button'>Explore More</div>
+            <h1>{t('igo.pokemine.game')}</h1>
+            <span>{t('igo.pokemine.gamecontent')}</span>
+            <div className='button'>{t('igo.expore.more')}</div>
           </div>
           <img src={vedioCut} alt='' />
         </div>

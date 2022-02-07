@@ -1,11 +1,11 @@
 export const LNG = {
   EN: {
-    label: '中文',
+    label: 'English',
     value: 'en',
   },
-  ZH: {
-    label: 'EN',
-    value: 'zh'
+  TC: {
+    label: '中文繁體',
+    value: 'tc'
   }
 }
 export const NET_WORK_VERSION = {
