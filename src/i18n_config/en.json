@@ -9,7 +9,8 @@
 		"igo": "IGO",
 		"gallery": "Gallery",
 		"profile": "Profile",
-		"transfer": "Transfer"
+		"transfer": "Transfer",
+		"drop": "Drop"
 	},
 	"doc": {
 		"btn.link": "DOCUMENTATION"
