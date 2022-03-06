@@ -5,11 +5,12 @@ import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 import { toast } from 'react-toastify'
-import { Dialog } from 'element-react'
+import { Dialog, Table, Switch } from 'element-react'
 import { SimpleGrid, AspectRatio, Tooltip } from '@chakra-ui/react'
+import CountDown from 'components/CountDown'
 
 import { get, post } from 'utils/request'
-import { getImgLink } from 'utils/tools'
+import { getImgLink, shortenString } from 'utils/tools'
 import { toDecimal } from 'utils/web3Tools'
 
 import { InstanceAuction721 } from 'constant/abi'
@@ -33,6 +34,53 @@ const DropAuctionScreen = (props) => {
 		{ key: 1, label: 'On Going' },
 		{ key: 2, label: 'Ended' },
 	]
+	const TableCols = [
+		{
+			label: 'Bidder',
+			prop: 'bidder',
+			render: function (data) {
+				return (
+					<a
+						target="_blank"
+						rel="noopener noreferrer"
+						href={`https://bscscan.com/address/${data?.bidder}`}
+					>
+						<span>{shortenString(data?.bidder)}</span>
+					</a>
+				)
+			},
+		},
+		{
+			label: 'TxHash',
+			prop: 'txHash',
+			render: function (data) {
+				return (
+					<a
+						target="_blank"
+						rel="noopener noreferrer"
+						href={`https://bscscan.com/tx/${data?.txHash}`}
+					>
+						<span>{shortenString(data?.txHash)}</span>
+					</a>
+				)
+			},
+		},
+		{
+			label: 'Time',
+			prop: 'bidTime',
+			render: function (data) {
+				return <span>{new Date(data.bidTime * 1000).toLocaleString()}</span>
+			},
+		},
+		{
+			label: 'Amount',
+			prop: 'amount',
+			align: 'right',
+			render: function (data) {
+				return <span>{toDecimal(data.amount)}</span>
+			},
+		},
+	]
 
 	const [modalObj, setModalObj] = useState({
 		case: 'bid',
@@ -44,8 +92,9 @@ const DropAuctionScreen = (props) => {
 
 	const [lastUpdtae, setLU] = useState(0)
 	const [tabName, setTab] = useState(1)
-	const [busdPrice, setBusdPrice] = useState(1)
-	const [dnfPrice, setDnfPrice] = useState(1)
+	const [isJoined, setIsJoined] = useState(false)
+	const [busdPrice, setBusdPrice] = useState(0)
+	const [dnfPrice, setDnfPrice] = useState(0)
 	const [list, setList] = useState([])
 	const [listHis, setListHis] = useState([])
 
@@ -94,7 +143,25 @@ const DropAuctionScreen = (props) => {
 	)
 
 	const getAuctionList = useCallback(async () => {
-		const res = await get(`/api/v1/auction/list/${tabName}`)
+		setModalObj({
+			...modalObj,
+			loading: true,
+		})
+		try {
+			if (dnfPrice === 0) {
+				const priceDNFT = await get('/api/v1/info/price/DNFT')
+				setDnfPrice(priceDNFT?.data?.data || 1)
+			}
+			if (busdPrice === 0) {
+				const priceBUSD = await get('/api/v1/info/price/BUSD')
+				setBusdPrice(priceBUSD?.data?.data || 1)
+			}
+		} catch (err) {
+			setBusdPrice(1)
+			setDnfPrice(1)
+		}
+		const midUrl = isJoined ? `joined/${address}` : 'list'
+		const res = await get(`/api/v1/auction/${midUrl}/${tabName}`)
 		// setList(data?.data?.data)
 		console.log(res?.data?.data?.data)
 		setList(
@@ -108,8 +175,8 @@ const DropAuctionScreen = (props) => {
 					address: '0xAe8d7E09Ed86E658C42d3D3eADE99219E213583F',
 					startingPrice: '1000000000000000000',
 					bidIncrement: '100000000000000000',
-					startTime: '1646561451614',
-					durationTime: e * '36000000',
+					startTime: '1646580584',
+					durationTime: e * '3600000',
 					auctionLastId: '4',
 					auctionLastBid: '1210000000000000000',
 					auctionLastTime: '1646489041',
@@ -144,29 +211,52 @@ const DropAuctionScreen = (props) => {
 				},
 			})),
 		)
-		const priceDNFT = await get('/api/v1/info/price/DNFT')
-		const priceBUSD = await get('/api/v1/info/price/BUSD')
-		// console.log(priceBUSD, priceDNFT)
-	}, [tabName])
+		setModalObj({
+			...modalObj,
+			loading: false,
+		})
+	}, [tabName, address, isJoined])
 
 	const hanldeHistory = useCallback(
 		async (item) => {
 			try {
-				setModalObj({
-					...modalObj,
-					isShow: false,
-					loading: true,
-				})
-				setListHis([1, 2])
-				setTimeout(() => {
+				if (item && item.auction) {
+					setModalObj({
+						...modalObj,
+						isShow: false,
+						loading: true,
+					})
+					const {
+						auction: { lotId },
+					} = item
+					const res = await get(`/api/v1/auction/history/${lotId}`)
+					const _data = res?.data?.data?.data
+					console.log('_data', _data)
+					// setListHis(_data || [])
+					setListHis(
+						[1, 2, 3].map((e) => ({
+							createTime: 1646564679202,
+							updateTime: 1646564679202,
+							id: 110796,
+							auctionId: '4',
+							lotId: '4',
+							bidder: '0xf16D2789cF63EDB255A5EB2805D8edA78b4ECBBC',
+							bid: '1210000000000000000',
+							bidTime: '1646489041',
+							claimed: false,
+							isWinner: false,
+							amount: '0',
+							txHash: 'weqwlkjeqwoienqwrnqwrqwrqwr',
+						})),
+					)
 					setModalObj({
 						case: 'history',
 						nftInfo: item,
-						bidInfo: null,
+						bidInfo: _data,
 						isShow: true,
 						loading: false,
 					})
-				}, 1000)
+				}
 			} catch (err) {
 				toast.warn(err.message)
 				setModalObj({
@@ -417,7 +507,14 @@ const DropAuctionScreen = (props) => {
 							</div>
 						</div>
 					)}
-					{modalObj.case === 'history' && <div>history</div>}
+					{modalObj.case === 'history' && (
+						<Table
+							className={styleModalHistory}
+							columns={TableCols}
+							maxHeight={600}
+							data={listHis}
+						/>
+					)}
 					{modalObj.case === 'checkout' && (
 						<div className={styleModalCheck}>
 							<AspectRatio className="avatar" ratio={3 / 4} maxWidth="338px">
@@ -463,6 +560,8 @@ const DropAuctionScreen = (props) => {
 		const isEnded = auction?.status > 1
 		const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD'
 		const minimum = toDecimal((auction.auctionLastBid * 1 + auction.bidIncrement * 1).toString())
+		const endDuration =
+			auction.startTime * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
 		return (
 			<SimpleGrid
 				className={styleItem}
@@ -521,20 +620,7 @@ const DropAuctionScreen = (props) => {
 								</div>
 								<div className="right">
 									<h4>Time Left</h4>
-									<div className="countDown">
-										<div>
-											<strong>3</strong>
-											<p className="subText">DAY</p>
-										</div>
-										<div>
-											<strong>12</strong>
-											<p className="subText">HOURS</p>
-										</div>
-										<div>
-											<strong>56</strong>
-											<p className="subText">MINUTES</p>
-										</div>
-									</div>
+									<CountDown time={endDuration} isMilliSecond key={auction?.lotId} />
 								</div>
 							</div>
 							<div>
@@ -564,7 +650,7 @@ const DropAuctionScreen = (props) => {
 
 	useEffect(() => {
 		getAuctionList()
-	}, [tabName])
+	}, [tabName, isJoined])
 
 	return (
 		<div className={styleContainer}>
@@ -602,6 +688,15 @@ const DropAuctionScreen = (props) => {
 							{e.label}
 						</div>
 					))}
+					<Switch
+						value={isJoined}
+						width={120}
+						onText="Only Mine"
+						offText="All"
+						onColor="#0057D9"
+						offColor="rgba(0, 87, 217, 0.2)"
+						onChange={setIsJoined}
+					/>
 				</div>
 				{list.map((e) => renderCard(e))}
 			</div>
@@ -770,6 +865,12 @@ const styleListContainer = css`
 		color: #fff;
 		margin-bottom: 4vh;
 	}
+	.el-switch__label {
+		span {
+			width: 75%;
+			text-align: center;
+		}
+	}
 `
 
 const styleItem = css`
@@ -791,6 +892,8 @@ const styleItem = css`
 		background: rgba(255, 255, 255, 0.2);
 		border-radius: 20px;
 		padding: 30px;
+		position: relative;
+		overflow: hidden;
 		section {
 			h2 {
 				font-family: Archivo Black;
@@ -865,38 +968,23 @@ const styleItem = css`
 				h4 {
 					margin-left: 1rem;
 				}
-				.countDown {
-					display: flex;
-					justify-content: flex-start;
-					flex-wrap: wrap;
-					div {
-						display: flex;
-						flex-flow: column nowrap;
-						margin: 0 1rem;
-						position: relative;
-					}
-					div:nth-child(2) {
-						text-align: center;
-						&::before,
-						&::after {
-							position: absolute;
-							content: ':';
-							top: 0;
-						}
-						&::before {
-							left: -1rem;
-						}
-						&::after {
-							right: -1rem;
-						}
-					}
-				}
 			}
 		}
 		.auctionEnded {
 			color: #ffffff;
 			font-style: normal;
 			font-weight: normal;
+			&::after {
+				content: 'Auction End';
+				position: absolute;
+				background: #ff2e6c;
+				width: max-content;
+				padding: 0 40px;
+				text-align: center;
+				right: 0;
+				top: 0;
+				transform: rotate(45deg) translate(31%, -15%);
+			}
 			h3 {
 				font-family: Archivo;
 				font-weight: 800;
@@ -1066,5 +1154,37 @@ const styleModalCheck = css`
 				color: #000000;
 			}
 		}
+	}
+`
+
+const styleModalHistory = css`
+	border: none !important;
+	background: #fff !important;
+	font-family: Barlow;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	table,
+	tr,
+	th,
+	td,
+	thead,
+	table,
+	colgroup,
+	col,
+	.cell,
+	&::after,
+	&::before {
+		border: none !important;
+		background: #fff !important;
+	}
+	th {
+		.cell {
+			color: #888888;
+		}
+	}
+	a {
+		text-decoration: none;
+		color: #0057d9;
 	}
 `
