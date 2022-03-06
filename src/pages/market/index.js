@@ -25,6 +25,7 @@ const Market = (props) => {
 	const sortTagBack = location?.state?.sortTag
 	const [category, setCategory] = useState(categoryBack || 'All')
 	const [sortTag, setSortTag] = useState(sortTagBack || 'popular')
+	const [coinTag, setCoinTag] = useState('DNFT')
 	const [page, setPage] = useState(0)
 	const [size, setSize] = useState(20)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
@@ -37,6 +38,10 @@ const Market = (props) => {
 		{ label: t('market.sort.label4'), value: 'total_price-DESC' },
 		{ label: t('market.sort.label5'), value: 'total_price-ASC' },
 	]
+	const coinType = [
+		{ label: 'DNFT', value: 'DNFT' },
+		{ label: 'BUSD', value: 'BUSD' },
+	]
 
 	const currentNetEnv = globalConfig.net_env
 	const rightChainId = currentNetEnv === 'testnet' ? 97 : 56
@@ -48,7 +53,7 @@ const Market = (props) => {
 
 	useEffect(() => {
 		fetchData(true)
-	}, [category, sortTag, address])
+	}, [category, sortTag, coinTag, address])
 
 	const fetchData = (tag) => {
 		dispatch(
@@ -57,13 +62,14 @@ const Market = (props) => {
 					category: category,
 					sortOrder: sortTag?.split('-')?.[1] ?? 'DESC',
 					sortTag: sortTag?.split('-')?.[0],
-					page: tag ? 1 : page + 1,
+					coinTag,
+					page: tag ? 0 : page + 1,
 					size,
 				},
 				token,
 			),
 		)
-		setPage(tag ? 1 : page + 1)
+		setPage(tag ? 0 : page + 1)
 	}
 
 	const renderNoData = useMemo(
@@ -197,6 +203,16 @@ const Market = (props) => {
 							onChange={(value) => setSortTag(value)}
 						>
 							{sortTagType.map((el) => (
+								<Select.Option key={el.value} label={el.label} value={el.value} />
+							))}
+						</Select>
+						<Select
+							value={coinTag}
+							className={`${styles.selectType} ${styleSelectContainer}`}
+							placeholder={t('nftCard.sort.by')}
+							onChange={(value) => setCoinTag(value)}
+						>
+							{coinType.map((el) => (
 								<Select.Option key={el.value} label={el.label} value={el.value} />
 							))}
 						</Select>

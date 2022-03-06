@@ -53,7 +53,7 @@
   gap: 20px 20px;
   //grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
-.selectType:first-child {
+.selectType:not(:last-child) {
   margin-right: 30px;
 }
 @media (max-width: 900px)  {
@@ -70,7 +70,7 @@
   .selectType {
     width: 100%;
   }
-  .selectType:first-child {
+  .selectType:not(:last-child) {
     margin-right: 0px;
     margin-bottom: 20px;
   }

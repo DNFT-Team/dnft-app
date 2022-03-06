@@ -17,7 +17,7 @@ const market = (state = initialState, action) => {
     return {
       ...state,
       pending: false,
-      datas: (action.payload.page == 1 ? [] : state.datas).concat(action.payload.data?.content || []),
+      datas: (action.payload.page == 0 ? [] : state.datas).concat(action.payload.data?.content || []),
       pageAble: action.payload.data?.pageAble
     }
   case GET_MARKET_LIST.ERROR:
