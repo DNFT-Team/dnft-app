@@ -13,6 +13,7 @@ import SyncBtcScreen from 'pages/igo/syncbtc'
 import pokeScreen from 'pages/igo/poke'
 import ProfileScreen from 'pages/profile'
 import collectionScreen from 'pages/profile/collection'
+import dropsScreen from 'pages/drops'
 
 import DataDetailScreen from 'pages/data/detail'
 import ProfileEditScreen from 'pages/profile/edit'
@@ -29,6 +30,7 @@ import marketIcon from '../images/menu/market.svg'
 import igoIcon from '../images/menu/igo.svg'
 import dataIcon from '../images/menu/data.svg'
 import galleryIcon from '../images/menu/gallery.svg'
+import dropsIcon from '../images/menu/drops.svg'
 import homeIcon_Select from 'images/menu/home_select.svg'
 import miningIcon_Select from '../images/menu/mining_select.svg'
 import bridgeIcon_Select from '../images/menu/bridge_select.svg'
@@ -36,6 +38,7 @@ import marketIcon_Select from '../images/menu/market_select.svg'
 import igoIcon_Select from '../images/menu/igo_select.svg'
 import dataIcon_Select from '../images/menu/data_select.svg'
 import galleryIcon_Select from '../images/menu/gallery_select.svg'
+import dropsIcon_Select from '../images/menu/drops_select.svg'
 
 const NetName = process.env.REACT_APP_NET_ENV
 const nets = ['devnet', 'testnet', 'mainnet']
@@ -101,6 +104,15 @@ const menuAll = [
 		navName: 'Gallery',
 		icon: galleryIcon,
 		icon_Select: galleryIcon_Select,
+		exact: true,
+	},
+	{
+		net_env: nets,
+		path: '/drops',
+		Component: dropsScreen,
+		navName: 'Drops',
+		icon: dropsIcon,
+		icon_Select: dropsIcon_Select,
 		exact: true,
 	},
 ]
