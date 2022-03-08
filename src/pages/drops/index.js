@@ -14,8 +14,8 @@ const Drops = (props) => {
 		{
 			key: 'b2e',
 			title: 'MYSTERY BOX',
-			time: '25/03/2022 0:00 AM (UTC)',
-			isActive: true,
+			time: 'Coming Soon',
+			isActive: false,
 			avatar: pic1,
 			txtTitle: 'Parking Infinity',
 			txt: 'Hi all, sharing a mobile version of a dashboard app that keeps all expenses organized, stay tax ready at all time',
@@ -53,7 +53,7 @@ const Drops = (props) => {
 						<Flex flexDirection={'column'} className="header">
 							<h3>{item.title}</h3>
 							<span>{item.time}</span>
-							<button onClick={() => {}}>PLAY</button>
+							<button className={!item.isActive && 'btn'} onClick={() => {}}>PLAY</button>
 							<img src={item.avatar} alt="" />
 						</Flex>
 						<div className="descBox">
@@ -182,4 +182,7 @@ const styleCard = css`
 		text-transform: uppercase;
 		color: #ffffff;
 	}
+  .btn {
+    background: #B2B3B5;
+  }
 `
