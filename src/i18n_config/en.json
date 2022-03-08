@@ -324,5 +324,9 @@
 		"image": "Upload Media Source",
 		"json": "Upload MetaData",
 		"mint": "Mint NFT"
+	},
+	"drops": {
+		"title": "DROPS",
+		"tipTitle":  "$DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. "
 	}
 }

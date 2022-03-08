@@ -324,5 +324,9 @@
 		"image": "上傳媒體源",
 		"json": "上傳元數據",
 		"mint": "鑄造 NFT"
+	},
+	"drops": {
+		"title": "DROPS",
+		"tipTitle":  "$DNF is a multi-chain token. The bridge enable users transfer their $DNF across Ethereum and Binance Smart Chain. "
 	}
 }

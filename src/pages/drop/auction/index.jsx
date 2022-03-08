@@ -15,6 +15,7 @@ import { toDecimal } from 'utils/web3Tools'
 
 import { InstanceAuction721 } from 'constant/abi'
 
+import { noDataSvg } from 'utils/svg';
 import refreshIcon from 'images/common/refresh.svg'
 import LoadingIcon from 'images/asset/loading.gif'
 import busd_unit from 'images/market/busd.svg'
@@ -22,14 +23,10 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import bg from 'images/igo/poke-bg.png'
 import vedioCut from 'images/igo/vedio-cut.png'
 
-/**
- * @todo contract
- * @todo api
- * @todo ui
- */
 const DropAuctionScreen = (props) => {
 	const { t } = useTranslation()
 	const { address, chainType, token } = props
+
 	const tabList = [
 		{ key: 1, label: 'On Going' },
 		{ key: 2, label: 'Ended' },
@@ -92,9 +89,12 @@ const DropAuctionScreen = (props) => {
 
 	const [lastUpdtae, setLU] = useState(0)
 	const [tabName, setTab] = useState(1)
+
 	const [isJoined, setIsJoined] = useState(false)
+
 	const [busdPrice, setBusdPrice] = useState(0)
 	const [dnfPrice, setDnfPrice] = useState(0)
+
 	const [list, setList] = useState([])
 	const [listHis, setListHis] = useState([])
 
@@ -139,8 +139,9 @@ const DropAuctionScreen = (props) => {
 				toast.error(err.message)
 			}
 		},
-		[address, token, lastUpdtae],
+		[address, token, lastUpdtae, busdPrice, dnfPrice],
 	)
+
 
 	const getAuctionList = useCallback(async () => {
 		setModalObj({
@@ -148,6 +149,7 @@ const DropAuctionScreen = (props) => {
 			loading: true,
 		})
 		try {
+			console.log(`dnfPrice:${dnfPrice},${busdPrice}`)
 			if (dnfPrice === 0) {
 				const priceDNFT = await get('/api/v1/info/price/DNFT')
 				setDnfPrice(priceDNFT?.data?.data || 1)
@@ -162,60 +164,12 @@ const DropAuctionScreen = (props) => {
 		}
 		const midUrl = isJoined ? `joined/${address}` : 'list'
 		const res = await get(`/api/v1/auction/${midUrl}/${tabName}`)
-		// setList(data?.data?.data)
-		console.log(res?.data?.data?.data)
-		setList(
-			[0, 1, 2].map((e) => ({
-				auction: {
-					createTime: 1646494662025,
-					updateTime: 1646494662025,
-					id: 110788,
-					lotId: '4',
-					payMod: '0',
-					address: '0xAe8d7E09Ed86E658C42d3D3eADE99219E213583F',
-					startingPrice: '1000000000000000000',
-					bidIncrement: '100000000000000000',
-					startTime: '1646580584',
-					durationTime: e * '3600000',
-					auctionLastId: '4',
-					auctionLastBid: '1210000000000000000',
-					auctionLastTime: '1646489041',
-					nftId: 106508,
-					status: tabName,
-					consignorclaimed: null,
-					winnerclaimed: null,
-				},
-				nft: {
-					createTime: 1638891078763,
-					updateTime: 1638891078763,
-					id: 106508,
-					name: 'Horse',
-					description: 'HHAHAHHAHAHAHAHAHAHHAH aHHAHDHJH',
-					category: 'Art',
-					avatorUrl: 'https://bit.ly/naruto-sage',
-					chainType: 'BSC',
-					hash: '0xf66bf5be025605fa988cea7c8ae72dbae936b441fee4c41d962c842465e798f2',
-					supply: 1,
-					likeCount: 0,
-					saveCount: 0,
-					hashStatus: false,
-					tokenId: '3529',
-					tokenAddress: '0x47cd52E61e3210FF86d797162ba03474dD304E00',
-					contractType: '721',
-					ipfsHash: 'QmUgLEXEAVb8SrPwQRB8dVTgkobZRQ2zzKsn9rAADBnpZf',
-					sellable: null,
-					source: null,
-					fileType: null,
-					animationUrl: null,
-					collectionId: 106506,
-				},
-			})),
-		)
+		setList(res?.data?.data?.data || [])
 		setModalObj({
 			...modalObj,
 			loading: false,
 		})
-	}, [tabName, address, isJoined])
+	}, [tabName, address, isJoined, busdPrice, dnfPrice])
 
 	const hanldeHistory = useCallback(
 		async (item) => {
@@ -232,23 +186,7 @@ const DropAuctionScreen = (props) => {
 					const res = await get(`/api/v1/auction/history/${lotId}`)
 					const _data = res?.data?.data?.data
 					console.log('_data', _data)
-					// setListHis(_data || [])
-					setListHis(
-						[1, 2, 3].map((e) => ({
-							createTime: 1646564679202,
-							updateTime: 1646564679202,
-							id: 110796,
-							auctionId: '4',
-							lotId: '4',
-							bidder: '0xf16D2789cF63EDB255A5EB2805D8edA78b4ECBBC',
-							bid: '1210000000000000000',
-							bidTime: '1646489041',
-							claimed: false,
-							isWinner: false,
-							amount: '0',
-							txHash: 'weqwlkjeqwoienqwrnqwrqwrqwr',
-						})),
-					)
+					setListHis(_data || [])
 					setModalObj({
 						case: 'history',
 						nftInfo: item,
@@ -276,8 +214,12 @@ const DropAuctionScreen = (props) => {
 					return
 				}
 				const {
-					auction: { lotId, payMod, bidIncrement, auctionLastBid },
+					auction: { lotId, payMod, bidIncrement, auctionLastBid, startTime },
 				} = item
+
+				if (startTime > Date.now()) {
+					throw new Error('Auction is not start')
+				}
 
 				setModalObj({
 					...modalObj,
@@ -286,9 +228,9 @@ const DropAuctionScreen = (props) => {
 				})
 				await detectProvider()
 				const contract = InstanceAuction721()
-				const isEnded = await contract.methods['checkTime'](lotId).call()
-				if (isEnded) {
-					throw new Error('Auction is Ended')
+				const isTimeAble = await contract.methods['checkTime'](lotId).call()
+				if (!isTimeAble) {
+					throw new Error('This is not the time to bid')
 				}
 				const bidInfo = await contract.methods['getBidInfo'](lotId, address).call()
 				// console.log('bidInfo', bidInfo)
@@ -344,7 +286,7 @@ const DropAuctionScreen = (props) => {
 				const lotInfo = await contract.methods['getLotInfo'](lotId).call()
 				// console.log('lotInfo', lotInfo)
 				if (lotInfo.status < 2) {
-					throw new Error('Auction is not ended.')
+					throw new Error('Auction is not settled.')
 				}
 				// bidInfo [auctionId,amount,claimed,isWinner]
 				const bidInfo = await contract.methods['getBidInfo'](lotId, address).call()
@@ -513,6 +455,7 @@ const DropAuctionScreen = (props) => {
 							columns={TableCols}
 							maxHeight={600}
 							data={listHis}
+							emptyText="No Data"
 						/>
 					)}
 					{modalObj.case === 'checkout' && (
@@ -555,13 +498,15 @@ const DropAuctionScreen = (props) => {
 		)
 	}, [modalObj, address, chainType, token])
 
+
 	const renderCard = (item) => {
 		const { nft, auction } = item
+		// const isStart = Date.now() > auction.startTime
 		const isEnded = auction?.status > 1
 		const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD'
 		const minimum = toDecimal((auction.auctionLastBid * 1 + auction.bidIncrement * 1).toString())
-		const endDuration =
-			auction.startTime * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
+		const endDuration = (auction.auctionLastTime || auction.startTime) * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
+
 		return (
 			<SimpleGrid
 				className={styleItem}
@@ -698,6 +643,14 @@ const DropAuctionScreen = (props) => {
 						onChange={setIsJoined}
 					/>
 				</div>
+				{list.length === 0  && (
+					<div className={styleNoDataContainer}>
+						<div>
+							{noDataSvg}
+							<p>No Data</p>
+						</div>
+					</div>
+				)}
 				{list.map((e) => renderCard(e))}
 			</div>
 			{renderModal}
@@ -717,6 +670,7 @@ const mapStateToProps = ({ profile, lng }) => ({
 	token: profile.token,
 	lng: lng.lng,
 })
+
 export default withRouter(connect(mapStateToProps)(DropAuctionScreen))
 
 const styleContainer = css`
@@ -1188,3 +1142,11 @@ const styleModalHistory = css`
 		color: #0057d9;
 	}
 `
+
+const styleNoDataContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  text-align: center;
+`;
