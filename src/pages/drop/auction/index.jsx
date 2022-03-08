@@ -11,9 +11,9 @@ import CountDown from 'components/CountDown'
 
 import { get, post } from 'utils/request'
 import { getImgLink, shortenString } from 'utils/tools'
-import { toDecimal } from 'utils/web3Tools'
+import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools'
 
-import { InstanceAuction721 } from 'constant/abi'
+import { InstanceAuction721, InstanceDNFBSC, InstanceBUSD } from 'constant/abi'
 
 import { noDataSvg } from 'utils/svg';
 import refreshIcon from 'images/common/refresh.svg'
@@ -149,7 +149,7 @@ const DropAuctionScreen = (props) => {
 			loading: true,
 		})
 		try {
-			console.log(`dnfPrice:${dnfPrice},${busdPrice}`)
+			// console.log(`dnfPrice:${dnfPrice},${busdPrice}`)
 			if (dnfPrice === 0) {
 				const priceDNFT = await get('/api/v1/info/price/DNFT')
 				setDnfPrice(priceDNFT?.data?.data || 1)
@@ -214,7 +214,7 @@ const DropAuctionScreen = (props) => {
 					return
 				}
 				const {
-					auction: { lotId, payMod, bidIncrement, auctionLastBid, startTime },
+					auction: { lotId, payMod, bidIncrement, startingPrice, auctionLastBid, startTime },
 				} = item
 
 				if (startTime > Date.now()) {
@@ -228,6 +228,10 @@ const DropAuctionScreen = (props) => {
 				})
 				await detectProvider()
 				const contract = InstanceAuction721()
+
+				// const info = await contract.methods['getLotInfo'](7).call()
+				// console.log('info', info)
+
 				const isTimeAble = await contract.methods['checkTime'](lotId).call()
 				if (!isTimeAble) {
 					throw new Error('This is not the time to bid')
@@ -236,7 +240,9 @@ const DropAuctionScreen = (props) => {
 				// console.log('bidInfo', bidInfo)
 				const oldBid = bidInfo?.[1] || 0
 				const unit = +payMod === 0 ? 'DNF' : 'BUSD'
-				const total = auctionLastBid * 1 + bidIncrement * 1 - oldBid * 1
+				const now = Math.max(auctionLastBid, startingPrice)
+				const total = now  + bidIncrement * 1 - oldBid * 1
+
 				setModalObj({
 					case: 'bid',
 					isShow: true,
@@ -246,10 +252,11 @@ const DropAuctionScreen = (props) => {
 					bidInfo: {
 						unit,
 						lotId,
+						payMod,
+						now: toDecimal(String(now)),
 						old: toDecimal(String(oldBid)),
 						tol: toDecimal(String(total)),
-						inc: toDecimal(String(bidIncrement)),
-						now: toDecimal(String(auctionLastBid)),
+						inc: toDecimal(String(bidIncrement))
 					},
 				})
 			} catch (err) {
@@ -347,12 +354,28 @@ const DropAuctionScreen = (props) => {
 	const sumbitBid = useCallback(async () => {
 		try {
 			const {
-				bidInfo: { lotId, unit, tol },
+				bidInfo: { lotId, unit, tol, payMod },
 			} = modalObj
 			if (lotId && unit && tol) {
 				await detectProvider()
+				setModalObj({
+					...modalObj,
+					loading: true
+				})
+				const tokenContract = +payMod === 0 ?  InstanceDNFBSC() : +payMod === 1 ? InstanceBUSD() : null
+				if (tokenContract) {
+					const addrAuction = process.env.REACT_APP_C_AUTCION721
+					const allowance = await tokenContract.methods['allowance'](address, addrAuction).call()
+					if (+allowance <= 0) {
+						toast.info('You need to approve your token allowance')
+						await tokenContract.methods['approve'](addrAuction, WEB3_MAX_NUM).send({
+							from: address
+						});
+						return
+					}
+				}
 				const contract = InstanceAuction721()
-				const payloads = [lotId, toDecimal(tol, true, 'ether', true)]
+				const payloads = [lotId, toDecimal(tol, true)]
 				console.log('sumbitBid-payloads', payloads, Number(payloads[1]))
 				const tx = await contract.methods['buy'](...payloads).send({
 					from: address,
@@ -363,10 +386,21 @@ const DropAuctionScreen = (props) => {
 						sender: address,
 						txHash: tx.transactionHash,
 					})
+					setModalObj({
+						...modalObj,
+						isShow: false,
+						loading: false
+					})
+					await getAuctionList()
 				}
 			}
 		} catch (err) {
 			toast.warning(err.message)
+			setModalObj({
+				...modalObj,
+				isShow: false,
+				loading: false
+			})
 		}
 	}, [modalObj, address])
 
@@ -504,8 +538,8 @@ const DropAuctionScreen = (props) => {
 		// const isStart = Date.now() > auction.startTime
 		const isEnded = auction?.status > 1
 		const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD'
-		const minimum = toDecimal((auction.auctionLastBid * 1 + auction.bidIncrement * 1).toString())
-		const endDuration = (auction.auctionLastTime || auction.startTime) * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
+		const minimum = toDecimal((Math.max(auction.auctionLastBid, auction.startingPrice) + auction.bidIncrement * 1).toString())
+		const endDuration = Math.max(auction.auctionLastTime, auction.startTime) * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
 
 		return (
 			<SimpleGrid
@@ -557,15 +591,15 @@ const DropAuctionScreen = (props) => {
 									<h4>Minimum Bid</h4>
 									<strong>
 										<img src={unit === 'DNF' ? dnft_unit : busd_unit} />
-										<span>{`${Number(minimum).toFixed(2)} ${unit}`}</span>
+										<span>{`${Number(minimum).toFixed(4)} ${unit}`}</span>
 									</strong>
 									<p className="subText">
-										≈ ${Number(minimum * (unit === 'DNF' ? dnfPrice : busdPrice)).toFixed(2)}
+										≈ ${Number(minimum * (unit === 'DNF' ? dnfPrice : busdPrice)).toFixed(4)}
 									</p>
 								</div>
 								<div className="right">
 									<h4>Time Left</h4>
-									<CountDown time={endDuration} isMilliSecond key={auction?.lotId} />
+									<CountDown time={endDuration} key={auction?.lotId} />
 								</div>
 							</div>
 							<div>
