@@ -214,7 +214,7 @@ const DropAuctionScreen = (props) => {
 					return
 				}
 				const {
-					auction: { lotId, payMod, bidIncrement, startingPrice, auctionLastBid, startTime },
+					auction: { lotId },
 				} = item
 
 				if (startTime > Date.now()) {
@@ -226,16 +226,20 @@ const DropAuctionScreen = (props) => {
 					loading: true,
 					isShow: false,
 				})
-				await detectProvider()
-				const contract = InstanceAuction721()
 
-				// const info = await contract.methods['getLotInfo'](7).call()
-				// console.log('info', info)
+				await detectProvider()
+
+				const contract = InstanceAuction721()
 
 				const isTimeAble = await contract.methods['checkTime'](lotId).call()
 				if (!isTimeAble) {
 					throw new Error('This is not the time to bid')
 				}
+
+				const info = await contract.methods['getLotInfo'](lotId).call()
+				// console.log('info', info)
+				const { payMod, bidIncrement, startingPrice, auctionLastBid, startTime } = info
+
 				const bidInfo = await contract.methods['getBidInfo'](lotId, address).call()
 				// console.log('bidInfo', bidInfo)
 				const oldBid = bidInfo?.[1] || 0
