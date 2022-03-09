@@ -375,6 +375,11 @@ const DropAuctionScreen = (props) => {
 						await tokenContract.methods['approve'](addrAuction, WEB3_MAX_NUM).send({
 							from: address
 						});
+						setModalObj({
+							...modalObj,
+							isShow: false,
+							loading: false
+						})
 						return
 					}
 				}
