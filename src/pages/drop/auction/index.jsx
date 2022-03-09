@@ -381,8 +381,10 @@ const DropAuctionScreen = (props) => {
 					from: address,
 				})
 				if (tx.transactionHash) {
+					const auctionId =  tx?.events?.Buy?.returnValues?.auctionId;
 					await post('/api/v1/auction/bid', {
-						auctionId: lotId,
+						auctionId,
+						lotId,
 						sender: address,
 						txHash: tx.transactionHash,
 					})
