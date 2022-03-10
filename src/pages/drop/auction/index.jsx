@@ -253,6 +253,7 @@ const DropAuctionScreen = (props) => {
 						unit,
 						lotId,
 						payMod,
+						sendVal: now * 1 + bidIncrement * 1 + '',
 						now: toDecimal(String(now)),
 						old: toDecimal(String(oldBid)),
 						tol: toDecimal(String(total)),
@@ -354,7 +355,7 @@ const DropAuctionScreen = (props) => {
 	const sumbitBid = useCallback(async () => {
 		try {
 			const {
-				bidInfo: { lotId, unit, tol, payMod },
+				bidInfo: { lotId, unit, tol, payMod, sendVal},
 			} = modalObj
 			if (lotId && unit && tol) {
 				await detectProvider()
@@ -380,8 +381,8 @@ const DropAuctionScreen = (props) => {
 					}
 				}
 				const contract = InstanceAuction721()
-				const payloads = [lotId, toDecimal(tol, true)]
-				console.log('sumbitBid-payloads', payloads, Number(payloads[1]))
+				const payloads = [lotId, sendVal]
+				console.log('sumbitBid-payloads', payloads)
 				const tx = await contract.methods['buy'](...payloads).send({
 					from: address,
 				})
