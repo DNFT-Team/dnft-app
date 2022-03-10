@@ -217,10 +217,6 @@ const DropAuctionScreen = (props) => {
 					auction: { lotId },
 				} = item
 
-				if (startTime > Date.now()) {
-					throw new Error('Auction is not start')
-				}
-
 				setModalObj({
 					...modalObj,
 					loading: true,
@@ -238,7 +234,7 @@ const DropAuctionScreen = (props) => {
 
 				const info = await contract.methods['getLotInfo'](lotId).call()
 				// console.log('info', info)
-				const { payMod, bidIncrement, startingPrice, auctionLastBid, startTime } = info
+				const { payMod, bidIncrement, startingPrice, auctionLastBid } = info
 
 				const bidInfo = await contract.methods['getBidInfo'](lotId, address).call()
 				// console.log('bidInfo', bidInfo)
