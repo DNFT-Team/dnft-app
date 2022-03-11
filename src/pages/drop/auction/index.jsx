@@ -70,11 +70,11 @@ const DropAuctionScreen = (props) => {
 			},
 		},
 		{
-			label: 'Amount',
-			prop: 'amount',
+			label: 'Bid',
+			prop: 'bid',
 			align: 'right',
 			render: function (data) {
-				return <span>{toDecimal(data.amount)}</span>
+				return <span>{toDecimal(data.bid)}</span>
 			},
 		},
 	]
@@ -423,11 +423,11 @@ const DropAuctionScreen = (props) => {
 				const contract = InstanceAuction721()
 				let tx
 				if (bidInfo) {
-					tx = await contract.methods['claimByBuyer'](lotId).send()
+					tx = await contract.methods['claimByBuyer'](lotId).send({from: address})
 				} else if (address === nftInfo?.auction?.address) {
-					tx = await contract.methods['claimByConsignor'](lotId).send()
+					tx = await contract.methods['claimByConsignor'](lotId).send({from: address})
 				} else {
-					tx = await contract.methods['claimByWinner'](lotId).send()
+					tx = await contract.methods['claimByWinner'](lotId).send({from: address})
 				}
 				if (tx.transactionHash) {
 					await updateAuctions(lotId)
