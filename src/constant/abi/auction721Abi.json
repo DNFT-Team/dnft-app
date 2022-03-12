@@ -15,26 +15,7 @@
         "type": "uint256"
       }
     ],
-    "name": "Auction",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "lotId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum Auction721.Status",
-        "name": "status",
-        "type": "uint8"
-      }
-    ],
-    "name": "Audit",
+    "name": "Buy",
     "type": "event"
   },
   {
@@ -49,7 +30,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "auctionId",
+        "name": "lotId",
         "type": "uint256"
       },
       {
@@ -79,37 +60,12 @@
       },
       {
         "indexed": false,
-        "internalType": "enum Auction721.Status",
+        "internalType": "enum AuctionNew721.Status",
         "name": "status",
         "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
     "name": "ClaimByConsignor",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "auctionId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ClaimByWinner",
     "type": "event"
   },
   {
@@ -128,7 +84,7 @@
         "type": "uint256"
       }
     ],
-    "name": "OffDenyNFT",
+    "name": "ClaimByWinner",
     "type": "event"
   },
   {
@@ -183,8 +139,32 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      }
+    ],
+    "name": "buy",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "busdWithdrawAmount",
+    "name": "buyFeeTenThousandth",
     "outputs": [
       {
         "internalType": "uint256",
@@ -193,54 +173,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_lotId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bid",
-        "type": "uint256"
-      }
-    ],
-    "name": "buyByBusd",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_lotId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bid",
-        "type": "uint256"
-      }
-    ],
-    "name": "buyByDnft",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -266,16 +198,16 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_auctionId",
+        "name": "_lotId",
         "type": "uint256"
       }
     ],
     "name": "claimByBuyer",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
     "stateMutability": "nonpayable",
@@ -304,7 +236,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_auctionId",
+        "name": "_lotId",
         "type": "uint256"
       }
     ],
@@ -321,20 +253,7 @@
   },
   {
     "inputs": [],
-    "name": "contractAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentAuctionIdLen",
+    "name": "currentAuctionId",
     "outputs": [
       {
         "internalType": "uint256",
@@ -347,20 +266,7 @@
   },
   {
     "inputs": [],
-    "name": "currentLotIdLen",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "dnftWithdrawAmount",
+    "name": "currentLotId",
     "outputs": [
       {
         "internalType": "uint256",
@@ -407,16 +313,98 @@
             "internalType": "uint256",
             "name": "bidTime",
             "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "isClaimAirdrop",
-            "type": "bool"
           }
         ],
-        "internalType": "struct Auction721.AuctionInfo",
+        "internalType": "struct AuctionNew721.AuctionInfo",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      }
+    ],
+    "name": "getBidInfo",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_bid",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBuyFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getKnockedInfo",
+    "outputs": [
+      {
+        "internalType": "enum AuctionNew721.Status",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -440,26 +428,9 @@
             "type": "uint256"
           },
           {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "contractAddress",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct Auction721.NftInfo",
-            "name": "nftInfo",
-            "type": "tuple"
-          },
-          {
-            "internalType": "enum Auction721.PayMod",
+            "internalType": "uint256",
             "name": "payMod",
-            "type": "uint8"
+            "type": "uint256"
           },
           {
             "internalType": "address",
@@ -477,18 +448,13 @@
             "type": "uint256"
           },
           {
-            "internalType": "enum Auction721.Status",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
             "internalType": "uint256",
-            "name": "durationTime",
+            "name": "startTime",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "startTime",
+            "name": "durationTime",
             "type": "uint256"
           },
           {
@@ -507,17 +473,29 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "airdropAmount",
-            "type": "uint256"
+            "components": [
+              {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct AuctionNew721.NftInfo",
+            "name": "nftInfo",
+            "type": "tuple"
           },
           {
-            "internalType": "uint256",
-            "name": "realClaimAmount",
-            "type": "uint256"
+            "internalType": "enum AuctionNew721.Status",
+            "name": "status",
+            "type": "uint8"
           }
         ],
-        "internalType": "struct Auction721.LotInfo",
+        "internalType": "struct AuctionNew721.LotInfo",
         "name": "",
         "type": "tuple"
       }
@@ -531,11 +509,6 @@
         "internalType": "address",
         "name": "_admin",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_operator",
-        "type": "address"
       }
     ],
     "name": "initialize",
@@ -544,8 +517,14 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "isStopped",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotId",
+        "type": "uint256"
+      }
+    ],
+    "name": "knockedDown",
     "outputs": [
       {
         "internalType": "bool",
@@ -553,7 +532,7 @@
         "type": "bool"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -605,19 +584,6 @@
   },
   {
     "inputs": [],
-    "name": "operator",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -632,13 +598,18 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_payMod",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
-        "name": "_tokenAddr",
+        "name": "_nftAddress",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_tokenId",
+        "name": "_nftId",
         "type": "uint256"
       },
       {
@@ -653,41 +624,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_durationTime",
-        "type": "uint256"
-      }
-    ],
-    "name": "putOnByBusd",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_tokenAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_startingPrice",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_bidIncrement",
+        "name": "_startTime",
         "type": "uint256"
       },
       {
@@ -696,7 +633,7 @@
         "type": "uint256"
       }
     ],
-    "name": "putOnByDnft",
+    "name": "putOn",
     "outputs": [
       {
         "internalType": "uint256",
@@ -710,6 +647,19 @@
   {
     "inputs": [],
     "name": "putOnFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "putOnTotal",
     "outputs": [
       {
         "internalType": "uint256",
@@ -743,12 +693,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
       }
     ],
-    "name": "setBusdAddress",
+    "name": "setBuyFeeTenThousandth",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -756,13 +706,37 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_payMod",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "_addr",
         "type": "address"
       }
     ],
-    "name": "setDnftAddress",
+    "name": "setErc20TokenAddress",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_lotId",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLotStop",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -782,43 +756,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_operator",
-        "type": "address"
-      }
-    ],
-    "name": "setOperator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
-        "name": "_fee",
+        "name": "_value",
         "type": "uint256"
       }
     ],
-    "name": "setPutOnFeeDnft",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_techFee",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_airdropFee",
-        "type": "uint256"
-      }
-    ],
-    "name": "setSoldFee",
+    "name": "setPutOnDnftFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -832,40 +775,26 @@
       }
     ],
     "name": "setStopped",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "soldAirdropFee",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_bo",
+        "type": "bool"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "soldTechFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "setWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -882,7 +811,18 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",

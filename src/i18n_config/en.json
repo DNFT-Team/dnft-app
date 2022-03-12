@@ -10,7 +10,7 @@
 		"gallery": "Gallery",
 		"profile": "Profile",
 		"transfer": "Transfer",
-		"drops": "Drops"
+		"drop": "Drop"
 	},
 	"doc": {
 		"btn.link": "DOCUMENTATION"

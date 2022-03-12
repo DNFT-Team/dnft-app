@@ -1,8 +1,7 @@
-//  Route - Pages
+import { lazy } from 'react'
+
 import HomeScreen from 'pages/home'
 import MarketScreen from 'pages/market'
-import BridgeScreen from 'pages/bridge'
-import BridgeTransfer from 'pages/bridge/transfer'
 import MiningScreen from 'pages/mining'
 import DataScreen from 'pages/data'
 import CompetitionScreen from 'pages/data/competition'
@@ -19,7 +18,6 @@ import DataDetailScreen from 'pages/data/detail'
 import ProfileEditScreen from 'pages/profile/edit'
 import CreateNFT from 'pages/asset/create'
 import GalleryScreen from 'pages/gallery'
-import UnityScreen from 'pages/gallery/unitys'
 import AssetDetailScreen from 'pages/market/detail'
 
 //  Menu - Icon
@@ -30,7 +28,8 @@ import marketIcon from '../images/menu/market.svg'
 import igoIcon from '../images/menu/igo.svg'
 import dataIcon from '../images/menu/data.svg'
 import galleryIcon from '../images/menu/gallery.svg'
-import dropsIcon from '../images/menu/drops.svg'
+import dropIcon from '../images/menu/drop.svg'
+
 import homeIcon_Select from 'images/menu/home_select.svg'
 import miningIcon_Select from '../images/menu/mining_select.svg'
 import bridgeIcon_Select from '../images/menu/bridge_select.svg'
@@ -38,7 +37,7 @@ import marketIcon_Select from '../images/menu/market_select.svg'
 import igoIcon_Select from '../images/menu/igo_select.svg'
 import dataIcon_Select from '../images/menu/data_select.svg'
 import galleryIcon_Select from '../images/menu/gallery_select.svg'
-import dropsIcon_Select from '../images/menu/drops_select.svg'
+import dropIcon_Select from '../images/menu/drop_select.svg'
 
 const NetName = process.env.REACT_APP_NET_ENV
 const nets = ['devnet', 'testnet', 'mainnet']
@@ -73,7 +72,7 @@ const menuAll = [
 	{
 		net_env: [nets[2]],
 		path: '/bridge',
-		Component: BridgeScreen,
+		Component: lazy(async () => import('pages/bridge')),
 		navName: 'Bridge',
 		icon: bridgeIcon,
 		icon_Select: bridgeIcon_Select,
@@ -86,6 +85,15 @@ const menuAll = [
 		navName: 'IGO',
 		icon: igoIcon,
 		icon_Select: igoIcon_Select,
+		exact: true,
+	},
+	{
+		net_env: nets,
+		path: '/drop',
+		Component: lazy(async () => import('pages/drop')),
+		navName: 'Drop',
+		icon: dropIcon,
+		icon_Select: dropIcon_Select,
 		exact: true,
 	},
 	{
@@ -111,20 +119,44 @@ const menuAll = [
 		path: '/drops',
 		Component: dropsScreen,
 		navName: 'Drops',
-		icon: dropsIcon,
-		icon_Select: dropsIcon_Select,
+		icon: dropIcon,
+		icon_Select: dropIcon_Select,
 		exact: true,
 	},
 ]
+
 const MENU_MAP = menuAll.filter((e) => e.net_env.includes(NetName))
+
 const ROUTER_MAP = [
 	...MENU_MAP,
+
+	/*	Marker Router	*/
+
 	{ path: '/market/detail', exact: true, Component: MarketDetailScreen, navName: 'market' },
+
+	/*	Asset Router	*/
+
 	{ path: '/asset', exact: true, Component: AssetScreen, navName: 'asset' },
 	{ path: '/asset/detail', exact: true, Component: AssetDetailScreen, navName: 'asset' },
+	{ path: '/asset/create', exact: true, Component: CreateNFT },
+
+	/*	Profile Router	*/
+
 	{ path: '/profile/address/*', exact: true, Component: ProfileScreen, navName: 'profile' },
 	{ path: '/profile/edit', exact: true, Component: ProfileEditScreen, navName: 'profile' },
 	{ path: '/profile/collection', exact: true, Component: collectionScreen, navName: 'profile' },
+
+	/*	Bridge Router	*/
+
+	{
+		path: '/bridge/transfer',
+		exact: true,
+		Component: lazy(async () => import('pages/bridge/transfer')),
+		navName: 'Transfer',
+	},
+
+	/*	Data Router	*/
+
 	{
 		path: '/data/competition',
 		exact: true,
@@ -133,10 +165,33 @@ const ROUTER_MAP = [
 		reqComing: 'devnet' !== NetName,
 	},
 	{ path: '/data/competition/detail', exact: true, Component: DataDetailScreen, navName: 'Data' },
-	{ path: '/asset/create', exact: true, Component: CreateNFT },
+
+	/*	IGO Router	*/
+
 	{ path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
 	{ path: '/igo/poke', exact: true, Component: pokeScreen, navName: 'IGO' },
-	{ path: '/gallery/unityView', exact: true, Component: UnityScreen, navName: 'Gallery' },
-	{ path: '/bridge/transfer', exact: true, Component: BridgeTransfer, navName: 'Transfer' },
+
+	/*	Gallery Router	*/
+	{
+		path: '/gallery/unityView',
+		exact: true,
+		Component: lazy(async () => import('pages/gallery/unitys')),
+		navName: 'Gallery',
+	},
+
+	/*	Drop Router	*/
+
+	{
+		path: '/drop/mystery',
+		exact: true,
+		Component: lazy(async () => import('pages/drop/mystery')),
+		navName: 'Drop',
+	},
+	{
+		path: '/drop/auction',
+		exact: true,
+		Component: lazy(async () => import('pages/drop/auction')),
+		navName: 'Drop',
+	},
 ]
 export { MENU_MAP, ROUTER_MAP }

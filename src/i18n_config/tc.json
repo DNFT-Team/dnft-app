@@ -10,8 +10,7 @@
 		"gallery": "畫廊",
 		"profile": "個人資料",
 		"transfer": "轉賬",
-		"drops": "Drops"
-
+		"drop": "Drop"
 	},
 	"doc": {
 		"btn.link": "文檔"
