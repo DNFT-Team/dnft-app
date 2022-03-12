@@ -313,9 +313,11 @@ const DropAuctionScreen = (props) => {
 							bidInfo: {
 								unit,
 								fee,
+								lotId,
 								amount: 0,
 								avatar: avatorUrl,
 								isWinner: true,
+								consignor: item?.auction?.address
 							},
 						})
 					}
@@ -333,9 +335,11 @@ const DropAuctionScreen = (props) => {
 							bidInfo: {
 								unit,
 								fee,
+								lotId,
 								amount: toDecimal(bidInfo?.[1]),
 								avatar: avatorUrl,
-								isWinner: true,
+								isWinner: false,
+								consignor: item?.auction?.address
 							},
 						})
 					}
@@ -414,20 +418,17 @@ const DropAuctionScreen = (props) => {
 
 	const sumbitClaim = useCallback(async () => {
 		try {
-			const { nftInfo, bidInfo } = modalObj
-			if (nftInfo && nftInfo.auction) {
-				const {
-					auction: { lotId },
-				} = nftInfo
+			if (modalObj && modalObj.bidInfo) {
+				const { bidInfo: {lotId, isWinner, consignor} } = modalObj
 				await detectProvider()
 				const contract = InstanceAuction721()
 				let tx
-				if (bidInfo) {
-					tx = await contract.methods['claimByBuyer'](lotId).send({from: address})
-				} else if (address === nftInfo?.auction?.address) {
+				if (isWinner) {
+						tx = await contract.methods['claimByWinner'](lotId).send({from: address})
+				} else if (address === consignor) {
 					tx = await contract.methods['claimByConsignor'](lotId).send({from: address})
 				} else {
-					tx = await contract.methods['claimByWinner'](lotId).send({from: address})
+					tx = await contract.methods['claimByBuyer'](lotId).send({from: address})
 				}
 				if (tx.transactionHash) {
 					await updateAuctions(lotId)
