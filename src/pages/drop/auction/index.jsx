@@ -291,16 +291,43 @@ const DropAuctionScreen = (props) => {
 				})
 				await detectProvider()
 				const contract = InstanceAuction721()
+
 				const lotInfo = await contract.methods['getLotInfo'](lotId).call()
 				// console.log('lotInfo', lotInfo)
+
 				if (lotInfo.status < 2) {
 					throw new Error('Auction is not settled.')
 				}
+
 				// bidInfo [auctionId,amount,claimed,isWinner]
 				const bidInfo = await contract.methods['getBidInfo'](lotId, address).call()
-				if (bidInfo?.[3]) {
-					// konckedInfo [status,consignorClaimed,winnerClaimed]
-					const knockedInfo = await contract.methods['getKnockedInfo'](lotId).call()
+				// console.log('bidInfo', bidInfo)
+
+				// konckedInfo [status,consignorClaimed,winnerClaimed]
+				const knockedInfo = await contract.methods['getKnockedInfo'](lotId).call()
+				// console.log('knockedInfo', knockedInfo)
+
+				if (item?.auction?.address === address) {
+					if (knockedInfo?.[1]) {
+						throw new Error('You have already claimed.')
+					} else {
+						setModalObj({
+							case: 'checkout',
+							isShow: true,
+							loading: false,
+							nftInfo: item,
+							bidInfo: {
+								unit,
+								fee,
+								lotId,
+								amount: 0,
+								avatar: avatorUrl,
+								isWinner: false,
+								consignor: item?.auction?.address
+							},
+						})
+					}
+				} else if (bidInfo?.[3]) {
 					// console.log('knockedInfo', knockedInfo)
 					if (knockedInfo?.[2]) {
 						throw new Error('You have already claimed.')
@@ -436,6 +463,11 @@ const DropAuctionScreen = (props) => {
 			}
 		} catch (err) {
 			toast.warning(err.message)
+			setModalObj({
+				...modalObj,
+				isShow: false,
+				loading: false
+			})
 		}
 	}, [modalObj, address])
 
@@ -523,6 +555,15 @@ const DropAuctionScreen = (props) => {
 										Claim Invalid Bid
 									</div>
 								</section>
+							) : bidInfo?.consignor === address ? (
+								<section>
+									<p>
+										Your NFT auction is ended. You are able to claim now!
+									</p>
+									<div className="button" onClick={sumbitClaim}>
+										Claim
+									</div>
+								</section>
 							) : (
 								<section>
 									<p>
@@ -584,13 +625,23 @@ const DropAuctionScreen = (props) => {
 								You are able to check the result of the auction by clicking the ”Checkout“ button,
 								which means the participants of the auction can claim their invalid bid or the NFT.
 							</p>
-							<div
+							<div>
+								<div
 								className="button success"
 								onClick={() => {
 									handleCheckout(item)
 								}}
 							>
 								Checkout
+							</div>
+							<div
+								className="button outline"
+								onClick={() => {
+									hanldeHistory(item)
+								}}
+							>
+								Bid History
+							</div>
 							</div>
 						</div>
 					) : (
@@ -1004,6 +1055,7 @@ const styleItem = css`
 			margin-top: 20px;
 		}
 		.button.success {
+			margin-right: 20px;
 			background: #45b36b;
 		}
 	}
