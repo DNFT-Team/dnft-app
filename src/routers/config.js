@@ -12,7 +12,6 @@ import SyncBtcScreen from 'pages/igo/syncbtc'
 import pokeScreen from 'pages/igo/poke'
 import ProfileScreen from 'pages/profile'
 import collectionScreen from 'pages/profile/collection'
-import dropsScreen from 'pages/drops'
 
 import DataDetailScreen from 'pages/data/detail'
 import ProfileEditScreen from 'pages/profile/edit'
@@ -113,16 +112,7 @@ const menuAll = [
 		icon: galleryIcon,
 		icon_Select: galleryIcon_Select,
 		exact: true,
-	},
-	{
-		net_env: nets,
-		path: '/drops',
-		Component: dropsScreen,
-		navName: 'Drops',
-		icon: dropIcon,
-		icon_Select: dropIcon_Select,
-		exact: true,
-	},
+	}
 ]
 
 const MENU_MAP = menuAll.filter((e) => e.net_env.includes(NetName))
