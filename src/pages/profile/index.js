@@ -19,7 +19,7 @@ import edit_bg from 'images/profile/edit_bg.png'
 import edit_avatar from 'images/profile/edit_avatar.png'
 import ins from 'images/profile/ins.png'
 import twitter from 'images/profile/twitter.png'
-import { post } from 'utils/request'
+import { post, stack_post } from 'utils/request'
 import { ipfs_add, IPFS_PREFIX } from 'utils/ipfs-request'
 import { toast } from 'react-toastify'
 import { Box, Tab, Tabs, TabList } from '@chakra-ui/react'
@@ -110,7 +110,18 @@ const ProfileScreen = (props) => {
 			// dispatch(getMyProfileOwned({ address, page: 0, size: 100 }, token));
 		}
 	}, [token, newAddress])
-
+	useEffect(() => {
+		console.log(_newAddress, '_newAddress')
+		stack_post('/track/event', {
+			time_stamp: new Date().toISOString(),
+			type: 'track',
+			event: 'Homepage',
+			address,
+			info: {
+				homepage: newAddress,
+			},
+		})
+	}, [])
 	const getProfileInfo = () => {
 		dispatch(getMyProfileList({ userId: newAddress }, token))
 	}
@@ -182,7 +193,9 @@ const ProfileScreen = (props) => {
 						newAddress={newAddress}
 						handleDetail={() => {
 							history.push(
-								`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${item?.nftId}&fromAsset=${true}`,
+								`/market/detail?address=${item?.address}&status=${item?.status}&nftId=${
+									item?.nftId
+								}&fromAsset=${true}`,
 								// `/market/detail?contractType=${item?.contractType}&orderId=${item?.orderId}`,
 								// { item, fromAsset: true },
 							)

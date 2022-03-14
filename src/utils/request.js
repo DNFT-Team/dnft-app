@@ -1,4 +1,5 @@
 const BASE_URL = process.env.REACT_APP_CORE_ENDPOINT
+const STACK_URL = process.env.REACT_APP_TRACK_ENDPOINT
 
 const FETCH_TIMEOUT = 15 * 1000
 let _token = ''
@@ -41,8 +42,8 @@ export default function request(url, options) {
 		}
 	}
 
-	let URL = BASE_URL + url
-
+	// let URL = BASE_URL + url
+	let URL = (newOptions?.baseURL || BASE_URL) + url
 	const req = Promise.race([
 		fetch(URL, newOptions),
 		new Promise((resolve, reject) => {
@@ -84,6 +85,18 @@ export const get = (url, params, token) =>
 		method: 'GET',
 		headers: {
 			Authorization: token,
+		},
+	})
+
+export const stack_post = (url, params, headers = {}) =>
+	request(url, {
+		method: 'POST',
+		body: params,
+		baseURL: STACK_URL,
+		headers: {
+			// Authorization: token,
+			...headers,
+			time: new Date().toISOString(),
 		},
 	})
 
