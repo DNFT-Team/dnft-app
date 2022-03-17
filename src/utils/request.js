@@ -90,26 +90,23 @@ export const get = (url, params, token) =>
 	})
 
 export const stack_post = (url, params, headers = {}) => {
-	let _params = sortObj(Object.assign({},params,{ip:'210.12.75.34'}))
+	let _params = sortObj(Object.assign({},params,{time_stamp: Date.now(), type: 'track', ip: window?.returnCitySN['cip']}))
 	let format = sortObj({
 	..._params,
-	type: `${'track'}${'jDW^CEGbWC2$4iXS'}${params.time_stamp}`,
+	type: `${'track'}${'jDW^CEGbWC2$4iXS'}${_params.time_stamp}`,
 	})
 	delete format.info;
 	let sign = MD5(stringify(format, true)).toString().toUpperCase();
-
-	console.log(format,'format', sign,stringify(format),_params)
 	return request(url, {
-			method: 'POST',
-			body: _params,
-			baseURL: STACK_URL,
-			headers: {
-				// Authorization: token,
-				...headers,
-				time: _params.time_stamp,
-				sign: sign
-			},
-		})
+		method: 'POST',
+		body: _params,
+		baseURL: STACK_URL,
+		headers: {
+			...headers,
+			time: _params.time_stamp,
+			sign: sign
+		},
+	})
 }
 
 export const put = (url, params, token) =>

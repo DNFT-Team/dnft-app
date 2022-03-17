@@ -113,8 +113,6 @@ const ProfileScreen = (props) => {
 		stack_post('/track/event', {
 			address,
 			event: 'Homepage',
-			time_stamp: Date.now(),
-			type: 'track',
 			info: {
 				homepage: newAddress,
 			},

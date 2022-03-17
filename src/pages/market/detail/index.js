@@ -61,6 +61,26 @@ const MarketDetailScreen = (props) => {
 	}, [item])
 	useEffect(() => {
 		getMarketInfo()
+		let _price = item?.price && toDecimal(item?.price)
+		stack_post('/track/event', {
+			address,
+			event: 'NftDetail',
+			info: {
+				name: item?.name,
+				chain_type: item?.chainType,
+				contract_type: item?.contractType,
+				contract_address: item?.tokenAddress,
+				token_id: item?.token_id,
+				url: item?.avatorUrl,
+				category: item?.category,
+				creator_address: item?.createrAddress,
+				owner_address: item?.address,
+				price: transPrice(_price),
+				price_type: item?.type,
+				price_usd: transPrice(item?.amount * price),
+			},
+		})
+
 	}, [])
 	const getMarketInfo = async () => {
 		try {
@@ -216,7 +236,20 @@ const MarketDetailScreen = (props) => {
 				})
 		}
 	}
+	const transPrice = (amount) => {
+		if (isNaN(amount)) {
+			return amount
+		}
+		let _amount
+		try {
+			_amount = Number(Number(amount).toFixed(4))
+		} catch (e) {
+			console.log(e)
+		}
+		return _amount
+	}
 
+	let price = datas?.price && toDecimal(datas?.price)
 	const clickBuyItem = async () => {
 		const { contractType, type } = datas || {}
 		try {
@@ -279,21 +312,24 @@ const MarketDetailScreen = (props) => {
 						)
 						console.log('[ receipt.status ]', receipt.status)
 						historyBack()
-						// stack_post('/track/event', {
-						// 	address,
-						// 	event: 'Buy',
-						// 	time_stamp: Date.now(),
-						// 	type: 'track',
-						// 	info: {
-						// 		name: datas?.name,
-						// 		chain_type: datas?.chainType,
-						// 		contract_type: datas?.contractType,
-						// 		contract_address: datas?.tokenAddress,
-						// 		token_id: datas?.token_id,
-						// 		url: datas?.avatorUrl,
-						// 		// category: form.category,
-						// 	},
-						// })
+						stack_post('/track/event', {
+							address,
+							event: 'Buy',
+							info: {
+								name: datas?.name,
+								chain_type: datas?.chainType,
+								contract_type: datas?.contractType,
+								contract_address: datas?.tokenAddress,
+								token_id: datas?.token_id,
+								url: datas?.avatorUrl,
+								category: datas?.category,
+								creator_address: datas?.createrAddress,
+								owner_address: datas?.address,
+								price: transPrice(price),
+								price_type: datas?.type,
+								price_usd: transPrice(datas?.amount * price),
+							},
+						})
 					})
 			}
 		} catch (e) {
@@ -374,20 +410,7 @@ const MarketDetailScreen = (props) => {
 			console.log(e, 'e')
 		}
 	}
-	const transPrice = (amount) => {
-		if (isNaN(amount)) {
-			return amount
-		}
-		let _amount
-		try {
-			_amount = Number(Number(amount).toFixed(4))
-		} catch (e) {
-			console.log(e)
-		}
-		return _amount
-	}
 
-	let price = datas?.price && toDecimal(datas?.price)
 
 	return (
 		<Box bg={'white'} p={['20px', '20px', '20px', '50px']} pb={[0, 0, 0, '20px']}>

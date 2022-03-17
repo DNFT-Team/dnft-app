@@ -315,8 +315,6 @@ const CreateNFTModal = (props) => {
 			stack_post('/track/event', {
 				address,
 				event: 'Mint',
-				time_stamp: Date.now(),
-				type: 'track',
 				info: {
 					name: form.name,
 					chain_type: chainType,

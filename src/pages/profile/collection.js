@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
 import { withRouter } from 'react-router-dom'
-import { get } from 'utils/request'
+import { get, stack_post } from 'utils/request'
 import NFTCard from '../../components/NFTCard'
 import CreateNFTModal from '../asset/create/index'
 import SharePopover from 'components/SharePopover'
@@ -33,6 +33,11 @@ const CollectionScreen = (props) => {
 
 	useEffect(() => {
 		getCollectionNftList()
+		stack_post('/track/event', {
+			address,
+			event: 'Collect',
+			info: {},
+		})
 	}, [])
 	const getCollectionNftList = async () => {
 		try {
