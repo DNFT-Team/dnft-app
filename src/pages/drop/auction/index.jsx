@@ -125,7 +125,7 @@ const DropAuctionScreen = (props) => {
 						throw new Error('Auction Update Failed')
 					}
 					toast.dark('Auction Data Is Updating')
-					await getAuctionList()
+					// await getAuctionList()
 				}
 			} catch (err) {
 				toast.error(err.message)
@@ -375,7 +375,8 @@ const DropAuctionScreen = (props) => {
 				if (tokenContract) {
 					const addrAuction = process.env.REACT_APP_C_AUTCION721
 					const allowance = await tokenContract.methods['allowance'](address, addrAuction).call()
-					if (+allowance <= 0) {
+					// console.log('allowance', allowance)
+					if (+allowance <= sendVal) {
 						toast.info('You need to approve your token allowance')
 						await tokenContract.methods['approve'](addrAuction, WEB3_MAX_NUM).send({
 							from: address
@@ -740,29 +741,6 @@ const styleVedioContainer = css`
 	}
 `
 
-const tabRow = css`
-	margin-bottom: 30px;
-	.tabBtn {
-		display: inline-block;
-		padding: 12px 16px;
-		font-size: 14px;
-		width: fit-content;
-		border-radius: 10px;
-		cursor: pointer;
-		user-select: none;
-		min-width: 175px;
-		text-align: center;
-		box-sizing: border-box;
-		background: rgba(0, 87, 217, 0.2);
-		border: 1px solid #0057d9;
-		margin-right: 32px;
-	}
-	.active {
-		background: #0057d9;
-		color: #ffffff;
-	}
-`
-
 const styleListContainer = css`
 	background: linear-gradient(180deg, #033073 0%, #00112b 100%);
 	padding: 4vw 3vw;
@@ -783,145 +761,6 @@ const styleListContainer = css`
 	}
 `
 
-const styleItem = css`
-	align-items: flex-start;
-	justify-content: center;
-	margin: 4vh auto 8vh;
-	.cover {
-		width: 100%;
-		height: 100%;
-		margin: 0 auto;
-		border-radius: 20px;
-		overflow: hidden;
-		box-shadow: 0 0 16px 4px rgba(49, 78, 120, 0.8), 0 0 20px 1px rgba(255, 255, 255, 0.8);
-	}
-	.content {
-		margin-top: 2rem;
-		width: 100%;
-		box-sizing: border-box;
-		background: rgba(255, 255, 255, 0.2);
-		border-radius: 20px;
-		padding: 30px;
-		position: relative;
-		overflow: hidden;
-		section {
-			h2 {
-				font-family: Archivo Black;
-				font-size: 36px;
-				color: #ffffff;
-				margin: 0;
-				display: flex;
-				align-items: center;
-				.action {
-					height: 24px;
-					width: 24px;
-					background: rgba(0, 87, 217, 0.2);
-					border: 1px solid #0057d9;
-					padding: 10px 8px;
-					border-radius: 10px;
-					cursor: pointer;
-					user-select: none;
-					margin-left: 1rem;
-				}
-			}
-			p {
-				font-family: Barlow;
-				font-style: normal;
-				font-weight: normal;
-				font-size: 14px;
-				line-height: 20px;
-				color: rgba(255, 255, 255, 0.7);
-			}
-		}
-		.auctionInfo {
-			background: #193864;
-			border: 1px solid #002a67;
-			border-radius: 10px;
-			position: relative;
-			display: flex;
-			flex-direction: row wrap;
-			justify-content: space-between;
-			align-items: flex-start;
-			box-sizing: border-box;
-			padding: 15px;
-			margin: 1rem 0;
-			max-width: 500px;
-			.left,
-			.right {
-				font-family: Barlow;
-				font-style: normal;
-				height: 100%;
-				h4 {
-					font-weight: 500;
-					font-size: 14px;
-					color: rgba(255, 255, 255, 0.5);
-				}
-				.subText {
-					font-weight: 500;
-					font-size: 12px;
-					text-transform: uppercase;
-					color: rgba(255, 255, 255, 0.8);
-				}
-			}
-			.left {
-				strong {
-					display: flex;
-					align-items: center;
-					img {
-						height: 20px;
-						width: 20px;
-						margin-right: 10px;
-					}
-				}
-			}
-			.right {
-				h4 {
-					margin-left: 1rem;
-				}
-			}
-		}
-		.auctionEnded {
-			color: #ffffff;
-			font-style: normal;
-			font-weight: normal;
-			&::after {
-				content: 'Auction End';
-				position: absolute;
-				background: #ff2e6c;
-				width: max-content;
-				padding: 0 40px;
-				text-align: center;
-				right: 0;
-				top: 0;
-				transform: rotate(45deg) translate(31%, -15%);
-			}
-			h3 {
-				font-family: Archivo;
-				font-weight: 800;
-				font-size: 18px;
-				color: #ffffff;
-				margin-top: 40px;
-			}
-			p {
-				font-family: Barlow;
-				font-size: 16px;
-				margin: 34px 0 26px 0;
-			}
-		}
-		.button.primary {
-			margin-right: 20px;
-		}
-		.button.outline {
-			background: rgba(0, 87, 217, 0.2);
-			border: 1px solid #0057d9;
-			margin-top: 20px;
-		}
-		.button.success {
-			margin-right: 20px;
-			background: #45b36b;
-		}
-	}
-`
 
 const styleModalContainer = css`
 	max-width: 564px;

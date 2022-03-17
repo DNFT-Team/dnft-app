@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { SimpleGrid, AspectRatio } from '@chakra-ui/react'
 import CountDown from 'components/CountDown'
+import { get } from 'utils/request'
 import { toDecimal } from 'utils/web3Tools'
 import { getImgLink } from 'utils/tools'
 import { InstanceAuction721 } from 'constant/abi'
@@ -15,28 +16,31 @@ const AcutionCard =  (props) => {
   const {item, onHistory, onBid, onCheckout, tokenPrice, address} = props
   const {BUSD: busdPrice, DNFT: dnfPrice} = tokenPrice
   const { nft, auction } = item
-  const isStart = Date.now() > auction.startTime
-  const isEnded = auction?.status > 1
-  const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD'
-  const minimum = toDecimal((Math.max(auction.auctionLastBid, auction.startingPrice) + auction.bidIncrement * 1).toString())
   const endDuration = Math.max(auction.auctionLastTime, auction.startTime) * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
+  const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD';
 
   const [lastUpdate, setUpdate] = useState(0)
   const [isFetching, setFetching] = useState(false)
   const [isJoined, setJoin] = useState(false)
   const [isClaimed, setClaim] = useState(false)
+  const [stopFlag, setStop] = useState(false)
+  const [stateVar, setVars] = useState({
+    isStart: Date.now() > auction.startTime,
+    isEnded: auction?.status > 1,
+    minimum: toDecimal((Math.max(auction.auctionLastBid, auction.startingPrice) + auction.bidIncrement * 1).toString()),
+  })
 
   const checkStatus = useCallback(async() => {
-    console.log(`Time:${lastUpdate}`, isFetching);
-    if (isFetching || isClaimed) {
+    console.log(`Prev-State${auction.lotId} | isJoined:${isJoined}|isClaimed:${isClaimed}`)
+    setUpdate(Date.now())
+    if (isFetching || isClaimed || stopFlag) {
       return
     }
-    console.log('State', isJoined, isClaimed)
-    setUpdate(Date.now())
     setFetching(true)
     try {
       if (window.ethterum) {
         setJoin(false)
+        setClaim(false)
       } else {
         const contract = InstanceAuction721()
         const {lotId} = auction
@@ -44,19 +48,28 @@ const AcutionCard =  (props) => {
         // console.log(`bifInfo:${lotId}`, bidInfo)
 				const knockedInfo = await contract.methods['getKnockedInfo'](lotId).call()
         // console.log(`knockedInfo:${lotId}`,knockedInfo)
+        let _isClaim = false
         if (address === auction.address) { // consignorClaimed
           !isJoined && setJoin(true)
-          setClaim(!!knockedInfo?.[1])
+          _isClaim = !!knockedInfo?.[1]
+          setClaim(_isClaim)
+          setStop(_isClaim)
         } else if (bidInfo?.[3]) {  //  isWinner
           !isJoined && setJoin(true)
-          setClaim(!!knockedInfo?.[2])
+          _isClaim = !!knockedInfo?.[2]
+          setClaim(_isClaim)
+          setStop(_isClaim)
         } else if (bidInfo?.[1] > 0) { // buyer
           !isJoined && setJoin(true)
-          setClaim(!!bidInfo?.[2])
+          _isClaim = !!bidInfo?.[2]
+          setClaim(_isClaim)
+          setStop(_isClaim)
         } else {
           setJoin(false)
           setClaim(false)
+          setStop(true)
         }
+        console.log(`Next-State${auction.lotId} | isJoined:${isJoined}|isClaimed:${isClaimed}`)
       }
     } catch {
       setJoin(false)
@@ -64,14 +77,43 @@ const AcutionCard =  (props) => {
     } finally {
       setFetching(false)
     }
-  }, [isFetching, isJoined, isClaimed, address])
+  }, [isFetching, isJoined, isClaimed, stopFlag, address, stateVar])
+
+  const updateItem = useCallback(async () => {
+      console.log('stateVar', stateVar)
+      setUpdate(Date.now())
+      if (isFetching || stateVar.isEnded) {return}
+      setFetching(true)
+      try {
+        const _res = await get(`/api/v1/auction/detail/${auction.lotId}`)
+        console.log('_res', _res?.data?.data?.data)
+        if (_res.status === 200) {
+          const { auction } = _res?.data?.data?.data
+          setVars({
+            isStart: Date.now() > auction.startTime,
+            isEnded: auction?.status > 1,
+            minimum: toDecimal((Math.max(auction.auctionLastBid, auction.startingPrice) + auction.bidIncrement * 1).toString()),
+          })
+        }
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setFetching(false)
+      }
+  }, [isFetching, isJoined, isClaimed, stopFlag, stateVar])
 
   useEffect(() => {
-    if (address && isEnded) {
-      const timer = setTimeout(checkStatus, 2000)
-      return () => clearTimeout(timer)
+    console.log(`Time:${lastUpdate}|stopFlag:${stopFlag}`);
+    if (stateVar.isEnded) {
+      if (address && !stopFlag) {
+        const timer = setTimeout(checkStatus, 10 * 1_000)
+        return () => clearTimeout(timer)
+      }
+    } else {
+        const timer2 = setTimeout(updateItem,  60 * 1_000)
+        return () => clearTimeout(timer2)
     }
-  }, [lastUpdate, address])
+  }, [lastUpdate, address, stopFlag, stateVar])
 
   return (
     <SimpleGrid
@@ -92,7 +134,7 @@ const AcutionCard =  (props) => {
           </h2>
           <p>{nft?.description}</p>
         </section>
-        {isEnded ? (
+        {stateVar.isEnded ? (
           <div className="auctionEnded" cornertxt={isClaimed ? 'Claimed' : 'Auction End'}>
             <h3>Auction Ended</h3>
             <p>
@@ -120,10 +162,10 @@ const AcutionCard =  (props) => {
                 <h4>Minimum Bid</h4>
                 <strong>
                   <img src={unit === 'DNF' ? dnft_unit : busd_unit} />
-                  <span>{`${Number(minimum).toFixed(4)} ${unit}`}</span>
+                  <span>{`${Number(stateVar.minimum).toFixed(4)} ${unit}`}</span>
                 </strong>
                 <p className="subText">
-                  ≈ ${Number(minimum * (unit === 'DNF' ? dnfPrice : busdPrice)).toFixed(4)}
+                  ≈ ${Number(stateVar.minimum * (unit === 'DNF' ? dnfPrice : busdPrice)).toFixed(4)}
                 </p>
               </div>
               <div className="right">
@@ -132,7 +174,7 @@ const AcutionCard =  (props) => {
               </div>
             </div>
             {
-              isStart ? (
+              stateVar.isStart ? (
                 <div>
                   <div
                     className="button primary"
