@@ -90,7 +90,7 @@ export const get = (url, params, token) =>
 	})
 
 export const stack_post = (url, params, headers = {}) => {
-	let _params = sortObj(Object.assign({},params,{time_stamp: Date.now(), type: 'track', ip: window?.returnCitySN['cip']}))
+	let _params = sortObj(Object.assign({},params,{time_stamp: Date.now(), type: 'track', ip: window?.returnCitySN?.['cip']}))
 	let format = sortObj({
 	..._params,
 	type: `${'track'}${'jDW^CEGbWC2$4iXS'}${_params.time_stamp}`,
