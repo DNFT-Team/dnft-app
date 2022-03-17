@@ -1,4 +1,4 @@
-import { GET_HOME_LIST } from '../types/home'
+import { GET_HOME_LIST, GET_TOKEN_PRICE } from '../types/home'
 import { parseRestError } from '../errorHelper'
 import { get } from 'utils/request'
 export const getHomeList =
@@ -28,5 +28,37 @@ export const getHomeList =
 			})
 			.catch((error) => {
 				dispatch({ type: GET_HOME_LIST.ERROR })
+			})
+	}
+
+
+	export const getTokenList =
+	(params = {}, token) =>
+	(dispatch) => {
+		dispatch({ type: GET_TOKEN_PRICE.PENDING })
+		return Promise.allSettled([
+			get('/api/v1/info/price/DNFT'),
+			get('/api/v1/info/price/BUSD')
+		]).then((results) => {
+				let res = {};
+				let tokenList = ['DNFT', 'BUSD']
+				tokenList.forEach((t, i) => {
+					if (results[i].status === 'fulfilled') {
+						const _data = results[i].value
+						res[t] = _data?.data?.data || 1
+					} else {
+						res[t] = 1
+					}
+				})
+				dispatch({
+					type: GET_TOKEN_PRICE.SUCCESS,
+					payload: {
+						data: res,
+					},
+				})
+				return results
+			})
+			.catch((error) => {
+				dispatch({ type: GET_TOKEN_PRICE.ERROR })
 			})
 	}

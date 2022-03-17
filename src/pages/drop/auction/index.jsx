@@ -5,18 +5,19 @@ import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 import { toast } from 'react-toastify'
-import { Dialog, Table, Switch } from 'element-react'
-import { SimpleGrid, AspectRatio, Tooltip } from '@chakra-ui/react'
-import CountDown from 'components/CountDown'
+import { Dialog, Table } from 'element-react'
+import { SimpleGrid, AspectRatio } from '@chakra-ui/react'
+import AutionCard from './AutionCard'
 
 import { get, post } from 'utils/request'
 import { getImgLink, shortenString } from 'utils/tools'
 import { toDecimal, WEB3_MAX_NUM } from 'utils/web3Tools'
 
+import { getTokenList } from 'reduxs/actions/home'
+
 import { InstanceAuction721, InstanceDNFBSC, InstanceBUSD } from 'constant/abi'
 
 import { noDataSvg } from 'utils/svg';
-import refreshIcon from 'images/common/refresh.svg'
 import LoadingIcon from 'images/asset/loading.gif'
 import busd_unit from 'images/market/busd.svg'
 import dnft_unit from 'images/market/dnft_unit.png'
@@ -25,12 +26,9 @@ import vedioCut from 'images/igo/vedio-cut.png'
 
 const DropAuctionScreen = (props) => {
 	const { t } = useTranslation()
-	const { address, chainType, token } = props
+	const { dispatch, address, chainType, token, tokenPrice } = props
+	const {BUSD: busdPrice, DNFT: dnfPrice} = tokenPrice
 
-	const tabList = [
-		{ key: 1, label: 'On Going' },
-		{ key: 2, label: 'Ended' },
-	]
 	const TableCols = [
 		{
 			label: 'Bidder',
@@ -88,12 +86,6 @@ const DropAuctionScreen = (props) => {
 	})
 
 	const [lastUpdtae, setLU] = useState(0)
-	const [tabName, setTab] = useState(1)
-
-	const [isJoined, setIsJoined] = useState(false)
-
-	const [busdPrice, setBusdPrice] = useState(0)
-	const [dnfPrice, setDnfPrice] = useState(0)
 
 	const [list, setList] = useState([])
 	const [listHis, setListHis] = useState([])
@@ -148,28 +140,13 @@ const DropAuctionScreen = (props) => {
 			...modalObj,
 			loading: true,
 		})
-		try {
-			// console.log(`dnfPrice:${dnfPrice},${busdPrice}`)
-			if (dnfPrice === 0) {
-				const priceDNFT = await get('/api/v1/info/price/DNFT')
-				setDnfPrice(priceDNFT?.data?.data || 1)
-			}
-			if (busdPrice === 0) {
-				const priceBUSD = await get('/api/v1/info/price/BUSD')
-				setBusdPrice(priceBUSD?.data?.data || 1)
-			}
-		} catch (err) {
-			setBusdPrice(1)
-			setDnfPrice(1)
-		}
-		const midUrl = isJoined ? `joined/${address}` : 'list'
-		const res = await get(`/api/v1/auction/${midUrl}/${tabName}`)
+		const res = await get('/api/v1/auction/list/0')
 		setList(res?.data?.data?.data || [])
 		setModalObj({
 			...modalObj,
 			loading: false,
 		})
-	}, [tabName, address, isJoined, busdPrice, dnfPrice])
+	}, [address, busdPrice, dnfPrice])
 
 	const hanldeHistory = useCallback(
 		async (item) => {
@@ -582,114 +559,13 @@ const DropAuctionScreen = (props) => {
 		)
 	}, [modalObj, address, chainType, token])
 
-
-	const renderCard = (item) => {
-		const { nft, auction } = item
-		// const isStart = Date.now() > auction.startTime
-		const isEnded = auction?.status > 1
-		const unit = +auction.payMod === 0 ? 'DNF' : 'BUSD'
-		const minimum = toDecimal((Math.max(auction.auctionLastBid, auction.startingPrice) + auction.bidIncrement * 1).toString())
-		const endDuration = Math.max(auction.auctionLastTime, auction.startTime) * 1 + auction.durationTime * 1 - Math.round(new Date().getTime() / 1000)
-
-		return (
-			<SimpleGrid
-				className={styleItem}
-				columns={[1, 1, 1, 1, 2]}
-				width={['100%', '100%', '100%', '80%', '80%']}
-				spacingX="40px"
-				spacingY="20px"
-			>
-				<AspectRatio className="cover" ratio={3 / 4} maxWidth="400px">
-					<img src={getImgLink(nft?.avatorUrl)} alt="" />
-				</AspectRatio>
-				<div className="content">
-					<section>
-						<h2>
-							<span>{nft?.name}</span>
-							<Tooltip label="Refresh Data" hasArrow>
-								<img
-									className="action"
-									src={refreshIcon}
-									onClick={() => {
-										updateAuctions(auction?.lotId)
-									}}
-								/>
-							</Tooltip>
-						</h2>
-						<p>{nft?.description}</p>
-					</section>
-					{isEnded ? (
-						<div className="auctionEnded">
-							<h3>Auction Ended</h3>
-							<p>
-								You are able to check the result of the auction by clicking the ”Checkout“ button,
-								which means the participants of the auction can claim their invalid bid or the NFT.
-							</p>
-							<div>
-								<div
-								className="button success"
-								onClick={() => {
-									handleCheckout(item)
-								}}
-							>
-								Checkout
-							</div>
-							<div
-								className="button outline"
-								onClick={() => {
-									hanldeHistory(item)
-								}}
-							>
-								Bid History
-							</div>
-							</div>
-						</div>
-					) : (
-						<div>
-							<div className="auctionInfo">
-								<div className="left">
-									<h4>Minimum Bid</h4>
-									<strong>
-										<img src={unit === 'DNF' ? dnft_unit : busd_unit} />
-										<span>{`${Number(minimum).toFixed(4)} ${unit}`}</span>
-									</strong>
-									<p className="subText">
-										≈ ${Number(minimum * (unit === 'DNF' ? dnfPrice : busdPrice)).toFixed(4)}
-									</p>
-								</div>
-								<div className="right">
-									<h4>Time Left</h4>
-									<CountDown time={endDuration} key={auction?.lotId} />
-								</div>
-							</div>
-							<div>
-								<div
-									className="button primary"
-									onClick={() => {
-										hanldeBid(item)
-									}}
-								>
-									Place Bid
-								</div>
-								<div
-									className="button outline"
-									onClick={() => {
-										hanldeHistory(item)
-									}}
-								>
-									Bid History
-								</div>
-							</div>
-						</div>
-					)}
-				</div>
-			</SimpleGrid>
-		)
-	}
-
 	useEffect(() => {
-		getAuctionList()
-	}, [tabName, isJoined])
+		if (tokenPrice._isOk) {
+			getAuctionList()
+		} else {
+			dispatch(getTokenList())
+		}
+	}, [tokenPrice])
 
 	return (
 		<div className={styleContainer}>
@@ -715,28 +591,6 @@ const DropAuctionScreen = (props) => {
 			</SimpleGrid>
 			<div className={styleListContainer}>
 				<h1>Timed Auction</h1>
-				<div className={tabRow}>
-					{tabList.map((e) => (
-						<div
-							key={e.key}
-							className={`tabBtn ${tabName === e.key ? 'active' : ''}`}
-							onClick={() => {
-								setTab(e.key)
-							}}
-						>
-							{e.label}
-						</div>
-					))}
-					<Switch
-						value={isJoined}
-						width={120}
-						onText="Only Mine"
-						offText="All"
-						onColor="#0057D9"
-						offColor="rgba(0, 87, 217, 0.2)"
-						onChange={setIsJoined}
-					/>
-				</div>
 				{list.length === 0  && (
 					<div className={styleNoDataContainer}>
 						<div>
@@ -745,7 +599,15 @@ const DropAuctionScreen = (props) => {
 						</div>
 					</div>
 				)}
-				{list.map((e) => renderCard(e))}
+				{list.map(
+					(e, i) =>
+					<AutionCard
+						key={i}
+						item={e}
+						onBid={hanldeBid}
+						onCheckout={handleCheckout}
+						onHistory={hanldeHistory}
+				/>)}
 			</div>
 			{renderModal}
 			{modalObj.loading && (
@@ -757,12 +619,12 @@ const DropAuctionScreen = (props) => {
 	)
 }
 
-const mapStateToProps = ({ profile, lng }) => ({
+const mapStateToProps = ({ profile, home }) => ({
 	address: profile.address,
 	chainType: profile.chainType,
 	net_env: profile.net_env,
 	token: profile.token,
-	lng: lng.lng,
+	tokenPrice: home.tokenPrice,
 })
 
 export default withRouter(connect(mapStateToProps)(DropAuctionScreen))
