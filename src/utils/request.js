@@ -1,5 +1,6 @@
 const BASE_URL = process.env.REACT_APP_CORE_ENDPOINT
 const STACK_URL = process.env.REACT_APP_TRACK_ENDPOINT
+import MD5 from 'crypto-js/md5'
 
 const FETCH_TIMEOUT = 15 * 1000
 let _token = ''
@@ -88,17 +89,28 @@ export const get = (url, params, token) =>
 		},
 	})
 
-export const stack_post = (url, params, headers = {}) =>
-	request(url, {
-		method: 'POST',
-		body: params,
-		baseURL: STACK_URL,
-		headers: {
-			// Authorization: token,
-			...headers,
-			time: new Date().toISOString(),
-		},
+export const stack_post = (url, params, headers = {}) => {
+	let _params = sortObj(Object.assign({},params,{ip:'210.12.75.34'}))
+	let format = sortObj({
+	..._params,
+	type: `${'track'}${'jDW^CEGbWC2$4iXS'}${params.time_stamp}`,
 	})
+	delete format.info;
+	let sign = MD5(stringify(format, true)).toString().toUpperCase();
+
+	console.log(format,'format', sign,stringify(format),_params)
+	return request(url, {
+			method: 'POST',
+			body: _params,
+			baseURL: STACK_URL,
+			headers: {
+				// Authorization: token,
+				...headers,
+				time: _params.time_stamp,
+				sign: sign
+			},
+		})
+}
 
 export const put = (url, params, token) =>
 	request(url, {
@@ -127,20 +139,27 @@ export const _delete = (url, params, token) =>
 		},
 	})
 
-function stringify(params) {
+function stringify(params, isencode) {
 	let tempParams = []
 	Object.keys(params).forEach((key) => {
 		let value = params[key]
 		if (value === '' || value === null || value === undefined) {
 			return
 		}
-		tempParams.push([key, encodeURIComponent(value)].join('='))
+		tempParams.push([key, isencode ? value : encodeURIComponent(value)].join('='))
 	})
 	return tempParams.join('&')
 }
 
 function checkCode(res) {
 	return res
+}
+
+function sortObj(obj) {
+	var keysArr = Object.keys(obj).sort();
+	var sortObj = {};
+	for (var i in keysArr) { sortObj[keysArr[i]] = (obj[keysArr[i]]); }
+	return sortObj;
 }
 
 class RequestError extends Error {

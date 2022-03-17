@@ -2,7 +2,7 @@ import { Dialog, Button, Input, InputNumber, Select, Upload } from 'element-reac
 import { css } from 'emotion'
 import React, { useEffect, useState, useCallback } from 'react'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
-import { post } from 'utils/request'
+import { post, stack_post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router'
@@ -312,6 +312,23 @@ const CreateNFTModal = (props) => {
 			// }
 
 			setStep(STEP_ENUM.END)
+			stack_post('/track/event', {
+				address,
+				event: 'Mint',
+				time_stamp: Date.now(),
+				type: 'track',
+				info: {
+					name: form.name,
+					chain_type: chainType,
+					contract_type: form.contractType,
+					contract_address: form.contractType == 1155
+					? createNFTContract1155[net_env]
+					: createNFTContract721[net_env],
+					token_id: txRes.tokenId,
+					url: IpfsUrl(mediaMeta.image),
+					category: form.category,
+				},
+			})
 		} catch (e) {
 			console.log(e, 'e')
 		}

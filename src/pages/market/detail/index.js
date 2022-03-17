@@ -21,7 +21,7 @@ import {
 	tradableNFTContract721,
 } from 'utils/contract'
 import { getWallet } from 'utils/get-wallet'
-import { get, post } from 'utils/request'
+import { get, post, stack_post } from 'utils/request'
 import { shortenAddress, shortenNameString, queryParse, getImgLink } from 'utils/tools'
 import { toDecimal } from 'utils/web3Tools'
 import Web3 from 'web3'
@@ -279,6 +279,21 @@ const MarketDetailScreen = (props) => {
 						)
 						console.log('[ receipt.status ]', receipt.status)
 						historyBack()
+						// stack_post('/track/event', {
+						// 	address,
+						// 	event: 'Buy',
+						// 	time_stamp: Date.now(),
+						// 	type: 'track',
+						// 	info: {
+						// 		name: datas?.name,
+						// 		chain_type: datas?.chainType,
+						// 		contract_type: datas?.contractType,
+						// 		contract_address: datas?.tokenAddress,
+						// 		token_id: datas?.token_id,
+						// 		url: datas?.avatorUrl,
+						// 		// category: form.category,
+						// 	},
+						// })
 					})
 			}
 		} catch (e) {

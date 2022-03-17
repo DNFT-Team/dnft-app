@@ -27,7 +27,6 @@ import { Icon } from '@iconify/react'
 import ProfileEditScreen from './edit'
 import youtube from 'images/profile/youtube.png'
 import CropperBox from 'components/CropperBox'
-
 import u_twitter from 'images/profile/u_twitter.png'
 import u_youtube from 'images/profile/u_youtube.png'
 import u_ins from 'images/profile/u_ins.png'
@@ -111,12 +110,11 @@ const ProfileScreen = (props) => {
 		}
 	}, [token, newAddress])
 	useEffect(() => {
-		console.log(_newAddress, '_newAddress')
 		stack_post('/track/event', {
-			time_stamp: new Date().toISOString(),
-			type: 'track',
-			event: 'Homepage',
 			address,
+			event: 'Homepage',
+			time_stamp: Date.now(),
+			type: 'track',
 			info: {
 				homepage: newAddress,
 			},
