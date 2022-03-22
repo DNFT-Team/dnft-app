@@ -27,7 +27,7 @@ const Drops = (props) => {
 			title: 'TIMED AUCTION',
 			time: '25/03/2022 0:00 AM (UTC)',
 			link: '/drop/auction',
-			isActive: true,
+			isActive: false,
 			avatar: pic2,
 			txtTitle: 'Parking Infinity',
 			txt: 'Hi all, sharing a mobile version of a dashboard app that keeps all expenses organized, stay tax ready at all time',
@@ -55,7 +55,7 @@ const Drops = (props) => {
 					<div className={styleCard} key={i}>
 						<Flex flexDirection={'column'} className="header">
 							<h3>{item.title}</h3>
-							<span>{item.time}</span>
+							<span>{item.isActive ? item.time : 'Coming Soon'}</span>
 							<button onClick={() => {
 								if (item.isActive && item.link) {
 									history.push(item.link)
