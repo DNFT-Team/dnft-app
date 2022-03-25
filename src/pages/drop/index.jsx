@@ -25,7 +25,7 @@ const Drops = (props) => {
 		{
 			key: 'auction',
 			title: 'TIMED AUCTION',
-			time: '25/03/2022 0:00 AM (UTC)',
+			time: '01/04/2022 0:00 AM (UTC)',
 			link: '/drop/auction',
 			isActive: false,
 			avatar: pic2,
