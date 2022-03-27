@@ -471,3 +471,11 @@ export const auction721Contract = {
 	devnet: '0x942b11A8A44777aA00F0eB5241D15721e63A09E2',
 	mainnet: '0x942b11A8A44777aA00F0eB5241D15721e63A09E2',
 }
+
+export const blindBox721Contract = {
+	testnet: '0x48160F0eA5f11D05201B492D27E4ba7B2A0e91F3',
+}
+
+export const blindBoxApproveContract = {
+	testnet: '0xfB1927c7923f23e18375038179E8E61a09617037',
+}

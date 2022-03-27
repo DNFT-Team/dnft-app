@@ -6138,3 +6138,554 @@ export const auction721Abi = [
 		type: 'function',
 	},
 ]
+
+export const blindBoxAbi = [
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: '_admin',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_erc20_address',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_nft_address',
+				type: 'address',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'constructor',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'have',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: 'want',
+				type: 'address',
+			},
+		],
+		name: 'OnlyCoordinatorCanFulfill',
+		type: 'error',
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: 'address',
+				name: 'seller',
+				type: 'address',
+			},
+			{
+				indexed: false,
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+		],
+		name: 'BuyMore',
+		type: 'event',
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: 'address',
+				name: 'seller',
+				type: 'address',
+			},
+			{
+				indexed: false,
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+		],
+		name: 'BuyOne',
+		type: 'event',
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: 'address',
+				name: 'seller',
+				type: 'address',
+			},
+			{
+				indexed: false,
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+		],
+		name: 'Claim',
+		type: 'event',
+	},
+	{
+		inputs: [],
+		name: 'admin',
+		outputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'amount_more',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'amount_more_quantity',
+		outputs: [
+			{
+				internalType: 'uint32',
+				name: '',
+				type: 'uint32',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'amount_once',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'box_len',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'buyMore',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'buyOne',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+		],
+		name: 'claim',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'destroy',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'erc_token',
+		outputs: [
+			{
+				internalType: 'contract IERC20',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 'ids',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'ids_len',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'isStart',
+		outputs: [
+			{
+				internalType: 'bool',
+				name: '',
+				type: 'bool',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'nft_token',
+		outputs: [
+			{
+				internalType: 'contract IERC721',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+			{
+				internalType: 'bytes',
+				name: '',
+				type: 'bytes',
+			},
+		],
+		name: 'onERC721Received',
+		outputs: [
+			{
+				internalType: 'bytes4',
+				name: '',
+				type: 'bytes4',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+			{
+				internalType: 'uint256[]',
+				name: 'randomWords',
+				type: 'uint256[]',
+			},
+		],
+		name: 'rawFulfillRandomWords',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: '_addr',
+				type: 'address',
+			},
+		],
+		name: 'sRequestIdLen',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 's_randowWords_nftId',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 's_requestId',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 's_vrf',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: 'requestId',
+				type: 'uint256',
+			},
+			{
+				internalType: 'address',
+				name: 'user',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: 'num',
+				type: 'uint256',
+			},
+			{
+				internalType: 'bool',
+				name: 'isRev',
+				type: 'bool',
+			},
+			{
+				internalType: 'bool',
+				name: 'isClaim',
+				type: 'bool',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 's_vrf_nftId',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 's_vrf_randowWords',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '_amount_once',
+				type: 'uint256',
+			},
+			{
+				internalType: 'uint256',
+				name: '_amount_more',
+				type: 'uint256',
+			},
+		],
+		name: 'setAmount',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256[]',
+				name: '_ids',
+				type: 'uint256[]',
+			},
+		],
+		name: 'setIds',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'start',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'stop',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'withdrawERC',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256[]',
+				name: '_nftIds',
+				type: 'uint256[]',
+			},
+		],
+		name: 'withdrawNft',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+]

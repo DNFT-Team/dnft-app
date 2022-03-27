@@ -9,7 +9,7 @@ import MarketDetailScreen from 'pages/market/detail'
 import AssetScreen from 'pages/asset'
 import IGOScreen from 'pages/igo'
 import SyncBtcScreen from 'pages/igo/syncbtc'
-import pokeScreen from 'pages/igo/poke'
+import pokeScreen from 'pages/drop/blind-box'
 import ProfileScreen from 'pages/profile'
 import collectionScreen from 'pages/profile/collection'
 
@@ -112,7 +112,7 @@ const menuAll = [
 		icon: galleryIcon,
 		icon_Select: galleryIcon_Select,
 		exact: true,
-	}
+	},
 ]
 
 const MENU_MAP = menuAll.filter((e) => e.net_env.includes(NetName))
@@ -159,7 +159,6 @@ const ROUTER_MAP = [
 	/*	IGO Router	*/
 
 	{ path: '/igo/syncBtc', exact: true, Component: SyncBtcScreen, navName: 'IGO' },
-	{ path: '/igo/poke', exact: true, Component: pokeScreen, navName: 'IGO' },
 
 	/*	Gallery Router	*/
 	{
@@ -181,6 +180,12 @@ const ROUTER_MAP = [
 		path: '/drop/auction',
 		exact: true,
 		Component: lazy(async () => import('pages/drop/auction')),
+		navName: 'Drop',
+	},
+	{
+		path: '/drop/blind-box',
+		exact: true,
+		Component: lazy(async () => import('pages/drop/blind-box')),
 		navName: 'Drop',
 	},
 ]

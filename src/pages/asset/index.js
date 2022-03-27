@@ -217,7 +217,6 @@ const AssetScreen = (props) => {
 					tokenAbi,
 					bscTestTokenContact[currentNetEnv],
 				)
-				console.log(myContract, 'myContract')
 				const dnftBalance = await myContract.methods.balanceOf(account).call({
 					from: account,
 				})

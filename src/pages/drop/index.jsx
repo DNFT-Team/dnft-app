@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'emotion'
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'
 import Title from 'components/Title'
 import helper from 'config/helper'
 import { Text, Flex, Grid } from '@chakra-ui/react'
@@ -16,7 +16,7 @@ const Drops = (props) => {
 			key: 'mystery',
 			title: 'MYSTERY BOX',
 			time: 'Coming Soon',
-			link: '/drop/mystery',
+			link: '/drop/blind-box',
 			isActive: false,
 			avatar: pic1,
 			txtTitle: 'Parking Infinity',
@@ -56,11 +56,15 @@ const Drops = (props) => {
 						<Flex flexDirection={'column'} className="header">
 							<h3>{item.title}</h3>
 							<span>{item.isActive ? item.time : 'Coming Soon'}</span>
-							<button onClick={() => {
-								if (item.isActive && item.link) {
-									history.push(item.link)
-								}
-							}}>PLAY</button>
+							<button
+								onClick={() => {
+									if (item.isActive && item.link) {
+										history.push(item.link)
+									}
+								}}
+							>
+								PLAY
+							</button>
 							<img src={item.avatar} alt="" />
 						</Flex>
 						<div className="descBox">

@@ -118,6 +118,7 @@ const Mining = (props) => {
         const dnftBalance = await myContract.methods.balanceOf(account).call({
           from: account,
         });
+        console.log(dnftBalance, 'dnftBalance')
         setBalance((dnftBalance * Math.pow(10, -18)).toFixed(2));
       }
     } catch (e) {
