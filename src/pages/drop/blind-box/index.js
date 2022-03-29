@@ -11,16 +11,14 @@ import { useTranslation } from 'react-i18next'
 import { Dialog, Loading } from 'element-react'
 import { SimpleGrid } from '@chakra-ui/react'
 import { blindBoxAbi, busdAbi, tokenAbi } from 'utils/abi'
-import {
-	blindBox721Contract,
-	blindBoxApproveContract,
-	busdContract,
-	tokenContract,
-} from 'utils/contract'
+import { blindBox721Contract, blindBoxApproveContract } from 'utils/contract'
 import { getWallet } from 'utils/get-wallet'
 import SwitchModal from 'components/SwitchModal'
 import Web3 from 'web3'
 import { WEB3_MAX_NUM } from 'utils/web3Tools'
+import { get, post } from 'utils/request'
+import dayjs from 'dayjs'
+import defaultBox from 'images/drops/box.png'
 
 const pokeScreen = (props) => {
 	const { t } = useTranslation()
@@ -34,9 +32,13 @@ const pokeScreen = (props) => {
 	const [isUnboxVisible, setIsUnboxVisible] = useState(false)
 	const [isGotoAssetVisible, setIsGotoAssetVisible] = useState(false)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
+	const [isListVisible, setIsListVisible] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [oneNftPrice, setOneNftPrice] = useState()
 	const [moreNftPrice, setMoreNftPrice] = useState()
+	const [myBoxList, setMyBoxList] = useState([])
+	const [blindBoxList, setBlindBoxList] = useState([])
+	const [currentNFTImageUrl, setCurrentNFTImageUrl] = useState()
 
 	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
@@ -118,7 +120,6 @@ const pokeScreen = (props) => {
 
 	const getApproveStatus = async () => {
 		try {
-			setIsLoading(true)
 			let wallet = getWallet()
 			if (wallet) {
 				window.web3 = new Web3(wallet)
@@ -136,17 +137,25 @@ const pokeScreen = (props) => {
 				}
 			}
 		} finally {
-			setIsLoading(false)
 		}
+	}
+
+	const getAllMyBox = async () => {
+		const { data } = await get(`/api/v1/mystery/getRecords/${address}`, '', token)
+		console.log(data?.data?.data, 'data')
+		setMyBoxList(data?.data?.data)
+	}
+
+	const getBlindBoxList = async () => {
+		const { data } = await get('/api/v1/mystery/getAllMesteryBox')
+		setBlindBoxList(data.data.data)
 	}
 
 	useEffect(() => {
 		setIsShowSwitchModal(false)
 		let wallet = getWallet()
-		console.log(wallet, 'wallet')
 
 		if (wallet) {
-			console.log(wallet, 'wallet', rightChainId)
 			if (
 				Number(wallet.networkVersion || wallet.chainId) !== rightChainId &&
 				history.location.pathname === '/drop/blind-box'
@@ -157,19 +166,29 @@ const pokeScreen = (props) => {
 	}, [window.onto, window.walletProvider, window.ethereum, address])
 
 	useEffect(() => {
+		if (address) {
+			getAmountPrice()
+			getApproveStatus()
+		}
 		address && getAmountPrice()
 	}, [address])
 
 	useEffect(() => {
-		address && getApproveStatus()
-	}, [address])
+		if (token) {
+			getAllMyBox()
+		}
+	}, [token])
+
+	useEffect(() => {
+		getBlindBoxList()
+	}, [])
 
 	const renderAmountButton = (amount) => {
 		console.log(amount)
 		return (
 			<div
 				className={cx(styleAmountButton(buyAmount === amount))}
-				onClick={() => {
+				onClick={async () => {
 					setBuyAmount(amount)
 				}}
 			>
@@ -178,15 +197,14 @@ const pokeScreen = (props) => {
 			</div>
 		)
 	}
-
-	const renderCard = () => {
-		console.log('card')
+	const renderCard = (data) => {
+		console.log(blindBoxList, 'blindBoxList?.[0]?.imageUrl')
 		return (
 			<div className={styleItem}>
-				<img src={card} alt="" />
+				<img src={data?.imageUrl} alt="" />
 				<div className="content">
-					<div className="title">{t('igo.shark.ticket')}</div>
-					<p>{t('igo.shark.tickettitle')}</p>
+					<div className="title">{data?.title}</div>
+					<p>{data?.description}</p>
 					<div className="subTitle">{t('igo.selectAmount')}</div>
 					<div className={styleButtonRow}>
 						{renderAmountButton(1)}
@@ -244,9 +262,33 @@ const pokeScreen = (props) => {
 										}
 										console.log(result, 'result')
 										if (buyAmount === 1) {
-											setBlindBoxId(result.events.BuyOne.returnValues?.requestId)
+											const requestId = result.events.BuyOne.returnValues?.requestId
+											const apiResult = await post(
+												'/api/v1/mystery/createRecord',
+												{
+													address,
+													amount: buyAmount,
+													opened: false,
+													requestId,
+												},
+												token,
+											)
+											console.log(apiResult, 'apiResult')
+											setBlindBoxId(requestId)
 										} else {
-											setBlindBoxId(result.events.BuyMore.returnValues?.requestId)
+											const requestId = result.events.BuyMore.returnValues?.requestId
+											const apiResult = await post(
+												'/api/v1/mystery/createRecord',
+												{
+													address,
+													amount: buyAmount,
+													opened: false,
+													requestId,
+												},
+												token,
+											)
+											console.log(apiResult, 'apiResult')
+											setBlindBoxId(requestId)
 										}
 										setIsUnboxVisible(true)
 									}
@@ -272,6 +314,63 @@ const pokeScreen = (props) => {
 
 	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
+	const renderBox = (item) => {
+		console.log(item, 'item')
+		return (
+			<div>
+				<img src={item.imageUrl ? item.imageUrl : defaultBox} />
+				<div
+					className="unbox-button"
+					onClick={async () => {
+						if (item.opened) {
+							history.push('/asset')
+						}
+						try {
+							setIsLoading(true)
+							setBlindBoxId(item.requestId)
+							let wallet = getWallet()
+							if (wallet) {
+								console.log(
+									blindBox721Contract[currentNetEnv],
+									'blindBox721Contract[currentNetEnv]',
+								)
+								window.web3 = new Web3(wallet)
+								const myContract = new window.web3.eth.Contract(
+									blindBoxAbi,
+									blindBox721Contract[currentNetEnv],
+								)
+
+								let result = await myContract.methods.claim(item.requestId).send({
+									from: address,
+									requestId: item.requestId,
+								})
+
+								let { data } = await get(`/api/v1/mystery/open/${item.requestId}`, '', token)
+
+								setCurrentNFTImageUrl(data?.data?.data?.avatorUrl)
+
+								setIsUnboxVisible(false)
+								setIsGotoAssetVisible(true)
+							}
+						} finally {
+							setIsLoading(false)
+							setBlindBoxId(undefined)
+						}
+					}}
+				>
+					<Loading
+						style={{
+							left: '-40px',
+						}}
+						loading={blindBoxId === item.requestId && isLoading}
+					/>
+					{item.opened ? 'Check My Asset' : 'Unbox'}
+				</div>
+			</div>
+		)
+	}
+	console.log(blindBoxId, 'blindBoxId')
+
 	return (
 		<div className={styleContainer}>
 			<div className={styleHeader}>
@@ -296,7 +395,15 @@ const pokeScreen = (props) => {
 			</SimpleGrid>
 			<div className={styleListContainer}>
 				<h1>{t('igo.mysteryBox')}</h1>
-				{renderCard()}
+				<span
+					className="my-mystery-box"
+					onClick={() => {
+						setIsListVisible(true)
+					}}
+				>
+					My mystery Box
+				</span>
+				{renderCard(blindBoxList?.[0])}
 			</div>
 			<Dialog
 				key="unbox-modal"
@@ -306,9 +413,12 @@ const pokeScreen = (props) => {
 				title={t('igo.congratuations')}
 				onCancel={() => {
 					setIsUnboxVisible(false)
+					getAllMyBox()
 				}}
 			>
-				<Dialog.Body>{}</Dialog.Body>
+				<Dialog.Body>
+					<img src={defaultBox} />
+				</Dialog.Body>
 				<Dialog.Footer className="dialog-footer">
 					<div
 						className="unbox-button"
@@ -331,7 +441,11 @@ const pokeScreen = (props) => {
 										from: address,
 										requestId: blindBoxId,
 									})
-									console.log(result, 'result')
+
+									let { data } = await get(`/api/v1/mystery/open/${blindBoxId}`, {}, token)
+									console.log(data, data?.data?.data, 'data?.data?.data')
+
+									// setCurrentNFTImageUrl(data?.data?.data?.)
 
 									setIsUnboxVisible(false)
 									setIsGotoAssetVisible(true)
@@ -359,9 +473,12 @@ const pokeScreen = (props) => {
 				title={t('igo.congratuations')}
 				onCancel={() => {
 					setIsGotoAssetVisible(false)
+					getAllMyBox()
 				}}
 			>
-				<Dialog.Body>{}</Dialog.Body>
+				<Dialog.Body>
+					<img src={currentNFTImageUrl} />
+				</Dialog.Body>
 				<Dialog.Footer className="dialog-footer">
 					<div
 						className="unbox-button"
@@ -372,6 +489,20 @@ const pokeScreen = (props) => {
 						Check My Asset
 					</div>
 				</Dialog.Footer>
+			</Dialog>
+			<Dialog
+				key={'my-box-list'}
+				size="tiny"
+				className={styleBoxListModal}
+				visible={isListVisible}
+				title={'My mystery box'}
+				onCancel={() => {
+					setIsListVisible(false)
+				}}
+			>
+				<Dialog.Body>
+					<div className={styleBoxList}>{myBoxList?.map((item) => renderBox(item))}</div>
+				</Dialog.Body>
 			</Dialog>
 			<SwitchModal
 				isUnboxVisible={isShowSwitchModal}
@@ -517,10 +648,23 @@ const styleListContainer = css`
 	flex-direction: column;
 	align-items: center;
 	flex-wrap: wrap;
+	position: relative;
 	h1 {
 		font-size: 3vw;
 		color: #fff;
 		margin-bottom: 4vh;
+	}
+	.my-mystery-box {
+		@media (max-width: 1400px) {
+			position: relative;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			left: 0;
+		}
+		position: absolute;
+		right: 10%;
+		cursor: pointer;
 	}
 `
 
@@ -528,13 +672,15 @@ const styleItem = css`
 	display: flex;
 	align-items: center;
 	max-width: 1440px;
-	padding: 0 10%;
+	padding: 0 5%;
 	margin: 0 auto;
 	justify-content: space-between;
-	margin-bottom: 100px;
+	margin: 40px 0 100px 0;
+	width: 90%;
 	img {
-		height: 480px;
+		height: 410px;
 		width: auto;
+		border-radius: 20px;
 	}
 	.content {
 		background: rgba(255, 255, 255, 0.2);
@@ -562,12 +708,32 @@ const styleItem = css`
 			font-weight: bold;
 		}
 	}
+	@media (max-width: 1400px) {
+		flex-wrap: wrap;
+		img {
+			width: 100%;
+			height: auto;
+		}
+		.content {
+			width: 100%;
+			margin-top: 20px;
+			.title {
+				font-size: 16px;
+			}
+			.button {
+				padding: 8px 44px;
+			}
+		}
+	}
 `
 
 const styleButtonRow = css`
 	display: flex;
 	gap: 20px;
 	margin: 16px 0;
+	@media (max-width: 1400px) {
+		flex-wrap: wrap;
+	}
 `
 
 const styleAmountButton = (isActive) => css`
@@ -602,9 +768,58 @@ const styleModal = css`
 	.el-dialog__header {
 		padding: 20px 30px 20px 50px;
 	}
+	.el-dialog__body {
+		padding: 50px;
+	}
 	.el-dialog__headerbtn .el-dialog__close {
 		top: 10px;
 		position: relative;
 		color: #575d6f;
+	}
+`
+
+const styleBoxListModal = css`
+	width: fit-content;
+	max-width: 690px;
+	border-radius: 20px;
+	width: calc(100% - 40px);
+	.el-dialog__title {
+		font-size: 36px;
+		font-family: 'Barlow';
+	}
+	.el-dialog__header {
+		padding: 20px 30px 20px 50px;
+	}
+	.el-dialog__body {
+		padding: 50px;
+	}
+	.el-dialog__headerbtn .el-dialog__close {
+		top: 10px;
+		position: relative;
+		color: #575d6f;
+	}
+	.el-dialog__footer {
+		padding: 10px 50px;
+	}
+`
+
+const styleBoxList = css`
+	display: flex;
+	justify-content: space-between;
+	display: flex;
+	gap: 40px;
+	flex-wrap: wrap;
+	& > div {
+		min-width: 160px;
+		max-width: 100%;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+	img {
+		padding-bottom: 30px;
+	}
+	.unbox-button {
+		color: white;
 	}
 `
