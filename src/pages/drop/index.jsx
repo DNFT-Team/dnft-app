@@ -17,7 +17,7 @@ const Drops = (props) => {
 			title: 'MYSTERY BOX',
 			time: 'Coming Soon',
 			link: '/drop/blind-box',
-			isActive: false,
+			isActive: true,
 			avatar: pic1,
 			txtTitle: 'Parking Infinity',
 			txt: 'Hi all, sharing a mobile version of a dashboard app that keeps all expenses organized, stay tax ready at all time',

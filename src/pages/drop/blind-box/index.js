@@ -38,7 +38,7 @@ const pokeScreen = (props) => {
 	const [moreNftPrice, setMoreNftPrice] = useState()
 	const [myBoxList, setMyBoxList] = useState([])
 	const [blindBoxList, setBlindBoxList] = useState([])
-	const [currentNFTImageUrl, setCurrentNFTImageUrl] = useState()
+	const [currentNFTList, setCurrentNFTList] = useState([])
 
 	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
@@ -141,14 +141,13 @@ const pokeScreen = (props) => {
 	}
 
 	const getAllMyBox = async () => {
-		const { data } = await get(`/api/v1/mystery/getRecords/${address}`, '', token)
-		console.log(data?.data?.data, 'data')
-		setMyBoxList(data?.data?.data)
+		const result = await get(`/api/v1/mystery/getRecords/${address}`, '', token)
+		setMyBoxList(result?.data?.data?.data)
 	}
 
 	const getBlindBoxList = async () => {
-		const { data } = await get('/api/v1/mystery/getAllMesteryBox')
-		setBlindBoxList(data.data.data)
+		const result = await get('/api/v1/mystery/getAllMesteryBox')
+		setBlindBoxList(result?.data?.data?.data)
 	}
 
 	useEffect(() => {
@@ -270,6 +269,7 @@ const pokeScreen = (props) => {
 													amount: buyAmount,
 													opened: false,
 													requestId,
+													mysteryId: data.id,
 												},
 												token,
 											)
@@ -284,6 +284,7 @@ const pokeScreen = (props) => {
 													amount: buyAmount,
 													opened: false,
 													requestId,
+													mysteryId: data.id,
 												},
 												token,
 											)
@@ -347,7 +348,7 @@ const pokeScreen = (props) => {
 
 								let { data } = await get(`/api/v1/mystery/open/${item.requestId}`, '', token)
 
-								setCurrentNFTImageUrl(data?.data?.data?.avatorUrl)
+								setCurrentNFTList(data?.data?.data)
 
 								setIsUnboxVisible(false)
 								setIsGotoAssetVisible(true)
@@ -445,7 +446,7 @@ const pokeScreen = (props) => {
 									let { data } = await get(`/api/v1/mystery/open/${blindBoxId}`, {}, token)
 									console.log(data, data?.data?.data, 'data?.data?.data')
 
-									// setCurrentNFTImageUrl(data?.data?.data?.)
+									setCurrentNFTList(data?.data?.data)
 
 									setIsUnboxVisible(false)
 									setIsGotoAssetVisible(true)
@@ -477,7 +478,16 @@ const pokeScreen = (props) => {
 				}}
 			>
 				<Dialog.Body>
-					<img src={currentNFTImageUrl} />
+					<div className={styleBoxList}>
+						{currentNFTList.map((item) => {
+							console.log(item, 'item')
+							return (
+								<div>
+									<img src={item.avatorUrl} />
+								</div>
+							)
+						})}
+					</div>
 				</Dialog.Body>
 				<Dialog.Footer className="dialog-footer">
 					<div
@@ -818,6 +828,7 @@ const styleBoxList = css`
 	}
 	img {
 		padding-bottom: 30px;
+		border-radius: 20px;
 	}
 	.unbox-button {
 		color: white;
