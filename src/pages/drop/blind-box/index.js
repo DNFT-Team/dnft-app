@@ -20,6 +20,7 @@ import { get, post } from 'utils/request'
 import dayjs from 'dayjs'
 import defaultBox from 'images/drops/box.png'
 import { toast } from 'react-toastify'
+import { getImgLink } from 'utils/tools'
 
 const pokeScreen = (props) => {
 	const { t } = useTranslation()
@@ -40,8 +41,6 @@ const pokeScreen = (props) => {
 	const [myBoxList, setMyBoxList] = useState([])
 	const [blindBoxList, setBlindBoxList] = useState([])
 	const [currentNFTList, setCurrentNFTList] = useState([])
-
-	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
 	let history = useHistory()
 	const { token, address } = props
@@ -201,7 +200,7 @@ const pokeScreen = (props) => {
 		console.log(blindBoxList, 'blindBoxList?.[0]?.imageUrl')
 		return (
 			<div className={styleItem}>
-				<img src={data?.imageUrl} alt="" />
+				<img src={getImgLink(data?.imageUrl)} alt="" />
 				<div className="content">
 					<div className="title">{data?.title}</div>
 					<p>{data?.description}</p>
@@ -317,10 +316,10 @@ const pokeScreen = (props) => {
 	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
 	const renderBox = (item) => {
-		console.log('item')
+		console.log('item', item)
 		return (
 			<div>
-				<img src={item.imageUrl ? item.imageUrl : defaultBox} />
+				<img src={item.imageUrl ? getImgLink(item.imageUrl) : defaultBox} />
 				<div
 					className="unbox-button"
 					onClick={async () => {
@@ -513,8 +512,8 @@ const pokeScreen = (props) => {
 						{currentNFTList.map((item) => {
 							console.log(item, 'item')
 							return (
-								<div>
-									<img src={item.avatorUrl} />
+								<div style={{ minWidth: '100%' }}>
+									<img src={getImgLink(item.avatorUrl)} />
 								</div>
 							)
 						})}
@@ -587,6 +586,7 @@ const styleContainer = css`
 		border-radius: 10px;
 		cursor: pointer;
 		justify-content: center;
+		max-height: 20px;
 	}
 	.el-loading-spinner .circular {
 		width: 30px;
@@ -860,9 +860,10 @@ const styleBoxList = css`
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		justify-content: space-between;
 	}
 	img {
-		padding-bottom: 30px;
+		margin-bottom: 30px;
 		border-radius: 20px;
 	}
 	.unbox-button {
