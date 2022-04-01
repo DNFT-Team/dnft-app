@@ -475,9 +475,11 @@ export const auction721Contract = {
 export const blindBox721Contract = {
 	testnet: '0xa3b6967F8eb5397831e007B542758D209Dc2e182',
 	devnet: '0xd2BF0d2e365B7904161c8c9917902d957d0d6a36',
+	mainnet: '0xd2BF0d2e365B7904161c8c9917902d957d0d6a36',
 }
 
 export const blindBoxApproveContract = {
 	testnet: '0xfB1927c7923f23e18375038179E8E61a09617037',
 	devnet: '0x55d398326f99059fF775485246999027B3197955',
+	mainnet: '0x55d398326f99059fF775485246999027B3197955',
 }
