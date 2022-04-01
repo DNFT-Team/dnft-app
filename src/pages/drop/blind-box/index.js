@@ -19,6 +19,7 @@ import { WEB3_MAX_NUM } from 'utils/web3Tools'
 import { get, post } from 'utils/request'
 import dayjs from 'dayjs'
 import defaultBox from 'images/drops/box.png'
+import { toast } from 'react-toastify'
 
 const pokeScreen = (props) => {
 	const { t } = useTranslation()
@@ -316,7 +317,7 @@ const pokeScreen = (props) => {
 	console.log(isGotoAssetVisible, 'isGotoAssetVisible')
 
 	const renderBox = (item) => {
-		console.log(item, 'item')
+		console.log('item')
 		return (
 			<div>
 				<img src={item.imageUrl ? item.imageUrl : defaultBox} />
@@ -325,33 +326,48 @@ const pokeScreen = (props) => {
 					onClick={async () => {
 						if (item.opened) {
 							history.push('/asset')
+							return
 						}
 						try {
 							setIsLoading(true)
 							setBlindBoxId(item.requestId)
+
 							let wallet = getWallet()
 							if (wallet) {
-								console.log(
-									blindBox721Contract[currentNetEnv],
-									'blindBox721Contract[currentNetEnv]',
-								)
 								window.web3 = new Web3(wallet)
 								const myContract = new window.web3.eth.Contract(
 									blindBoxAbi,
 									blindBox721Contract[currentNetEnv],
 								)
 
-								let result = await myContract.methods.claim(item.requestId).send({
+								let hasRandomNumberRequest = await myContract.methods.s_vrf(item.requestId).call({
 									from: address,
 									requestId: item.requestId,
 								})
+								// 判断随机数是否已返回
+								if (hasRandomNumberRequest.isRev) {
+									let result = await myContract.methods.claim(item.requestId).send({
+										from: address,
+										requestId: item.requestId,
+									})
 
-								let { data } = await get(`/api/v1/mystery/open/${item.requestId}`, '', token)
+									let { data } = await get(`/api/v1/mystery/open/${item.requestId}`, '', token)
 
-								setCurrentNFTList(data?.data?.data)
+									setCurrentNFTList(data?.data?.data)
 
-								setIsUnboxVisible(false)
-								setIsGotoAssetVisible(true)
+									setIsUnboxVisible(false)
+									setIsGotoAssetVisible(true)
+									setIsListVisible(false)
+								} else {
+									setIsLoading(false)
+									setBlindBoxId(undefined)
+									toast.warning(
+										'Sorry, your unbox operation failed due to network issues. Please try again later.',
+										{
+											position: toast.POSITION.TOP_CENTER,
+										},
+									)
+								}
 							}
 						} finally {
 							setIsLoading(false)
@@ -438,18 +454,33 @@ const pokeScreen = (props) => {
 										blindBox721Contract[currentNetEnv],
 									)
 
-									let result = await myContract.methods.claim(blindBoxId).send({
+									let hasRandomNumberRequest = await myContract.methods.s_vrf(blindBoxId).call({
 										from: address,
 										requestId: blindBoxId,
 									})
+									// 判断随机数是否已返回
+									if (hasRandomNumberRequest.isRev) {
+										let result = await myContract.methods.claim(blindBoxId).send({
+											from: address,
+											requestId: blindBoxId,
+										})
 
-									let { data } = await get(`/api/v1/mystery/open/${blindBoxId}`, {}, token)
-									console.log(data, data?.data?.data, 'data?.data?.data')
+										let { data } = await get(`/api/v1/mystery/open/${blindBoxId}`, {}, token)
+										console.log(data, data?.data?.data, 'data?.data?.data')
 
-									setCurrentNFTList(data?.data?.data)
+										setCurrentNFTList(data?.data?.data)
 
-									setIsUnboxVisible(false)
-									setIsGotoAssetVisible(true)
+										setIsUnboxVisible(false)
+										setIsGotoAssetVisible(true)
+									} else {
+										setIsLoading(false)
+										toast.warning(
+											'Sorry, your unbox operation failed due to network issues. Please try again later.',
+											{
+												position: toast.POSITION.TOP_CENTER,
+											},
+										)
+									}
 								}
 							} finally {
 								setIsLoading(false)
@@ -815,13 +846,17 @@ const styleBoxListModal = css`
 
 const styleBoxList = css`
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	display: flex;
-	gap: 40px;
+	gap: 50px;
 	flex-wrap: wrap;
 	& > div {
+		@media (max-width: 1400px) {
+			min-width: 100%;
+			max-width: 100%;
+		}
 		min-width: 160px;
-		max-width: 100%;
+		max-width: 160px;
 		display: flex;
 		flex-direction: column;
 		flex: 1;
