@@ -131,7 +131,7 @@
 		"title": "裁切圖片",
 		"banner.file.limit": "上傳的背景圖片大小不能超過2MB！",
 		"avatar.file.limit": "上傳的頭像圖片大小不能超過2MB！",
-		"uploaded.nft.limit": "上傳的NFT圖片大小不能超過10MB！",
+		"uploaded.nft.limit": "上傳的NFT圖片大小不能超過20MB！",
 		"unpoaded.size.limit15": "上傳的圖片大小不能超過15MB！"
 	},
 	"nftCard": {

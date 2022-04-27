@@ -130,7 +130,7 @@
 		"title": "Crop Image",
 		"banner.file.limit": "The size of the uploaded banner image cannot exceed 2MB!",
 		"avatar.file.limit": "The size of the uploaded avatar image cannot exceed 2MB!",
-		"uploaded.nft.limit": "The size of the uploaded NFT image cannot exceed 10MB!",
+		"uploaded.nft.limit": "The size of the uploaded NFT image cannot exceed 20MB!",
 		"unpoaded.size.limit15": "Upload image size cannot exceed 15MB!"
 	},
 	"nftCard": {

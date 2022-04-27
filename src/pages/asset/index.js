@@ -127,6 +127,9 @@ const AssetScreen = (props) => {
 			if (callback) {
 				toast.info(t('toast.operation.success'))
 			}
+		} catch (e) {
+			console.log(e)
+			setList([])
 		} finally {
 			setIsLoading(false)
 		}

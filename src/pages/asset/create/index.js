@@ -177,11 +177,12 @@ const CreateNFTModal = (props) => {
 		}
 	}
 
-	const mintNFTInBlock = async (form, imageCid, jsonCid) => {
+	const mintNFTInBlock = async (form, jsonCid) => {
 		try {
+			console.log([form, jsonCid])
 			let wallet = getWallet()
 			if (!wallet) {
-				return null
+				throw Error('Please Check Wallet')
 			} else {
 				window.web3 = new Web3(wallet)
 				await window.web3.eth.requestAccounts()
@@ -267,7 +268,7 @@ const CreateNFTModal = (props) => {
 			//	1.check Sensi
 			setStep(STEP_ENUM.SENSI_PENDING)
 			const _preFile = imgOnly ? nftFile : nftCover?.file
-			if (_preFile) {
+			if (_preFile && !_preFile.type.includes('gif')) {
 				const isSensi = await checkSensi(_preFile)
 				if (isSensi) {
 					setStep(STEP_ENUM.SENSI_FAILED)
@@ -303,7 +304,7 @@ const CreateNFTModal = (props) => {
 			}
 			//  4.mint nft
 			setStep(STEP_ENUM.MINT_PENDING)
-			const txRes = await mintNFTInBlock(jsonCid)
+			const txRes = await mintNFTInBlock(form, jsonCid)
 			if (!txRes) {
 				setStep(STEP_ENUM.MINT_FAILED)
 				return
@@ -403,6 +404,7 @@ const CreateNFTModal = (props) => {
 							multiple={false}
 							withCredentials
 							showFileList={false}
+							accept="image/*,video/*,audio/*"
 							action=""
 							beforeUpload={(file) => beforeUpload(file)}
 							httpRequest={async (e) => {
@@ -416,7 +418,7 @@ const CreateNFTModal = (props) => {
 							{nftUrl ? (
 								imgOnly
 								? <img src={nftUrl} alt="" />
-								: <video src={nftUrl} controls autoPlay />
+								: <video src={nftUrl} controls poster={nftCover?.url || ''}/>
 							) : (
 								<React.Fragment>
 									<i className="el-icon-upload2" />
@@ -432,6 +434,7 @@ const CreateNFTModal = (props) => {
 								multiple={false}
 								withCredentials
 								showFileList={false}
+								accept="image/*"
 								action=""
 								beforeUpload={(file) => beforeUpload(file)}
 								httpRequest={async (e) => {
