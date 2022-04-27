@@ -30,6 +30,11 @@ const CreateNFTModal = (props) => {
 	})
 	const [nftUrl, setNftUrl] = useState()
 	const [nftFile, setNftFile] = useState()
+	const [nftCover, setCover] = useState({
+		file: null,
+		url: ''
+	})
+	const [imgOnly, setImgOnly] = useState(true)
 	const [isShowSwitchModal, setIsShowSwitchModal] = useState(false)
 	const [step, setStep] = useState(STEP_ENUM.INITIAL)
 	const [stepErr, setStepErr] = useState('')
@@ -51,9 +56,28 @@ const CreateNFTModal = (props) => {
 	const uploadFile = async (file) => {
 		setNftUrl('')
 		setNftFile(null)
+		setImgOnly(false)
 		try {
 			const imgUrl = getObjectURL(file)
-			imgUrl && setNftFile(file)
+			if (imgUrl) {
+				setNftFile(file)
+				setImgOnly(file.type.includes('image'))
+			}
+			return imgUrl
+		} catch (e) {
+			console.log(e, 'e')
+		}
+	}
+	const uploadCover = async (file) => {
+		setCover({url: '', file: null})
+		try {
+			const imgUrl = getObjectURL(file)
+			if (imgUrl) {
+				setCover({
+					url: imgUrl,
+					file: file
+				})
+			}
 			return imgUrl
 		} catch (e) {
 			console.log(e, 'e')
@@ -61,11 +85,9 @@ const CreateNFTModal = (props) => {
 	}
 
 	const beforeUpload = (file) => {
-		const isLt10M = file.size / 1024 / 1024 < 10
+		const isLt10M = file.size / 1024 / 1024 < 20
 		if (!isLt10M) {
-			toast.warn(t('cropImg.uploaded.nft.limit'), {
-				position: toast.POSITION.TOP_CENTER,
-			})
+			toast.warn(t('cropImg.uploaded.nft.limit'))
 			return false
 		}
 	}
@@ -214,9 +236,7 @@ const CreateNFTModal = (props) => {
 
 	const createNFT = async () => {
 		if (!address) {
-			toast.warn(t('toast.link.wallet'), {
-				position: toast.POSITION.TOP_CENTER,
-			})
+			toast.warn(t('toast.link.wallet'))
 			return
 		}
 		// check network
@@ -246,16 +266,19 @@ const CreateNFTModal = (props) => {
 			setStepErr('')
 			//	1.check Sensi
 			setStep(STEP_ENUM.SENSI_PENDING)
-			const isSensi = await checkSensi(nftFile)
-			if (isSensi) {
-				setStep(STEP_ENUM.SENSI_FAILED)
-				setStepErr(t('toast.sensitive'))
-				return
+			const _preFile = imgOnly ? nftFile : nftCover?.file
+			if (_preFile) {
+				const isSensi = await checkSensi(_preFile)
+				if (isSensi) {
+					setStep(STEP_ENUM.SENSI_FAILED)
+					setStepErr(t('toast.sensitive'))
+					return
+				}
 			}
 
 			// 2.upload media file
 			setStep(STEP_ENUM.IMAGE_PENDING)
-			const mediaMeta = await ipfs_media([nftFile], /video|audio/.test(nftFile.type))
+			const mediaMeta = await ipfs_media([nftFile, nftCover?.file], /video|audio/.test(nftFile.type))
 			if (!mediaMeta.isOk) {
 				setStep(STEP_ENUM.IMAGE_FAILED)
 				setStepErr(t('toast.uploadingFiles'))
@@ -391,14 +414,43 @@ const CreateNFTModal = (props) => {
 							}}
 						>
 							{nftUrl ? (
-								<img style={{ marginBottom: '.6rem' }} src={nftUrl} alt="" />
+								imgOnly
+								? <img src={nftUrl} alt="" />
+								: <video src={nftUrl} controls autoPlay />
 							) : (
 								<React.Fragment>
 									<i className="el-icon-upload2" />
-									<div className="el-upload__text">PNG, GIF</div>
+									<div className="el-upload__text">PNG, GIF, MP3, MP4</div>
 								</React.Fragment>
 							)}
 						</Upload>
+						{
+							!imgOnly &&
+							<Upload
+								className={styleUploadContainer}
+								drag
+								multiple={false}
+								withCredentials
+								showFileList={false}
+								action=""
+								beforeUpload={(file) => beforeUpload(file)}
+								httpRequest={async (e) => {
+									await uploadCover(e.file)
+								}}
+								onRemove={() => {
+									setCover({url: '', file: null})
+								}}
+							>
+								{nftCover.url ? (
+									<img src={nftCover.url} alt="" />
+								) : (
+									<React.Fragment>
+										<i className="el-icon-upload2" />
+										<div className="el-upload__text">COVER:PNG, GIF</div>
+									</React.Fragment>
+								)}
+							</Upload>
+						}
 						{renderFormItem(
 							t('nftCard.name'),
 							<Input
@@ -620,16 +672,10 @@ const styleContainer = css`
 		margin: 0 0 40px 0;
 	}
 `
-const styleContainerWithStep = css`
-	height: 40vh;
-	overflow: hidden;
-	position: relative;
-	border-radius: 0;
-`
 const styleUploadContainer = css`
 	margin-bottom: 18px;
 	.el-upload {
-		width: 100%;
+		width: max-content;
 		.el-upload-dragger {
 			display: flex;
 			flex-direction: column;

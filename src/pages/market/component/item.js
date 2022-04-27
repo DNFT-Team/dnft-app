@@ -7,9 +7,10 @@ import dnft_unit from 'images/market/dnft_unit.png'
 import busd_unit from 'images/market/busd.svg'
 import { Icon } from '@iconify/react'
 import { toast } from 'react-toastify'
-import { get, post } from 'utils/request'
+import { post } from 'utils/request'
 import { Tooltip } from '@chakra-ui/react'
-import { shortenAddress, getImgLink } from 'utils/tools'
+import { shortenAddress } from 'utils/tools'
+import MetaBox from 'components/NFTCard/meta'
 
 const NFTCard = (props) => {
 	const {
@@ -69,9 +70,10 @@ const NFTCard = (props) => {
 		>
 			<div
 				onClick={clickDetail}
-				style={{ backgroundImage: `url(${getImgLink(item.avatorUrl)})` }}
 				className={styles.styleShortPicture}
-			/>
+			>
+				<MetaBox data={item} autoPlay />
+			</div>
 			<div className={styles.styleInfoContainer}>
 				<div className={styles.styleCardHeader}>
 					<div className={styles.styleCardHeaderBox}>

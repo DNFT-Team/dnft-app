@@ -28,6 +28,7 @@ import Web3 from 'web3'
 import CreateCollectionModal from '../../../components/CreateCollectionModal'
 import styles from './index.less'
 import SharePopover from 'components/SharePopover'
+import MetaBox from 'components/NFTCard/meta'
 const MarketDetailScreen = (props) => {
 	const { t } = useTranslation()
 	const { location, net_env, address, token, chainType } = props
@@ -421,8 +422,9 @@ const MarketDetailScreen = (props) => {
 					h={['80vw', '80vw', '80vw', 0]}
 					w={['100%', '100%', '100%', 'calc(50% - 25px)']}
 					className={styles.mainL}
-					style={{ backgroundImage: `url(${getImgLink(datas?.avatorUrl)})` }}
-				/>
+				>
+					<MetaBox data={datas} auto autoPlay hideTrigger />
+				</Box>
 				<Box w={['100%', '100%', '100%', 'calc(50% - 25px)']} boxSizing="border-box">
 					<Flex
 						flexDirection={['row', 'row', 'row', 'column']}
