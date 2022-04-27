@@ -1,10 +1,9 @@
-import { Dialog, Button, Select } from 'element-react'
+import { Dialog, Select } from 'element-react'
 import { css, cx } from 'emotion'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
-import { Box, Tab, Tabs, TabList, TabPanels, TabPanel, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { toast } from 'react-toastify'
-import { tradableNFTAbi, nftAbi, nft1155Abi } from 'utils/abi'
 import { noDataSvg } from 'utils/svg'
 import Web3 from 'web3'
 import NFTCard from '../../components/NFTCard'
@@ -12,21 +11,19 @@ import { get, post } from 'utils/request'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import globalConfig from '../../config'
-import { busdAbi, tokenAbi } from '../../utils/abi'
-import { bscTestTokenContact, busdContract } from '../../utils/contract'
-// import { getCategoryList } from 'reduxs/actions/market';
+import { tokenAbi } from '../../utils/abi'
+import { bscTestTokenContact } from '../../utils/contract'
 import CreateNFTModal from './create/index'
 import NFTImportModal from './nftImport/index'
 import LoadingIcon from 'images/asset/loading.gif'
 import dnft_unit from 'images/market/dnft_unit.png'
 import SwitchModal from 'components/SwitchModal'
 import { getWallet } from 'utils/get-wallet'
-import { Btn } from 'components/Button'
 import { useTranslation } from 'react-i18next'
 import { getImgLink } from 'utils/tools'
 
 const AssetScreen = (props) => {
-	const { dispatch, location, address, chainType, token, categoryList, lng } = props
+	const { address, chainType, token, categoryList, lng } = props
 	const { t } = useTranslation()
 
 	const currentNetEnv = globalConfig.net_env

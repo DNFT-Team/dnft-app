@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"start": "node scripts/start.js",
+		"start:qa": "node -r dotenv/config scripts/start.js dotenv_config_path=.env.qa",
 		"start:test": "node -r dotenv/config scripts/start.js dotenv_config_path=.env.test",
 		"start:prod": "node -r dotenv/config scripts/start.js dotenv_config_path=.env.production",
 		"build:qa": "node -r dotenv/config scripts/build.js dotenv_config_path=.env.qa",

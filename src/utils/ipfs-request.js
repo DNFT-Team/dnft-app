@@ -104,13 +104,11 @@ export const ipfs_add = async (_file) => {
 export const ipfs_media = async (files, isMedia) => {
 	let cidImage, cidAnimate
 	try {
-		// if (isMedia && files.length === 2) {
-		// cidImage = await ipfs_add(files[0])
-		// cidAnimate = await ipfs_add(files[1])
 		if (isMedia) {
 			cidAnimate = await ipfs_add(files[0])
+			files?.[1] && (cidImage = await ipfs_add(files[1]))
 			return {
-				image: '',
+				image: cidImage,
 				animation_url: cidAnimate,
 				isOk: !!cidAnimate,
 			}

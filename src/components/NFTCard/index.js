@@ -6,8 +6,6 @@ import { connect } from 'react-redux'
 import { useHistory, withRouter } from 'react-router-dom'
 import Web3 from 'web3'
 import {
-	createNFTContract1155,
-	createNFTContract721,
 	tradableNFTContract,
 	tradableNFTContract721,
 	auction721Contract,
