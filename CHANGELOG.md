@@ -1,3 +1,30 @@
+## [1.1.1](https://github.com/DNFT-Team/dnft-app/compare/1.1.0...1.1.1) (2022-04-27)
+
+
+### ✨ Features | Caractéristiques
+
+* add auction - 2 ([d14becd](https://github.com/DNFT-Team/dnft-app/commit/d14becd))
+* add coinType ([5b8afb5](https://github.com/DNFT-Team/dnft-app/commit/5b8afb5))
+* add drop.aution - 1 ([72b3b7b](https://github.com/DNFT-Team/dnft-app/commit/72b3b7b))
+* drops coming soon ([f2f01fc](https://github.com/DNFT-Team/dnft-app/commit/f2f01fc))
+* drops module ([0d7d65c](https://github.com/DNFT-Team/dnft-app/commit/0d7d65c))
+* NftDetailt track ([d64ad46](https://github.com/DNFT-Team/dnft-app/commit/d64ad46))
+* support multi media ([1ddacbf](https://github.com/DNFT-Team/dnft-app/commit/1ddacbf))
+* track ([f625524](https://github.com/DNFT-Team/dnft-app/commit/f625524))
+* track sign ([15e3600](https://github.com/DNFT-Team/dnft-app/commit/15e3600))
+
+
+### 🐛 Bug Fixes | Correction de bogues
+
+* auction id ([33913d4](https://github.com/DNFT-Team/dnft-app/commit/33913d4))
+* date utc ([351da7f](https://github.com/DNFT-Team/dnft-app/commit/351da7f))
+* get data via chain ([c9adc3c](https://github.com/DNFT-Team/dnft-app/commit/c9adc3c))
+* http ----> https ([67b24e4](https://github.com/DNFT-Team/dnft-app/commit/67b24e4))
+* market default selected ([80cab06](https://github.com/DNFT-Team/dnft-app/commit/80cab06))
+* someting ([290ae4b](https://github.com/DNFT-Team/dnft-app/commit/290ae4b))
+
+
+
 # [1.1.0](https://github.com/DNFT-Team/dnft-app/compare/1.0.0...1.1.0) (2022-01-30)
 
 
