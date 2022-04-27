@@ -42,7 +42,13 @@ const Meta = (props) => {
       <div className={videoBoxStyle}>
         {
           show
-          ? <video className={videoStyle} src={getImgLink(animationUrl)} controls autoPlay={autoPlay} />
+          ? <video
+            className={videoStyle}
+            poster={getImgLink(avatorUrl)}
+            src={getImgLink(animationUrl)}
+            autoPlay={autoPlay}
+            controls
+          />
           : ImgWrapper
         }
         {
