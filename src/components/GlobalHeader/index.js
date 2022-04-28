@@ -241,7 +241,10 @@ const GlobalHeader = (props) => {
 	}, [])
 
 	useEffect(() => {
-		if (window.ethereum?.selectedAddress) {
+		if (
+			window.ethereum?.selectedAddress ||
+			window.ethereum?.isConnected()
+		) {
 			injectWallet()
 		} else if (window.walletProvider?.connected) {
 			injectWalletConnect()

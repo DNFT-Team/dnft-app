@@ -178,11 +178,12 @@ const CreateNFTModal = (props) => {
 	}
 
 	const mintNFTInBlock = async (form, jsonCid) => {
+		const NO_WALLET_ERR = 'NO_WALLET'
 		try {
 			console.log([form, jsonCid])
 			let wallet = getWallet()
 			if (!wallet) {
-				throw Error('Please Check Wallet')
+				throw Error(NO_WALLET_ERR)
 			} else {
 				window.web3 = new Web3(wallet)
 				await window.web3.eth.requestAccounts()
@@ -228,6 +229,8 @@ const CreateNFTModal = (props) => {
 			console.log('[ Mint Err ]', err)
 			if (4001 === err?.code) {
 				setStepErr(t('toast.user.signature'))
+			} else if (NO_WALLET_ERR === err.message) {
+				setStepErr('Please check wallet')
 			} else {
 				setStepErr(t('toast.mint.failed'))
 			}
@@ -690,9 +693,9 @@ const styleUploadContainer = css`
 			border-radius: 10px;
 			border: none;
 			height: auto;
-			@media (max-width: 900px) {
+			/* @media (max-width: 900px) {
 				width: 100%;
-			}
+			} */
 
 			.el-upload__text {
 				margin-top: 10px;
